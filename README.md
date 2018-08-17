@@ -1,2 +1,2 @@
-# sitewhere-admin-ui
-SiteWhere Administrative User Interface
+# SiteWhere Administrative User Interface
+User interface for SiteWhere administrative functionality.
