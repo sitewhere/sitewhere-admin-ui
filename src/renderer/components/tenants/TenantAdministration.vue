@@ -17,18 +17,18 @@
     </v-navigation-drawer>
     <v-toolbar fixed class="grey darken-3" dark app>
       <v-toolbar-side-icon class="grey--text" @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-icon left dark>{{ section.icon }}</v-icon>
+      <font-awesome-icon :icon="section.icon" size="lg" />
       <v-toolbar-title class="subheading">{{ section.longTitle }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu bottom right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
-          <v-icon dark class="mr-2">portrait</v-icon>
+          <font-awesome-icon icon="user" class="mr-2" />
           {{ fullname }}
         </v-btn>
         <v-list>
           <v-list-tile @click="onUserAction(action)"
             v-for="action in userActions" :key="action.id">
-            <v-icon left light class="mr-2">{{action.icon}}</v-icon>
+            <font-awesome-icon :icon="action.icon" class="mr-2" />
             <v-list-tile-title v-text="action.title"></v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -41,123 +41,141 @@
 </template>
 
 <script>
-import {_getTenant, _getJwt} from '../../http/sitewhere-api-wrapper'
-import Navigation from '../common/Navigation'
-import ErrorBanner from '../common/ErrorBanner'
+import { _getTenant, _getJwt } from "../../http/sitewhere-api-wrapper";
+import Navigation from "../common/Navigation";
+import ErrorBanner from "../common/ErrorBanner";
 
 export default {
   data: () => ({
     drawer: true,
     tenantToken: null,
-    sections: [{
-      id: 'customersGroup',
-      title: 'Customer Management',
-      icon: 'fa-building',
-      route: 'customers',
-      longTitle: 'Manage Customers',
-      subsections: [{
-        id: 'customertypes',
-        title: 'Customer Types',
-        icon: 'fa-cog',
-        route: 'customertypes',
-        longTitle: 'Manage Customer Types'
-      }, {
-        id: 'customers',
-        title: 'Customers',
-        icon: 'fa-building',
-        route: 'customers',
-        longTitle: 'Manage Customers'
-      }]
-    },
-    {
-      id: 'areasGroup',
-      title: 'Area Management',
-      icon: 'fa-map',
-      route: 'areas',
-      longTitle: 'Manage Areas',
-      subsections: [{
-        id: 'areatypes',
-        title: 'Area Types',
-        icon: 'fa-cog',
-        route: 'areatypes',
-        longTitle: 'Manage Area Types'
-      }, {
-        id: 'areas',
-        title: 'Areas',
-        icon: 'fa-map',
-        route: 'areas',
-        longTitle: 'Manage Areas'
-      }]
-    },
-    {
-      id: 'deviceGroup',
-      title: 'Device Management',
-      icon: 'fa-microchip',
-      route: 'devices',
-      longTitle: 'Manage Devices',
-      subsections: [{
-        id: 'devicetypes',
-        title: 'Device Types',
-        icon: 'fa-cog',
-        route: 'devicetypes',
-        longTitle: 'Manage Device Types'
-      }, {
-        id: 'devices',
-        title: 'Devices',
-        icon: 'fa-microchip',
-        route: 'devices',
-        longTitle: 'Manage Devices'
-      }, {
-        id: 'groups',
-        title: 'Device Groups',
-        icon: 'view_module',
-        route: 'groups',
-        longTitle: 'Manage Device Groups'
-      }]
-    },
-    {
-      id: 'assetGroup',
-      title: 'Asset Management',
-      icon: 'fa-car',
-      route: 'assets',
-      longTitle: 'Manage Assets',
-      subsections: [{
-        id: 'assettypes',
-        title: 'Asset Types',
-        icon: 'fa-cog',
-        route: 'assettypes',
-        longTitle: 'Manage Asset Types'
-      }, {
-        id: 'assets',
-        title: 'Assets',
-        icon: 'fa-car',
-        route: 'assets',
-        longTitle: 'Manage Assets'
-      }]
-    },
-    {
-      id: 'batch',
-      title: 'Batch Operations',
-      icon: 'fa-list-alt',
-      route: 'batch',
-      longTitle: 'Manage Batch Operations'
-    },
-    {
-      id: 'schedules',
-      title: 'Schedules',
-      icon: 'fa-calendar',
-      route: 'schedules',
-      longTitle: 'Manage Schedules'
-    }],
-    userActions: [{
-      id: 'sysadmin',
-      title: 'System Administration',
-      icon: 'settings'
-    }, {
-      id: 'logout',
-      title: 'Log Out',
-      icon: 'power_settings_new'
-    }],
+    sections: [
+      {
+        id: "customersGroup",
+        title: "Customer Management",
+        icon: "building",
+        route: "customers",
+        longTitle: "Manage Customers",
+        subsections: [
+          {
+            id: "customertypes",
+            title: "Customer Types",
+            icon: "cog",
+            route: "customertypes",
+            longTitle: "Manage Customer Types"
+          },
+          {
+            id: "customers",
+            title: "Customers",
+            icon: "building",
+            route: "customers",
+            longTitle: "Manage Customers"
+          }
+        ]
+      },
+      {
+        id: "areasGroup",
+        title: "Area Management",
+        icon: "map",
+        route: "areas",
+        longTitle: "Manage Areas",
+        subsections: [
+          {
+            id: "areatypes",
+            title: "Area Types",
+            icon: "cog",
+            route: "areatypes",
+            longTitle: "Manage Area Types"
+          },
+          {
+            id: "areas",
+            title: "Areas",
+            icon: "map",
+            route: "areas",
+            longTitle: "Manage Areas"
+          }
+        ]
+      },
+      {
+        id: "deviceGroup",
+        title: "Device Management",
+        icon: "microchip",
+        route: "devices",
+        longTitle: "Manage Devices",
+        subsections: [
+          {
+            id: "devicetypes",
+            title: "Device Types",
+            icon: "cog",
+            route: "devicetypes",
+            longTitle: "Manage Device Types"
+          },
+          {
+            id: "devices",
+            title: "Devices",
+            icon: "microchip",
+            route: "devices",
+            longTitle: "Manage Devices"
+          },
+          {
+            id: "groups",
+            title: "Device Groups",
+            icon: "cubes",
+            route: "groups",
+            longTitle: "Manage Device Groups"
+          }
+        ]
+      },
+      {
+        id: "assetGroup",
+        title: "Asset Management",
+        icon: "car",
+        route: "assets",
+        longTitle: "Manage Assets",
+        subsections: [
+          {
+            id: "assettypes",
+            title: "Asset Types",
+            icon: "cog",
+            route: "assettypes",
+            longTitle: "Manage Asset Types"
+          },
+          {
+            id: "assets",
+            title: "Assets",
+            icon: "car",
+            route: "assets",
+            longTitle: "Manage Assets"
+          }
+        ]
+      },
+      {
+        id: "batch",
+        title: "Batch Operations",
+        icon: "list-alt",
+        route: "batch",
+        longTitle: "Manage Batch Operations"
+      },
+      {
+        id: "schedules",
+        title: "Schedules",
+        icon: "calendar",
+        route: "schedules",
+        longTitle: "Manage Schedules"
+      }
+    ],
+    userActions: [
+      {
+        id: "sysadmin",
+        title: "System Administration",
+        icon: "cog"
+      },
+      {
+        id: "logout",
+        title: "Log Out",
+        icon: "power-off"
+      }
+    ],
     right: null
   }),
 
@@ -168,126 +186,132 @@ export default {
 
   computed: {
     // Get loggied in user.
-    user: function () {
-      return this.$store.getters.user
+    user: function() {
+      return this.$store.getters.user;
     },
     // Get currently selected section.
-    section: function () {
-      return this.$store.getters.currentSection
+    section: function() {
+      return this.$store.getters.currentSection;
     },
-    fullname: function () {
-      var user = this.$store.getters.user
+    fullname: function() {
+      var user = this.$store.getters.user;
       if (user) {
-        var first = this.$store.getters.user.firstName
-        var last = this.$store.getters.user.lastName
+        var first = this.$store.getters.user.firstName;
+        var last = this.$store.getters.user.lastName;
         if (last.length > 1) {
-          return first + ' ' + last
+          return first + " " + last;
         } else {
-          return first
+          return first;
         }
       }
-      return 'Not Logged In'
+      return "Not Logged In";
     },
 
     // Get global loading indicator.
-    loading: function () {
-      return this.$store.getters.loading
+    loading: function() {
+      return this.$store.getters.loading;
     },
 
     // Get global error indicator.
-    error: function () {
-      return this.$store.getters.error
+    error: function() {
+      return this.$store.getters.error;
     }
   },
 
-  created: function () {
+  created: function() {
     // Set up JWT auto-refresh.
-    this.refreshJwt()
+    this.refreshJwt();
 
     // Verify that user is logged in.
-    var user = this.$store.getters.user
+    var user = this.$store.getters.user;
     if (!user) {
-      this.onLogOut()
-      return
+      this.onLogOut();
+      return;
     }
 
     // Verify that a tenant token was specified in the route.
-    var tenantToken = this.$route.params.tenantToken
+    var tenantToken = this.$route.params.tenantToken;
     if (!tenantToken) {
-      this.onLogOut()
-      return
+      this.onLogOut();
+      return;
     }
-    this.$data.tenantToken = tenantToken
+    this.$data.tenantToken = tenantToken;
 
     // Load tenant if tenant id changed or not already loaded.
-    var tenant = this.$store.getters.selectedTenant
-    if ((!tenant) || (tenant.token !== tenantToken)) {
-      this.onLoadTenant(tenantToken)
+    var tenant = this.$store.getters.selectedTenant;
+    if (!tenant || tenant.token !== tenantToken) {
+      this.onLoadTenant(tenantToken);
     } else {
       // Select first section from list.
-      this.onSectionClicked(this.$data.sections[0])
+      this.onSectionClicked(this.$data.sections[0]);
     }
   },
 
   methods: {
     // Load tenant based on tenant id.
-    onLoadTenant: function (tenantToken) {
-      var component = this
+    onLoadTenant: function(tenantToken) {
+      var component = this;
 
       // Make api call to load tenant.
       _getTenant(this.$store, tenantToken)
-        .then(function (response) {
-          component.onTenantLoaded(response.data)
-        }).catch(function (e) {
-          console.log('Unable to load tenant ' + tenantToken + '. Logging out!')
-          component.onLogOut()
+        .then(function(response) {
+          component.onTenantLoaded(response.data);
         })
+        .catch(function(e) {
+          console.log(
+            "Unable to load tenant " + tenantToken + ". Logging out!"
+          );
+          component.onLogOut();
+        });
     },
     // Called after tenant is loaded.
-    onTenantLoaded: function (tenant) {
-      this.$store.commit('selectedTenant', tenant)
+    onTenantLoaded: function(tenant) {
+      this.$store.commit("selectedTenant", tenant);
 
       // Select first section from list.
-      this.onSectionClicked(this.$data.sections[0])
+      this.onSectionClicked(this.$data.sections[0]);
     },
     // Called when a section is clicked.
-    onSectionClicked: function (section) {
-      this.$store.commit('currentSection', section)
-      this.$router.push('/tenants/' + this.$data.tenantToken + '/' + section.route)
+    onSectionClicked: function(section) {
+      this.$store.commit("currentSection", section);
+      this.$router.push(
+        "/tenants/" + this.$data.tenantToken + "/" + section.route
+      );
     },
-    onUserAction: function (action) {
-      if (action.id === 'logout') {
-        this.onLogOut()
-      } else if (action.id === 'sysadmin') {
-        this.$router.push('/system')
+    onUserAction: function(action) {
+      if (action.id === "logout") {
+        this.onLogOut();
+      } else if (action.id === "sysadmin") {
+        this.$router.push("/system");
       }
     },
     // Called when user requests log out.
-    onLogOut: function () {
-      console.log('Logging out!')
-      this.$store.commit('logOut')
-      this.$router.push('/')
+    onLogOut: function() {
+      console.log("Logging out!");
+      this.$store.commit("logOut");
+      this.$router.push("/");
     },
 
     // Set up timer for reloading JWT.
-    refreshJwt: function () {
-      var component = this
+    refreshJwt: function() {
+      var component = this;
       _getJwt(this.$store)
-        .then(function (response) {
-          console.log('Refreshed JWT.')
-          var jwt = response.headers['x-sitewhere-jwt']
-          component.$store.commit('jwt', jwt)
-          setTimeout(function () {
-            component.refreshJwt()
-          }, (1000 * 60 * 5))
-        }).catch(function (e) {
-          console.log('Could not update JWT.')
-          console.log(e)
-          component.onLogOut()
+        .then(function(response) {
+          console.log("Refreshed JWT.");
+          var jwt = response.headers["x-sitewhere-jwt"];
+          component.$store.commit("jwt", jwt);
+          setTimeout(function() {
+            component.refreshJwt();
+          }, 1000 * 60 * 5);
         })
+        .catch(function(e) {
+          console.log("Could not update JWT.");
+          console.log(e);
+          component.onLogOut();
+        });
     }
   }
-}
+};
 </script>
 
 <style scoped>

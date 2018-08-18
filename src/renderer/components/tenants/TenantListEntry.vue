@@ -10,12 +10,12 @@
       <div class="tenant-actions">
         <v-btn @click.stop="onConfigureTenant"
           class="blue white--text tenant-configure ma-0" >
-          <v-icon left dark>fa-cogs</v-icon>
+          <font-awesome-icon class="white--text mr-2" icon="cogs" size="lg"/>
           Configure
         </v-btn>
         <v-btn @click.stop="onOpenTenant"
           class="green white--text tenant-open" >
-          <v-icon left dark>fa-database</v-icon>
+          <font-awesome-icon class="white--text mr-2" icon="database" size="lg"/>
           Manage Data
         </v-btn>
       </div>
@@ -25,65 +25,69 @@
 
 <script>
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['tenant'],
+  props: ["tenant"],
 
   computed: {
-    tenantStarted: function () {
-      return this.tenant.engineState &&
-        this.tenant.engineState.lifecycleStatus === 'Started'
+    tenantStarted: function() {
+      return (
+        this.tenant.engineState &&
+        this.tenant.engineState.lifecycleStatus === "Started"
+      );
     },
-    tenantStopped: function () {
-      return this.tenant.engineState &&
-        this.tenant.engineState.lifecycleStatus === 'Stopped'
+    tenantStopped: function() {
+      return (
+        this.tenant.engineState &&
+        this.tenant.engineState.lifecycleStatus === "Stopped"
+      );
     },
-    tenantError: function () {
-      return this.tenant.engineState &&
-        this.tenant.engineState.lifecycleStatus === 'LifecycleError'
+    tenantError: function() {
+      return (
+        this.tenant.engineState &&
+        this.tenant.engineState.lifecycleStatus === "LifecycleError"
+      );
     },
-    tenantHeaderColor: function () {
+    tenantHeaderColor: function() {
       if (this.tenantStarted) {
-        return '#060'
+        return "#060";
       } else if (this.tenantStopped) {
-        return '#ddd'
+        return "#ddd";
       } else if (this.tenantError) {
-        return '#d00'
+        return "#d00";
       }
     }
   },
 
   methods: {
     // Styling for tenant panel.
-    tenantPanelStyle: function (tenant) {
+    tenantPanelStyle: function(tenant) {
       return {
-        'border-top': '5px solid ' + this.tenantHeaderColor
-      }
+        "border-top": "5px solid " + this.tenantHeaderColor
+      };
     },
 
     // Styling for tenant logo.
-    tenantLogoStyle: function (tenant) {
+    tenantLogoStyle: function(tenant) {
       return {
-        'background': 'url(' + tenant.logoUrl + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%'
-      }
+        background: "url(" + tenant.logoUrl + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%"
+      };
     },
 
     // Open tenant.
-    onOpenTenant: function () {
-      this.$emit('openTenant', this.tenant)
+    onOpenTenant: function() {
+      this.$emit("openTenant", this.tenant);
     },
 
     // Configure tenant.
-    onConfigureTenant: function () {
-      this.$emit('configureTenant', this.tenant)
+    onConfigureTenant: function() {
+      this.$emit("configureTenant", this.tenant);
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,10 +1,10 @@
 <template>
-  <navigation-page icon="fa-cog" title="Customer Types"
+  <navigation-page icon="cog" title="Customer Types"
     loadingMessage="Loading customer types ..." :loaded="loaded">
     <div v-if="customerTypes" slot="content">
       <v-container fluid grid-list-md>
         <v-layout row wrap>
-           <v-flex xs6 v-for="(customerType, index) in customerTypes"
+           <v-flex xs6 v-for="(customerType) in customerTypes"
             :key="customerType.token">
             <customer-type-list-entry :customerType="customerType"
               :customerTypes="customerTypes"
@@ -22,14 +22,13 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import Pager from '../common/Pager'
-import CustomerTypeListEntry from './CustomerTypeListEntry'
-import CustomerTypeCreateDialog from './CustomerTypeCreateDialog'
-import {_listCustomerTypes} from '../../http/sitewhere-api-wrapper'
+import NavigationPage from "../common/NavigationPage";
+import Pager from "../common/Pager";
+import CustomerTypeListEntry from "./CustomerTypeListEntry";
+import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog";
+import { _listCustomerTypes } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
@@ -46,40 +45,41 @@ export default {
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list of area types.
-    refresh: function () {
-      this.$data.loaded = false
-      var paging = this.$data.paging.query
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var paging = this.$data.paging.query;
+      var component = this;
       _listCustomerTypes(this.$store, false, paging)
-        .then(function (response) {
-          component.results = response.data
-          component.$data.customerTypes = response.data.results
-          component.loaded = true
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.results = response.data;
+          component.$data.customerTypes = response.data.results;
+          component.loaded = true;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called when a customer type is clicked.
-    onOpenCustomerType: function (token) {
-      var tenant = this.$store.getters.selectedTenant
+    onOpenCustomerType: function(token) {
+      var tenant = this.$store.getters.selectedTenant;
       if (tenant) {
-        this.$router.push('/tenants/' + tenant.id + '/customertypes/' + token)
+        this.$router.push("/tenants/" + tenant.id + "/customertypes/" + token);
       }
     },
 
     // Called when a new area type is added.
-    onCustomerTypeAdded: function () {
-      this.refresh()
+    onCustomerTypeAdded: function() {
+      this.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

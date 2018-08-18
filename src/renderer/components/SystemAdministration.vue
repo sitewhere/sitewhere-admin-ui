@@ -17,17 +17,17 @@
     </v-navigation-drawer>
     <v-toolbar fixed class="grey darken-3" dark app>
       <v-toolbar-side-icon class="grey--text" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-icon left dark>{{ section.icon }}</v-icon>
+      <font-awesome-icon :icon="section.icon" size="lg" />
       <v-toolbar-title class="subheading">{{ section.longTitle }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu bottom right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
-          <v-icon dark class="mr-2">portrait</v-icon>
+          <font-awesome-icon icon="user" class="mr-2" />
           {{ fullname }}
         </v-btn>
         <v-list>
           <v-list-tile @click="onUserAction(action)" v-for="action in userActions" :key="action.id">
-            <v-icon left light class="mr-2">{{action.icon}}</v-icon>
+            <font-awesome-icon :icon="action.icon" class="mr-2" />
             <v-list-tile-title v-text="action.title"></v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -43,43 +43,47 @@
 </template>
 
 <script>
-import Navigation from './common/Navigation'
-import ErrorBanner from './common/ErrorBanner'
-import {_getJwt} from '../http/sitewhere-api-wrapper'
+import Navigation from "./common/Navigation";
+import ErrorBanner from "./common/ErrorBanner";
+import { _getJwt } from "../http/sitewhere-api-wrapper";
 
 export default {
   data: () => ({
     drawer: true,
     tenantId: null,
-    sections: [{
-      id: 'tenants',
-      title: 'Manage Tenants',
-      icon: 'fa-cogs',
-      route: 'system/tenants',
-      longTitle: 'Manage System Tenants',
-      requireAll: ['ADMINISTER_TENANTS']
-    },
-    {
-      id: 'users',
-      title: 'Manage Users',
-      icon: 'fa-users',
-      route: 'system/users',
-      longTitle: 'Manage System Users',
-      requireAll: ['ADMINISTER_USERS']
-    },
-    {
-      id: 'global',
-      title: 'Global Microservices',
-      icon: 'fa-globe',
-      route: 'system/microservices',
-      longTitle: 'Manage Global microservices',
-      requireAll: ['ADMINISTER_TENANTS']
-    }],
-    userActions: [{
-      id: 'logout',
-      title: 'Log Out',
-      icon: 'power_settings_new'
-    }],
+    sections: [
+      {
+        id: "tenants",
+        title: "Manage Tenants",
+        icon: "layer-group",
+        route: "system/tenants",
+        longTitle: "Manage System Tenants",
+        requireAll: ["ADMINISTER_TENANTS"]
+      },
+      {
+        id: "users",
+        title: "Manage Users",
+        icon: "users",
+        route: "system/users",
+        longTitle: "Manage System Users",
+        requireAll: ["ADMINISTER_USERS"]
+      },
+      {
+        id: "global",
+        title: "Global Microservices",
+        icon: "globe",
+        route: "system/microservices",
+        longTitle: "Manage Global microservices",
+        requireAll: ["ADMINISTER_TENANTS"]
+      }
+    ],
+    userActions: [
+      {
+        id: "logout",
+        title: "Log Out",
+        icon: "power-off"
+      }
+    ],
     right: null
   }),
 
@@ -90,89 +94,90 @@ export default {
 
   computed: {
     // Get loggied in user.
-    user: function () {
-      return this.$store.getters.user
+    user: function() {
+      return this.$store.getters.user;
     },
     // Get currently selected section.
-    section: function () {
-      return this.$store.getters.currentSection
+    section: function() {
+      return this.$store.getters.currentSection;
     },
-    fullname: function () {
-      var user = this.$store.getters.user
+    fullname: function() {
+      var user = this.$store.getters.user;
       if (user) {
-        var first = this.$store.getters.user.firstName
-        var last = this.$store.getters.user.lastName
+        var first = this.$store.getters.user.firstName;
+        var last = this.$store.getters.user.lastName;
         if (last.length > 1) {
-          return first + ' ' + last
+          return first + " " + last;
         } else {
-          return first
+          return first;
         }
       }
-      return 'Not Logged In'
+      return "Not Logged In";
     },
 
     // Get global loading indicator.
-    loading: function () {
-      return this.$store.getters.loading
+    loading: function() {
+      return this.$store.getters.loading;
     },
 
     // Get global error indicator.
-    error: function () {
-      return this.$store.getters.error
+    error: function() {
+      return this.$store.getters.error;
     }
   },
 
-  created: function () {
+  created: function() {
     // Set up JWT auto-refresh.
-    this.refreshJwt()
+    this.refreshJwt();
 
     // Verify that user is logged in.
-    var user = this.$store.getters.user
+    var user = this.$store.getters.user;
     if (!user) {
-      console.log('No user found in store. Logging out!')
-      this.onLogOut()
-      return
+      console.log("No user found in store. Logging out!");
+      this.onLogOut();
+      return;
     }
-    this.onSectionClicked(this.$data.sections[0])
+    this.onSectionClicked(this.$data.sections[0]);
   },
 
   methods: {
     // Called when a section is clicked.
-    onSectionClicked: function (section) {
-      this.$store.commit('currentSection', section)
-      this.$router.push('/' + section.route)
+    onSectionClicked: function(section) {
+      this.$store.commit("currentSection", section);
+      this.$router.push("/" + section.route);
     },
-    onUserAction: function (action) {
-      if (action.id === 'logout') {
-        this.onLogOut()
+    onUserAction: function(action) {
+      if (action.id === "logout") {
+        this.onLogOut();
       }
     },
     // Called when user requests log out.
-    onLogOut: function () {
-      console.log('Logging out!')
-      this.$store.commit('logOut')
-      this.$router.push('/')
+    onLogOut: function() {
+      console.log("Logging out!");
+      this.$store.commit("logOut");
+      this.$router.push("/");
     },
 
     // Set up timer for reloading JWT.
-    refreshJwt: function () {
-      var component = this
+    refreshJwt: function() {
+      var component = this;
       _getJwt(this.$store)
-        .then(function (response) {
-          console.log('Refreshed JWT.')
-          var jwt = response.headers['x-sitewhere-jwt']
-          component.$store.commit('jwt', jwt)
-          setTimeout(function () {
-            component.refreshJwt()
-          }, (1000 * 60 * 5))
-        }).catch(function (e) {
-          console.log('Could not update JWT.')
-          console.log(e)
-          component.onLogOut()
+        .then(function(response) {
+          console.log("Refreshed JWT.");
+          var jwt = response.headers["x-sitewhere-jwt"];
+          component.$store.commit("jwt", jwt);
+          setTimeout(function() {
+            component.refreshJwt();
+          }, 1000 * 60 * 5);
         })
+        .catch(function(e) {
+          console.log("Could not update JWT.");
+          console.log(e);
+          component.onLogOut();
+        });
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,19 +1,19 @@
 <template>
   <div>
-    <navigation-page icon="fa-microchip" title="Manage Devices"
+    <navigation-page icon="microchip" title="Manage Devices"
       loadingMessage="Loading devices ..." :loaded="loaded">
       <div slot="actions">
         <v-tooltip left v-if="filter.deviceType">
           <v-btn slot="activator" color="green darken-2 white--text"
             @click="onBatchCommandInvocation">
-            <v-icon left>fa-bolt</v-icon>
+            <font-awesome-icon class="mr-2" icon="bolt" size="lg"/>
             Execute Batch Command
           </v-btn>
           <span>Execute Batch Command</span>
         </v-tooltip>
         <v-tooltip left>
           <v-btn icon slot="activator" @click="onShowFilterCriteria">
-            <v-icon>fa-filter</v-icon>
+            <font-awesome-icon icon="filter" size="lg"/>
           </v-btn>
           <span>Filter Device List</span>
         </v-tooltip>
@@ -23,7 +23,7 @@
         </device-list-filter-bar>
         <v-container fluid grid-list-md  v-if="devices">
           <v-layout row wrap>
-             <v-flex xs6 v-for="(device, index) in devices" :key="device.token">
+             <v-flex xs6 v-for="(device) in devices" :key="device.token">
               <device-list-panel :device="device" @assignDevice="onAssignDevice"
                 @deviceOpened="onOpenDevice">
               </device-list-panel>
@@ -45,18 +45,17 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import Utils from '../common/Utils'
-import Pager from '../common/Pager'
-import DeviceListPanel from './DeviceListPanel'
-import DeviceListFilterBar from './DeviceListFilterBar'
-import DeviceCreateDialog from './DeviceCreateDialog'
-import AssignmentCreateDialog from '../assignments/AssignmentCreateDialog'
-import BatchCommandCreateDialog from '../batch/BatchCommandCreateDialog'
-import {_listDevices} from '../../http/sitewhere-api-wrapper'
+import NavigationPage from "../common/NavigationPage";
+import Utils from "../common/Utils";
+import Pager from "../common/Pager";
+import DeviceListPanel from "./DeviceListPanel";
+import DeviceListFilterBar from "./DeviceListFilterBar";
+import DeviceCreateDialog from "./DeviceCreateDialog";
+import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog";
+import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog";
+import { _listDevices } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
@@ -64,13 +63,15 @@ export default {
     filter: {},
     pageSizes: [
       {
-        text: '20',
+        text: "20",
         value: 20
-      }, {
-        text: '50',
+      },
+      {
+        text: "50",
         value: 50
-      }, {
-        text: '100',
+      },
+      {
+        text: "100",
         value: 100
       }
     ],
@@ -90,70 +91,71 @@ export default {
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
     // Refresh list of sites.
-    refresh: function () {
-      this.$data.loaded = false
-      let paging = this.$data.paging.query
-      let filter = this.$data.filter
-      let component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      let paging = this.$data.paging.query;
+      let filter = this.$data.filter;
+      let component = this;
 
-      let options = {}
-      options.area = filter.area
-      options.deviceType = filter.deviceType
-      options.includeDeviceType = true
-      options.includeAssignment = true
-      options.includeDeleted = false
-      options.excludeAssigned = false
+      let options = {};
+      options.area = filter.area;
+      options.deviceType = filter.deviceType;
+      options.includeDeviceType = true;
+      options.includeAssignment = true;
+      options.includeDeleted = false;
+      options.excludeAssigned = false;
 
       _listDevices(this.$store, options, paging)
-        .then(function (response) {
-          component.loaded = true
-          component.results = response.data
-          component.devices = response.data.results
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.results = response.data;
+          component.devices = response.data.results;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
     // Called to show filter criteria dialog.
-    onShowFilterCriteria: function () {
-      this.$refs['filters'].showFilterCriteriaDialog()
+    onShowFilterCriteria: function() {
+      this.$refs["filters"].showFilterCriteriaDialog();
     },
     // Called when filter criteria are updated.
-    onFilterUpdated: function (filter) {
-      this.$data.filter = filter
-      this.refresh()
+    onFilterUpdated: function(filter) {
+      this.$data.filter = filter;
+      this.refresh();
     },
     // Open device assignment dialog.
-    onAssignDevice: function (device) {
-      let assignDialog = this.$refs['assign']
-      assignDialog.deviceToken = device.token
-      assignDialog.onOpenDialog()
+    onAssignDevice: function(device) {
+      let assignDialog = this.$refs["assign"];
+      assignDialog.deviceToken = device.token;
+      assignDialog.onOpenDialog();
     },
     // Called after new assignment is created.
-    onAssignmentCreated: function () {
-      this.refresh()
+    onAssignmentCreated: function() {
+      this.refresh();
     },
     // Called when a new device is added.
-    onDeviceAdded: function () {
-      this.refresh()
+    onDeviceAdded: function() {
+      this.refresh();
     },
-    onDateUpdated: function (value) {
-      console.log('date emitted ' + value)
+    onDateUpdated: function(value) {
+      console.log("date emitted " + value);
     },
     // Called to open detail page for device.
-    onOpenDevice: function (device) {
-      Utils.routeTo(this, '/devices/' + device.token)
+    onOpenDevice: function(device) {
+      Utils.routeTo(this, "/devices/" + device.token);
     },
     // Called to invoke a batch command.
-    onBatchCommandInvocation: function () {
-      this.$refs['batch'].onOpenDialog()
+    onBatchCommandInvocation: function() {
+      this.$refs["batch"].onOpenDialog();
     }
   }
-}
+};
 </script>
 
 <style scoped>

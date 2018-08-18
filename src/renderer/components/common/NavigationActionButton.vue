@@ -1,7 +1,7 @@
 <template>
   <v-tooltip left>
     <v-btn flat icon class="ma-0" @click="onAction" slot="activator">
-      <v-icon class="white--text">{{ icon }}</v-icon>
+      <font-awesome-icon class="white--text" :icon="icon" size="lg"/>
     </v-btn>
     <span>{{ tooltip }}</span>
   </v-tooltip>
@@ -9,21 +9,18 @@
 
 <script>
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
+  props: ["icon", "tooltip"],
 
-  props: ['icon', 'tooltip'],
-
-  components: {
-  },
+  components: {},
 
   methods: {
-    onAction: function () {
-      this.$emit('action')
+    onAction: function() {
+      this.$emit("action");
     }
   }
-}
+};
 </script>
 
 <style scoped>

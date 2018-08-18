@@ -1,11 +1,11 @@
 <template>
   <div>
-    <navigation-page v-if="customer" icon="fa-building" :title="customer.name"
+    <navigation-page v-if="customer" icon="building" :title="customer.name"
       loadingMessage="Loading customer ..." :loaded="loaded">
       <div v-if="customer.parentCustomer" slot="actions">
         <v-tooltip left>
           <v-btn icon slot="activator" @click="onUpOneLevel">
-            <v-icon>fa-arrow-circle-up</v-icon>
+            <font-awesome-icon icon="arrow-circle-up" size="lg"/>
           </v-btn>
           <span>Up One Level</span>
         </v-tooltip>
@@ -58,10 +58,10 @@
         <zone-create-dialog v-if="active === 'zones'" :area="area" @zoneAdded="onZoneAdded"/>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="fa-edit" tooltip="Edit Customer"
+        <navigation-action-button icon="edit" tooltip="Edit Customer"
           @action="onEdit">
         </navigation-action-button>
-        <navigation-action-button icon="fa-times" tooltip="Delete Customer"
+        <navigation-action-button icon="times" tooltip="Delete Customer"
           @action="onDelete">
         </navigation-action-button>
       </div>
@@ -76,22 +76,21 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationPage from '../common/NavigationPage'
-import NavigationActionButton from '../common/NavigationActionButton'
-import CustomerDetailHeader from './CustomerDetailHeader'
-import CustomerContainedCustomers from './CustomerContainedCustomers'
-import CustomerAssignments from './CustomerAssignments'
-import CustomerLocationEvents from './CustomerLocationEvents'
-import CustomerMeasurementEvents from './CustomerMeasurementEvents'
-import CustomerAlertEvents from './CustomerAlertEvents'
-import CustomerUpdateDialog from './CustomerUpdateDialog'
-import CustomerDeleteDialog from './CustomerDeleteDialog'
+import Utils from "../common/Utils";
+import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
+import CustomerDetailHeader from "./CustomerDetailHeader";
+import CustomerContainedCustomers from "./CustomerContainedCustomers";
+import CustomerAssignments from "./CustomerAssignments";
+import CustomerLocationEvents from "./CustomerLocationEvents";
+import CustomerMeasurementEvents from "./CustomerMeasurementEvents";
+import CustomerAlertEvents from "./CustomerAlertEvents";
+import CustomerUpdateDialog from "./CustomerUpdateDialog";
+import CustomerDeleteDialog from "./CustomerDeleteDialog";
 
-import {_getCustomer} from '../../http/sitewhere-api-wrapper'
+import { _getCustomer } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     token: null,
     parentCustomer: null,
@@ -115,71 +114,72 @@ export default {
   },
 
   // Called on initial create.
-  created: function () {
-    this.display(this.$route.params.token)
+  created: function() {
+    this.display(this.$route.params.token);
   },
 
   // Called when component is reused.
-  beforeRouteUpdate (to, from, next) {
-    this.display(to.params.token)
-    next()
+  beforeRouteUpdate(to, from, next) {
+    this.display(to.params.token);
+    next();
   },
 
   methods: {
     // Display area with the given token.
-    display: function (token) {
-      this.$data.token = token
-      this.refresh()
+    display: function(token) {
+      this.$data.token = token;
+      this.refresh();
     },
     // Called to refresh area data.
-    refresh: function () {
-      this.$data.loaded = false
-      var token = this.$data.token
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var token = this.$data.token;
+      var component = this;
 
       // Load area information.
       _getCustomer(this.$store, token)
-        .then(function (response) {
-          component.loaded = true
-          component.onLoaded(response.data)
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.onLoaded(response.data);
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
     // Called after data is loaded.
-    onLoaded: function (data) {
-      this.$data.parentCustomer = data.parentCustomer
-      this.$data.customer = data
+    onLoaded: function(data) {
+      this.$data.parentCustomer = data.parentCustomer;
+      this.$data.customer = data;
       var section = {
-        id: 'customers',
-        title: 'Customers',
-        icon: 'fa-building',
-        route: '/admin/customers/' + data.token,
-        longTitle: 'Manage Customer: ' + data.name
-      }
-      this.$store.commit('currentSection', section)
+        id: "customers",
+        title: "Customers",
+        icon: "fa-building",
+        route: "/admin/customers/" + data.token,
+        longTitle: "Manage Customer: " + data.name
+      };
+      this.$store.commit("currentSection", section);
     },
     // Called to open area edit dialog.
-    onEdit: function () {
-      this.$refs['edit'].onOpenDialog()
+    onEdit: function() {
+      this.$refs["edit"].onOpenDialog();
     },
     // Called when customer is updated.
-    onCustomerUpdated: function () {
-      this.refresh()
+    onCustomerUpdated: function() {
+      this.refresh();
     },
-    onDelete: function () {
-      this.$refs['delete'].showDeleteDialog()
+    onDelete: function() {
+      this.$refs["delete"].showDeleteDialog();
     },
     // Called when customer is deleted.
-    onCustomerDeleted: function () {
-      Utils.routeTo(this, '/customers')
+    onCustomerDeleted: function() {
+      Utils.routeTo(this, "/customers");
     },
     // Move up one level in the area hierarchy.
-    onUpOneLevel: function () {
-      Utils.routeTo(this, '/customers/' + this.customer.parentCustomer.token)
+    onUpOneLevel: function() {
+      Utils.routeTo(this, "/customers/" + this.customer.parentCustomer.token);
     }
   }
-}
+};
 </script>
 
 <style scoped>

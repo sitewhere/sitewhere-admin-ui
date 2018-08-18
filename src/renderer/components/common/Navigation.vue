@@ -4,7 +4,7 @@
       <v-list-tile v-if="isAuthForSection(navsect)"
         @click.native="onSectionClicked(navsect)" slot="item">
         <v-list-tile-action>
-          <v-icon dark>{{ navsect.icon }}</v-icon>
+          <font-awesome-icon :icon="navsect.icon" size="lg"/>
         </v-list-tile-action>
         <v-list-tile-content>
           <v-list-tile-title>{{ navsect.title }}</v-list-tile-title>
@@ -19,7 +19,7 @@
           <v-list-tile-title>{{ navsub.title }}</v-list-tile-title>
         </v-list-tile-content>
         <v-list-tile-action>
-          <v-icon dark>{{ navsub.icon }}</v-icon>
+          <font-awesome-icon :icon="navsub.icon" size="lg"/>
         </v-list-tile-action>
       </v-list-tile>
     </v-list-group>
@@ -27,39 +27,37 @@
 </template>
 
 <script>
-import Utils from './Utils'
+import Utils from "./Utils";
 
 export default {
-
   data: () => ({
     sites: null,
     drawerEdit: true
   }),
 
-  props: ['sections'],
+  props: ["sections"],
 
   methods: {
     // Determines whether user is authorized for section.
-    isAuthForSection: function (section) {
+    isAuthForSection: function(section) {
       if (section.requireAll) {
-        return Utils.isAuthForAll(this, section.requireAll)
+        return Utils.isAuthForAll(this, section.requireAll);
       }
-      return true
+      return true;
     },
 
-    onSectionClicked: function (section) {
-      this.$emit('sectionSelected', section)
+    onSectionClicked: function(section) {
+      this.$emit("sectionSelected", section);
     }
   }
-}
+};
 </script>
 
 <style scoped>
 .list__tile__action {
-  min-width: 40px;
+  min-width: 30px;
 }
 .list__tile__title {
   font-size: 16px;
-  padding-top: 3px;
 }
 </style>

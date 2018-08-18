@@ -3,7 +3,7 @@
     <v-card-text>
       <span v-if="imageUrl" class="header-image" :style="imageStyle"></span>
       <span v-if="icon" class="header-image">
-        <v-icon :style="iconStyle">{{ icon }}</v-icon>
+        <font-awesome-icon class="white--text" :icon="icon" size="lg"/>
       </span>
       <span class="header-content">
         <slot name="content"></slot>
@@ -19,53 +19,51 @@
 </template>
 
 <script>
-import AuthenticatedImage from '../common/AuthenticatedImage'
+import AuthenticatedImage from "../common/AuthenticatedImage";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['height', 'imageUrl', 'qrCodeUrl', 'icon'],
+  props: ["height", "imageUrl", "qrCodeUrl", "icon"],
 
   computed: {
     // Style for top-level panel.
-    panelStyle: function () {
+    panelStyle: function() {
       return {
-        'min-height': this.height
-      }
+        "min-height": this.height
+      };
     },
     // Compute style of image.
-    imageStyle: function () {
+    imageStyle: function() {
       return {
-        'background-color': '#fff',
-        'background-image': 'url(' + this.imageUrl + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%',
-        'border': '1px solid #eee'
-      }
+        "background-color": "#fff",
+        "background-image": "url(" + this.imageUrl + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%",
+        border: "1px solid #eee"
+      };
     },
     // Compute style for icon.
-    iconStyle: function () {
+    iconStyle: function() {
       return {
-        'height': '180px',
-        'width': '180px',
-        'font-size': '80px',
-        'padding': '35px',
-        'border': '1px solid #eee'
-      }
+        height: "180px",
+        width: "180px",
+        "font-size": "80px",
+        padding: "35px",
+        border: "1px solid #eee"
+      };
     },
     // Compute style for QR code URL.
-    qrCodeStyle: function () {
+    qrCodeStyle: function() {
       return {
-        'background-color': '#fff',
-        'background-image': 'url(' + this.qrCodeUrl + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%',
-        'border': '1px solid #eee'
-      }
+        "background-color": "#fff",
+        "background-image": "url(" + this.qrCodeUrl + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%",
+        border: "1px solid #eee"
+      };
     }
   },
 
@@ -73,9 +71,8 @@ export default {
     AuthenticatedImage
   },
 
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

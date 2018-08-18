@@ -9,7 +9,9 @@ app.on("ready", () => {
   // Main window options.
   let windowOptions = {
     width: 1280,
+    minWidth: 1024,
     height: 900,
+    minHeight: 768,
     title: "SiteWhere Admininstration (Community Edition)",
     webPreferences: {
       webSecurity: false

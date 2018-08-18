@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-toolbar flat dark dense card class="primary">
-        <v-icon>{{ icon }}</v-icon>
+        <font-awesome-icon :icon="icon" size="lg"/>
         <v-toolbar-title class="white--text">
           {{ title }}
         </v-toolbar-title>
@@ -22,18 +22,14 @@
 
 <script>
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
+  props: ["icon", "title", "loaded", "loadingMessage"],
 
-  props: ['icon', 'title', 'loaded', 'loadingMessage'],
+  components: {},
 
-  components: {
-  },
-
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>
