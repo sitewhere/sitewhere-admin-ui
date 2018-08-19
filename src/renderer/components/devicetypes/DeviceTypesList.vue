@@ -1,10 +1,10 @@
 <template>
-  <navigation-page icon="fa-cog" title="Manage Device Types"
+  <navigation-page icon="cog" title="Manage Device Types"
     loadingMessage="Loading device types ..." :loaded="loaded">
     <div slot="content">
       <v-container fluid grid-list-md  v-if="deviceTypes">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(deviceType, index) in deviceTypes"
+           <v-flex xs6 v-for="(deviceType) in deviceTypes"
             :key="deviceType.token">
             <device-type-list-entry :deviceType="deviceType">
             </device-type-list-entry>
@@ -18,14 +18,13 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import Pager from '../common/Pager'
-import DeviceTypeListEntry from './DeviceTypeListEntry'
-import DeviceTypeCreateDialog from './DeviceTypeCreateDialog'
-import {_listDeviceTypes} from '../../http/sitewhere-api-wrapper'
+import NavigationPage from "../common/NavigationPage";
+import Pager from "../common/Pager";
+import DeviceTypeListEntry from "./DeviceTypeListEntry";
+import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog";
+import { _listDeviceTypes } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
@@ -42,32 +41,33 @@ export default {
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh data.
-    refresh: function () {
-      this.$data.loaded = false
-      var paging = this.$data.paging.query
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var paging = this.$data.paging.query;
+      var component = this;
       _listDeviceTypes(this.$store, false, true, paging)
-        .then(function (response) {
-          component.loaded = true
-          component.results = response.data
-          component.deviceTypes = response.data.results
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.results = response.data;
+          component.deviceTypes = response.data.results;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called when a new device type is added.
-    onDeviceTypeAdded: function () {
-      this.refresh()
+    onDeviceTypeAdded: function() {
+      this.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

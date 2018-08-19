@@ -13,6 +13,7 @@ app.on("ready", () => {
     height: 900,
     minHeight: 768,
     title: "SiteWhere Admininstration (Community Edition)",
+    titleBarStyle: "hidden",
     webPreferences: {
       webSecurity: false
     }

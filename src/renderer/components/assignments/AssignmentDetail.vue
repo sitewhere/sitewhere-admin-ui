@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page v-if="assignment" icon="fa-link"
+    <navigation-page v-if="assignment" icon="link"
       title="Manage Device Assignment"
       loadingMessage="Loading device assignment ..." :loaded="loaded">
       <div slot="content">
@@ -65,22 +65,21 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationPage from '../common/NavigationPage'
-import NavigationActionButton from '../common/NavigationActionButton'
-import AssignmentDetailHeader from './AssignmentDetailHeader'
-import AssignmentLocationEvents from './AssignmentLocationEvents'
-import AssignmentMeasurementEvents from './AssignmentMeasurementEvents'
-import AssignmentAlertEvents from './AssignmentAlertEvents'
-import AssignmentInvocationEvents from './AssignmentInvocationEvents'
-import AssignmentResponseEvents from './AssignmentResponseEvents'
-import AssignmentDeleteDialog from './AssignmentDeleteDialog'
-import InvocationCreateDialog from './InvocationCreateDialog'
+import Utils from "../common/Utils";
+import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
+import AssignmentDetailHeader from "./AssignmentDetailHeader";
+import AssignmentLocationEvents from "./AssignmentLocationEvents";
+import AssignmentMeasurementEvents from "./AssignmentMeasurementEvents";
+import AssignmentAlertEvents from "./AssignmentAlertEvents";
+import AssignmentInvocationEvents from "./AssignmentInvocationEvents";
+import AssignmentResponseEvents from "./AssignmentResponseEvents";
+import AssignmentDeleteDialog from "./AssignmentDeleteDialog";
+import InvocationCreateDialog from "./InvocationCreateDialog";
 
-import {_getDeviceAssignment} from '../../http/sitewhere-api-wrapper'
+import { _getDeviceAssignment } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     token: null,
     assignment: null,
@@ -101,57 +100,58 @@ export default {
     InvocationCreateDialog
   },
 
-  created: function () {
-    this.$data.token = this.$route.params.token
-    this.refresh()
+  created: function() {
+    this.$data.token = this.$route.params.token;
+    this.refresh();
   },
 
   methods: {
     // Called to refresh data.
-    refresh: function () {
-      this.$data.loaded = false
-      var token = this.$data.token
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var token = this.$data.token;
+      var component = this;
 
       // Load site information.
       _getDeviceAssignment(this.$store, token)
-        .then(function (response) {
-          component.loaded = true
-          component.onAssignmentLoaded(response.data)
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.onAssignmentLoaded(response.data);
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
     // Called after data is loaded.
-    onAssignmentLoaded: function (assignment) {
-      this.$data.assignment = assignment
+    onAssignmentLoaded: function(assignment) {
+      this.$data.assignment = assignment;
       var section = {
-        id: 'assignments',
-        title: 'Assignments',
-        icon: 'link',
-        route: '/admin/assignments/' + assignment.token,
-        longTitle: 'Manage Assignment: ' + assignment.token
-      }
-      this.$store.commit('currentSection', section)
+        id: "assignments",
+        title: "Assignments",
+        icon: "link",
+        route: "/admin/assignments/" + assignment.token,
+        longTitle: "Manage Assignment: " + assignment.token
+      };
+      this.$store.commit("currentSection", section);
     },
     // Open dialog to delete assignment.
-    onDelete: function () {
-      this.$refs['delete'].showDeleteDialog()
+    onDelete: function() {
+      this.$refs["delete"].showDeleteDialog();
     },
     // Called when site is deleted.
-    onAssignmentDeleted: function () {
-      Utils.routeTo(this, '/areas')
+    onAssignmentDeleted: function() {
+      Utils.routeTo(this, "/areas");
     },
     // Called when emulator is opened.
-    onOpenEmulator: function () {
-      Utils.routeTo(this, '/assignments/' + this.$data.token + '/emulator')
+    onOpenEmulator: function() {
+      Utils.routeTo(this, "/assignments/" + this.$data.token + "/emulator");
     },
     // Called if command invocation is added.
-    onInvocationAdded: function () {
-      this.$refs['invocations'].refresh()
+    onInvocationAdded: function() {
+      this.$refs["invocations"].refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

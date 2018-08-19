@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page v-if="device" icon="fa-microchip" title="Manage Device"
+    <navigation-page v-if="device" icon="microchip" title="Manage Device"
       loadingMessage="Loading device ..." :loaded="loaded">
       <div slot="content">
         <device-detail-header :device="device" @deviceDeleted="onDeviceDeleted">
@@ -20,10 +20,10 @@
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="fa-edit" tooltip="Edit Device"
+        <navigation-action-button icon="edit" tooltip="Edit Device"
           @action="onEdit">
         </navigation-action-button>
-        <navigation-action-button icon="fa-times" tooltip="Delete Device"
+        <navigation-action-button icon="times" tooltip="Delete Device"
           @action="onDelete">
         </navigation-action-button>
       </div>
@@ -38,18 +38,17 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationPage from '../common/NavigationPage'
-import NavigationActionButton from '../common/NavigationActionButton'
-import DeviceDetailHeader from './DeviceDetailHeader'
-import DeviceAssignmentHistory from './DeviceAssignmentHistory'
-import DeviceUpdateDialog from './DeviceUpdateDialog'
-import DeviceDeleteDialog from './DeviceDeleteDialog'
+import Utils from "../common/Utils";
+import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
+import DeviceDetailHeader from "./DeviceDetailHeader";
+import DeviceAssignmentHistory from "./DeviceAssignmentHistory";
+import DeviceUpdateDialog from "./DeviceUpdateDialog";
+import DeviceDeleteDialog from "./DeviceDeleteDialog";
 
-import {_getDevice} from '../../http/sitewhere-api-wrapper'
+import { _getDevice } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     token: null,
     device: null,
@@ -68,74 +67,75 @@ export default {
   },
 
   // Called on initial create.
-  created: function () {
-    this.display(this.$route.params.token)
+  created: function() {
+    this.display(this.$route.params.token);
   },
 
   // Called when component is reused.
-  beforeRouteUpdate (to, from, next) {
-    this.display(to.params.token)
-    next()
+  beforeRouteUpdate(to, from, next) {
+    this.display(to.params.token);
+    next();
   },
 
   methods: {
     // Display entity with the given token.
-    display: function (token) {
-      this.$data.token = token
-      this.refresh()
+    display: function(token) {
+      this.$data.token = token;
+      this.refresh();
     },
     // Called to refresh data.
-    refresh: function () {
-      this.$data.loaded = false
-      var token = this.$data.token
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var token = this.$data.token;
+      var component = this;
 
       // Set search options.
-      let options = {}
-      options.includeDeviceType = true
-      options.includeAssignment = true
-      options.includeAsset = true
-      options.includeNested = true
+      let options = {};
+      options.includeDeviceType = true;
+      options.includeAssignment = true;
+      options.includeAsset = true;
+      options.includeNested = true;
 
       // Load information.
       _getDevice(this.$store, token, options)
-        .then(function (response) {
-          component.loaded = true
-          component.onDeviceLoaded(response.data)
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.onDeviceLoaded(response.data);
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
     // Called after data is loaded.
-    onDeviceLoaded: function (device) {
-      this.$data.device = device
+    onDeviceLoaded: function(device) {
+      this.$data.device = device;
       var section = {
-        id: 'devices',
-        title: 'Devices',
-        icon: 'fa-microchip',
-        route: '/admin/devices/' + device.token,
-        longTitle: 'Manage Device: ' + device.token
-      }
-      this.$store.commit('currentSection', section)
+        id: "devices",
+        title: "Devices",
+        icon: "fa-microchip",
+        route: "/admin/devices/" + device.token,
+        longTitle: "Manage Device: " + device.token
+      };
+      this.$store.commit("currentSection", section);
     },
     // Open dialog to edit device.
-    onEdit: function () {
-      this.$refs['edit'].onOpenDialog()
+    onEdit: function() {
+      this.$refs["edit"].onOpenDialog();
     },
     // Called after update.
-    onDeviceUpdated: function () {
-      this.refresh()
+    onDeviceUpdated: function() {
+      this.refresh();
     },
     // Open dialog to delete device.
-    onDelete: function () {
-      this.$refs['delete'].showDeleteDialog()
+    onDelete: function() {
+      this.$refs["delete"].showDeleteDialog();
     },
     // Called after device is deleted.
-    onDeviceDeleted: function () {
-      Utils.routeTo(this, '/devices')
+    onDeviceDeleted: function() {
+      Utils.routeTo(this, "/devices");
     }
   }
-}
+};
 </script>
 
 <style scoped>

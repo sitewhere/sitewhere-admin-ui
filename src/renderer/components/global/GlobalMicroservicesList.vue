@@ -1,5 +1,5 @@
 <template>
-  <navigation-page icon="fa-globe" title="Global Microservices"
+  <navigation-page icon="globe" title="Global Microservices"
     loadingMessage="Loading global microservices list ..." :loaded="loaded">
     <div slot="content">
       <microservice-list v-if="topology" :topology="topology"
@@ -10,14 +10,11 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import MicroserviceList from '../microservice/MicroserviceList'
-import {
-  _getGlobalTopology
-} from '../../http/sitewhere-api-wrapper'
+import NavigationPage from "../common/NavigationPage";
+import MicroserviceList from "../microservice/MicroserviceList";
+import { _getGlobalTopology } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     topology: null,
     loaded: false
@@ -28,44 +25,45 @@ export default {
     MicroserviceList
   },
 
-  created: function () {
-    this.refresh()
+  created: function() {
+    this.refresh();
   },
 
   methods: {
     // Called if a microservice is clicked.
-    onMicroserviceClicked: function (microservice) {
-      this.$router.push('/system/microservices/' + microservice.identifier)
+    onMicroserviceClicked: function(microservice) {
+      this.$router.push("/system/microservices/" + microservice.identifier);
     },
 
     // Called to refresh data.
-    refresh: function () {
-      this.$data.loaded = false
+    refresh: function() {
+      this.$data.loaded = false;
 
       // Load configuration data.
-      var component = this
+      var component = this;
       _getGlobalTopology(this.$store)
-        .then(function (response) {
-          component.$data.topology = response.data
-          component.loaded = true
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.$data.topology = response.data;
+          component.loaded = true;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called after data is loaded.
-    onLoaded: function (tenant) {
+    onLoaded: function(tenant) {
       var section = {
-        id: 'global',
-        title: 'Global Microservices',
-        icon: 'layers',
-        route: '/system/microservices',
-        longTitle: 'Manage Global Microservices'
-      }
-      this.$store.commit('currentSection', section)
+        id: "global",
+        title: "Global Microservices",
+        icon: "layers",
+        route: "/system/microservices",
+        longTitle: "Manage Global Microservices"
+      };
+      this.$store.commit("currentSection", section);
     }
   }
-}
+};
 </script>
 
 <style>

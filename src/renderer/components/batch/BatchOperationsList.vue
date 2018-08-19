@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page icon="fa-list-alt" title="Manage Batch Operations"
+    <navigation-page icon="list-alt" title="Manage Batch Operations"
       loadingMessage="Loading batch operations ..." :loaded="loaded">
       <div slot="content">
         <v-layout row wrap v-if="operations">
@@ -52,60 +52,66 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationPage from '../common/NavigationPage'
-import Pager from '../common/Pager'
-import NoResultsPanel from '../common/NoResultsPanel'
-import {_listBatchOperations} from '../../http/sitewhere-api-wrapper'
+import Utils from "../common/Utils";
+import NavigationPage from "../common/NavigationPage";
+import Pager from "../common/Pager";
+import NoResultsPanel from "../common/NoResultsPanel";
+import { _listBatchOperations } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
     operations: null,
     headers: [
       {
-        align: 'left',
+        align: "left",
         sortable: false,
-        text: 'Operation',
-        value: 'operation'
-      }, {
-        align: 'left',
+        text: "Operation",
+        value: "operation"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Status',
-        value: 'status'
-      }, {
-        align: 'left',
+        text: "Status",
+        value: "status"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Created',
-        value: 'created'
-      }, {
-        align: 'left',
+        text: "Created",
+        value: "created"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Processing Started',
-        value: 'started'
-      }, {
-        align: 'left',
+        text: "Processing Started",
+        value: "started"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Processing Finished',
-        value: 'finished'
-      }, {
-        align: 'left',
+        text: "Processing Finished",
+        value: "finished"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: '',
-        value: 'open'
+        text: "",
+        value: "open"
       }
     ],
     pageSizes: [
       {
-        text: '25',
+        text: "25",
         value: 25
-      }, {
-        text: '50',
+      },
+      {
+        text: "50",
         value: 50
-      }, {
-        text: '100',
+      },
+      {
+        text: "100",
         value: 100
       }
     ],
@@ -120,45 +126,46 @@ export default {
 
   computed: {
     // Accessor for utility functions.
-    utils: function () {
-      return Utils
+    utils: function() {
+      return Utils;
     }
   },
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list.
-    refresh: function () {
-      this.$data.loaded = false
-      var component = this
-      var paging = this.$data.paging.query
+    refresh: function() {
+      this.$data.loaded = false;
+      var component = this;
+      var paging = this.$data.paging.query;
       _listBatchOperations(this.$store, paging)
-        .then(function (response) {
-          component.loaded = true
-          component.results = response.data
-          component.operations = response.data.results
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.results = response.data;
+          component.operations = response.data.results;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called when page number is updated.
-    onPageUpdated: function (pageNumber) {
-      this.$data.pager.page = pageNumber
-      this.refresh()
+    onPageUpdated: function(pageNumber) {
+      this.$data.pager.page = pageNumber;
+      this.refresh();
     },
 
     // Open detail page for batch operation.
-    openBatchOperation: function (token) {
-      Utils.routeTo(this, '/batch/' + token)
+    openBatchOperation: function(token) {
+      Utils.routeTo(this, "/batch/" + token);
     }
   }
-}
+};
 </script>
 
 <style scoped>

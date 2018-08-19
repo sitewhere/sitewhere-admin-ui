@@ -1,10 +1,10 @@
 <template>
-  <navigation-page icon="fa-cog" title="Asset Types"
+  <navigation-page icon="cog" title="Asset Types"
     loadingMessage="Loading asset types ..." :loaded="loaded">
     <div v-if="assetTypes" slot="content">
       <v-container fluid grid-list-md>
         <v-layout row wrap>
-           <v-flex xs6 v-for="(assetType, index) in assetTypes"
+           <v-flex xs6 v-for="(assetType) in assetTypes"
             :key="assetType.token">
             <asset-type-list-entry :assetType="assetType"
               @assetTypeOpened="onOpenAssetType" @assetTypeDeleted="refresh">
@@ -19,14 +19,13 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import Pager from '../common/Pager'
-import AssetTypeListEntry from './AssetTypeListEntry'
-import AssetTypeCreateDialog from './AssetTypeCreateDialog'
-import {_listAssetTypes} from '../../http/sitewhere-api-wrapper'
+import NavigationPage from "../common/NavigationPage";
+import Pager from "../common/Pager";
+import AssetTypeListEntry from "./AssetTypeListEntry";
+import AssetTypeCreateDialog from "./AssetTypeCreateDialog";
+import { _listAssetTypes } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
@@ -43,41 +42,42 @@ export default {
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh data.
-    refresh: function () {
-      this.$data.loaded = false
-      var paging = this.$data.paging.query
-      var component = this
-      var options = {}
+    refresh: function() {
+      this.$data.loaded = false;
+      var paging = this.$data.paging.query;
+      var component = this;
+      var options = {};
       _listAssetTypes(this.$store, options, paging)
-        .then(function (response) {
-          component.loaded = true
-          component.results = response.data
-          component.$data.assetTypes = response.data.results
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.results = response.data;
+          component.$data.assetTypes = response.data.results;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called on open.
-    onOpenAssetType: function (token) {
-      var tenant = this.$store.getters.selectedTenant
+    onOpenAssetType: function(token) {
+      var tenant = this.$store.getters.selectedTenant;
       if (tenant) {
-        this.$router.push('/tenants/' + tenant.token + '/assettypes/' + token)
+        this.$router.push("/tenants/" + tenant.token + "/assettypes/" + token);
       }
     },
 
     // Called on add.
-    onAssetTypeAdded: function () {
-      this.refresh()
+    onAssetTypeAdded: function() {
+      this.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

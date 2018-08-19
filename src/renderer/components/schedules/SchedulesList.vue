@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page icon="fa-calendar" title="Manage Schedules"
+    <navigation-page icon="calendar" title="Manage Schedules"
       loadingMessage="Loading schedules ..." :loaded="loaded">
       <div slot="content">
         <v-layout row wrap v-if="schedules">
@@ -49,59 +49,64 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationPage from '../common/NavigationPage'
-import Pager from '../common/Pager'
-import ActionsBlock from '../common/ActionsBlock'
-import NoResultsPanel from '../common/NoResultsPanel'
-import ScheduleCreateDialog from './ScheduleCreateDialog'
-import ScheduleUpdateDialog from './ScheduleUpdateDialog'
-import ScheduleDeleteDialog from './ScheduleDeleteDialog'
-import {_listSchedules} from '../../http/sitewhere-api-wrapper'
+import Utils from "../common/Utils";
+import NavigationPage from "../common/NavigationPage";
+import Pager from "../common/Pager";
+import ActionsBlock from "../common/ActionsBlock";
+import NoResultsPanel from "../common/NoResultsPanel";
+import ScheduleCreateDialog from "./ScheduleCreateDialog";
+import ScheduleUpdateDialog from "./ScheduleUpdateDialog";
+import ScheduleDeleteDialog from "./ScheduleDeleteDialog";
+import { _listSchedules } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
     schedules: null,
     headers: [
       {
-        align: 'left',
+        align: "left",
         sortable: false,
-        text: 'Name',
-        value: 'name'
-      }, {
-        align: 'left',
+        text: "Name",
+        value: "name"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Type',
-        value: 'type'
-      }, {
-        align: 'left',
+        text: "Type",
+        value: "type"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Token',
-        value: 'token'
-      }, {
-        align: 'left',
+        text: "Token",
+        value: "token"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Created Date',
-        value: 'created'
-      }, {
-        align: 'left',
+        text: "Created Date",
+        value: "created"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Actions',
-        value: 'actions'
+        text: "Actions",
+        value: "actions"
       }
     ],
     pageSizes: [
       {
-        text: '25',
+        text: "25",
         value: 25
-      }, {
-        text: '50',
+      },
+      {
+        text: "50",
         value: 50
-      }, {
-        text: '100',
+      },
+      {
+        text: "100",
         value: 100
       }
     ],
@@ -120,45 +125,46 @@ export default {
 
   computed: {
     // Accessor for utility functions.
-    utils: function () {
-      return Utils
+    utils: function() {
+      return Utils;
     }
   },
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list.
-    refresh: function () {
-      this.$data.loaded = false
-      var component = this
-      var paging = this.$data.paging.query
+    refresh: function() {
+      this.$data.loaded = false;
+      var component = this;
+      var paging = this.$data.paging.query;
 
       // Schedule filter options.
-      let options = {}
+      let options = {};
 
       _listSchedules(this.$store, options, paging)
-        .then(function (response) {
-          component.loaded = true
-          component.results = response.data
-          component.schedules = response.data.results
-        }).catch(function (e) {
-          component.loaded = true
-          console.log('schedules list failed')
+        .then(function(response) {
+          component.loaded = true;
+          component.results = response.data;
+          component.schedules = response.data.results;
         })
+        .catch(function(e) {
+          component.loaded = true;
+          console.log("schedules list failed");
+        });
     },
 
     // Called when page number is updated.
-    onPageUpdated: function (pageNumber) {
-      this.$data.pager.page = pageNumber
-      this.refresh()
+    onPageUpdated: function(pageNumber) {
+      this.$data.pager.page = pageNumber;
+      this.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

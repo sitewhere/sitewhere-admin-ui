@@ -1,10 +1,10 @@
 <template>
-  <navigation-page icon="fa-cog" title="Area Types"
+  <navigation-page icon="cog" title="Area Types"
     loadingMessage="Loading area types ..." :loaded="loaded">
     <div v-if="areaTypes" slot="content">
       <v-container fluid grid-list-md>
         <v-layout row wrap>
-           <v-flex xs6 v-for="(areaType, index) in areaTypes" :key="areaType.token">
+           <v-flex xs6 v-for="(areaType) in areaTypes" :key="areaType.token">
             <area-type-list-entry :areaType="areaType" :areaTypes="areaTypes"
               @areaTypeOpened="onOpenAreaType" @areaTypeDeleted="refresh">
             </area-type-list-entry>
@@ -19,14 +19,13 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import Pager from '../common/Pager'
-import AreaTypeListEntry from './AreaTypeListEntry'
-import AreaTypeCreateDialog from './AreaTypeCreateDialog'
-import {_listAreaTypes} from '../../http/sitewhere-api-wrapper'
+import NavigationPage from "../common/NavigationPage";
+import Pager from "../common/Pager";
+import AreaTypeListEntry from "./AreaTypeListEntry";
+import AreaTypeCreateDialog from "./AreaTypeCreateDialog";
+import { _listAreaTypes } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
@@ -43,40 +42,41 @@ export default {
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list of area types.
-    refresh: function () {
-      this.$data.loaded = false
-      var paging = this.$data.paging.query
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var paging = this.$data.paging.query;
+      var component = this;
       _listAreaTypes(this.$store, false, paging)
-        .then(function (response) {
-          component.loaded = true
-          component.results = response.data
-          component.$data.areaTypes = response.data.results
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.results = response.data;
+          component.$data.areaTypes = response.data.results;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called when an area type is clicked.
-    onOpenAreaType: function (token) {
-      var tenant = this.$store.getters.selectedTenant
+    onOpenAreaType: function(token) {
+      var tenant = this.$store.getters.selectedTenant;
       if (tenant) {
-        this.$router.push('/tenants/' + tenant.id + '/areatypes/' + token)
+        this.$router.push("/tenants/" + tenant.id + "/areatypes/" + token);
       }
     },
 
     // Called when a new area type is added.
-    onAreaTypeAdded: function () {
-      this.refresh()
+    onAreaTypeAdded: function() {
+      this.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

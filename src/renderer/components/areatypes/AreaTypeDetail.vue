@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page v-if="areaType" icon="fa-map" :title="areaType.name"
+    <navigation-page v-if="areaType" icon="map" :title="areaType.name"
       loadingMessage="Loading area type ..." :loaded="loaded">
       <div v-if="areaType" slot="content">
         <area-type-detail-header :areaType="areaType" :areaTypes="areaTypes"
@@ -18,7 +18,7 @@
             <v-tabs-content key="areas" id="areas">
               <v-container fluid grid-list-md v-if="areas">
                 <v-layout row wrap>
-                  <v-flex xs6 v-for="(area, index) in areas" :key="area.token">
+                  <v-flex xs6 v-for="(area) in areas" :key="area.token">
                     <area-list-entry :area="area" @openArea="onOpenArea">
                     </area-list-entry>
                  </v-flex>
@@ -52,23 +52,22 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import Pager from '../common/Pager'
-import NoResultsPanel from '../common/NoResultsPanel'
-import NavigationPage from '../common/NavigationPage'
-import NavigationActionButton from '../common/NavigationActionButton'
-import AreaTypeDetailHeader from './AreaTypeDetailHeader'
-import AreaTypeDeleteDialog from './AreaTypeDeleteDialog'
-import AreaTypeUpdateDialog from './AreaTypeUpdateDialog'
-import AreaListEntry from '../areas/AreaListEntry'
+import Utils from "../common/Utils";
+import Pager from "../common/Pager";
+import NoResultsPanel from "../common/NoResultsPanel";
+import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
+import AreaTypeDetailHeader from "./AreaTypeDetailHeader";
+import AreaTypeDeleteDialog from "./AreaTypeDeleteDialog";
+import AreaTypeUpdateDialog from "./AreaTypeUpdateDialog";
+import AreaListEntry from "../areas/AreaListEntry";
 import {
   _getAreaType,
   _listAreaTypes,
   _listAreas
-} from '../../http/sitewhere-api-wrapper'
+} from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     token: null,
     areaType: null,
@@ -92,100 +91,101 @@ export default {
   },
 
   // Called on initial create.
-  created: function () {
-    this.display(this.$route.params.token)
+  created: function() {
+    this.display(this.$route.params.token);
   },
 
   // Called when component is reused.
-  beforeRouteUpdate (to, from, next) {
-    this.display(to.params.token)
-    next()
+  beforeRouteUpdate(to, from, next) {
+    this.display(to.params.token);
+    next();
   },
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refreshAreas()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refreshAreas();
     },
     // Display area with the given token.
-    display: function (token) {
-      this.$data.token = token
-      this.refresh()
+    display: function(token) {
+      this.$data.token = token;
+      this.refresh();
     },
     // Called to refresh area data.
-    refresh: function () {
-      this.$data.loaded = false
-      var token = this.$data.token
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var token = this.$data.token;
+      var component = this;
 
       // Load area information.
       _getAreaType(this.$store, token)
-        .then(function (response) {
-          component.loaded = true
-          component.onDataLoaded(response.data)
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.onDataLoaded(response.data);
         })
-      _listAreaTypes(this.$store, false, 'page=1&pageSize=0')
-        .then(function (response) {
-          component.$data.areaTypes = response.data.results
-        }).catch(function (e) {
+        .catch(function(e) {
+          component.loaded = true;
+        });
+      _listAreaTypes(this.$store, false, "page=1&pageSize=0")
+        .then(function(response) {
+          component.$data.areaTypes = response.data.results;
         })
+        .catch(function(e) {});
 
-      this.refreshAreas()
+      this.refreshAreas();
     },
-    refreshAreas: function () {
-      var component = this
+    refreshAreas: function() {
+      var component = this;
 
       // Search options.
-      let options = {}
-      options.rootOnly = false
-      options.areaTypeToken = this.$data.token
-      options.includeAreaType = false
-      options.includeAssignments = false
-      options.includeZones = false
+      let options = {};
+      options.rootOnly = false;
+      options.areaTypeToken = this.$data.token;
+      options.includeAreaType = false;
+      options.includeAssignments = false;
+      options.includeZones = false;
 
       _listAreas(this.$store, options, this.$data.paging)
-        .then(function (response) {
-          component.results = response.data
-          component.areas = response.data.results
-        }).catch(function (e) {
+        .then(function(response) {
+          component.results = response.data;
+          component.areas = response.data.results;
         })
+        .catch(function(e) {});
     },
     // Called after data is loaded.
-    onDataLoaded: function (areaType) {
-      this.$data.areaType = areaType
+    onDataLoaded: function(areaType) {
+      this.$data.areaType = areaType;
       var section = {
-        id: 'areatypes',
-        title: 'Area Types',
-        icon: 'map',
-        route: '/admin/areatypes/' + areaType.token,
-        longTitle: 'Manage Area Type: ' + areaType.name
-      }
-      this.$store.commit('currentSection', section)
+        id: "areatypes",
+        title: "Area Types",
+        icon: "map",
+        route: "/admin/areatypes/" + areaType.token,
+        longTitle: "Manage Area Type: " + areaType.name
+      };
+      this.$store.commit("currentSection", section);
     },
     // Called to open area type edit dialog.
-    onEdit: function () {
-      this.$refs['edit'].onOpenDialog()
+    onEdit: function() {
+      this.$refs["edit"].onOpenDialog();
     },
     // Called when area type is updated.
-    onAreaTypeUpdated: function () {
-      this.refresh()
+    onAreaTypeUpdated: function() {
+      this.refresh();
     },
-    onDelete: function () {
-      this.$refs['delete'].showDeleteDialog()
+    onDelete: function() {
+      this.$refs["delete"].showDeleteDialog();
     },
     // Called when area type is deleted.
-    onAreaTypeDeleted: function () {
-      Utils.routeTo(this, '/areatypes')
+    onAreaTypeDeleted: function() {
+      Utils.routeTo(this, "/areatypes");
     },
     // Called to open an area.
-    onOpenArea: function (area) {
-      Utils.routeTo(this, '/areas/' + area.token)
+    onOpenArea: function(area) {
+      Utils.routeTo(this, "/areas/" + area.token);
     }
   }
-}
+};
 </script>
 
 <style scoped>

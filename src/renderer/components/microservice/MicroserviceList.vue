@@ -5,7 +5,7 @@
         <v-list-tile :key="microservice.identifier"
           @click="onMicroserviceClicked(microservice)">
           <v-list-tile-avatar>
-            <v-icon left light>fa-{{microservice.icon}}</v-icon>
+            <font-awesome-icon class="mt-2 indigo--text text--darken-3" :icon="microservice.icon" size="2x"/>
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-text="microservice.name" class="subheading"></v-list-tile-title>
@@ -13,7 +13,7 @@
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-divider></v-divider>
+        <v-divider :key="'div-' + microservice.identifier"></v-divider>
       </template>
     </v-list>
   </span>
@@ -21,18 +21,17 @@
 
 <script>
 export default {
-  data: () => ({
-  }),
+  data: () => ({}),
 
-  props: ['topology'],
+  props: ["topology"],
 
   methods: {
     // Called if a microservice is clicked.
-    onMicroserviceClicked: function (microservice) {
-      this.$emit('microserviceClicked', microservice)
+    onMicroserviceClicked: function(microservice) {
+      this.$emit("microserviceClicked", microservice);
     }
   }
-}
+};
 </script>
 
 <style>

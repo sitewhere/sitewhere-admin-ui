@@ -1,10 +1,10 @@
 <template>
-  <navigation-page icon="view_module" title="Manage Device Groups"
+  <navigation-page icon="cubes" title="Manage Device Groups"
     loadingMessage="Loading device groups ..." :loaded="loaded">
     <div slot="content">
       <v-container fluid grid-list-md  v-if="groups">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(group, index) in groups" :key="group.token">
+           <v-flex xs6 v-for="(group) in groups" :key="group.token">
             <device-group-list-panel :group="group" class="mb-1"
               @click.native="onOpenGroup(group)">
             </device-group-list-panel>
@@ -21,15 +21,14 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import Utils from '../common/Utils'
-import Pager from '../common/Pager'
-import DeviceGroupListPanel from './DeviceGroupListPanel'
-import DeviceGroupCreateDialog from './DeviceGroupCreateDialog'
-import {_listDeviceGroups} from '../../http/sitewhere-api-wrapper'
+import NavigationPage from "../common/NavigationPage";
+import Utils from "../common/Utils";
+import Pager from "../common/Pager";
+import DeviceGroupListPanel from "./DeviceGroupListPanel";
+import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog";
+import { _listDeviceGroups } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
@@ -37,13 +36,15 @@ export default {
     filter: null,
     pageSizes: [
       {
-        text: '20',
+        text: "20",
         value: 20
-      }, {
-        text: '50',
+      },
+      {
+        text: "50",
         value: 50
-      }, {
-        text: '100',
+      },
+      {
+        text: "100",
         value: 100
       }
     ],
@@ -59,32 +60,33 @@ export default {
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list of sites.
-    refresh: function () {
-      this.$data.loaded = false
-      let paging = this.$data.paging.query
-      let component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      let paging = this.$data.paging.query;
+      let component = this;
       _listDeviceGroups(this.$store, null, false, paging)
-        .then(function (response) {
-          component.loaded = true
-          component.results = response.data
-          component.groups = response.data.results
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.results = response.data;
+          component.groups = response.data.results;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called to open detail page for group.
-    onOpenGroup: function (group) {
-      Utils.routeTo(this, '/groups/' + group.token)
+    onOpenGroup: function(group) {
+      Utils.routeTo(this, "/groups/" + group.token);
     }
   }
-}
+};
 </script>
 
 <style scoped>

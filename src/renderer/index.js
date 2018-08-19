@@ -16,7 +16,7 @@ import Tree from "element-ui";
 
 Vue.use(Vuetify, {
   theme: {
-    primary: "#1565c0",
+    primary: "#616161",
     secondary: "#b0bec5",
     accent: "#8c9eff",
     error: "#b71c1c"

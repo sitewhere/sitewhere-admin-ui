@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page v-if="deviceType" icon="fa-cog"
+    <navigation-page v-if="deviceType" icon="cog"
       :title="deviceType.name" loadingMessage="Loading device type ..."
       :loaded="loaded">
       <div slot="content">
@@ -52,10 +52,10 @@
         </device-status-create-dialog>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="fa-edit" tooltip="Edit Device Type"
+        <navigation-action-button icon="edit" tooltip="Edit Device Type"
           @action="onEdit">
         </navigation-action-button>
-        <navigation-action-button icon="fa-times" tooltip="Delete Device Type"
+        <navigation-action-button icon="times" tooltip="Delete Device Type"
           @action="onDelete">
         </navigation-action-button>
       </div>
@@ -68,23 +68,22 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationPage from '../common/NavigationPage'
-import NavigationActionButton from '../common/NavigationActionButton'
-import DeviceTypeDetailHeader from './DeviceTypeDetailHeader'
-import DeviceTypeCommands from './DeviceTypeCommands'
-import DeviceTypeStatuses from './DeviceTypeStatuses'
-import DeviceTypeCodegen from './DeviceTypeCodegen'
-import DeviceTypeComposition from './DeviceTypeComposition'
-import DeviceTypeDeleteDialog from './DeviceTypeDeleteDialog'
-import DeviceTypeUpdateDialog from './DeviceTypeUpdateDialog'
-import CommandCreateDialog from '../commands/CommandCreateDialog'
-import DeviceStatusCreateDialog from '../statuses/DeviceStatusCreateDialog'
+import Utils from "../common/Utils";
+import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
+import DeviceTypeDetailHeader from "./DeviceTypeDetailHeader";
+import DeviceTypeCommands from "./DeviceTypeCommands";
+import DeviceTypeStatuses from "./DeviceTypeStatuses";
+import DeviceTypeCodegen from "./DeviceTypeCodegen";
+import DeviceTypeComposition from "./DeviceTypeComposition";
+import DeviceTypeDeleteDialog from "./DeviceTypeDeleteDialog";
+import DeviceTypeUpdateDialog from "./DeviceTypeUpdateDialog";
+import CommandCreateDialog from "../commands/CommandCreateDialog";
+import DeviceStatusCreateDialog from "../statuses/DeviceStatusCreateDialog";
 
-import {_getDeviceType} from '../../http/sitewhere-api-wrapper'
+import { _getDeviceType } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     token: null,
     deviceType: null,
@@ -108,74 +107,75 @@ export default {
   },
 
   // Called on initial create.
-  created: function () {
-    this.display(this.$route.params.token)
+  created: function() {
+    this.display(this.$route.params.token);
   },
 
   // Called when component is reused.
-  beforeRouteUpdate (to, from, next) {
-    this.display(to.params.token)
-    next()
+  beforeRouteUpdate(to, from, next) {
+    this.display(to.params.token);
+    next();
   },
 
   methods: {
     // Display entity with the given token.
-    display: function (token) {
-      this.$data.token = token
-      this.refresh()
+    display: function(token) {
+      this.$data.token = token;
+      this.refresh();
     },
     // Called to refresh device type data.
-    refresh: function () {
-      this.$data.loaded = false
-      var token = this.$data.token
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var token = this.$data.token;
+      var component = this;
 
       // Load device type information.
       _getDeviceType(this.$store, token)
-        .then(function (response) {
-          component.loaded = true
-          component.onLoaded(response.data)
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.onLoaded(response.data);
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
     // Called after data is loaded.
-    onLoaded: function (deviceType) {
-      this.$data.deviceType = deviceType
+    onLoaded: function(deviceType) {
+      this.$data.deviceType = deviceType;
       var section = {
-        id: 'devicetypes',
-        title: 'Device Types',
-        icon: 'map',
-        route: '/admin/devicetypes/' + deviceType.token,
-        longTitle: 'Manage Device Type: ' + deviceType.name
-      }
-      this.$store.commit('currentSection', section)
+        id: "devicetypes",
+        title: "Device Types",
+        icon: "map",
+        route: "/admin/devicetypes/" + deviceType.token,
+        longTitle: "Manage Device Type: " + deviceType.name
+      };
+      this.$store.commit("currentSection", section);
     },
     // Called to open area edit dialog.
-    onEdit: function () {
-      this.$refs['edit'].onOpenDialog()
+    onEdit: function() {
+      this.$refs["edit"].onOpenDialog();
     },
     // Called after update.
-    onUpdated: function () {
-      this.refresh()
+    onUpdated: function() {
+      this.refresh();
     },
-    onDelete: function () {
-      this.$refs['delete'].showDeleteDialog()
+    onDelete: function() {
+      this.$refs["delete"].showDeleteDialog();
     },
     // Called after delete.
-    onDeleted: function () {
-      Utils.routeTo(this, '/devicetypes')
+    onDeleted: function() {
+      Utils.routeTo(this, "/devicetypes");
     },
     // Called after a command is added.
-    onCommandAdded: function () {
-      this.$refs['commands'].refresh()
+    onCommandAdded: function() {
+      this.$refs["commands"].refresh();
     },
     // Called after a status is added.
-    onStatusAdded: function () {
-      this.$refs['statuses'].refresh()
+    onStatusAdded: function() {
+      this.$refs["statuses"].refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

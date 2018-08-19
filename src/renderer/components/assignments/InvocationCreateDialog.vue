@@ -5,27 +5,26 @@
       :deviceType="deviceType" @payload="onCommit"
       @scheduleUpdated="onScheduleUpdated">
     </invocation-dialog>
-    <floating-action-button label="Invoke Command" icon="fa-bolt"
+    <floating-action-button label="Invoke Command" icon="bolt"
       @action="onOpenDialog">
     </floating-action-button>
   </div>
 </template>
 
 <script>
-import InvocationDialog from './InvocationDialog'
-import FloatingActionButton from '../common/FloatingActionButton'
+import InvocationDialog from "./InvocationDialog";
+import FloatingActionButton from "../common/FloatingActionButton";
 import {
   _createCommandInvocationForAssignment,
   _scheduleCommandInvocation
-} from '../../http/sitewhere-api-wrapper'
+} from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     schedule: null
   }),
 
-  props: ['token', 'deviceType'],
+  props: ["token", "deviceType"],
 
   components: {
     InvocationDialog,
@@ -34,47 +33,51 @@ export default {
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
+    onOpenDialog: function() {
+      this.getDialogComponent().reset();
+      this.getDialogComponent().openDialog();
     },
 
     // Called if schedule selection is updated.
-    onScheduleUpdated: function (schedule) {
-      this.$data.schedule = schedule
+    onScheduleUpdated: function(schedule) {
+      this.$data.schedule = schedule;
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
+    onCommit: function(payload) {
+      var component = this;
       if (this.schedule) {
-        _scheduleCommandInvocation(this.$store, this.token, this.schedule,
-          payload)
-          .then(function (response) {
-            component.onCommitted(response)
-          }).catch(function (e) {
+        _scheduleCommandInvocation(
+          this.$store,
+          this.token,
+          this.schedule,
+          payload
+        )
+          .then(function(response) {
+            component.onCommitted(response);
           })
+          .catch(function(e) {});
       } else {
         _createCommandInvocationForAssignment(this.$store, this.token, payload)
-          .then(function (response) {
-            component.onCommitted(response)
-          }).catch(function (e) {
+          .then(function(response) {
+            component.onCommitted(response);
           })
+          .catch(function(e) {});
       }
     },
 
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('invocationAdded')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("invocationAdded");
     }
   }
-}
+};
 </script>
 
 <style scoped>

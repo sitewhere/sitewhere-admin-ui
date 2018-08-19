@@ -1,5 +1,5 @@
 <template>
-  <navigation-page icon="fa-users" title="Manage Users"
+  <navigation-page icon="users" title="Manage Users"
     loadingMessage="Loading user list ..." :loaded="loaded">
     <div slot="content">
       <v-layout row wrap v-if="users">
@@ -55,69 +55,76 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationPage from '../common/NavigationPage'
-import Pager from '../common/Pager'
-import NoResultsPanel from '../common/NoResultsPanel'
-import ActionsBlock from '../common/ActionsBlock'
-import UserCreateDialog from './UserCreateDialog'
-import UserUpdateDialog from './UserUpdateDialog'
-import UserDeleteDialog from './UserDeleteDialog'
-import {_listUsers} from '../../http/sitewhere-api-wrapper'
+import Utils from "../common/Utils";
+import NavigationPage from "../common/NavigationPage";
+import Pager from "../common/Pager";
+import NoResultsPanel from "../common/NoResultsPanel";
+import ActionsBlock from "../common/ActionsBlock";
+import UserCreateDialog from "./UserCreateDialog";
+import UserUpdateDialog from "./UserUpdateDialog";
+import UserDeleteDialog from "./UserDeleteDialog";
+import { _listUsers } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
     users: null,
     headers: [
       {
-        align: 'left',
+        align: "left",
         sortable: false,
-        text: 'User Name',
-        value: 'username'
-      }, {
-        align: 'left',
+        text: "User Name",
+        value: "username"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'First Name',
-        value: 'firstname'
-      }, {
-        align: 'left',
+        text: "First Name",
+        value: "firstname"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Last Name',
-        value: 'lastname'
-      }, {
-        align: 'left',
+        text: "Last Name",
+        value: "lastname"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Status',
-        value: 'status'
-      }, {
-        align: 'left',
+        text: "Status",
+        value: "status"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Created',
-        value: 'created'
-      }, {
-        align: 'left',
+        text: "Created",
+        value: "created"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Updated',
-        value: 'updated'
-      }, {
-        align: 'left',
+        text: "Updated",
+        value: "updated"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Actions',
-        value: 'actions'
+        text: "Actions",
+        value: "actions"
       }
     ],
     pageSizes: [
       {
-        text: '25',
+        text: "25",
         value: 25
-      }, {
-        text: '50',
+      },
+      {
+        text: "50",
         value: 50
-      }, {
-        text: '100',
+      },
+      {
+        text: "100",
         value: 100
       }
     ],
@@ -136,40 +143,41 @@ export default {
 
   computed: {
     // Accessor for utility functions.
-    utils: function () {
-      return Utils
+    utils: function() {
+      return Utils;
     }
   },
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list.
-    refresh: function () {
-      this.$data.loaded = false
-      var component = this
-      var paging = this.$data.paging.query
+    refresh: function() {
+      this.$data.loaded = false;
+      var component = this;
+      var paging = this.$data.paging.query;
       _listUsers(this.$store, paging)
-        .then(function (response) {
-          component.results = response.data
-          component.users = response.data.results
-          component.loaded = true
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.results = response.data;
+          component.users = response.data.results;
+          component.loaded = true;
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called when page number is updated.
-    onPageUpdated: function (pageNumber) {
-      this.$data.pager.page = pageNumber
-      this.refresh()
+    onPageUpdated: function(pageNumber) {
+      this.$data.pager.page = pageNumber;
+      this.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>
