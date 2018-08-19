@@ -33,7 +33,7 @@
                         {{ command.description }}
                       </v-card-text>
                       <v-card-text class="pt-0" v-if="command.parameters.length">
-                        <v-flex xs12 v-for="(param, index) in command.parameters" :key="param.name">
+                        <v-flex xs12 v-for="(param) in command.parameters" :key="param.name">
                           <v-text-field :label="param.name"
                             :required="param.required" v-model="parameters[param.name]">
                           </v-text-field>
@@ -60,18 +60,17 @@
 </template>
 
 <script>
-import Lodash from 'lodash'
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import MetadataPanel from '../common/MetadataPanel'
-import ScheduleChooser from '../schedules/ScheduleChooser'
+import Lodash from "lodash";
+import Utils from "../common/Utils";
+import BaseDialog from "../common/BaseDialog";
+import MetadataPanel from "../common/MetadataPanel";
+import ScheduleChooser from "../schedules/ScheduleChooser";
 import {
   _listDeviceCommands,
   _listSchedules
-} from '../../http/sitewhere-api-wrapper'
+} from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     active: null,
     dialogVisible: false,
@@ -91,129 +90,132 @@ export default {
     ScheduleChooser
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel', 'deviceType'],
+  props: ["title", "width", "createLabel", "cancelLabel", "deviceType"],
 
   computed: {
     // Get currently selected command.
-    command: function () {
-      return Lodash.find(this.commands, {'token': this.commandSelection})
+    command: function() {
+      return Lodash.find(this.commands, { token: this.commandSelection });
     },
 
     // Message shown next to schedule switch.
-    scheduleMessage: function () {
-      return (!this.useSchedule) ? 'No schedule. Invoke command immediately.'
-        : 'Invoke command on schedule below.'
+    scheduleMessage: function() {
+      return !this.useSchedule
+        ? "No schedule. Invoke command immediately."
+        : "Invoke command on schedule below.";
     }
   },
 
   watch: {
     // Clear schedule selection if not using schedule.
-    useSchedule: function (value) {
+    useSchedule: function(value) {
       if (!value) {
-        this.$data.scheduleSelection = null
+        this.$data.scheduleSelection = null;
       }
     },
 
     // Indicate that schedule was updated.
-    scheduleSelection: function (value) {
-      this.$emit('scheduleUpdated', value)
+    scheduleSelection: function(value) {
+      this.$emit("scheduleUpdated", value);
     }
   },
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
-      var user = this.$store.getters.user
-      var payload = {}
-      payload.initiator = 'REST'
-      payload.initiatorId = user.username
-      payload.target = 'Assignment'
-      payload.commandToken = this.$data.commandSelection
-      payload.parameterValues = this.$data.parameters
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+    generatePayload: function() {
+      var user = this.$store.getters.user;
+      var payload = {};
+      payload.initiator = "REST";
+      payload.initiatorId = user.username;
+      payload.target = "Assignment";
+      payload.commandToken = this.$data.commandSelection;
+      payload.parameterValues = this.$data.parameters;
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
 
     // Reset dialog contents.
-    reset: function (e) {
-      this.$data.commandSelection = null
-      this.$data.useSchedule = false
-      this.$data.scheduleSelection = null
-      this.$data.metadata = []
-      this.$data.active = 'details'
+    reset: function(e) {
+      this.$data.commandSelection = null;
+      this.$data.useSchedule = false;
+      this.$data.scheduleSelection = null;
+      this.$data.metadata = [];
+      this.$data.active = "details";
 
       // Command list filter options.
-      let options = {}
-      options.includeDeleted = false
+      let options = {};
+      options.includeDeleted = false;
 
-      var component = this
+      var component = this;
       _listDeviceCommands(this.$store, this.deviceType.token, options)
-        .then(function (response) {
-          component.$data.commands = response.data.results
-        }).catch(function (e) {
-          component.showError(e)
+        .then(function(response) {
+          component.$data.commands = response.data.results;
         })
+        .catch(function(e) {
+          component.showError(e);
+        });
       _listSchedules(this.$store, null)
-        .then(function (response) {
-          component.$data.schedules = response.data.results
-        }).catch(function (e) {
-          component.showError(e)
+        .then(function(response) {
+          component.$data.schedules = response.data.results;
         })
+        .catch(function(e) {
+          component.showError(e);
+        });
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
-      this.reset()
+    load: function(payload) {
+      this.reset();
 
       if (payload) {
-        this.$data.commandSelection = payload.xxx
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.commandSelection = payload.xxx;
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
-    openDialog: function () {
-      this.$data.dialogVisible = true
+    openDialog: function() {
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
-    closeDialog: function () {
-      this.$data.dialogVisible = false
+    closeDialog: function() {
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
-    showError: function (error) {
-      this.$data.error = error
+    showError: function(error) {
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+    onCreateClicked: function(e) {
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+    onCancelClicked: function(e) {
+      this.$data.dialogVisible = false;
     },
 
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+    onMetadataDeleted: function(name) {
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
 
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+    onMetadataAdded: function(entry) {
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     }
   }
-}
+};
 </script>
 
 <style scoped>
