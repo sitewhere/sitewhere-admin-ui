@@ -2,7 +2,7 @@
   <navigation-page icon="cog" title="Area Types"
     loadingMessage="Loading area types ..." :loaded="loaded">
     <div v-if="areaTypes" slot="content">
-      <v-container fluid grid-list-md>
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;">
         <v-layout row wrap>
            <v-flex xs6 v-for="(areaType) in areaTypes" :key="areaType.token">
             <area-type-list-entry :areaType="areaType" :areaTypes="areaTypes"

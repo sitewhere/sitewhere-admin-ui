@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="visible" persistent :width="width" :lazy="true">
     <v-card>
-      <v-toolbar dense flat card dark color="primary">
+      <v-toolbar dense flat card dark class="mb-0" color="primary">
         <v-toolbar-title>{{title}}</v-toolbar-title>
       </v-toolbar>
       <error-banner :error="error"></error-banner>
@@ -22,32 +22,39 @@
 </template>
 
 <script>
-import ErrorBanner from '../common/ErrorBanner'
+import ErrorBanner from "../common/ErrorBanner";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     ErrorBanner
   },
 
-  props: ['title', 'width', 'visible', 'createLabel', 'cancelLabel', 'error',
-    'hideButtons', 'hideCreate', 'invalid'],
+  props: [
+    "title",
+    "width",
+    "visible",
+    "createLabel",
+    "cancelLabel",
+    "error",
+    "hideButtons",
+    "hideCreate",
+    "invalid"
+  ],
 
   methods: {
     // Called when create button is clicked.
-    onCancelClicked: function (e) {
-      this.$emit('cancelClicked', e)
+    onCancelClicked: function(e) {
+      this.$emit("cancelClicked", e);
     },
 
     // Called when create button is clicked.
-    onCreateClicked: function (e) {
-      this.$emit('createClicked', e)
+    onCreateClicked: function(e) {
+      this.$emit("createClicked", e);
     }
   }
-}
+};
 </script>
 
 <style scoped>

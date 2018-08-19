@@ -2,7 +2,7 @@
   <navigation-page icon="fa-map" title="Areas"
     loadingMessage="Loading areas ..." :loaded="loaded">
     <div slot="content">
-      <v-container fluid grid-list-md v-if="areas">
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="areas">
         <v-layout row wrap>
            <v-flex xs6 v-for="(area) in areas" :key="area.token">
             <area-list-entry :area="area" @openArea="onOpenArea">

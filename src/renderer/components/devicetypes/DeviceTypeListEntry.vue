@@ -1,5 +1,5 @@
 <template>
-  <v-card hover class="white pa-2">
+  <v-card flat hover class="white pa-2">
     <v-card-text class="deviceType" @click="onOpenDeviceType">
       <div class="type-logo" :style="logoStyle"></div>
       <div class="type-name">{{deviceType.name}}</div>
@@ -10,37 +10,36 @@
 
 <script>
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['deviceType'],
+  props: ["deviceType"],
 
   computed: {
     // Compute style of logo.
-    logoStyle: function () {
+    logoStyle: function() {
       return {
-        'background-color': '#fff',
-        'background-image': 'url(' + this.deviceType.imageUrl + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%',
-        'border': '1px solid #eee'
-      }
+        "background-color": "#fff",
+        "background-image": "url(" + this.deviceType.imageUrl + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%",
+        border: "1px solid #eee"
+      };
     }
   },
 
   methods: {
     // Called when a device type is clicked.
-    onOpenDeviceType: function () {
-      var tenant = this.$store.getters.selectedTenant
+    onOpenDeviceType: function() {
+      var tenant = this.$store.getters.selectedTenant;
       if (tenant) {
-        this.$router.push('/tenants/' + tenant.token + '/devicetypes/' +
-          this.deviceType.token)
+        this.$router.push(
+          "/tenants/" + tenant.token + "/devicetypes/" + this.deviceType.token
+        );
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <template>
-  <v-card hover class="white">
+  <v-card flat hover>
     <v-card-text class="group">
       <div class="group-image" :style="backgroundImageStyle"></div>
       <div class="group-name ellipsis title">
@@ -20,39 +20,36 @@
 
 <script>
 export default {
-
-  data: function () {
-    return {
-    }
+  data: function() {
+    return {};
   },
 
-  components: {
-  },
+  components: {},
 
-  props: ['group'],
+  props: ["group"],
 
   computed: {
-    rolesView: function () {
-      return this.group.roles.join(', ')
+    rolesView: function() {
+      return this.group.roles.join(", ");
     },
     // Create background image style.
-    backgroundImageStyle: function () {
+    backgroundImageStyle: function() {
       return {
-        'background-image': 'url(' + this.group.imageUrl + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%'
-      }
+        "background-image": "url(" + this.group.imageUrl + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%"
+      };
     }
   },
 
   methods: {
     // Fire event to have parent refresh content.
-    refresh: function () {
-      this.$emit('refresh')
+    refresh: function() {
+      this.$emit("refresh");
     }
   }
-}
+};
 </script>
 
 <style scoped>

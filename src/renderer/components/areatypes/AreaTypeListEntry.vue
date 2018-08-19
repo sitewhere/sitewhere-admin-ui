@@ -1,6 +1,6 @@
 <template>
-  <v-card hover color="white">
-    <v-container fluid grid-list-lg @click="onAreaTypeClicked">
+  <v-card flat hover color="white">
+    <v-container @click="onAreaTypeClicked">
       <v-layout row>
         <v-flex xs2>
           <v-card-media>
@@ -9,7 +9,7 @@
         </v-flex>
         <v-flex xs10>
           <div>
-            <div class="headline ellipsis">{{ areaType.name }}</div>
+            <div class="title ellipsis">{{ areaType.name }}</div>
             <div class="atdesc">{{ areaType.description }}</div>
           </div>
         </v-flex>
@@ -19,26 +19,24 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
+import Utils from "../common/Utils";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     Utils
   },
 
-  props: ['areaType', 'areaTypes'],
+  props: ["areaType", "areaTypes"],
 
   methods: {
     // Callen when card is clicked.
-    onAreaTypeClicked: function () {
-      Utils.routeTo(this, '/areatypes/' + this.areaType.token)
+    onAreaTypeClicked: function() {
+      Utils.routeTo(this, "/areatypes/" + this.areaType.token);
     }
   }
-}
+};
 </script>
 
 <style scoped>

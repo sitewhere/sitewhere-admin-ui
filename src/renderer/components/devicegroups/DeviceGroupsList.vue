@@ -2,7 +2,7 @@
   <navigation-page icon="cubes" title="Manage Device Groups"
     loadingMessage="Loading device groups ..." :loaded="loaded">
     <div slot="content">
-      <v-container fluid grid-list-md  v-if="groups">
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="groups">
         <v-layout row wrap>
            <v-flex xs6 v-for="(group) in groups" :key="group.token">
             <device-group-list-panel :group="group" class="mb-1"

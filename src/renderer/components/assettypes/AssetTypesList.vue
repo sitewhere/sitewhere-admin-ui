@@ -2,7 +2,7 @@
   <navigation-page icon="cog" title="Asset Types"
     loadingMessage="Loading asset types ..." :loaded="loaded">
     <div v-if="assetTypes" slot="content">
-      <v-container fluid grid-list-md>
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;">
         <v-layout row wrap>
            <v-flex xs6 v-for="(assetType) in assetTypes"
             :key="assetType.token">

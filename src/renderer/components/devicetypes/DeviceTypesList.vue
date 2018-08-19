@@ -2,7 +2,7 @@
   <navigation-page icon="cog" title="Manage Device Types"
     loadingMessage="Loading device types ..." :loaded="loaded">
     <div slot="content">
-      <v-container fluid grid-list-md  v-if="deviceTypes">
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="deviceTypes">
         <v-layout row wrap>
            <v-flex xs6 v-for="(deviceType) in deviceTypes"
             :key="deviceType.token">

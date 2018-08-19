@@ -21,7 +21,7 @@
       <div slot="content">
         <device-list-filter-bar ref="filters" @filter="onFilterUpdated">
         </device-list-filter-bar>
-        <v-container fluid grid-list-md  v-if="devices">
+        <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="devices">
           <v-layout row wrap>
              <v-flex xs6 v-for="(device) in devices" :key="device.token">
               <device-list-panel :device="device" @assignDevice="onAssignDevice"

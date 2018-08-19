@@ -1,14 +1,14 @@
 <template>
-  <v-card hover class="white">
+  <v-card flat hover class="pa-2">
     <v-card-text @click="onOpenDevice" :style="styleForDevice()"
       class="device-root">
       <div class="device-image"
         :style="backgroundImageStyle(device.deviceType.imageUrl)"></div>
-      <div class="device-token ellipsis">
-        {{ device.token }}
-      </div>
-      <div class="device-type ellipsis">
+      <div class="title device-type ellipsis">
         {{ device.deviceType.name }}
+      </div>
+      <div class="subheading device-token ellipsis">
+        {{ device.token }}
       </div>
       <div class="device-comments ellipsis">
         {{ device.comments }}
@@ -19,7 +19,7 @@
         <v-tooltip top>
           <v-btn dark icon class="blue ml-0"
             @click.stop="onAssignDevice" slot="activator">
-            <v-icon>fa-tag</v-icon>
+            <v-icon>tag</v-icon>
           </v-btn>
           <span>Assign Device</span>
         </v-tooltip>
@@ -29,63 +29,61 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import Style from '../common/Style'
+import Utils from "../common/Utils";
+import Style from "../common/Style";
 
 export default {
-
-  data: function () {
-    return {
-    }
+  data: function() {
+    return {};
   },
 
-  components: {
-  },
+  components: {},
 
-  props: ['device'],
+  props: ["device"],
 
   computed: {
-    styleForStatus: function () {
-      return Style.styleForAssignmentStatus(this.device.assignment)
+    styleForStatus: function() {
+      return Style.styleForAssignmentStatus(this.device.assignment);
     },
-    hasAssignedAsset: function () {
-      return this.device.assignment && this.device.assignment.assetId
+    hasAssignedAsset: function() {
+      return this.device.assignment && this.device.assignment.assetId;
     }
   },
 
   methods: {
-    styleForDevice: function () {
-      let style = {}
-      style['background-color'] = (this.device.assignment ? '#fff' : '#cff')
-      style['border'] = '1px solid ' + (this.device.assignment ? '#fff' : '#6cc')
-      return style
+    styleForDevice: function() {
+      let style = {};
+      style["background-color"] = this.device.assignment ? "#fff" : "#cff";
+      style["border"] =
+        "1px solid " + (this.device.assignment ? "#fff" : "#6cc");
+      return style;
     },
     // Create background image style.
-    backgroundImageStyle: function (image) {
+    backgroundImageStyle: function(image) {
       return {
-        'background-image': 'url(' + image + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%'
-      }
+        "background-image": "url(" + image + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%"
+      };
     },
 
     // Called when a device is clicked.
-    onOpenDevice: function () {
-      this.$emit('deviceOpened', this.device)
+    onOpenDevice: function() {
+      this.$emit("deviceOpened", this.device);
     },
 
     // Open device assignment dialog.
-    onAssignDevice: function () {
-      this.$emit('assignDevice', this.device)
+    onAssignDevice: function() {
+      this.$emit("assignDevice", this.device);
     },
 
     // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    formatDate: function(date) {
+      return Utils.formatDate(date);
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -105,25 +103,21 @@ export default {
 }
 .device-type {
   position: absolute;
-  top: 6px;
+  top: 0px;
   left: 110px;
   right: 10px;
-  font-size: 18px;
-  color: #333;
-  font-weight: 700;
 }
 .device-token {
   position: absolute;
-  top: 40px;
+  top: 30px;
   left: 110px;
   right: 10px;
   font-size: 14px;
   color: #333;
-  font-weight: 700;
 }
 .device-comments {
   position: absolute;
-  top: 68px;
+  top: 60px;
   left: 110px;
   right: 10px;
   font-size: 12px;
@@ -131,10 +125,10 @@ export default {
 }
 .device-asset {
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   right: 0px;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background-color: #fff;
   border: 1px solid #eee;
 }

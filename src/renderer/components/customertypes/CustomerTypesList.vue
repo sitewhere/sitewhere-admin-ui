@@ -2,7 +2,7 @@
   <navigation-page icon="cog" title="Customer Types"
     loadingMessage="Loading customer types ..." :loaded="loaded">
     <div v-if="customerTypes" slot="content">
-      <v-container fluid grid-list-md>
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;">
         <v-layout row wrap>
            <v-flex xs6 v-for="(customerType) in customerTypes"
             :key="customerType.token">
