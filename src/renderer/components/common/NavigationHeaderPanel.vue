@@ -2,8 +2,8 @@
   <v-card :style="panelStyle" class="white pa-2 header-panel">
     <v-card-text>
       <span v-if="imageUrl" class="header-image" :style="imageStyle"></span>
-      <span v-if="icon" class="header-image">
-        <font-awesome-icon class="white--text" :icon="icon" size="lg"/>
+      <span v-if="icon" class="header-icon">
+        <font-awesome-icon class="grey--text" :icon="icon" size="6x"/>
       </span>
       <span class="header-content">
         <slot name="content"></slot>
@@ -44,16 +44,6 @@ export default {
         border: "1px solid #eee"
       };
     },
-    // Compute style for icon.
-    iconStyle: function() {
-      return {
-        height: "180px",
-        width: "180px",
-        "font-size": "80px",
-        padding: "35px",
-        border: "1px solid #eee"
-      };
-    },
     // Compute style for QR code URL.
     qrCodeStyle: function() {
       return {
@@ -87,6 +77,16 @@ export default {
   left: 7px;
   bottom: 7px;
   width: 180px;
+}
+
+.header-icon {
+  position: absolute;
+  top: 10px;
+  left: 7px;
+  bottom: 7px;
+  width: 180px;
+  padding: 45px;
+  border: 1px solid #eee;
 }
 
 .header-qrcode {

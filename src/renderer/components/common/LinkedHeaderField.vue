@@ -1,19 +1,17 @@
 <template>
   <header-field :label="label">
-    <a @click="onLinkClicked">{{ text}}</a>
+    <a style="color: #33c; font-weight: 700;" @click="onLinkClicked">{{ text}}</a>
   </header-field>
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import HeaderField from './HeaderField'
+import Utils from "../common/Utils";
+import HeaderField from "./HeaderField";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['label', 'url', 'text'],
+  props: ["label", "url", "text"],
 
   components: {
     HeaderField
@@ -21,11 +19,11 @@ export default {
 
   methods: {
     // Handle link clicked.
-    onLinkClicked: function () {
-      Utils.routeTo(this, this.url)
+    onLinkClicked: function() {
+      Utils.routeTo(this, this.url);
     }
   }
-}
+};
 </script>
 
 <style scoped>

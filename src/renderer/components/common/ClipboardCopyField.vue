@@ -1,38 +1,36 @@
 <template>
   <span>
     {{ field }}
-    <v-tooltip right class="pl-1">
-      <v-icon style="font-size: 10pt;" class="grey--text" slot="activator"
-        v-clipboard="field" :key="field" @success="onFieldCopied"
-        @error="onFieldCopyFailed">fa-clipboard</v-icon>
+    <v-tooltip right>
+      <font-awesome-icon class="grey--text text--lighten-1 mt-1" icon="copy" size="sm" 
+        slot="activator" v-clipboard="field" :key="field" style="vertical-align: top;"
+        @success="onFieldCopied" @error="onFieldCopyFailed"/>
       <span>Copy to Clipboard</span>
     </v-tooltip>
     <v-snackbar :timeout="2000" success v-model="showFieldCopied">{{ message }}
-      <v-btn dark flat @click.native="showFieldCopied = false">Close</v-btn>
+      <v-btn dark flat @click="showFieldCopied = false">Close</v-btn>
     </v-snackbar>
   </span>
 </template>
 
 <script>
 export default {
-
   data: () => ({
     showFieldCopied: false
   }),
 
-  props: ['field', 'message'],
+  props: ["field", "message"],
 
   methods: {
     // Called after id is copied.
-    onFieldCopied: function (e) {
-      this.$data.showFieldCopied = true
+    onFieldCopied: function(e) {
+      this.$data.showFieldCopied = true;
     },
 
     // Called if unable to copy id.
-    onFieldCopyFailed: function (e) {
-    }
+    onFieldCopyFailed: function(e) {}
   }
-}
+};
 </script>
 
 <style scoped>

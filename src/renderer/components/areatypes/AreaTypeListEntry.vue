@@ -3,13 +3,13 @@
     <v-container @click="onAreaTypeClicked">
       <v-layout row>
         <v-flex xs2>
-          <v-card-media>
-            <v-icon class="atlogo">{{ areaType.icon }}</v-icon>
+          <v-card-media class="pt-2 pl-1">
+            <font-awesome-icon class="grey--text" :icon="areaType.icon" size="3x"/>
           </v-card-media>
         </v-flex>
         <v-flex xs10>
           <div>
-            <div class="title ellipsis">{{ areaType.name }}</div>
+            <div class="title ellipsis mb-1">{{ areaType.name }}</div>
             <div class="atdesc">{{ areaType.description }}</div>
           </div>
         </v-flex>
@@ -40,10 +40,6 @@ export default {
 </script>
 
 <style scoped>
-.atlogo {
-  font-size: 30pt;
-  padding: 10px;
-}
 .atdesc {
   height: 40px;
   overflow-y: hidden;

@@ -34,10 +34,10 @@
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="fa-edit" tooltip="Edit Area Type"
+        <navigation-action-button icon="edit" tooltip="Edit Area Type"
           @action="onEdit">
         </navigation-action-button>
-        <navigation-action-button icon="fa-times" tooltip="Delete Area Type"
+        <navigation-action-button icon="times" tooltip="Delete Area Type"
           @action="onDelete">
         </navigation-action-button>
       </div>
