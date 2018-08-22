@@ -6,7 +6,8 @@
         :contextElement="contextElement" @addComponent="onAddComponent">
       </element-placeholder>
       <v-toolbar v-else flat light class="grey lighten-4">
-        <v-icon light class="fa-lg">fa-{{contextElement.icon}}</v-icon>
+        <font-awesome-icon class="grey--text text--darken-2" 
+          :icon="contextElement.icon" size="lg"/>
         <v-toolbar-title class="black--text">
           {{ elementTitle(contextElement) }}
         </v-toolbar-title>
@@ -25,17 +26,16 @@
 </template>
 
 <script>
-import ElementPlaceholder from './ElementPlaceholder'
-import ElementDeleteDialog from './ElementDeleteDialog'
+import ElementPlaceholder from "./ElementPlaceholder";
+import ElementDeleteDialog from "./ElementDeleteDialog";
 
 export default {
-
   data: () => ({
     active: null,
     formValid: true
   }),
 
-  props: ['content'],
+  props: ["content"],
 
   components: {
     ElementPlaceholder,
@@ -44,30 +44,30 @@ export default {
 
   methods: {
     // Compute element title.
-    elementTitle: function (element) {
-      let title = element.name
+    elementTitle: function(element) {
+      let title = element.name;
       if (element.resolvedIndexAttribute) {
-        title += ' (' + element.resolvedIndexAttribute + ')'
+        title += " (" + element.resolvedIndexAttribute + ")";
       }
-      return title
+      return title;
     },
 
     /** Add a component */
-    onAddComponent: function (option) {
-      this.$emit('addComponent', option)
+    onAddComponent: function(option) {
+      this.$emit("addComponent", option);
     },
 
     /** Delete a component */
-    onDeleteComponent: function (child) {
-      this.$emit('deleteComponent', child)
+    onDeleteComponent: function(child) {
+      this.$emit("deleteComponent", child);
     },
 
     /** Push a context onto the stack */
-    onPushContext: function (context) {
-      this.$emit('pushContext', context)
+    onPushContext: function(context) {
+      this.$emit("pushContext", context);
     }
   }
-}
+};
 </script>
 
 <style scoped>
