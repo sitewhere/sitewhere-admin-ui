@@ -56,7 +56,7 @@ export default {
       var section = {
         id: "global",
         title: "Global Microservices",
-        icon: "layers",
+        icon: "globe",
         route: "/system/microservices",
         longTitle: "Manage Global Microservices"
       };

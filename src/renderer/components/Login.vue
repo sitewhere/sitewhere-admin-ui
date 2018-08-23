@@ -60,96 +60,110 @@
 </template>
 
 <script>
-import {_getJwt, _getUser} from '../http/sitewhere-api-wrapper'
-import ErrorBanner from './common/ErrorBanner'
+import { _getJwt, _getUser } from "../http/sitewhere-api-wrapper";
+import ErrorBanner from "./common/ErrorBanner";
+import { Settings } from "../libraries/Settings.ts";
+import { GoogleAnalytics } from "../libraries/GoogleAnalytics.ts";
 
 export default {
-
   data: () => ({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
     protocol: null,
     server: null,
     port: null,
     protocols: [
       {
-        'text': 'http',
-        'value': 'http'
-      }, {
-        'text': 'https',
-        'value': 'https'
-      }]
+        text: "http",
+        value: "http"
+      },
+      {
+        text: "https",
+        value: "https"
+      }
+    ],
+    settings: null
   }),
 
   components: {
     ErrorBanner
   },
 
-  created: function () {
-    this.$data.protocol = this.$store.getters.protocol
-    this.$data.server = this.$store.getters.server
-    this.$data.port = this.$store.getters.port
+  created: function() {
+    this.$data.protocol = this.$store.getters.protocol;
+    this.$data.server = this.$store.getters.server;
+    this.$data.port = this.$store.getters.port;
+    this.getOrCreateSiteWhereSettings();
   },
 
   watch: {
     // Push protocol value to store.
-    protocol: function (value) {
-      this.$store.commit('protocol', value)
+    protocol: function(value) {
+      this.$store.commit("protocol", value);
     },
 
     // Push server value to store.
-    server: function (value) {
-      this.$store.commit('server', value)
+    server: function(value) {
+      this.$store.commit("server", value);
     },
 
     // Push port value to store.
-    port: function (value) {
-      this.$store.commit('port', value)
+    port: function(value) {
+      this.$store.commit("port", value);
     }
   },
 
   computed: {
     // Get global loading indicator.
-    loading: function () {
-      return this.$store.getters.loading
+    loading: function() {
+      return this.$store.getters.loading;
     },
 
     // Get global error indicator.
-    error: function () {
-      return this.$store.getters.error
+    error: function() {
+      return this.$store.getters.error;
     }
   },
 
   methods: {
-    onLogin: function () {
-      var component = this
+    onLogin: function() {
+      var component = this;
 
-      var token = btoa(this.username + ':' + this.password)
-      this.$store.commit('authToken', token)
-      this.$store.commit('selectedTenant', null)
+      var token = btoa(this.username + ":" + this.password);
+      this.$store.commit("authToken", token);
+      this.$store.commit("selectedTenant", null);
 
       _getJwt(this.$store)
-        .then(function (response) {
-          var jwt = response.headers['x-sitewhere-jwt']
-          component.$store.commit('jwt', jwt)
-          component.onJwtAcquired()
-        }).catch(function (e) {
-          console.log(e)
+        .then(function(response) {
+          var jwt = response.headers["x-sitewhere-jwt"];
+          component.$store.commit("jwt", jwt);
+          component.onJwtAcquired();
         })
+        .catch(function(e) {
+          console.log(e);
+        });
     },
 
-    onJwtAcquired: function (jwt) {
-      var component = this
+    onJwtAcquired: function(jwt) {
+      var component = this;
       _getUser(this.$store, this.username)
-        .then(function (response) {
-          component.$store.commit('user', response.data)
-          component.$router.push('/system')
-        }).catch(function (e) {
-          console.log(e)
+        .then(function(response) {
+          component.$store.commit("user", response.data);
+          component.$router.push("/system");
         })
+        .catch(function(e) {
+          console.log(e);
+        });
+    },
+
+    // Load or create the SiteWhere settings file.
+    getOrCreateSiteWhereSettings: function() {
+      let settings = Settings.load();
+      this.$store.commit("settings", settings);
+      GoogleAnalytics.sendStartupEvent(settings);
     }
   }
-}
+};
 </script>
 
 <style scoped>

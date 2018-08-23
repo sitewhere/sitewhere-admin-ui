@@ -2,22 +2,6 @@
   <div>
     <navigation-page icon="microchip" title="Manage Devices"
       loadingMessage="Loading devices ..." :loaded="loaded">
-      <div slot="actions">
-        <v-tooltip left v-if="filter.deviceType">
-          <v-btn slot="activator" color="green darken-2 white--text"
-            @click="onBatchCommandInvocation">
-            <font-awesome-icon class="mr-2" icon="bolt" size="lg"/>
-            Execute Batch Command
-          </v-btn>
-          <span>Execute Batch Command</span>
-        </v-tooltip>
-        <v-tooltip left>
-          <v-btn icon slot="activator" @click="onShowFilterCriteria">
-            <font-awesome-icon icon="filter" size="lg"/>
-          </v-btn>
-          <span>Filter Device List</span>
-        </v-tooltip>
-      </div>
       <div slot="content">
         <device-list-filter-bar ref="filters" @filter="onFilterUpdated">
         </device-list-filter-bar>
@@ -35,6 +19,14 @@
         </pager>
         <device-create-dialog @deviceAdded="onDeviceAdded"/>
       </div>
+      <div slot="actions">
+        <navigation-action-button v-if="filter.deviceType" icon="bolt" 
+          tooltip="Execute Batch Command" @action="onBatchCommandInvocation">
+        </navigation-action-button>
+        <navigation-action-button icon="filter" 
+          tooltip="Filter Device List" @action="onShowFilterCriteria">
+        </navigation-action-button>
+      </div>
     </navigation-page>
     <assignment-create-dialog ref="assign"
        @assignmentCreated="onAssignmentCreated">
@@ -46,6 +38,7 @@
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import DeviceListPanel from "./DeviceListPanel";
@@ -81,6 +74,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     DeviceListPanel,
     DeviceListFilterBar,

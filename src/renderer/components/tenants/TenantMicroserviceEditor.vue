@@ -78,7 +78,7 @@ export default {
           var section = {
             id: "tenants",
             title: "Manage Microservice",
-            icon: "layers",
+            icon: "layer-group",
             route:
               "/tenants/" +
               component.$data.tenantToken +

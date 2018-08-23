@@ -66,7 +66,7 @@ export default {
           var section = {
             id: "global",
             title: "Manage Microservice",
-            icon: "language",
+            icon: microservice.icon,
             route: "/system/microservices/" + microservice.identifier,
             longTitle: "Manage Global Microservice: " + microservice.name
           };

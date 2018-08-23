@@ -1,6 +1,6 @@
 <template>
   <header-field :label="label">
-    <a style="color: #33c; font-weight: 700;" @click="onLinkClicked">{{ text}}</a>
+    <a style="color: #66a; font-weight: 700;" @click="onLinkClicked">{{ text}}</a>
   </header-field>
 </template>
 

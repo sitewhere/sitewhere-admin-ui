@@ -16,10 +16,10 @@
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
             <v-tabs-item key="contained" href="#contained">
-              Contained Customers
+              Contents
             </v-tabs-item>
             <v-tabs-item key="assignments" href="#assignments">
-              Device Assignments
+              Assigned Devices
             </v-tabs-item>
             <v-tabs-item key="locations" href="#locations">
               Locations

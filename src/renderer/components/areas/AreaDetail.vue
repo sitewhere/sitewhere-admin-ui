@@ -2,24 +2,16 @@
   <div>
     <navigation-page v-if="area" icon="map" :title="area.name"
       loadingMessage="Loading area ..." :loaded="loaded">
-      <div v-if="parentArea" slot="actions">
-        <v-tooltip left>
-          <v-btn icon slot="activator" @click="onUpOneLevel">
-            <font-awesome-icon icon="arrow-circle-up" size="lg"/>
-          </v-btn>
-          <span>Up One Level</span>
-        </v-tooltip>
-      </div>
       <div slot="content">
         <area-detail-header :area="area">
         </area-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
             <v-tabs-item key="contained" href="#contained">
-              Contained Areas
+              Contents
             </v-tabs-item>
             <v-tabs-item key="assignments" href="#assignments">
-              Device Assignments
+              Assigned Devices
             </v-tabs-item>
             <v-tabs-item key="locations" href="#locations">
               Locations
@@ -59,6 +51,9 @@
         <zone-create-dialog v-if="active === 'zones'" :area="area" @zoneAdded="onZoneAdded"/>
       </div>
       <div slot="actions">
+        <navigation-action-button v-if="parentArea" icon="arrow-circle-up" 
+          tooltip="Up One Level" @action="onUpOneLevel">
+        </navigation-action-button>
         <navigation-action-button icon="edit" tooltip="Edit Area"
           @action="onEdit">
         </navigation-action-button>

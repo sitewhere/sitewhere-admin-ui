@@ -1,8 +1,7 @@
 <template>
   <v-tooltip left>
-    <v-btn flat icon class="ma-0" @click="onAction" slot="activator">
-      <font-awesome-icon class="white--text" :icon="icon" size="lg"/>
-    </v-btn>
+    <font-awesome-icon class="ma-1 navbutton" :icon="icon" size="lg" 
+      @click="onAction" slot="activator"/>
     <span>{{ tooltip }}</span>
   </v-tooltip>
 </template>
@@ -24,4 +23,11 @@ export default {
 </script>
 
 <style scoped>
+.navbutton {
+  color: #eee;
+  vertical-align: middle;
+}
+.navbutton:hover {
+  color: #fff;
+}
 </style>

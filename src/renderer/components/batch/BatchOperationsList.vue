@@ -34,7 +34,7 @@
                   <v-tooltip left>
                     <v-btn dark icon class="green darken-2" slot="activator"
                       @click.stop="openBatchOperation(props.item.token)">
-                      <v-icon small>fa-arrow-right</v-icon>
+                      <font-awesome-icon class="ma-1 navbutton" icon="arrow-right" size="lg"/>
                     </v-btn>
                     <span>Batch Operation Detail</span>
                   </v-tooltip>
