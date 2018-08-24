@@ -12,7 +12,6 @@ import VueMoment from "vue-moment";
 import VueClipboards from "vue-clipboards";
 import VueHighlightJS from "vue-highlightjs";
 import VueFlatPickr from "vue-flatpickr-component";
-import Sticky from "vue-sticky-directive";
 import Tree from "element-ui";
 
 Vue.use(Vuetify, {
@@ -23,11 +22,11 @@ Vue.use(Vuetify, {
     error: "#b71c1c"
   }
 });
+
 Vue.use(VueMoment);
 Vue.use(VueClipboards);
 Vue.use(VueHighlightJS);
 Vue.use(VueFlatPickr);
-Vue.use(Sticky);
 Vue.use(Tree);
 
 // Fontawesome.

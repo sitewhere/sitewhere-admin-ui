@@ -53,7 +53,7 @@
           <v-tooltip top>
             <v-btn dark color="primary"
               @click="onScriptCreate" slot="activator">
-              <v-icon left>fa-plus</v-icon>
+              <font-awesome-icon class="mr-2" icon="plus" size="lg"/>
               Create
             </v-btn>
             <span>Create Script</span>
@@ -61,7 +61,7 @@
           <v-tooltip top>
             <v-btn dark color="green darken-2" @click="refresh"
               slot="activator">
-              <v-icon left>fa-refresh</v-icon>
+              <font-awesome-icon class="mr-2" icon="sync" size="lg"/>
               Refresh
             </v-btn>
             <span>Refresh Scripts</span>
@@ -83,16 +83,15 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import ScriptsContentEditor from './ScriptsContentEditor'
-import ScriptsCreateDialog from './ScriptsCreateDialog'
+import Utils from "../common/Utils";
+import ScriptsContentEditor from "./ScriptsContentEditor";
+import ScriptsCreateDialog from "./ScriptsCreateDialog";
 import {
   _listGlobalScriptMetadata,
   _listTenantScriptMetadata
-} from '../../http/sitewhere-api-wrapper'
+} from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     scripts: null,
     selectedScript: null,
@@ -104,125 +103,129 @@ export default {
     showMessage: false
   }),
 
-  props: ['identifier', 'tenantToken'],
+  props: ["identifier", "tenantToken"],
 
   components: {
     ScriptsContentEditor,
     ScriptsCreateDialog
   },
 
-  created: function () {
-    this.refresh()
+  created: function() {
+    this.refresh();
   },
 
   methods: {
     // Refresh list of scripts.
-    refresh: function () {
-      var component = this
+    refresh: function() {
+      var component = this;
       if (!this.tenantToken) {
         _listGlobalScriptMetadata(this.$store, this.identifier)
-          .then(function (response) {
-            let scripts = response.data
-            let scriptId = component.$data.scriptAfterRefresh
-            component.$data.scripts = scripts
+          .then(function(response) {
+            let scripts = response.data;
+            let scriptId = component.$data.scriptAfterRefresh;
+            component.$data.scripts = scripts;
             if (scriptId) {
               for (var i = 0; i < scripts.length; i++) {
                 if (scriptId === scripts[i].id) {
-                  component.onScriptClicked(scripts[i])
+                  component.onScriptClicked(scripts[i]);
                 }
               }
-              component.$data.scriptAfterRefresh = null
+              component.$data.scriptAfterRefresh = null;
             }
-          }).catch(function (e) {
           })
+          .catch(function(e) {});
       } else {
-        _listTenantScriptMetadata(this.$store, this.identifier, this.tenantToken)
-          .then(function (response) {
-            let scripts = response.data
-            let scriptId = component.$data.scriptAfterRefresh
-            component.$data.scripts = scripts
+        _listTenantScriptMetadata(
+          this.$store,
+          this.identifier,
+          this.tenantToken
+        )
+          .then(function(response) {
+            let scripts = response.data;
+            let scriptId = component.$data.scriptAfterRefresh;
+            component.$data.scripts = scripts;
             if (scriptId) {
               for (var i = 0; i < scripts.length; i++) {
                 if (scriptId === scripts[i].id) {
-                  component.onScriptClicked(scripts[i])
+                  component.onScriptClicked(scripts[i]);
                 }
               }
-              component.$data.scriptAfterRefresh = null
+              component.$data.scriptAfterRefresh = null;
             }
-          }).catch(function (e) {
           })
+          .catch(function(e) {});
       }
     },
 
     // Called when content is saved successfully.
-    onContentSaved: function () {
-      this.displaySnackbarMessage('Script Content Saved Successfully.')
+    onContentSaved: function() {
+      this.displaySnackbarMessage("Script Content Saved Successfully.");
     },
 
     // Called when script create button is pressed.
-    onScriptCreate: function () {
-      let createDialog = this.$refs['create']
-      createDialog.onOpenDialog()
+    onScriptCreate: function() {
+      let createDialog = this.$refs["create"];
+      createDialog.onOpenDialog();
     },
 
     // Indicates that a new script was added.
-    onScriptAdded: function (scriptId) {
-      this.$data.scriptAfterRefresh = scriptId
-      this.refresh()
+    onScriptAdded: function(scriptId) {
+      this.$data.scriptAfterRefresh = scriptId;
+      this.refresh();
     },
 
     // Called when a script is clicked.
-    onScriptClicked: function (script) {
-      this.$data.selectedScript = script
-      this.$data.versions = script.versions
-      let versionId = this.$data.versionAfterRefresh
+    onScriptClicked: function(script) {
+      this.$data.selectedScript = script;
+      this.$data.versions = script.versions;
+      let versionId = this.$data.versionAfterRefresh;
       if (versionId) {
         for (var i = 0; i < script.versions.length; i++) {
           if (versionId === script.versions[i].versionId) {
-            this.$data.selectedVersion = script.versions[i]
-            this.$data.versionAfterRefresh = null
+            this.$data.selectedVersion = script.versions[i];
+            this.$data.versionAfterRefresh = null;
           }
         }
       } else {
         if (script.versions.length > 0) {
-          this.$data.selectedVersion = script.versions[0]
+          this.$data.selectedVersion = script.versions[0];
         }
       }
     },
 
     // Called when a version is clicked.
-    onVersionClicked: function (version) {
-      this.$data.selectedVersion = version
+    onVersionClicked: function(version) {
+      this.$data.selectedVersion = version;
     },
 
     // Called after a script version has been cloned.
-    onVersionCloned: function (version) {
-      this.$data.scriptAfterRefresh = this.$data.selectedScript.id
-      this.$data.versionAfterRefresh = version.versionId
-      this.refresh()
-      this.displaySnackbarMessage('Version Cloned Successfully.')
+    onVersionCloned: function(version) {
+      this.$data.scriptAfterRefresh = this.$data.selectedScript.id;
+      this.$data.versionAfterRefresh = version.versionId;
+      this.refresh();
+      this.displaySnackbarMessage("Version Cloned Successfully.");
     },
 
     // Called after version has been activated.
-    onVersionActivated: function () {
-      this.$data.scriptAfterRefresh = this.$data.selectedScript.id
-      this.$data.versionAfterRefresh = this.$data.selectedVersion.versionId
-      this.refresh()
-      this.displaySnackbarMessage('Version Activated Successfully.')
+    onVersionActivated: function() {
+      this.$data.scriptAfterRefresh = this.$data.selectedScript.id;
+      this.$data.versionAfterRefresh = this.$data.selectedVersion.versionId;
+      this.refresh();
+      this.displaySnackbarMessage("Version Activated Successfully.");
     },
 
     // Show snackbar message.
-    displaySnackbarMessage: function (message) {
-      this.$data.message = message
-      this.$data.showMessage = true
+    displaySnackbarMessage: function(message) {
+      this.$data.message = message;
+      this.$data.showMessage = true;
     },
 
     // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    formatDate: function(date) {
+      return Utils.formatDate(date);
     }
   }
-}
+};
 </script>
 
 <style scoped>

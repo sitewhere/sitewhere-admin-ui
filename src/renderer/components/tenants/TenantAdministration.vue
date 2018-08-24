@@ -1,8 +1,6 @@
 <template>
   <v-app v-if="user">
     <error-banner :error="error"></error-banner>
-    <v-progress-linear v-if="loading" class="call-progress pa-0 ma-0">
-    </v-progress-linear>
     <v-navigation-drawer fixed dark mini-variant.sync="false"
       v-model="drawer" app>
       <v-list>

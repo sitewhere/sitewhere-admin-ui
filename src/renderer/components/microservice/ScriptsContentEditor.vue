@@ -1,6 +1,6 @@
 <template>
-  <v-card v-if="selectedVersion">
-    <v-card-text>
+  <v-card v-if="selectedVersion" height="100%">
+    <v-card-text height="100%">
       <v-toolbar dense dark color="primary">
         <v-toolbar-title class="subheading">
           {{ scriptTitle }}
@@ -8,47 +8,36 @@
         <v-spacer></v-spacer>
         <v-tooltip top>
           <v-btn dark color="red darken-3" slot="activator" @click="onActivate">
-            <v-icon left>
-              fa-bolt
-            </v-icon>
+            <font-awesome-icon class="mr-2" icon="bolt" size="lg"/>
             Activate
           </v-btn>
           <span>Make Version Active</span>
         </v-tooltip>
         <v-tooltip top>
           <v-btn dark color="blue" slot="activator" @click="onClone">
-            <v-icon left>
-              fa-clone
-            </v-icon>
+            <font-awesome-icon class="mr-2" icon="copy" size="lg"/>
             Clone
           </v-btn>
           <span>Clone as New Version</span>
         </v-tooltip>
         <v-tooltip top>
           <v-btn dark color="green" slot="activator" @click="onSave">
-            <v-icon left>
-              fa-cloud-upload
-            </v-icon>
+            <font-awesome-icon class="mr-2" icon="upload" size="lg"/>
             Save
           </v-btn>
           <span>Upload Changes</span>
         </v-tooltip>
       </v-toolbar>
-      <v-card>
-        <div style="height: 500px; overflow-y: auto;">
-          <codemirror ref="cm" v-model="content" :options="options">
-          </codemirror>
-        </div>
+      <v-card height="100%">
+        <editor v-model="content" @init="editorInit" lang="groovy" theme="chrome" 
+          :options="aceOptions" width="100%" height="500"></editor>
       </v-card>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import { codemirror } from 'vue-codemirror-lite/dist/vuecodemirror.min.js'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/mode/groovy/groovy'
-import Utils from '../common/Utils'
+import Utils from "../common/Utils";
 import {
   _getGlobalScriptContent,
   _getTenantScriptContent,
@@ -58,161 +47,216 @@ import {
   _cloneTenantScript,
   _activateGlobalScript,
   _activateTenantScript
-} from '../../http/sitewhere-api-wrapper'
+} from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     selectedScript: null,
     selectedVersion: null,
-    content: '',
-    options: {
-      mode: 'groovy'
+    content: "",
+    aceOptions: {
+      showPrintMargin: false
     }
   }),
 
-  props: ['identifier', 'tenantToken', 'script', 'version'],
+  props: ["identifier", "tenantToken", "script", "version"],
 
   components: {
-    codemirror
+    editor: require("vue2-ace-editor")
   },
 
   computed: {
-    scriptTitle: function () {
+    scriptTitle: function() {
       if (this.$data.selectedScript && this.$data.selectedVersion) {
-        return this.$data.selectedScript.id + '.' +
-          this.$data.selectedScript.type + ' (' +
-          this.formatDate(this.$data.selectedVersion.createdDate) + ')'
+        return (
+          this.$data.selectedScript.id +
+          "." +
+          this.$data.selectedScript.type +
+          " (" +
+          this.formatDate(this.$data.selectedVersion.createdDate) +
+          ")"
+        );
       }
-      return null
-    },
-    codemirror: function () {
-      return this.$refs.cm.codemirror
+      return null;
     }
   },
 
   watch: {
-    script: function (updated) {
-      this.$data.selectedScript = updated
+    script: function(updated) {
+      this.$data.selectedScript = updated;
     },
-    version: function (updated) {
-      this.$data.selectedVersion = updated
+    version: function(updated) {
+      this.$data.selectedVersion = updated;
     },
-    selectedVersion: function (updated) {
-      this.updateContent()
+    selectedVersion: function(updated) {
+      this.updateContent();
     }
   },
 
   methods: {
+    // Initialize code editor by requiring dependencies.
+    editorInit: function() {
+      require("brace/ext/language_tools"); //language extension prerequsite...
+      require("brace/mode/groovy");
+      require("brace/mode/javascript"); //language
+      require("brace/mode/less");
+      require("brace/theme/chrome");
+      require("brace/snippets/javascript"); //snippet
+    },
+
     // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    formatDate: function(date) {
+      return Utils.formatDate(date);
     },
 
     // Update content.
-    updateContent: function () {
-      var component = this
+    updateContent: function() {
+      var component = this;
       if (!this.tenantToken) {
-        _getGlobalScriptContent(this.$store, this.identifier,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId)
-          .then(function (response) {
-            component.$data.content = response.data
-          }).catch(function (e) {
-            console.log(e)
+        _getGlobalScriptContent(
+          this.$store,
+          this.identifier,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId
+        )
+          .then(function(response) {
+            component.$data.content = response.data;
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       } else {
-        _getTenantScriptContent(this.$store, this.identifier, this.tenantToken,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId)
-          .then(function (response) {
-            component.$data.content = response.data
-          }).catch(function (e) {
-            console.log(e)
+        _getTenantScriptContent(
+          this.$store,
+          this.identifier,
+          this.tenantToken,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId
+        )
+          .then(function(response) {
+            component.$data.content = response.data;
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       }
     },
 
     // Save editor content.
-    onSave: function () {
-      var component = this
-      var script = this.$data.selectedScript
+    onSave: function() {
+      var component = this;
+      var script = this.$data.selectedScript;
       var updated = {
-        'id': script.id,
-        'name': script.name,
-        'description': script.description,
-        'type': script.type,
-        'content': btoa(this.$data.content)
-      }
+        id: script.id,
+        name: script.name,
+        description: script.description,
+        type: script.type,
+        content: btoa(this.$data.content)
+      };
       if (!this.tenantToken) {
-        _updateGlobalScript(this.$store, this.identifier,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId,
-          updated)
-          .then(function (response) {
-            component.$emit('saved')
-          }).catch(function (e) {
-            console.log(e)
+        _updateGlobalScript(
+          this.$store,
+          this.identifier,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId,
+          updated
+        )
+          .then(function(response) {
+            component.$emit("saved");
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       } else {
-        _updateTenantScript(this.$store, this.identifier, this.tenantToken,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId,
-          updated)
-          .then(function (response) {
-            component.$emit('saved')
-          }).catch(function (e) {
-            console.log(e)
+        _updateTenantScript(
+          this.$store,
+          this.identifier,
+          this.tenantToken,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId,
+          updated
+        )
+          .then(function(response) {
+            component.$emit("saved");
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       }
     },
 
     // Create clone of edited version.
-    onClone: function () {
-      var component = this
+    onClone: function() {
+      var component = this;
       var request = {
-        'comment': 'I am a clone.'
-      }
+        comment: "I am a clone."
+      };
       if (!this.tenantToken) {
-        _cloneGlobalScript(this.$store, this.identifier,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId,
-          request)
-          .then(function (response) {
-            component.$emit('cloned', response.data)
-          }).catch(function (e) {
-            console.log(e)
+        _cloneGlobalScript(
+          this.$store,
+          this.identifier,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId,
+          request
+        )
+          .then(function(response) {
+            component.$emit("cloned", response.data);
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       } else {
-        _cloneTenantScript(this.$store, this.identifier, this.tenantToken,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId,
-          request)
-          .then(function (response) {
-            component.$emit('cloned', response.data)
-          }).catch(function (e) {
-            console.log(e)
+        _cloneTenantScript(
+          this.$store,
+          this.identifier,
+          this.tenantToken,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId,
+          request
+        )
+          .then(function(response) {
+            component.$emit("cloned", response.data);
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       }
     },
 
     // Activate current version.
-    onActivate: function () {
-      var component = this
+    onActivate: function() {
+      var component = this;
       if (!this.tenantToken) {
-        _activateGlobalScript(this.$store, this.identifier,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId)
-          .then(function (response) {
-            component.$emit('activated', response.data)
-          }).catch(function (e) {
-            console.log(e)
+        _activateGlobalScript(
+          this.$store,
+          this.identifier,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId
+        )
+          .then(function(response) {
+            component.$emit("activated", response.data);
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       } else {
-        _activateTenantScript(this.$store, this.identifier, this.tenantToken,
-          this.$data.selectedScript.id, this.$data.selectedVersion.versionId)
-          .then(function (response) {
-            component.$emit('activated', response.data)
-          }).catch(function (e) {
-            console.log(e)
+        _activateTenantScript(
+          this.$store,
+          this.identifier,
+          this.tenantToken,
+          this.$data.selectedScript.id,
+          this.$data.selectedVersion.versionId
+        )
+          .then(function(response) {
+            component.$emit("activated", response.data);
           })
+          .catch(function(e) {
+            console.log(e);
+          });
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
