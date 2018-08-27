@@ -144,10 +144,10 @@ export default {
 
       // Command list filter options.
       let options = {};
-      options.includeDeleted = false;
+      options.deviceTypeToken = this.deviceType.token;
 
       var component = this;
-      _listDeviceCommands(this.$store, this.deviceType.token, options)
+      _listDeviceCommands(this.$store, options)
         .then(function(response) {
           component.$data.commands = response.data.results;
         })
