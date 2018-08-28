@@ -184,9 +184,9 @@ export default {
 }
 .overlay {
   position: absolute;
-  top: 0;
+  top: 30px;
   right: 0;
-  bottom: 0;
+  bottom: 30px;
   left: 0;
   background-image: url("../assets/overlay.svg");
   background-position: center;
