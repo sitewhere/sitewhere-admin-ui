@@ -1,26 +1,23 @@
 <template>
 <v-app>
   <main>
+    <div class="background">
+      <div class="facets"></div>
+      <div class="overlay"></div>
+    </div>
     <v-container>
-      <v-card raised class="grey lighten-4 white--text mt-4"
-        style="width: 600px; margin-left: auto; margin-right: auto;">
-        <v-card-text class="white">
-          <img src="../assets/sitewhere.png" style="height: 185px;"/>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-progress-linear v-if="loading" class="login-progress">
-        </v-progress-linear>
+      <div style="width: 600px; margin-left: auto; margin-right: auto; position: relative; padding-top: 230px;">
+        <div class="sitewhere-logo"></div>
         <error-banner :error="error"></error-banner>
         <v-card-text>
           <v-layout row wrap style="width: 100%">
             <v-flex xs12>
-              <div style="width: 100%; text-align: center; color: #333; font-size: 28px;">
-                SiteWhere Server Administration
+              <div style="width: 100%; text-align: center; color: #333; font-size: 33px; font-family: RobotoRegular">
+                SiteWhere Instance Administration
               </div>
             </v-flex>
           </v-layout>
         </v-card-text>
-        <v-divider></v-divider>
         <v-card-text>
           <v-layout row wrap class="pa-3">
             <v-flex xs12 class="mb-4">
@@ -53,7 +50,7 @@
             Login
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </div>
     </v-container>
   </main>
 </v-app>
@@ -167,7 +164,44 @@ export default {
 </script>
 
 <style scoped>
-.login-progress {
-  margin: 0px;
+.background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.facets {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url("../assets/facets.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url("../assets/overlay.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.sitewhere-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 185px;
+  background-image: url("../assets/sitewhere.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 </style>

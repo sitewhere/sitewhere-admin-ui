@@ -8,7 +8,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 app.on("ready", () => {
   // Main window options.
   let windowOptions = {
-    width: 1280,
+    width: 1440,
     minWidth: 1024,
     height: 900,
     minHeight: 768,
