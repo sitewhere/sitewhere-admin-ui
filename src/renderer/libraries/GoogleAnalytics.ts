@@ -31,6 +31,23 @@ export class GoogleAnalytics {
   }
 
   /**
+   * Send an event indicating a social media icon was clicked.
+   * @param settings
+   */
+  public static sendSocialMediaEvent(settings: Settings, type: string): void {
+    const google = GoogleAnalytics.targetUser(settings);
+    if (!IsDev) {
+      google
+        .event({
+          ec: "AdminApplication",
+          ea: "SocialClick_" + type,
+          el: !IsDev ? remote.app.getVersion() : "2.0.0"
+        })
+        .send();
+    }
+  }
+
+  /**
    * Create UA context based on user in settings.
    * @param settings
    */
