@@ -6,13 +6,13 @@
       <div class="overlay"></div>
     </div>
     <v-container>
-      <div style="width: 600px; margin-left: auto; margin-right: auto; position: relative; padding-top: 230px;">
+      <div style="width: 550px; margin-left: auto; margin-right: auto; position: relative; padding-top: 200px;">
         <div class="sitewhere-logo"></div>
         <error-banner :error="error"></error-banner>
         <v-card-text>
           <v-layout row wrap style="width: 100%">
             <v-flex xs12>
-              <div style="width: 100%; text-align: center; color: #333; font-size: 33px; font-family: RobotoRegular">
+              <div style="width: 100%; text-align: center; color: #333; font-size: 30px; font-family: RobotoRegular">
                 SiteWhere Instance Administration
               </div>
             </v-flex>
@@ -198,10 +198,10 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  height: 185px;
-  background-image: url("../assets/sitewhere.png");
+  height: 165px;
+  background-image: url("../assets/sitewhere-with-tagline.svg");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: fill;
 }
 </style>
