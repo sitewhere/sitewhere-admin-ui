@@ -4,9 +4,6 @@
       resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit" :customerTypes="customerTypes">
     </customer-type-dialog>
-    <floating-action-button label="Add Customer Type" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 

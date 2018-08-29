@@ -15,14 +15,22 @@
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <customer-type-create-dialog @customerTypeAdded="onCustomerTypeAdded"
+      <customer-type-create-dialog ref="add" 
+        @customerTypeAdded="onCustomerTypeAdded"
         :customerTypes="customerTypes"/>
+    </div>      
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Customer Type"
+        @action="onAddCustomerType">
+      </navigation-action-button>
     </div>
+
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import CustomerTypeListEntry from "./CustomerTypeListEntry";
 import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog";
@@ -38,6 +46,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     CustomerTypeListEntry,
     CustomerTypeCreateDialog
@@ -72,6 +81,11 @@ export default {
       if (tenant) {
         this.$router.push("/tenants/" + tenant.id + "/customertypes/" + token);
       }
+    },
+
+    // Called to open dialog.
+    onAddCustomerType: function() {
+      this.$refs.add.onOpenDialog();
     },
 
     // Called when a new area type is added.

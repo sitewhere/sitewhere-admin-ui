@@ -1,14 +1,12 @@
 <template>
-  <v-menu offset-y close-on-content-click="false" lazy>
+  <v-menu offset-y lazy>
     <span slot="activator">
       <v-container fluid class="pa-0">
         <v-layout row wrap>
-          <v-flex xs10>
+          <v-flex xs12>
             <v-text-field label="Icon" v-model="icon" prepend-icon="image">
             </v-text-field>
           </v-flex>
-          <v-flex xs2>
-        </v-flex>
         </v-layout>
       </v-container>
     </span>
@@ -388,7 +386,7 @@ export default {
       "grin-tongue-wink",
       "grin-wink",
       "grip-horizontal",
-      "rip-vertical",
+      "grip-vertical",
       "h-square",
       "hand-holding",
       "hand-holding-heart",
