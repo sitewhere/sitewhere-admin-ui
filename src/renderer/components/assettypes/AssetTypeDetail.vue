@@ -145,7 +145,7 @@ export default {
       var section = {
         id: "assettypes",
         title: "Asset Types",
-        icon: "fa-cog",
+        icon: "cog",
         route: "/admin/assettypes/" + assetType.token,
         longTitle: "Manage Asset Type: " + assetType.name
       };

@@ -2,9 +2,11 @@
   <span>
     {{ field }}
     <v-tooltip right>
-      <font-awesome-icon class="grey--text text--lighten-1 mt-1" icon="copy" size="sm" 
-        slot="activator" v-clipboard="field" :key="field" style="vertical-align: top;"
-        @success="onFieldCopied" @error="onFieldCopyFailed"/>
+      <span slot="activator" v-clipboard="field" :key="field" 
+        @success="onFieldCopied" @error="onFieldCopyFailed">
+        <font-awesome-icon class="grey--text text--lighten-1 mt-1" icon="copy" 
+          size="sm" style="vertical-align: top;"/>
+      </span>
       <span>Copy to Clipboard</span>
     </v-tooltip>
     <v-snackbar :timeout="2000" success v-model="showFieldCopied">{{ message }}

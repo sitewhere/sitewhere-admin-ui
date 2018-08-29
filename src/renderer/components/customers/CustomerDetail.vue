@@ -153,7 +153,7 @@ export default {
       var section = {
         id: "customers",
         title: "Customers",
-        icon: "fa-building",
+        icon: "building",
         route: "/admin/customers/" + data.token,
         longTitle: "Manage Customer: " + data.name
       };

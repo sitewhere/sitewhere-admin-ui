@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page v-if="customerType" icon="map"
+    <navigation-page v-if="customerType" icon="cog"
       :title="customerType.name" loadingMessage="Loading customer type ..."
       :loaded="loaded">
       <div v-if="customerType" slot="content">
@@ -163,7 +163,7 @@ export default {
       var section = {
         id: "customertypes",
         title: "Customer Types",
-        icon: "fa-industry",
+        icon: "cog",
         route: "/admin/customertypes/" + customerType.token,
         longTitle: "Manage Customer Type: " + customerType.name
       };

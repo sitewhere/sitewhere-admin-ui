@@ -53,7 +53,7 @@
           @action="onOpenEmulator">
         </navigation-action-button>
         -->
-        <navigation-action-button icon="fa-times" tooltip="Delete Assignment"
+        <navigation-action-button icon="times" tooltip="Delete Assignment"
           @action="onDelete">
         </navigation-action-button>
       </div>

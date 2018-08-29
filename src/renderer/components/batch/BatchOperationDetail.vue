@@ -1,5 +1,5 @@
 <template>
-  <navigation-page icon="fa-list-alt" title="Manage Batch Operation"
+  <navigation-page icon="list-alt" title="Manage Batch Operation"
     loadingMessage="Loading batch operation ..." :loaded="loaded">
     <div v-if="operation" slot="content">
       <batch-operation-detail-header :operation="operation" class="mb-3">
@@ -23,16 +23,13 @@
 </template>
 
 <script>
-import NavigationPage from '../common/NavigationPage'
-import BatchOperationDetailHeader from './BatchOperationDetailHeader'
-import BatchOperationElementsList from './BatchOperationElementsList'
+import NavigationPage from "../common/NavigationPage";
+import BatchOperationDetailHeader from "./BatchOperationDetailHeader";
+import BatchOperationElementsList from "./BatchOperationElementsList";
 
-import {
-  _getBatchOperation
-} from '../../http/sitewhere-api-wrapper'
+import { _getBatchOperation } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     token: null,
     operation: null,
@@ -47,52 +44,53 @@ export default {
   },
 
   // Called on initial create.
-  created: function () {
-    this.display(this.$route.params.token)
+  created: function() {
+    this.display(this.$route.params.token);
   },
 
   // Called when component is reused.
-  beforeRouteUpdate (to, from, next) {
-    this.display(to.params.token)
-    next()
+  beforeRouteUpdate(to, from, next) {
+    this.display(to.params.token);
+    next();
   },
 
   methods: {
     // Display entity with the given token.
-    display: function (token) {
-      this.$data.token = token
-      this.refresh()
+    display: function(token) {
+      this.$data.token = token;
+      this.refresh();
     },
     // Called to refresh data.
-    refresh: function () {
-      this.$data.loaded = false
-      var token = this.$data.token
-      var component = this
+    refresh: function() {
+      this.$data.loaded = false;
+      var token = this.$data.token;
+      var component = this;
 
       // Load information.
       _getBatchOperation(this.$store, token)
-        .then(function (response) {
-          component.loaded = true
-          component.onLoaded(response.data)
-        }).catch(function (e) {
-          component.loaded = true
+        .then(function(response) {
+          component.loaded = true;
+          component.onLoaded(response.data);
         })
+        .catch(function(e) {
+          component.loaded = true;
+        });
     },
 
     // Called after data is loaded.
-    onLoaded: function (operation) {
-      this.$data.operation = operation
+    onLoaded: function(operation) {
+      this.$data.operation = operation;
       var section = {
-        id: 'batch',
-        title: 'Batch',
-        icon: 'group_work',
-        route: '/admin/batch/' + operation.token,
-        longTitle: 'Manage Batch Operation: ' + operation.token
-      }
-      this.$store.commit('currentSection', section)
+        id: "batch",
+        title: "Batch",
+        icon: "list-alt",
+        route: "/admin/batch/" + operation.token,
+        longTitle: "Manage Batch Operation: " + operation.token
+      };
+      this.$store.commit("currentSection", section);
     }
   }
-}
+};
 </script>
 
 <style scoped>

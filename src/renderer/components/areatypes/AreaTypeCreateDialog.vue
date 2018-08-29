@@ -4,58 +4,56 @@
       resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit" :areaTypes="areaTypes">
     </area-type-dialog>
-    <floating-action-button label="Add Area Type" icon="fa-plus"
+    <floating-action-button label="Add Area Type" icon="plus"
       @action="onOpenDialog">
     </floating-action-button>
   </div>
 </template>
 
 <script>
-import FloatingActionButton from '../common/FloatingActionButton'
-import AreaTypeDialog from './AreaTypeDialog'
-import {_createAreaType} from '../../http/sitewhere-api-wrapper'
+import FloatingActionButton from "../common/FloatingActionButton";
+import AreaTypeDialog from "./AreaTypeDialog";
+import { _createAreaType } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     AreaTypeDialog,
     FloatingActionButton
   },
 
-  props: ['areaTypes'],
+  props: ["areaTypes"],
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
+    onOpenDialog: function() {
+      this.getDialogComponent().reset();
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
+    onCommit: function(payload) {
+      var component = this;
       _createAreaType(this.$store, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
+        .then(function(response) {
+          component.onCommitted(response);
         })
+        .catch(function(e) {});
     },
 
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('areaTypeAdded')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("areaTypeAdded");
     }
   }
-}
+};
 </script>
 
 <style scoped>

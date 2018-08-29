@@ -152,7 +152,7 @@ export default {
       var section = {
         id: "assets",
         title: "Assets",
-        icon: "fa-car",
+        icon: "car",
         route: "/admin/assets/" + asset.token,
         longTitle: "Manage Asset: " + asset.name
       };

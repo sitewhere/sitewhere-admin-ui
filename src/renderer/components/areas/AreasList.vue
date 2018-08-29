@@ -1,5 +1,5 @@
 <template>
-  <navigation-page icon="fa-map" title="Areas"
+  <navigation-page icon="map" title="Areas"
     loadingMessage="Loading areas ..." :loaded="loaded">
     <div slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="areas">

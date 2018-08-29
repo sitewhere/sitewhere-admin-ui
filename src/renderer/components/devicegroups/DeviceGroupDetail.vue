@@ -134,7 +134,7 @@ export default {
       var section = {
         id: "groups",
         title: "Device Group",
-        icon: "view_module",
+        icon: "cubes",
         route: "/admin/groups/" + group.token,
         longTitle: "Manage Device Group: " + group.token
       };

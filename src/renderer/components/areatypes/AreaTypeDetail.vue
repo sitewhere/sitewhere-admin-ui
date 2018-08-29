@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page v-if="areaType" icon="map" :title="areaType.name"
+    <navigation-page v-if="areaType" icon="cog" :title="areaType.name"
       loadingMessage="Loading area type ..." :loaded="loaded">
       <div v-if="areaType" slot="content">
         <area-type-detail-header :areaType="areaType" :areaTypes="areaTypes"
@@ -159,7 +159,7 @@ export default {
       var section = {
         id: "areatypes",
         title: "Area Types",
-        icon: "map",
+        icon: "cog",
         route: "/admin/areatypes/" + areaType.token,
         longTitle: "Manage Area Type: " + areaType.name
       };

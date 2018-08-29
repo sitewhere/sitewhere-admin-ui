@@ -112,7 +112,7 @@ export default {
       var section = {
         id: "devices",
         title: "Devices",
-        icon: "fa-microchip",
+        icon: "microchip",
         route: "/admin/devices/" + device.token,
         longTitle: "Manage Device: " + device.token
       };
