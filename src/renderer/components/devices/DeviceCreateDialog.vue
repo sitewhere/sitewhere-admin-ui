@@ -3,9 +3,6 @@
     <device-dialog ref="dialog" title="Create Device" width="700" createLabel="Create"
       cancelLabel="Cancel" @payload="onCommit">
     </device-dialog>
-    <floating-action-button label="Add Device" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
-  <v-card flat hover class="pa-2">
-    <v-card-text @click="onOpenDevice" :style="styleForDevice()"
-      class="device-root">
+  <v-card flat hover class="pa-2" :style="styleForDevice()">
+    <v-card-text @click="onOpenDevice" class="device-root">
       <div class="device-image"
         :style="backgroundImageStyle(device.deviceType.imageUrl)"></div>
       <div class="title device-type ellipsis">
@@ -19,7 +18,7 @@
         <v-tooltip top>
           <v-btn dark icon class="blue ml-0"
             @click.stop="onAssignDevice" slot="activator">
-            <v-icon>tag</v-icon>
+            <font-awesome-icon icon="tag" size="lg"/>
           </v-btn>
           <span>Assign Device</span>
         </v-tooltip>
@@ -53,9 +52,9 @@ export default {
   methods: {
     styleForDevice: function() {
       let style = {};
-      style["background-color"] = this.device.assignment ? "#fff" : "#cff";
+      style["background-color"] = this.device.assignment ? "#fff" : "#f0f0ff";
       style["border"] =
-        "1px solid " + (this.device.assignment ? "#fff" : "#6cc");
+        "1px solid " + (this.device.assignment ? "#fff" : "#dde");
       return style;
     },
     // Create background image style.

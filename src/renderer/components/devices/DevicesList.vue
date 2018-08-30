@@ -17,9 +17,12 @@
         <pager :results="results" :pageSizes="pageSizes"
           @pagingUpdated="updatePaging">
         </pager>
-        <device-create-dialog @deviceAdded="onDeviceAdded"/>
+        <device-create-dialog ref="add" @deviceAdded="onDeviceAdded"/>
       </div>
       <div slot="actions">
+        <navigation-action-button icon="plus" tooltip="Add Device"
+          @action="onAddDevice">
+        </navigation-action-button>
         <navigation-action-button v-if="filter.deviceType" icon="bolt" 
           tooltip="Execute Batch Command" @action="onBatchCommandInvocation">
         </navigation-action-button>
@@ -89,6 +92,7 @@ export default {
       this.$data.paging = paging;
       this.refresh();
     },
+
     // Refresh list of sites.
     refresh: function() {
       this.$data.loaded = false;
@@ -114,36 +118,49 @@ export default {
           component.loaded = true;
         });
     },
+
     // Called to show filter criteria dialog.
     onShowFilterCriteria: function() {
       this.$refs["filters"].showFilterCriteriaDialog();
     },
+
     // Called when filter criteria are updated.
     onFilterUpdated: function(filter) {
       this.$data.filter = filter;
       this.refresh();
     },
+
     // Open device assignment dialog.
     onAssignDevice: function(device) {
       let assignDialog = this.$refs["assign"];
       assignDialog.deviceToken = device.token;
       assignDialog.onOpenDialog();
     },
+
     // Called after new assignment is created.
     onAssignmentCreated: function() {
       this.refresh();
     },
+
     // Called when a new device is added.
     onDeviceAdded: function() {
       this.refresh();
     },
+
     onDateUpdated: function(value) {
       console.log("date emitted " + value);
     },
+
     // Called to open detail page for device.
     onOpenDevice: function(device) {
       Utils.routeTo(this, "/devices/" + device.token);
     },
+
+    // Called to open dialog.
+    onAddDevice: function() {
+      this.$refs.add.onOpenDialog();
+    },
+
     // Called to invoke a batch command.
     onBatchCommandInvocation: function() {
       this.$refs["batch"].onOpenDialog();

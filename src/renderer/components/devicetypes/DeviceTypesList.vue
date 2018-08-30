@@ -12,13 +12,19 @@
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <device-type-create-dialog @deviceTypeAdded="onDeviceTypeAdded"/>
+      <device-type-create-dialog ref="add" @deviceTypeAdded="onDeviceTypeAdded"/>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Device Type"
+        @action="onAddDeviceType">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import DeviceTypeListEntry from "./DeviceTypeListEntry";
 import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog";
@@ -34,6 +40,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     DeviceTypeListEntry,
     DeviceTypeCreateDialog
@@ -60,6 +67,11 @@ export default {
         .catch(function(e) {
           component.loaded = true;
         });
+    },
+
+    // Called to open dialog.
+    onAddDeviceType: function() {
+      this.$refs.add.onOpenDialog();
     },
 
     // Called when a new device type is added.
