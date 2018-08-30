@@ -4,9 +4,6 @@
       resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit" :areaTypes="areaTypes">
     </area-type-dialog>
-    <floating-action-button label="Add Area Type" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 

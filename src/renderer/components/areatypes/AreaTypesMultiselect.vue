@@ -1,20 +1,20 @@
 <template>
   <v-card hover color="white">
     <v-list v-if="areaTypes">
-      <template v-for="(areaType, index) in areaTypes">
-        <v-list-tile @click="" :key="areaType.id">
+      <template v-for="(areaType) in areaTypes">
+        <v-list-tile :key="areaType.id">
           <v-list-tile-action>
             <v-checkbox v-model="selected" :value="areaType.id">
             </v-checkbox>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
-              <v-icon class="mr-2">{{ areaType.icon }}</v-icon>
+              <font-awesome-icon class="grey--text mr-2" :icon="areaType.icon" size="lg"/>
               {{ areaType.name }}
             </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-divider></v-divider>
+        <v-divider :key="'div' + areaType.id"></v-divider>
       </template>
     </v-list>
     <v-card-text v-else>
@@ -25,49 +25,47 @@
 
 <script>
 export default {
-
   data: () => ({
     selected: []
   }),
 
-  props: ['selectedAreaTypeIds', 'areaTypes'],
+  props: ["selectedAreaTypeIds", "areaTypes"],
 
   computed: {
     // Indexes area types by id.
-    areaTypesById: function () {
-      let atById = {}
+    areaTypesById: function() {
+      let atById = {};
       if (this.areaTypes) {
         for (let i = 0; i < this.areaTypes.length; i++) {
-          let at = this.areaTypes[i]
-          atById[at.id] = at
+          let at = this.areaTypes[i];
+          atById[at.id] = at;
         }
       }
-      return atById
+      return atById;
     }
   },
 
   watch: {
     // Update list selection.
-    selectedAreaTypeIds: function (value) {
-      this.$data.selected = value
+    selectedAreaTypeIds: function(value) {
+      this.$data.selected = value;
     },
     // Reflect selection updates to listeners.
-    selected: function (value) {
-      let atById = this.areaTypesById
-      let selectedAts = []
+    selected: function(value) {
+      let atById = this.areaTypesById;
+      let selectedAts = [];
       for (let i = 0; i < value.length; i++) {
-        let at = atById[value[i]]
+        let at = atById[value[i]];
         if (at) {
-          selectedAts.push(at)
+          selectedAts.push(at);
         }
       }
-      this.$emit('selectedAreaTypesUpdated', selectedAts)
+      this.$emit("selectedAreaTypesUpdated", selectedAts);
     }
   },
 
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

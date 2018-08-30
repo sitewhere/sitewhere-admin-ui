@@ -207,7 +207,7 @@ export default {
   top: 0;
   bottom: 0;
   right: 30px;
-  width: 150px;
+  width: 15%;
 }
 .facets {
   position: absolute;

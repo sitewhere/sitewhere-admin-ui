@@ -13,13 +13,19 @@
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <customer-create-dialog @customerAdded="onCustomerAdded"/>
+      <customer-create-dialog ref="add" @customerAdded="onCustomerAdded"/>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Customer"
+        @action="onAddCustomer">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import CustomerListEntry from "./CustomerListEntry";
@@ -36,6 +42,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     CustomerListEntry,
     CustomerCreateDialog
@@ -72,6 +79,12 @@ export default {
     onOpenCustomer: function(customer) {
       Utils.routeTo(this, "/customers/" + customer.token);
     },
+
+    // Called to open dialog.
+    onAddCustomer: function() {
+      this.$refs.add.onOpenDialog();
+    },
+
     // Called when a new customer is added.
     onCustomerAdded: function() {
       this.refresh();

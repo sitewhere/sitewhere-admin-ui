@@ -24,7 +24,6 @@
         @action="onAddCustomerType">
       </navigation-action-button>
     </div>
-
   </navigation-page>
 </template>
 

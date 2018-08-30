@@ -12,14 +12,20 @@
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <area-type-create-dialog @areaTypeAdded="onAreaTypeAdded"
+      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded"
         :areaTypes="areaTypes"/>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Area Type"
+        @action="onAddAreaType">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import AreaTypeListEntry from "./AreaTypeListEntry";
 import AreaTypeCreateDialog from "./AreaTypeCreateDialog";
@@ -35,6 +41,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     AreaTypeListEntry,
     AreaTypeCreateDialog
@@ -69,6 +76,11 @@ export default {
       if (tenant) {
         this.$router.push("/tenants/" + tenant.id + "/areatypes/" + token);
       }
+    },
+
+    // Called to open dialog.
+    onAddAreaType: function() {
+      this.$refs.add.onOpenDialog();
     },
 
     // Called when a new area type is added.

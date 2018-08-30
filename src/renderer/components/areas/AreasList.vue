@@ -11,13 +11,19 @@
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <area-create-dialog @areaAdded="onAreaAdded"/>
+      <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Area"
+        @action="onAddArea">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import AreaListEntry from "./AreaListEntry";
@@ -34,6 +40,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     AreaListEntry,
     AreaCreateDialog
@@ -71,6 +78,12 @@ export default {
     onOpenArea: function(area) {
       Utils.routeTo(this, "/areas/" + area.token);
     },
+
+    // Called to open dialog.
+    onAddArea: function() {
+      this.$refs.add.onOpenDialog();
+    },
+
     // Called when a new area is added.
     onAreaAdded: function() {
       this.refresh();

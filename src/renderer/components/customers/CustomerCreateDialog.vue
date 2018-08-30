@@ -4,9 +4,6 @@
       resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit" :parentCustomer="parentCustomer">
     </customer-dialog>
-    <floating-action-button label="Add Customer" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 
