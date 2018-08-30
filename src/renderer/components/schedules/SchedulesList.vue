@@ -41,16 +41,22 @@
         <pager :pageSizes="pageSizes" :results="results"
           @pagingUpdated="updatePaging">
         </pager>
+      <schedule-create-dialog ref="add" @scheduleAdded="refresh">
+      </schedule-create-dialog>
+      </div>
+      <div slot="actions">
+        <navigation-action-button icon="plus" tooltip="Add Schedule"
+          @action="onAddSchedule">
+        </navigation-action-button>
       </div>
     </navigation-page>
-    <schedule-create-dialog @scheduleAdded="refresh">
-    </schedule-create-dialog>
   </div>
 </template>
 
 <script>
 import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import ActionsBlock from "../common/ActionsBlock";
 import NoResultsPanel from "../common/NoResultsPanel";
@@ -115,6 +121,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     ActionsBlock,
     NoResultsPanel,
@@ -162,6 +169,11 @@ export default {
     onPageUpdated: function(pageNumber) {
       this.$data.pager.page = pageNumber;
       this.refresh();
+    },
+
+    // Called to open dialog.
+    onAddSchedule: function() {
+      this.$refs.add.onOpenDialog();
     }
   }
 };

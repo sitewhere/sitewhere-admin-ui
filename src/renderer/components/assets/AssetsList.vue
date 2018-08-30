@@ -13,7 +13,12 @@
       <pager :results="results" :pageSizes="pageSizes"
         @pagingUpdated="updatePaging">
       </pager>
-      <asset-create-dialog @assetAdded="onAssetAdded"/>
+      <asset-create-dialog ref="add" @assetAdded="onAssetAdded"/>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Asset"
+        @action="onAddAsset">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -21,6 +26,7 @@
 <script>
 import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import AssetListEntry from "./AssetListEntry";
 import AssetCreateDialog from "./AssetCreateDialog";
@@ -50,6 +56,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     AssetListEntry,
     AssetCreateDialog
@@ -82,6 +89,11 @@ export default {
     // Called on open.
     onOpenAsset: function(asset) {
       Utils.routeTo(this, "/assets/" + asset.token);
+    },
+
+    // Called to open dialog.
+    onAddAsset: function() {
+      this.$refs.add.onOpenDialog();
     },
 
     // Called on add.

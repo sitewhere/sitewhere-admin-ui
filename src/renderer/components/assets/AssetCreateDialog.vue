@@ -4,9 +4,6 @@
       resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit">
     </asset-dialog>
-    <floating-action-button label="Add Asset" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 

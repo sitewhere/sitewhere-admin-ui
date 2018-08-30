@@ -42,10 +42,9 @@
 </template>
 
 <script>
-import DeviceListFilterDialog from './DeviceListFilterDialog'
+import DeviceListFilterDialog from "./DeviceListFilterDialog";
 
 export default {
-
   data: () => ({
     areaFilter: null,
     deviceTypeFilter: null,
@@ -57,57 +56,60 @@ export default {
   },
 
   computed: {
-    emptyFilter: function () {
-      return (!this.areaFilter && !this.deviceTypeFilter &&
-        !this.deviceGroupFilter)
+    emptyFilter: function() {
+      return (
+        !this.areaFilter && !this.deviceTypeFilter && !this.deviceGroupFilter
+      );
     },
-    filter: function () {
-      var result = {}
-      result.areaFilter = this.$data.areaFilter
-      result.deviceTypeFilter = this.$data.deviceTypeFilter
-      result.deviceGroupFilter = this.$data.deviceGroupFilter
-      return result
+    filter: function() {
+      var result = {};
+      result.areaFilter = this.$data.areaFilter;
+      result.deviceTypeFilter = this.$data.deviceTypeFilter;
+      result.deviceGroupFilter = this.$data.deviceGroupFilter;
+      return result;
     }
   },
 
   methods: {
     // Called to show filter criteria dialog.
-    showFilterCriteriaDialog: function () {
-      this.$refs['criteria'].openDialog()
+    showFilterCriteriaDialog: function() {
+      this.$refs["criteria"].openDialog();
     },
     // Called when filter criteria are updated.
-    onFilterUpdated: function (filter) {
+    onFilterUpdated: function(filter) {
       if (filter) {
-        this.$data.areaFilter = filter.areaFilter
-        this.$data.deviceTypeFilter = filter.deviceTypeFilter
-        this.$data.deviceGroupFilter = filter.deviceGroupFilter
+        this.$data.areaFilter = filter.areaFilter;
+        this.$data.deviceTypeFilter = filter.deviceTypeFilter;
+        this.$data.deviceGroupFilter = filter.deviceGroupFilter;
 
-        let criteria = {}
-        criteria.area = (filter.areaFilter) ? filter.areaFilter.token : null
-        criteria.deviceType = (filter.deviceTypeFilter)
-          ? filter.deviceTypeFilter.token : null
-        criteria.group = (filter.deviceGroupFilter)
-          ? filter.deviceGroupFilter.token : null
-        this.$emit('filter', criteria)
+        let criteria = {};
+        criteria.area = filter.areaFilter ? filter.areaFilter.token : null;
+        criteria.deviceType = filter.deviceTypeFilter
+          ? filter.deviceTypeFilter.token
+          : null;
+        criteria.group = filter.deviceGroupFilter
+          ? filter.deviceGroupFilter.token
+          : null;
+        this.$emit("filter", criteria);
       }
     },
     // Remove area filter on close.
-    onAreaFilterClosed: function () {
-      this.$data.areaFilter = null
-      this.onFilterUpdated(this.filter)
+    onAreaFilterClosed: function() {
+      this.$data.areaFilter = null;
+      this.onFilterUpdated(this.filter);
     },
     // Remove deviceType filter on close.
-    onDeviceTypeFilterClosed: function () {
-      this.$data.deviceTypeFilter = null
-      this.onFilterUpdated(this.filter)
+    onDeviceTypeFilterClosed: function() {
+      this.$data.deviceTypeFilter = null;
+      this.onFilterUpdated(this.filter);
     },
     // Remove device group filter on close.
-    onDeviceGroupFilterClosed: function () {
-      this.$data.deviceGroupFilter = null
-      this.onFilterUpdated(this.filter)
+    onDeviceGroupFilterClosed: function() {
+      this.$data.deviceGroupFilter = null;
+      this.onFilterUpdated(this.filter);
     }
   }
-}
+};
 </script>
 
 <style scoped>

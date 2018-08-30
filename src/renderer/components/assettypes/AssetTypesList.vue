@@ -13,13 +13,19 @@
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <asset-type-create-dialog @assetTypeAdded="onAssetTypeAdded"/>
+      <asset-type-create-dialog ref="add" @assetTypeAdded="onAssetTypeAdded"/>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Asset Type"
+        @action="onAddAssetType">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import AssetTypeListEntry from "./AssetTypeListEntry";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog";
@@ -35,6 +41,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     AssetTypeListEntry,
     AssetTypeCreateDialog
@@ -70,6 +77,11 @@ export default {
       if (tenant) {
         this.$router.push("/tenants/" + tenant.token + "/assettypes/" + token);
       }
+    },
+
+    // Called to open dialog.
+    onAddAssetType: function() {
+      this.$refs.add.onOpenDialog();
     },
 
     // Called on add.

@@ -14,14 +14,20 @@
       <pager :results="results" :pageSizes="pageSizes"
         @pagingUpdated="updatePaging">
       </pager>
-      <device-group-create-dialog @groupAdded="refresh">
+      <device-group-create-dialog ref="add" @groupAdded="refresh">
       </device-group-create-dialog>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Device Group"
+        @action="onAddDeviceGroup">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import DeviceGroupListPanel from "./DeviceGroupListPanel";
@@ -53,6 +59,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     DeviceGroupListPanel,
     DeviceGroupCreateDialog
@@ -84,6 +91,11 @@ export default {
     // Called to open detail page for group.
     onOpenGroup: function(group) {
       Utils.routeTo(this, "/groups/" + group.token);
+    },
+
+    // Called to open dialog.
+    onAddDeviceGroup: function() {
+      this.$refs.add.onOpenDialog();
     }
   }
 };

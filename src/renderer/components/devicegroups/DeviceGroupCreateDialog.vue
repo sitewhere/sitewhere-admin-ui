@@ -3,9 +3,6 @@
     <device-group-dialog ref="dialog" title="Create Device Group" width="700"
       createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
     </device-group-dialog>
-    <floating-action-button label="Add Device Group" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 

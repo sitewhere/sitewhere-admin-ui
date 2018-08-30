@@ -4,9 +4,6 @@
       width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit">
     </schedule-dialog>
-    <floating-action-button label="Add Schedule" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 

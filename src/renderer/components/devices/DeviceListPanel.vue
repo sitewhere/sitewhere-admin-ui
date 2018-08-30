@@ -88,7 +88,7 @@ export default {
 <style scoped>
 .device-root {
   position: relative;
-  min-height: 100px;
+  min-height: 80px;
   overflow-x: hidden;
 }
 .device-image {
@@ -96,7 +96,7 @@ export default {
   top: 5px;
   left: 5px;
   bottom: 5px;
-  width: 90px;
+  width: 80px;
   background-color: #fff;
   border-right: 1px solid #eee;
 }

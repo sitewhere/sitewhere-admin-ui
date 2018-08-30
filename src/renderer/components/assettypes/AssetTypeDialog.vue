@@ -6,7 +6,7 @@
       <v-tabs v-model="active">
         <v-tabs-bar dark color="primary">
           <v-tabs-item key="details" href="#details">
-            Asset Type Details
+            Details
           </v-tabs-item>
           <v-tabs-item key="metadata" href="#metadata">
             Metadata
@@ -55,13 +55,12 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import IconSelector from '../common/IconSelector'
-import MetadataPanel from '../common/MetadataPanel'
+import Utils from "../common/Utils";
+import BaseDialog from "../common/BaseDialog";
+import IconSelector from "../common/IconSelector";
+import MetadataPanel from "../common/MetadataPanel";
 
 export default {
-
   data: () => ({
     active: null,
     dialogVisible: false,
@@ -73,16 +72,16 @@ export default {
     error: null,
     categories: [
       {
-        'text': 'Device Asset',
-        'value': 'Device'
+        text: "Device Asset",
+        value: "Device"
       },
       {
-        'text': 'Person Asset',
-        'value': 'Person'
+        text: "Person Asset",
+        value: "Person"
       },
       {
-        'text': 'Hardware Asset',
-        'value': 'Hardware'
+        text: "Hardware Asset",
+        value: "Hardware"
       }
     ]
   }),
@@ -93,85 +92,85 @@ export default {
     MetadataPanel
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel'],
+  props: ["title", "width", "createLabel", "cancelLabel"],
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
-      var payload = {}
-      payload.name = this.$data.typeName
-      payload.description = this.$data.typeDescription
-      payload.assetCategory = this.$data.typeAssetCategory
-      payload.imageUrl = this.$data.typeImageUrl
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+    generatePayload: function() {
+      var payload = {};
+      payload.name = this.$data.typeName;
+      payload.description = this.$data.typeDescription;
+      payload.assetCategory = this.$data.typeAssetCategory;
+      payload.imageUrl = this.$data.typeImageUrl;
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
 
     // Reset dialog contents.
-    reset: function (e) {
-      this.$data.typeName = null
-      this.$data.typeDescription = null
-      this.$data.typeAssetCategory = null
-      this.$data.typeImageUrl = null
-      this.$data.metadata = []
-      this.$data.active = 'details'
+    reset: function(e) {
+      this.$data.typeName = null;
+      this.$data.typeDescription = null;
+      this.$data.typeAssetCategory = null;
+      this.$data.typeImageUrl = null;
+      this.$data.metadata = [];
+      this.$data.active = "details";
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
-      this.reset()
+    load: function(payload) {
+      this.reset();
       if (payload) {
-        this.$data.typeName = payload.name
-        this.$data.typeDescription = payload.description
-        this.$data.typeAssetCategory = payload.assetCategory
-        this.$data.typeImageUrl = payload.imageUrl
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.typeName = payload.name;
+        this.$data.typeDescription = payload.description;
+        this.$data.typeAssetCategory = payload.assetCategory;
+        this.$data.typeImageUrl = payload.imageUrl;
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
-    openDialog: function () {
-      this.$data.dialogVisible = true
+    openDialog: function() {
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
-    closeDialog: function () {
-      this.$data.dialogVisible = false
+    closeDialog: function() {
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
-    showError: function (error) {
-      this.$data.error = error
+    showError: function(error) {
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+    onCreateClicked: function(e) {
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+    onCancelClicked: function(e) {
+      this.$data.dialogVisible = false;
     },
 
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+    onMetadataDeleted: function(name) {
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
 
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+    onMetadataAdded: function(entry) {
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     }
   }
-}
+};
 </script>
 
 <style scoped>
