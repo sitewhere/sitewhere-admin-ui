@@ -4,25 +4,6 @@ import path from "path";
 import { format as formatURL } from "url";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
-const Menu = require('electron').Menu
-
-var template = [{
-  label: "Application",
-  submenu: [
-    { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-    { type: "separator" },
-    { label: "Quit", accelerator: "Command+Q", click: function () { app.quit(); } }
-  ]
-}, {
-  label: "Edit",
-  submenu: [
-    { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-    { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-    { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-    { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-  ]
-}
-];
 
 app.on("ready", () => {
   // Main window options.
@@ -66,7 +47,7 @@ app.on("ready", () => {
     );
   }
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  require("./menu/mainmenu");
 });
 
 app.on("window-all-closed", () => {
