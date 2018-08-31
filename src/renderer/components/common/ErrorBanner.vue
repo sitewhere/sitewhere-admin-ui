@@ -6,43 +6,42 @@
 </template>
 
 <script>
-
 export default {
-
   data: () => ({
     errorDisplayed: false
   }),
 
-  props: ['error'],
+  props: ["error"],
 
   watch: {
-    error: function (value) {
+    error: function(value) {
       if (value) {
-        if (this.error.response && this.error.response.status !== 503) {
-          this.$data.errorDisplayed = true
+        if (this.error.response && this.error.response.status == 503) {
+          this.$data.errorDisplayed = false;
+        } else if (this.error.response || this.error.message) {
+          this.$data.errorDisplayed = true;
         }
       }
     }
   },
 
   computed: {
-    errorMessage: function () {
+    errorMessage: function() {
       if (!this.error) {
-        return ''
+        return "";
       } else if (this.error.response && this.error.response.headers) {
-        if (this.error.response.headers['x-sitewhere-error']) {
-          return this.error.response.headers['x-sitewhere-error']
+        if (this.error.response.headers["x-sitewhere-error"]) {
+          return this.error.response.headers["x-sitewhere-error"];
         } else if (this.error.response.status === 403) {
-          return 'Server Authentication Failed'
+          return "Server Authentication Failed";
         }
       }
-      return this.error.message
+      return this.error.message;
     }
   },
 
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

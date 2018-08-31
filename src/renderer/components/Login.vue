@@ -39,6 +39,9 @@
             <v-flex xs12 class="mb-4">
               <v-text-field hide-details label="Username" v-model="username">
               </v-text-field>
+              <!--
+              <div class="verror" v-if="$v.username.$dirty">Username is required.</div>
+              -->
             </v-flex>
             <v-flex xs12 class="mb-4">
               <v-text-field hide-details label="Password" v-model="password"
@@ -62,10 +65,23 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn type="submit" primary dark @click.stop="onLogin">
+          <v-btn type="submit" primary dark @click.native="onLogin" :loading="loggingIn">
             Login
           </v-btn>
         </v-card-actions>
+        <v-dialog v-model="noserver" max-width="300">
+          <v-card>
+            <v-card-title class="headline">Instance Not Available</v-card-title>
+            <v-card-text>The server location specified could not be contacted. Verify that
+              you have started a SiteWhere instance and the microservices have
+              started successfully.
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn primary flat @click.native="noserver = false">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </div>
     </v-container>
   </main>
@@ -73,14 +89,17 @@
 </template>
 
 <script>
-import { _getJwt, _getUser } from "../http/sitewhere-api-wrapper";
 import ErrorBanner from "./common/ErrorBanner";
 import SocialButton from "./SocialButton";
+import { required } from "vuelidate/lib/validators";
+import { _getJwt, _getUser } from "../http/sitewhere-api-wrapper";
 import { Settings } from "../libraries/Settings.ts";
 import { GoogleAnalytics } from "../libraries/GoogleAnalytics.ts";
 
 export default {
   data: () => ({
+    noserver: false,
+    error: null,
     username: "",
     password: "",
     protocol: null,
@@ -96,6 +115,7 @@ export default {
         value: "https"
       }
     ],
+    loggingIn: false,
     settings: null,
     discordSvgContent:
       '<path d="M137,134c-8.15,0-14.58,7.15-14.58,15.87S129,165.72,137,165.72s14.59-7.15,14.59-15.87S145.14,134,137,134Zm52.2,0c-8.15,0-14.59,7.15-14.59,15.87s6.58,15.87,14.59,15.87,14.58-7.15,14.58-15.87S197.34,134,189.19,134Z" transform="translate(-32.75 -17)"/><path class="cls-1" d="M315.49,17H70.26A37.61,37.61,0,0,0,32.75,54.7V302.11a37.6,37.6,0,0,0,37.51,37.7H277.79L268.09,306l23.42,21.77,22.15,20.5L353,383V54.7A37.61,37.61,0,0,0,315.49,17ZM244.85,256s-6.59-7.87-12.08-14.82c24-6.78,33.12-21.78,33.12-21.78a104.88,104.88,0,0,1-21,10.8,120.4,120.4,0,0,1-26.54,7.86,128.13,128.13,0,0,1-47.4-.18A153.38,153.38,0,0,1,144,230a106.78,106.78,0,0,1-13.36-6.22c-.54-.37-1.09-.55-1.64-.91a2.6,2.6,0,0,1-.73-.55c-3.3-1.83-5.13-3.11-5.13-3.11s8.79,14.64,32,21.59c-5.49,6.95-12.26,15.19-12.26,15.19-40.45-1.28-55.82-27.82-55.82-27.82,0-58.92,26.35-106.69,26.35-106.69,26.35-19.76,51.43-19.21,51.43-19.21l1.83,2.19c-32.94,9.52-48.13,24-48.13,24s4-2.2,10.79-5.31c19.58-8.6,35.14-11,41.55-11.53a18.19,18.19,0,0,1,3.11-.36,154.68,154.68,0,0,1,37-.37,149.19,149.19,0,0,1,55.09,17.57s-14.46-13.73-45.57-23.24l2.56-2.93s25.07-.55,51.42,19.21c0,0,26.36,47.77,26.36,106.69C300.85,228.18,285.29,254.72,244.85,256Z" transform="translate(-32.75 -17)"/>',
@@ -110,6 +130,15 @@ export default {
       '<path class="cls-1" d="M328.13,33H70.88A42.9,42.9,0,0,0,28,75.88V333.13A42.89,42.89,0,0,0,70.88,376H328.13A42.89,42.89,0,0,0,371,333.13V75.88A42.89,42.89,0,0,0,328.13,33ZM284.74,160.85c.08,1.89.08,3.78.08,5.66,0,58.06-44.25,125.11-125.11,125.11A125.13,125.13,0,0,1,92.4,272a86.28,86.28,0,0,0,10.46.6,88.2,88.2,0,0,0,54.62-18.87,44,44,0,0,1-41.07-30.53,43.94,43.94,0,0,0,19.81-.77A44.06,44.06,0,0,1,101,179.29v-.6a44.51,44.51,0,0,0,19.9,5.49,44.17,44.17,0,0,1-13.64-58.74,124.88,124.88,0,0,0,90.64,46,48.31,48.31,0,0,1-1.11-10,44,44,0,0,1,76.06-30.1,87.4,87.4,0,0,0,27.95-10.63A44.21,44.21,0,0,1,281.39,145a89.17,89.17,0,0,0,25.3-7A89.52,89.52,0,0,1,284.74,160.85Z" transform="translate(-28 -33)"/>',
     twitterTitle: "Follow SiteWhere on Twitter"
   }),
+
+  validations: {
+    username: {
+      required
+    },
+    password: {
+      required
+    }
+  },
 
   components: {
     ErrorBanner,
@@ -141,11 +170,6 @@ export default {
   },
 
   computed: {
-    // Get global loading indicator.
-    loading: function() {
-      return this.$store.getters.loading;
-    },
-
     // Get global error indicator.
     error: function() {
       return this.$store.getters.error;
@@ -155,6 +179,7 @@ export default {
   methods: {
     onLogin: function() {
       var component = this;
+      this.$data.loggingIn = true;
 
       var token = btoa(this.username + ":" + this.password);
       this.$store.commit("authToken", token);
@@ -165,21 +190,30 @@ export default {
           var jwt = response.headers["x-sitewhere-jwt"];
           component.$store.commit("jwt", jwt);
           component.onJwtAcquired();
+          component.$data.loggingIn = false;
         })
         .catch(function(e) {
-          console.log(e);
+          component.$data.error = e;
+          component.$data.loggingIn = false;
+          if (e.message === "Network Error") {
+            component.$data.noserver = true;
+          }
         });
     },
 
     onJwtAcquired: function(jwt) {
       var component = this;
+      this.$data.loggingIn = true;
+
       _getUser(this.$store, this.username)
         .then(function(response) {
           component.$store.commit("user", response.data);
           component.$router.push("/system");
+          component.$data.loggingIn = false;
         })
         .catch(function(e) {
-          console.log(e);
+          component.$data.error = e;
+          component.$data.loggingIn = false;
         });
     },
 
@@ -195,6 +229,9 @@ export default {
 </script>
 
 <style scoped>
+.verror {
+  color: #900;
+}
 .background {
   position: fixed;
   top: 0;

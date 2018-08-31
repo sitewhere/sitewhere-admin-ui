@@ -7,6 +7,7 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import Vuetify from "vuetify";
+import Vuelidate from "vuelidate";
 import Vue2Leaflet from "vue2-leaflet";
 import VueMoment from "vue-moment";
 import VueClipboards from "vue-clipboards";
@@ -23,6 +24,7 @@ Vue.use(Vuetify, {
   }
 });
 
+Vue.use(Vuelidate);
 Vue.use(VueMoment);
 Vue.use(VueClipboards);
 Vue.use(VueHighlightJS);
