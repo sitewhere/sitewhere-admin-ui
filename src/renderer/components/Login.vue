@@ -6,7 +6,7 @@
       <div class="overlay"></div>
     </div>
     <div class="social">
-      <div style="padding-top: 260px;">
+      <div style="padding-top: 240px;">
         <social-button :settings="settings" type="Discord" 
           :svg="discordSvgContent" :title="discordTitle" 
           url="https://discord.gg/sq7sH7B" width="400" height="400">
@@ -26,7 +26,7 @@
       </div>
     </div>
     <v-container>
-      <div style="width: 550px; margin-left: auto; margin-right: auto; position: relative; padding-top: 220px;">
+      <div style="width: 550px; margin-left: auto; margin-right: auto; position: relative; padding-top: 220px; padding-left: 50px;">
         <div class="sitewhere-logo"></div>
         <error-banner :error="error"></error-banner>
         <v-card-text class="ma-0 pa-1">
@@ -35,7 +35,7 @@
           </div>
         </v-card-text>
         <v-card-text>
-          <v-layout row wrap class="pa-3">
+          <v-layout row wrap>
             <v-flex xs12 class="mb-2">
               <v-text-field hide-details label="Username" v-model="username">
               </v-text-field>
@@ -66,7 +66,7 @@
             </v-flex>
           </v-layout>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="pr-2">
           <v-spacer></v-spacer>
           <v-btn type="submit" primary dark @click.native="onLogin" :loading="loggingIn">
             Login
@@ -280,7 +280,7 @@ export default {
 .sitewhere-logo {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50px;
   right: 0;
   height: 165px;
   background-image: url("../assets/sitewhere-with-tagline.svg");
