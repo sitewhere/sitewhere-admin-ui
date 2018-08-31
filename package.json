@@ -9,10 +9,24 @@
     "build": "electron-webpack && electron-builder"
   },
   "build": {
-    "appId": "com.sitewhere.admin"
-  },
-  "dmg": {
-    "icon": null
+    "appId": "com.sitewhere.admin",
+    "publish": [
+      {
+        "provider": "github"
+      },
+      {
+        "provider": "s3",
+        "bucket": "sitewhere-admin-app",
+        "path": "/",
+        "acl": "public-read"
+      }
+    ],
+    "dmg": {
+      "icon": null
+    },
+    "mac": {
+      "category": "public.app-category.business"
+    }
   },
   "repository": {
     "type": "git",
