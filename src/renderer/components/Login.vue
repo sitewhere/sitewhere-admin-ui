@@ -36,17 +36,20 @@
         </v-card-text>
         <v-card-text>
           <v-layout row wrap class="pa-3">
-            <v-flex xs12 class="mb-4">
+            <v-flex xs12 class="mb-2">
               <v-text-field hide-details label="Username" v-model="username">
               </v-text-field>
-              <!--
-              <div class="verror" v-if="$v.username.$dirty">Username is required.</div>
-              -->
+              <div class="verror">
+                <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
+              </div>
             </v-flex>
             <v-flex xs12 class="mb-4">
               <v-text-field hide-details label="Password" v-model="password"
                 type="password">
               </v-text-field>
+              <div class="verror">
+                <span v-if="$v.password.$invalid && $v.$dirty">Password is required.</span>
+              </div>
             </v-flex>
             <v-flex xs3 class="pr-3">
               <v-select required :items="protocols" v-model="protocol"
@@ -178,6 +181,11 @@ export default {
 
   methods: {
     onLogin: function() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+
       var component = this;
       this.$data.loggingIn = true;
 
@@ -231,6 +239,7 @@ export default {
 <style scoped>
 .verror {
   color: #900;
+  height: 12px;
 }
 .background {
   position: fixed;
