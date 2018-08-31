@@ -4,9 +4,9 @@
       width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit">
     </tenant-dialog>
-    <floating-action-button label="Add Tenant" icon="plus"
+    <!-- <floating-action-button label="Add Tenant" icon="plus"
       @action="onOpenDialog">
-    </floating-action-button>
+    </floating-action-button> -->
   </div>
 </template>
 

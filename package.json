@@ -8,6 +8,12 @@
     "dev": "electron-webpack dev",
     "build": "electron-webpack && electron-builder"
   },
+  "build": {
+    "appId": "com.sitewhere.admin"
+  },
+  "dmg": {
+    "icon": null
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sitewhere/sitewhere-admin-ui.git"

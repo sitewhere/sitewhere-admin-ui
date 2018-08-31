@@ -14,14 +14,20 @@
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <tenant-create-dialog @tenantAdded="refresh">
+      <tenant-create-dialog ref="add" @tenantAdded="refresh">
       </tenant-create-dialog>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Tenant"
+        @action="onAddTenant">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import TenantListEntry from "./TenantListEntry";
 import TenantCreateDialog from "./TenantCreateDialog";
@@ -37,6 +43,7 @@ export default {
 
   components: {
     NavigationPage,
+    NavigationActionButton,
     Pager,
     TenantListEntry,
     TenantCreateDialog
@@ -75,6 +82,10 @@ export default {
     // Called to open tenant detail.
     onConfigureTenant: function(tenant) {
       this.$router.push("/system/tenants/" + tenant.token);
+    },
+    // Called to open dialog.
+    onAddTenant: function() {
+      this.$refs.add.onOpenDialog();
     }
   }
 };
