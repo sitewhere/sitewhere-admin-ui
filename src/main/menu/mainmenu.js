@@ -166,6 +166,15 @@ if (process.platform === 'darwin') {
       role: 'front'
     }
   ]
+} else { 
+  template.unshift({
+    label: 'File',
+    submenu: [
+      {
+        role: 'quit'
+      }
+    ]
+  })
 }
 
 const menu = Menu.buildFromTemplate(template)
