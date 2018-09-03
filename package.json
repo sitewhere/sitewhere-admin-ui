@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "electron-webpack dev",
     "build": "electron-webpack && electron-builder",
-    "publish": "electron-webpack && electron-builder -p always"
+    "publish": "electron-webpack && electron-builder --mac --win --linux -p always"
   },
   "build": {
     "appId": "com.sitewhere.admin",
@@ -16,12 +16,6 @@
         "provider": "github",
         "owner": "sitewhere",
         "repo": "sitewhere-admin-ui"
-      },
-      {
-        "provider": "s3",
-        "bucket": "sitewhere-admin-app",
-        "path": "/",
-        "acl": "public-read"
       }
     ],
     "dmg": {
