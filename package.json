@@ -6,13 +6,16 @@
   "main": "index.js",
   "scripts": {
     "dev": "electron-webpack dev",
-    "build": "electron-webpack && electron-builder"
+    "build": "electron-webpack && electron-builder",
+    "publish": "electron-webpack && electron-builder -p always"
   },
   "build": {
     "appId": "com.sitewhere.admin",
     "publish": [
       {
-        "provider": "github"
+        "provider": "github",
+        "owner": "sitewhere",
+        "repo": "sitewhere-admin-ui"
       },
       {
         "provider": "s3",
