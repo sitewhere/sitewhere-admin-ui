@@ -99,6 +99,10 @@ if (process.platform === 'darwin') {
         role: 'about'
       },
       {
+        label: 'Check for Updates...',
+        click: require('../updater').checkForUpdates
+      },
+      {
         type: 'separator'
       },
       {

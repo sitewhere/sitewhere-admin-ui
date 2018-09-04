@@ -3,6 +3,7 @@ import { initSplashScreen } from "@trodi/electron-splashscreen";
 import path from "path";
 import { format as formatURL } from "url";
 
+const { autoUpdater } = require("electron-updater")
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 app.on("ready", () => {
@@ -48,6 +49,9 @@ app.on("ready", () => {
   }
 
   require("./menu/mainmenu");
+
+  // check for updates.
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on("window-all-closed", () => {

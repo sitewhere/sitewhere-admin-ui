@@ -48,6 +48,23 @@ export class GoogleAnalytics {
   }
 
   /**
+   * Send an event indicating an application update.
+   * @param settings
+   */
+  public static sendApplicationUpdateEvent(settings: Settings): void {
+    const google = GoogleAnalytics.targetUser(settings);
+    if (!IsDev) {
+      google
+        .event({
+          ec: "AdminApplication",
+          ea: "ApplicationUpdate",
+          el: !IsDev ? remote.app.getVersion() : "2.0.0"
+        })
+        .send();
+    }
+  }
+
+  /**
    * Create UA context based on user in settings.
    * @param settings
    */
