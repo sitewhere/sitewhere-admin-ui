@@ -2,7 +2,7 @@
   <v-card v-if="tenant" color="white" class="grey--text text--darken-1">
     <v-layout class="pa-3" row>
       <v-flex xs3>
-        <v-card-media :src="tenant.logoUrl" height="100%" contain>
+        <v-card-media :src="tenant.imageUrl" height="100%" contain>
         </v-card-media>
       </v-flex>
       <v-flex xs9>
@@ -16,18 +16,17 @@
 </template>
 
 <script>
-import HeaderField from '../common/HeaderField'
-import TenantUpdateDialog from './TenantUpdateDialog'
-import TenantDeleteDialog from './TenantDeleteDialog'
+import HeaderField from "../common/HeaderField";
+import TenantUpdateDialog from "./TenantUpdateDialog";
+import TenantDeleteDialog from "./TenantDeleteDialog";
 
 export default {
-
   data: () => ({
     copyData: null,
     showIdCopied: false
   }),
 
-  props: ['tenant'],
+  props: ["tenant"],
 
   components: {
     HeaderField,
@@ -35,9 +34,8 @@ export default {
     TenantDeleteDialog
   },
 
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

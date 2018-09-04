@@ -74,17 +74,16 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import MetadataPanel from '../common/MetadataPanel'
+import Utils from "../common/Utils";
+import BaseDialog from "../common/BaseDialog";
+import MetadataPanel from "../common/MetadataPanel";
 import {
   _getTenantTemplates,
   _getDatasetTemplates,
   _listUsers
-} from '../../http/sitewhere-api-wrapper'
+} from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     active: null,
     menu: null,
@@ -101,9 +100,12 @@ export default {
     datasetsList: [],
     allUsers: [],
     rules: {
-      tenantToken: (value) => {
-        const pattern = /^[\w-]*$/
-        return pattern.test(value) || 'Tenant token should be alphanumeric with no spaces.'
+      tenantToken: value => {
+        const pattern = /^[\w-]*$/;
+        return (
+          pattern.test(value) ||
+          "Tenant token should be alphanumeric with no spaces."
+        );
       }
     },
     error: null
@@ -114,113 +116,113 @@ export default {
     MetadataPanel
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel'],
+  props: ["title", "width", "createLabel", "cancelLabel"],
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
-      let payload = {}
-      payload.token = this.$data.tenantToken
-      payload.name = this.$data.tenantName
-      payload.logoUrl = this.$data.tenantLogoUrl
-      payload.authenticationToken = this.$data.tenantAuthToken
-      payload.authorizedUserIds = this.$data.tenantAuthUsers
-      payload.tenantTemplateId = this.$data.tenantTemplateId
-      payload.datasetTemplateId = this.$data.datasetTemplateId
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+    generatePayload: function() {
+      let payload = {};
+      payload.token = this.$data.tenantToken;
+      payload.name = this.$data.tenantName;
+      payload.imageUrl = this.$data.tenantLogoUrl;
+      payload.authenticationToken = this.$data.tenantAuthToken;
+      payload.authorizedUserIds = this.$data.tenantAuthUsers;
+      payload.tenantTemplateId = this.$data.tenantTemplateId;
+      payload.datasetTemplateId = this.$data.datasetTemplateId;
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
 
     // Reset dialog contents.
-    reset: function (e) {
-      this.$data.tenantToken = null
-      this.$data.tenantName = null
-      this.$data.tenantLogoUrl = null
-      this.$data.tenantAuthToken = null
-      this.$data.tenantAuthUsers = []
-      this.$data.tenantTemplateId = null
-      this.$data.datasetTemplateId = null
-      this.$data.metadata = []
-      this.$data.active = 'details'
+    reset: function(e) {
+      this.$data.tenantToken = null;
+      this.$data.tenantName = null;
+      this.$data.tenantLogoUrl = null;
+      this.$data.tenantAuthToken = null;
+      this.$data.tenantAuthUsers = [];
+      this.$data.tenantTemplateId = null;
+      this.$data.datasetTemplateId = null;
+      this.$data.metadata = [];
+      this.$data.active = "details";
 
       // Reload tenant templates list.
-      var component = this
+      var component = this;
       _getTenantTemplates(this.$store)
-        .then(function (response) {
-          component.templatesList = response.data
-        }).catch(function (e) {
+        .then(function(response) {
+          component.templatesList = response.data;
         })
+        .catch(function(e) {});
       _getDatasetTemplates(this.$store)
-        .then(function (response) {
-          component.datasetsList = response.data
-        }).catch(function (e) {
+        .then(function(response) {
+          component.datasetsList = response.data;
         })
+        .catch(function(e) {});
       _listUsers(this.$store, false, 1000)
-        .then(function (response) {
-          component.allUsers = response.data.results
-        }).catch(function (e) {
+        .then(function(response) {
+          component.allUsers = response.data.results;
         })
+        .catch(function(e) {});
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
-      this.reset()
+    load: function(payload) {
+      this.reset();
 
       if (payload) {
-        this.$data.tenantToken = payload.token
-        this.$data.tenantName = payload.name
-        this.$data.tenantLogoUrl = payload.logoUrl
-        this.$data.tenantAuthToken = payload.authenticationToken
-        this.$data.tenantAuthUsers = payload.authorizedUserIds
-        this.$data.tenantTemplateId = payload.tenantTemplateId
-        this.$data.datasetTemplateId = payload.datasetTemplateId
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.tenantToken = payload.token;
+        this.$data.tenantName = payload.name;
+        this.$data.tenantLogoUrl = payload.imageUrl;
+        this.$data.tenantAuthToken = payload.authenticationToken;
+        this.$data.tenantAuthUsers = payload.authorizedUserIds;
+        this.$data.tenantTemplateId = payload.tenantTemplateId;
+        this.$data.datasetTemplateId = payload.datasetTemplateId;
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
-    openDialog: function () {
-      this.$data.dialogVisible = true
+    openDialog: function() {
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
-    closeDialog: function () {
-      this.$data.dialogVisible = false
+    closeDialog: function() {
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
-    showError: function (error) {
-      this.$data.error = error
+    showError: function(error) {
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+    onCreateClicked: function(e) {
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+    onCancelClicked: function(e) {
+      this.$data.dialogVisible = false;
     },
 
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+    onMetadataDeleted: function(name) {
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
 
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+    onMetadataAdded: function(entry) {
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     }
   }
-}
+};
 </script>
 
 <style scoped>

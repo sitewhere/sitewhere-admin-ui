@@ -70,7 +70,7 @@ export default {
     // Styling for tenant logo.
     tenantLogoStyle: function(tenant) {
       return {
-        background: "url(" + tenant.logoUrl + ")",
+        background: "url(" + tenant.imageUrl + ")",
         "background-size": "contain",
         "background-repeat": "no-repeat",
         "background-position": "50% 50%"
