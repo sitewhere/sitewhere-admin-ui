@@ -2,10 +2,10 @@
   <navigation-page icon="layer-group" title="Manage Tenants"
     loadingMessage="Loading tenant list ..." :loaded="loaded">
     <div slot="content">
-      <v-container fluid grid-list-md v-if="tenants">
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="tenants">
         <v-layout row wrap>
            <v-flex xs12 v-for="(tenant) in tenants" :key="tenant.token">
-            <tenant-list-entry :tenant="tenant" class="mb-2"
+            <tenant-list-entry :tenant="tenant"
               @click="onOpenTenant(tenant)"
               @openTenant="onOpenTenant(tenant)"
               @configureTenant="onConfigureTenant(tenant)">
