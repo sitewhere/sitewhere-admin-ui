@@ -2,22 +2,23 @@ import { app } from "electron";
 import { initSplashScreen } from "@trodi/electron-splashscreen";
 import path from "path";
 import { format as formatURL } from "url";
+import IsDev from "electron-is-dev";
 
-const { autoUpdater } = require("electron-updater")
+const { autoUpdater } = require("electron-updater");
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 app.on("ready", () => {
+  let version = !IsDev ? app.getVersion() : "2.0.0";
+
   // Main window options.
   let windowOptions = {
     width: 1440,
     minWidth: 1024,
     height: 900,
     minHeight: 768,
-    title: "SiteWhere Admininstration (Community Edition)",
+    title: `SiteWhere Admininstration (${version} CE)`,
     titleBarStyle: "hidden",
-    webPreferences: {
-      webSecurity: false
-    }
+    webPreferences: { webSecurity: false }
   };
 
   // Create splash screen.

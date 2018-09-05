@@ -15,8 +15,8 @@
         </customer-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="contained" href="#contained">
-              Contents
+            <v-tabs-item key="customers" href="#customers">
+              Subcustomers
             </v-tabs-item>
             <v-tabs-item key="assignments" href="#assignments">
               Assigned Devices
@@ -33,7 +33,7 @@
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
-            <v-tabs-content key="contained" id="contained">
+            <v-tabs-content key="customers" id="customers">
               <customer-contained-customers :customer="customer">
               </customer-contained-customers>
             </v-tabs-content>

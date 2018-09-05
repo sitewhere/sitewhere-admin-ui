@@ -10,7 +10,7 @@
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
             <v-tabs-item key="areas" href="#areas">
-              Areas
+              Areas of Type
             </v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>

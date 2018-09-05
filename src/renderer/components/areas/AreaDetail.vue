@@ -7,8 +7,8 @@
         </area-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="contained" href="#contained">
-              Contents
+            <v-tabs-item key="areas" href="#areas">
+              Subareas
             </v-tabs-item>
             <v-tabs-item key="assignments" href="#assignments">
               Assigned Devices
@@ -28,7 +28,7 @@
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
-            <v-tabs-content key="contained" id="contained">
+            <v-tabs-content key="areas" id="areas">
               <area-contained-areas :area="area"></area-contained-areas>
             </v-tabs-content>
             <v-tabs-content key="assignments" id="assignments">

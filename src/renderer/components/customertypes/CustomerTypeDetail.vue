@@ -12,7 +12,7 @@
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
             <v-tabs-item key="instances" href="#instances">
-              Instances
+              Customers of Type
             </v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
