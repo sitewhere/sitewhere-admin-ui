@@ -191,7 +191,8 @@ export default {
       this.$data.datasetTemplateId = null;
       this.$data.metadata = [];
       this.$data.active = "details";
-
+      this.$v.$reset();
+      
       // Reload tenant templates list.
       var component = this;
       _getTenantTemplates(this.$store)
