@@ -58,7 +58,8 @@
                         v-model="customerImageUrl" prepend-icon="image">
                       </v-text-field>
                       <div class="verror">
-                        <span v-if="$v.customerImageUrl.$invalid && $v.$dirty">Image URL is not valid.</span>
+                        <span v-if="!$v.customerImageUrl.required && $v.$dirty">Image URL is required.</span>
+                        <span v-if="!$v.customerImageUrl.url && $v.$dirty">URL is not valid.</span>
                       </div>
                     </v-flex>
                   </v-layout>

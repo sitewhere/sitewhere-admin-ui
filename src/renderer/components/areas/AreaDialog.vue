@@ -57,7 +57,8 @@
                     <v-flex xs12>
                       <v-text-field required class="mt-1" label="Image URL" v-model="areaImageUrl" prepend-icon="image"></v-text-field>
                       <div class="verror">
-                        <span v-if="$v.areaImageUrl.$invalid && $v.$dirty">Image URL is required.</span>
+                        <span v-if="!$v.areaImageUrl.required && $v.$dirty">Image URL is required.</span>
+                        <span v-if="!$v.areaImageUrl.url && $v.$dirty">URL is not valid.</span>
                       </div>
                     </v-flex>
                   </v-layout>
