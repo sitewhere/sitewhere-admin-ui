@@ -23,21 +23,30 @@
                 <v-container fluid>
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" label="Name" v-model="typeName"
+                      <v-text-field required class="mt-1" label="Token"
+                        v-model="typeToken" hide-details prepend-icon="info"
+                        :rules="[rules.validToken]">
+                      </v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.typeToken.$invalid && $v.$dirty">Customer type token is required or invalid.</span>
+                      </div>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field required class="mt-1" label="Name" v-model="typeName"
                         prepend-icon="info"></v-text-field>
                       <div class="verror">
                         <span v-if="$v.typeName.$invalid && $v.$dirty">Name is required.</span>
                       </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" multi-line label="Description"
+                      <v-text-field required class="mt-1" multi-line label="Description"
                         v-model="typeDescription" prepend-icon="subject"></v-text-field>
                       <div class="verror">
                         <span v-if="$v.typeDescription.$invalid && $v.$dirty">Description is required.</span>
                       </div>
                     </v-flex>
                     <v-flex xs12>
-                      <icon-selector v-model="typeIcon"></icon-selector>
+                      <icon-selector required v-model="typeIcon"></icon-selector>
                        <div class="verror">
                         <span v-if="$v.typeIcon.$invalid && $v.$dirty">Icon is required.</span>
                       </div>
@@ -69,22 +78,38 @@ import BaseDialog from "../common/BaseDialog";
 import IconSelector from "../common/IconSelector";
 import CustomerTypesMultiselect from "./CustomerTypesMultiselect";
 import MetadataPanel from "../common/MetadataPanel";
-import { required } from "vuelidate/lib/validators";
+import { required, helpers } from "vuelidate/lib/validators";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
 
 export default {
   data: () => ({
     active: null,
     dialogVisible: false,
+    typeToken: null,
     typeName: "",
     typeDescription: "",
     typeIcon: "",
     typeContainedCustomerTypeIds: [],
     typeContainedCustomerTypeTokens: [],
     metadata: [],
+    rules: {
+      validToken: value => {
+        const pattern = /^[\w-]*$/;
+        return (
+          pattern.test(value) ||
+          "Customer typen token should be alphanumeric with no spaces."
+        );
+      }
+    },
     error: null
   }),
 
   validations: {
+    typeToken: {
+      required,
+      validToken
+    },
     typeName: {
       required
     },
@@ -109,6 +134,7 @@ export default {
     // Generate payload from UI.
     generatePayload: function() {
       var payload = {};
+      payload.token = this.$data.typeToken;
       payload.name = this.$data.typeName;
       payload.description = this.$data.typeDescription;
       payload.icon = this.$data.typeIcon;
@@ -119,6 +145,7 @@ export default {
 
     // Reset dialog contents.
     reset: function(e) {
+      this.$data.typeToken = null;
       this.$data.typeName = null;
       this.$data.typeDescription = null;
       this.$data.typeIcon = null;
@@ -133,6 +160,7 @@ export default {
     load: function(payload) {
       this.reset();
       if (payload) {
+        this.$data.typeToken = payload.token;
         this.$data.typeName = payload.name;
         this.$data.typeDescription = payload.description;
         this.$data.typeIcon = payload.icon;
