@@ -237,10 +237,6 @@ export default {
 </script>
 
 <style scoped>
-.verror {
-  color: #900;
-  height: 12px;
-}
 .background {
   position: fixed;
   top: 0;

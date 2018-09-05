@@ -30,3 +30,7 @@
 div.CodeMirror {
   height: auto;
 }
+.verror {
+  color: #900;
+  height: 12px;
+}

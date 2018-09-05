@@ -23,22 +23,34 @@
                       v-model="tenantToken" hide-details prepend-icon="info"
                       :rules="[rules.tenantToken]">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.tenantToken.$invalid && $v.$dirty">Tenant token is required or invalid.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="Name"
                       v-model="tenantName" hide-details prepend-icon="info">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.tenantName.$invalid && $v.$dirty">Name is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="Logo URL"
                       v-model="tenantLogoUrl" hide-details prepend-icon="info">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.tenantLogoUrl.$invalid && $v.$dirty">Logo is required or not valir URL.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field required class="mt-1"
                       label="Authentication Token" v-model="tenantAuthToken"
                       hide-details prepend-icon="https">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.tenantAuthToken.$invalid && $v.$dirty">Authentication Token is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-select label="Authorized users"
@@ -52,12 +64,18 @@
                       v-model="tenantTemplateId" label="Template"
                       item-text="name" item-value="id"
                       prepend-icon="info"></v-select>
+                    <div class="verror">
+                      <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty">Template is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-select required :items="datasetsList"
                       v-model="datasetTemplateId" label="Dataset"
                       item-text="name" item-value="id"
                       prepend-icon="info"></v-select>
+                    <div class="verror">
+                      <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty">Dataset is required.</span>
+                    </div>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -77,11 +95,14 @@
 import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
 import MetadataPanel from "../common/MetadataPanel";
+import { required, url, helpers } from "vuelidate/lib/validators";
 import {
   _getTenantTemplates,
   _getDatasetTemplates,
   _listUsers
 } from "../../http/sitewhere-api-wrapper";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
 
 export default {
   data: () => ({
@@ -110,6 +131,32 @@ export default {
     },
     error: null
   }),
+
+  validations: {
+    tenantToken: {
+      required,
+      validToken
+    },
+    tenantName: {
+      required
+    },
+    tenantLogoUrl: {
+      required,
+      url
+    },
+    tenantAuthToken: {
+      required
+    },
+    tenantAuthUsers: {
+      required
+    },
+    tenantTemplateId: {
+      required
+    },
+    datasetTemplateId: {
+      required
+    }
+  },
 
   components: {
     BaseDialog,
@@ -197,6 +244,10 @@ export default {
 
     // Called after create button is clicked.
     onCreateClicked: function(e) {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
