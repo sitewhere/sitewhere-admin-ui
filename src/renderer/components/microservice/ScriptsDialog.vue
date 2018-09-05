@@ -19,23 +19,35 @@
               <v-container fluid>
                 <v-layout row wrap>
                   <v-flex xs12>
-                    <v-text-field label="Id" v-model="scriptId">
+                    <v-text-field required label="Id" v-model="scriptId">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.scriptId.$invalid && $v.$dirty">Id is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field label="Name" v-model="scriptName">
+                    <v-text-field required label="Name" v-model="scriptName">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.scriptName.$invalid && $v.$dirty">Name is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field multi-line label="Description"
+                    <v-text-field required multi-line label="Description"
                       v-model="scriptDescription">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.scriptDescription.$invalid && $v.$dirty">Description is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-select :items="scriptTypes" v-model="scriptType"
+                    <v-select required :items="scriptTypes" v-model="scriptType"
                       label="Script Type" light single-line auto
                       hide-details>
                     </v-select>
+                    <div class="verror">
+                      <span v-if="$v.scriptType.$invalid && $v.$dirty">Script Type is required.</span>
+                    </div>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -70,58 +82,75 @@
 </template>
 
 <script>
-import BaseDialog from '../common/BaseDialog'
+import BaseDialog from "../common/BaseDialog"
 import {
   _listScriptTemplates,
   _getScriptTemplateContent
-} from '../../http/sitewhere-api-wrapper'
+} from "../../http/sitewhere-api-wrapper"
+import { required } from "vuelidate/lib/validators";
 
 export default {
 
   data: () => ({
     active: null,
     dialogVisible: false,
-    scriptId: '',
-    scriptName: '',
-    scriptDescription: '',
+    scriptId: "",
+    scriptName: "",
+    scriptDescription: "",
     scriptType: {},
-    scriptContent: '',
+    scriptContent: "",
     scriptTemplate: null,
     scriptTemplates: [],
     scriptTypes: [
       {
-        'text': 'Groovy',
-        'value': 'groovy'
+        "text": "Groovy",
+        "value": "groovy"
       }
     ],
     error: null
   }),
 
+  validations: {
+    scriptId: {
+      required
+    },
+    scriptName: {
+      required
+    },
+    scriptDescription: {
+      required
+    },
+    scriptType: {
+      required
+    }
+  },
+
   components: {
     BaseDialog
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel', 'identifier'],
+  props: ["title", "width", "createLabel", "cancelLabel", "identifier"],
 
   methods: {
     // Generate payload from UI.
     generatePayload: function () {
-      var payload = {}
-      payload.id = this.$data.scriptId
-      payload.name = this.$data.scriptName
-      payload.description = this.$data.scriptDescription
-      payload.type = this.$data.scriptType
-      payload.content = btoa(this.$data.scriptContent)
-      return payload
+      var payload = {};
+      payload.id = this.$data.scriptId;
+      payload.name = this.$data.scriptName;
+      payload.description = this.$data.scriptDescription;
+      payload.type = this.$data.scriptType;
+      payload.content = btoa(this.$data.scriptContent);
+      return payload;
     },
 
     // Reset dialog contents.
     reset: function (e) {
-      this.$data.scriptId = null
-      this.$data.scriptName = null
-      this.$data.scriptDescription = null
-      this.$data.scriptType = null
-      this.$data.scriptContent = '// Add script content here.'
+      this.$data.scriptId = null;
+      this.$data.scriptName = null;
+      this.$data.scriptDescription = null;
+      this.$data.scriptType = null;
+      this.$data.scriptContent = "// Add script content here.";
+      this.$v.$reset();
 
       // Refresh list of script templates.
       this.loadTemplates()
@@ -129,61 +158,65 @@ export default {
 
     // Refresh list of scripts.
     loadTemplates: function () {
-      var component = this
+      var component = this;
       _listScriptTemplates(this.$store, this.identifier)
         .then(function (response) {
-          component.$data.scriptTemplates = response.data
+          component.$data.scriptTemplates = response.data;
         }).catch(function (e) {
-        })
+        });
     },
 
     // Called when selected template is updated.
     onTemplateUpdated: function (templateId) {
-      var component = this
+      var component = this;
       _getScriptTemplateContent(this.$store, this.identifier, templateId)
         .then(function (response) {
-          component.$data.scriptContent = response.data
+          component.$data.scriptContent = response.data;
         }).catch(function (e) {
-        })
+        });
     },
 
     // Load dialog from a given payload.
     load: function (payload) {
-      this.reset()
+      this.reset();
 
       if (payload) {
-        this.$data.scriptId = payload.id
-        this.$data.scriptName = payload.name
-        this.$data.scriptDescription = payload.description
-        this.$data.scriptType = payload.type
-        this.$data.scriptContent = atob(payload.content)
+        this.$data.scriptId = payload.id;
+        this.$data.scriptName = payload.name;
+        this.$data.scriptDescription = payload.description;
+        this.$data.scriptType = payload.type;
+        this.$data.scriptContent = atob(payload.content);
       }
     },
 
     // Called to open the dialog.
     openDialog: function () {
-      this.$data.dialogVisible = true
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
     closeDialog: function () {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
     showError: function (error) {
-      this.$data.error = error
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
     onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
     onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     }
   }
 }
