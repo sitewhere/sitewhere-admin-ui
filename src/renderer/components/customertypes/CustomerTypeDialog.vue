@@ -25,14 +25,23 @@
                     <v-flex xs12>
                       <v-text-field class="mt-1" label="Name" v-model="typeName"
                         prepend-icon="info"></v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.typeName.$invalid && $v.$dirty">Name is required.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
                       <v-text-field class="mt-1" multi-line label="Description"
                         v-model="typeDescription" prepend-icon="subject"></v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.typeDescription.$invalid && $v.$dirty">Description is required.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
                       <icon-selector v-model="typeIcon"></icon-selector>
-                    </v-flex>
+                       <div class="verror">
+                        <span v-if="$v.typeIcon.$invalid && $v.$dirty">Icon is required.</span>
+                      </div>
+                   </v-flex>
                   </v-layout>
                 </v-container>
                 </v-card-text>
@@ -60,6 +69,7 @@ import BaseDialog from "../common/BaseDialog";
 import IconSelector from "../common/IconSelector";
 import CustomerTypesMultiselect from "./CustomerTypesMultiselect";
 import MetadataPanel from "../common/MetadataPanel";
+import { required } from "vuelidate/lib/validators";
 
 export default {
   data: () => ({
@@ -73,6 +83,18 @@ export default {
     metadata: [],
     error: null
   }),
+
+  validations: {
+    typeName: {
+      required
+    },
+    typeDescription: {
+      required
+    },
+    typeIcon: {
+      required
+    }
+  },
 
   components: {
     BaseDialog,
@@ -104,6 +126,7 @@ export default {
       this.$data.typeContainedCustomerTypeTokens = [];
       this.$data.metadata = [];
       this.$data.active = "details";
+      this.$v.$reset();
     },
 
     // Load dialog from a given payload.
@@ -146,6 +169,10 @@ export default {
 
     // Called after create button is clicked.
     onCreateClicked: function(e) {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
