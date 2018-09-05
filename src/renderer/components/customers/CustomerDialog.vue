@@ -20,7 +20,16 @@
                 <v-container fluid>
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" label="Customer name"
+                      <v-text-field required class="mt-1" label="Customer token"
+                        v-model="customerToken" hide-details prepend-icon="info"
+                        :rules="[rules.tenantToken]">
+                      </v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.customerToken.$invalid && $v.$dirty">Customer token is required or invalid.</span>
+                      </div>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field required class="mt-1" label="Customer name"
                         v-model="customerName" prepend-icon="info">
                       </v-text-field>
                       <div class="verror">
@@ -36,7 +45,7 @@
                       </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" multi-line label="Description"
+                      <v-text-field required class="mt-1" multi-line label="Description"
                         v-model="customerDescription" prepend-icon="subject">
                       </v-text-field>
                       <div class="verror">
@@ -44,7 +53,7 @@
                       </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" label="Image URL"
+                      <v-text-field required class="mt-1" label="Image URL"
                         v-model="customerImageUrl" prepend-icon="image">
                       </v-text-field>
                       <div class="verror">
@@ -71,23 +80,39 @@ import Utils from '../common/Utils'
 import BaseDialog from '../common/BaseDialog'
 import CustomerTypeSelector from '../customertypes/CustomerTypeSelector'
 import MetadataPanel from '../common/MetadataPanel'
-import { required, url } from "vuelidate/lib/validators";
+import { required, url, helpers } from "vuelidate/lib/validators";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
 
 export default {
 
   data: () => ({
     active: null,
     dialogVisible: false,
+    customerToken: null,
     customerTypeId: '',
     customerTypeToken: null,
     customerName: '',
     customerDescription: '',
     customerImageUrl: '',
     metadata: [],
+    rules: {
+      tenantToken: value => {
+        const pattern = /^[\w-]*$/;
+        return (
+          pattern.test(value) ||
+          "Customer token should be alphanumeric with no spaces."
+        );
+      }
+    },
     error: null
   }),
 
   validations: {
+    customerToken: {
+      required,
+      validToken
+    },
     customerName: {
       required
     },
@@ -115,6 +140,7 @@ export default {
     // Generate payload from UI.
     generatePayload: function () {
       var payload = {};
+      payload.token = this.$data.customerToken;
       payload.customerTypeToken = this.$data.customerTypeToken;
       payload.parentCustomerToken =
         this.parentCustomer ? this.parentCustomer.token : null;
@@ -127,6 +153,7 @@ export default {
 
     // Reset dialog contents.
     reset: function (e) {
+      this.$data.customerToken = null;
       this.$data.customerTypeId = null;
       this.$data.customerTypeToken = null;
       this.$data.customerName = null;
@@ -142,6 +169,7 @@ export default {
       this.reset();
 
       if (payload) {
+        this.$data.customerToken = payload.token;
         this.$data.customerTypeId = payload.customerType.id;
         this.$data.customerTypeToken = payload.customerType.token;
         this.$data.customerName = payload.name;
