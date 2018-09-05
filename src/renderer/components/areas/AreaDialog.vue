@@ -28,7 +28,8 @@
                         :rules="[rules.validToken]">
                       </v-text-field>
                       <div class="verror">
-                        <span v-if="$v.areaToken.$invalid && $v.$dirty">Area token is required or invalid.</span>
+                        <span v-if="!$v.areaToken.required && $v.$dirty">Area token is required.</span>
+                        <span v-if="!$v.areaToken.validToken && $v.$dirty">Area token is not valid.</span>
                       </div>
                     </v-flex>
                     <v-flex xs12>

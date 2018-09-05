@@ -25,7 +25,8 @@
                         :rules="[rules.tenantToken]">
                       </v-text-field>
                       <div class="verror">
-                        <span v-if="$v.customerToken.$invalid && $v.$dirty">Customer token is required or invalid.</span>
+                        <span v-if="!$v.customerToken.required && $v.$dirty">Customer token is required.</span>
+                        <span v-if="!$v.customerToken.validToken && $v.$dirty">Customer token is not valid.</span>
                       </div>
                     </v-flex>
                     <v-flex xs12>
