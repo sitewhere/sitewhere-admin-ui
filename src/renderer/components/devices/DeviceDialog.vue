@@ -20,6 +20,10 @@
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="Token"
                       v-model="devToken" prepend-icon="info"></v-text-field>
+                    <div class="verror">
+                      <span v-if="!$v.devToken.required && $v.$dirty">Device token is required.</span>
+                      <span v-if="!$v.devToken.validToken && $v.$dirty">Device token is not valid.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field class="mt-1" multi-line label="Comments"
@@ -81,10 +85,13 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import MetadataPanel from '../common/MetadataPanel'
-import DeviceTypeChooser from '../devicetypes/DeviceTypeChooser'
+import Utils from "../common/Utils";
+import BaseDialog from "../common/BaseDialog";
+import MetadataPanel from "../common/MetadataPanel";
+import DeviceTypeChooser from "../devicetypes/DeviceTypeChooser";
+import { required, helpers } from "vuelidate/lib/validators";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
 
 export default {
 
@@ -99,108 +106,121 @@ export default {
     error: null
   }),
 
+  validations: {
+    devToken: {
+      required,
+      validToken
+    }
+  },
+
   components: {
     BaseDialog,
     MetadataPanel,
     DeviceTypeChooser
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel'],
+  props: ["title", "width", "createLabel", "cancelLabel"],
 
   computed: {
     // Indicates if first page fields are filled in.
     firstPageComplete: function () {
-      return !Utils.isBlank(this.$data.devToken)
+      this.$v.$touch();
+      return (!this.$v.devToken.$invalid);
     },
 
     // Indicates if second page is complete.
     secondPageComplete: function () {
-      return this.firstPageComplete && (this.$data.devDeviceTypeToken != null)
+      return this.firstPageComplete && (this.$data.devDeviceTypeToken != null);
     }
   },
 
   methods: {
     // Generate payload from UI.
     generatePayload: function () {
-      var payload = {}
-      payload.token = this.$data.devToken
-      payload.comments = this.$data.devComments
-      payload.deviceTypeToken = this.$data.devDeviceTypeToken
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+      var payload = {};
+      payload.token = this.$data.devToken;
+      payload.comments = this.$data.devComments;
+      payload.deviceTypeToken = this.$data.devDeviceTypeToken;
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
 
     // Reset dialog contents.
     reset: function () {
-      this.$data.devToken = null
-      this.$data.devComments = null
-      this.$data.devDeviceTypeToken = null
-      this.$data.metadata = []
-      this.$data.step = 1
-      this.$data.error = null
+      this.$data.devToken = null;
+      this.$data.devComments = null;
+      this.$data.devDeviceTypeToken = null;
+      this.$data.metadata = [];
+      this.$data.step = 1;
+      this.$data.error = null;
+      this.$v.$reset();
     },
 
     // Load dialog from a given payload.
     load: function (payload) {
-      this.reset()
+      this.reset();
 
       if (payload) {
-        this.$data.devToken = payload.token
-        this.$data.devComments = payload.comments
-        this.$data.devDeviceTypeToken = payload.deviceType.token
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.devToken = payload.token;
+        this.$data.devComments = payload.comments;
+        this.$data.devDeviceTypeToken = payload.deviceType.token;
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
     openDialog: function () {
-      this.$data.dialogVisible = true
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
     closeDialog: function () {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
     showError: function (error) {
-      this.$data.error = error
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
     onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
     onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called when device type choice is updated.
     onDeviceTypeUpdated: function (deviceType) {
       if (deviceType) {
-        this.$data.devDeviceTypeToken = deviceType.token
+        this.$data.devDeviceTypeToken = deviceType.token;
       } else {
-        this.$data.devDeviceTypeToken = null
+        this.$data.devDeviceTypeToken = null;
       }
     },
 
     // Called when a metadata entry has been deleted.
     onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
 
     // Called when a metadata entry has been added.
     onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     }
   }
 }
