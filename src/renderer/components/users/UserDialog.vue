@@ -25,33 +25,52 @@
                     <v-text-field required class="mt-1" label="Username"
                       v-model="userUsername" hide-details prepend-icon="info">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.userUsername.$invalid && $v.$dirty">Username is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field type="password" required class="mt-1"
                       label="Password" v-model="userPassword"
                       hide-details prepend-icon="https">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="!$v.userPassword.required && $v.$dirty">Password is required.</span>
+                      <span v-if="!$v.userPassword.minLength && $v.$dirty">Password minimum lenght is 6.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field type="password" required class="mt-1"
                       label="Password (confirm)" v-model="userPasswordConfirm"
                       hide-details prepend-icon="https">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="!$v.userPasswordConfirm.sameAsPassword && $v.$dirty">Password does not match.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="First name"
                       v-model="userFirstName" hide-details prepend-icon="info">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.userFirstName.$invalid && $v.$dirty">First name is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="Last name"
                       v-model="userLastName" hide-details prepend-icon="info">
                     </v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.userLastName.$invalid && $v.$dirty">Last name is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-select required :items="accountStatusList"
                       v-model="userAccountStatus" label="Account status"
                       prepend-icon="check_circle"></v-select>
+                    <div class="verror">
+                      <span v-if="$v.userAccountStatus.$invalid && $v.$dirty">Account status is required.</span>
+                    </div>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -79,10 +98,11 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import MetadataPanel from '../common/MetadataPanel'
-import {_getAuthoritiesHierarchy} from '../../http/sitewhere-api-wrapper'
+import Utils from "../common/Utils"
+import BaseDialog from "../common/BaseDialog"
+import MetadataPanel from "../common/MetadataPanel"
+import {_getAuthoritiesHierarchy} from "../../http/sitewhere-api-wrapper"
+import { required, sameAs, minLength } from "vuelidate/lib/validators";
 
 export default {
 
@@ -99,135 +119,153 @@ export default {
     userAuthorities: [],
     metadata: [],
     treeProps: {
-      children: 'items',
-      label: 'text'
+      children: "items",
+      label: "text"
     },
     allPermissions: [],
     accountStatusList: [
       {
-        'text': 'Active',
-        'value': 'Active'
+        "text": "Active",
+        "value": "Active"
       }, {
-        'text': 'Expired',
-        'value': 'Expired'
+        "text": "Expired",
+        "value": "Expired"
       }, {
-        'text': 'Locked',
-        'value': 'Locked'
+        "text": "Locked",
+        "value": "Locked"
       }
     ],
     error: null
   }),
+
+  validations: {
+    userUsername: {
+      required
+    },
+    userPassword: {
+      required,
+      minLength: minLength(6)
+    },
+    userPasswordConfirm: {
+      sameAsPassword: sameAs('userPassword')
+    },
+    userFirstName: {
+      required
+    },
+    userLastName: {
+      required
+    },
+    userAccountStatus: {
+      required
+    }
+  },
 
   components: {
     BaseDialog,
     MetadataPanel
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel'],
+  props: ["title", "width", "createLabel", "cancelLabel"],
 
   methods: {
     // Generate payload from UI.
     generatePayload: function () {
-      let payload = {}
-      payload.username = this.$data.userUsername
-      payload.password = this.$data.userPassword
-      payload.firstName = this.$data.userFirstName
-      payload.lastName = this.$data.userLastName
-      payload.status = this.$data.userAccountStatus
-      payload.authorities = this.$data.userAuthorities
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+      let payload = {};
+      payload.username = this.$data.userUsername;
+      payload.password = this.$data.userPassword;
+      payload.firstName = this.$data.userFirstName;
+      payload.lastName = this.$data.userLastName;
+      payload.status = this.$data.userAccountStatus;
+      payload.authorities = this.$data.userAuthorities;
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
 
     // Reset dialog contents.
     reset: function (e) {
-      this.$data.userUsername = null
-      this.$data.userPassword = null
-      this.$data.userPasswordConfirm = null
-      this.$data.userFirstName = null
-      this.$data.userLastName = null
-      this.$data.userAccountStatus = null
-      this.$data.userAuthorities = []
-      this.$data.metadata = []
-      this.$data.active = 'details'
+      this.$data.userUsername = null;
+      this.$data.userPassword = null;
+      this.$data.userPasswordConfirm = null;
+      this.$data.userFirstName = null;
+      this.$data.userLastName = null;
+      this.$data.userAccountStatus = null;
+      this.$data.userAuthorities = [];
+      this.$data.metadata = [];
+      this.$data.active = "details";
+      this.$v.$reset();
 
       // Reload permissions hierarchy.
-      var component = this
+      var component = this;
       _getAuthoritiesHierarchy(this.$store)
         .then(function (response) {
-          component.allPermissions = response.data
+          component.allPermissions = response.data;
         }).catch(function (e) {
         })
     },
 
     // Load dialog from a given payload.
     load: function (payload) {
-      this.reset()
+      this.reset();
 
       if (payload) {
-        this.$data.userUsername = payload.username
-        this.$data.userFirstName = payload.firstName
-        this.$data.userLastName = payload.lastName
-        this.$data.userAccountStatus = payload.status
-        this.$data.userAuthorities = payload.authorities
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.userUsername = payload.username;
+        this.$data.userFirstName = payload.firstName;
+        this.$data.userLastName = payload.lastName;
+        this.$data.userAccountStatus = payload.status;
+        this.$data.userAuthorities = payload.authorities;
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
     openDialog: function () {
-      this.$data.dialogVisible = true
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
     closeDialog: function () {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
     showError: function (error) {
-      this.$data.error = error
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
     onCreateClicked: function (e) {
-      let password = this.$data.userPassword
-      let confirm = this.$data.userPasswordConfirm
-      if (password !== confirm) {
-        this.showError({
-          'message': 'Passwords do not match!'
-        })
-        return
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
       }
-
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
     onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called when permissions list is updated.
     onPermissionsUpdated: function () {
-      this.$data.userAuthorities = this.$refs['tree'].getCheckedKeys()
+      this.$data.userAuthorities = this.$refs["tree"].getCheckedKeys();
     },
 
     // Called when a metadata entry has been deleted.
     onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
 
     // Called when a metadata entry has been added.
     onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     }
   }
 }

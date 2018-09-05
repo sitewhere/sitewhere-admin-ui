@@ -4,14 +4,10 @@
       width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
       @payload="onCommit">
     </user-dialog>
-    <floating-action-button label="Add User" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
   </div>
 </template>
 
 <script>
-import FloatingActionButton from "../common/FloatingActionButton";
 import UserDialog from "./UserDialog";
 import { _createUser } from "../../http/sitewhere-api-wrapper";
 
@@ -19,7 +15,6 @@ export default {
   data: () => ({}),
 
   components: {
-    FloatingActionButton,
     UserDialog
   },
 

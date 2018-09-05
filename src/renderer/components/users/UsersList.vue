@@ -48,8 +48,13 @@
       <pager :pageSizes="pageSizes" :results="results"
         @pagingUpdated="updatePaging">
       </pager>
-      <user-create-dialog @userAdded="refresh">
+      <user-create-dialog ref="add" @userAdded="refresh">
       </user-create-dialog>
+    </div>
+    <div slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add User"
+        @action="onAddUser">
+      </navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -57,6 +62,7 @@
 <script>
 import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
+import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
 import ActionsBlock from "../common/ActionsBlock";
@@ -134,6 +140,7 @@ export default {
   components: {
     Pager,
     NavigationPage,
+    NavigationActionButton,
     NoResultsPanel,
     ActionsBlock,
     UserCreateDialog,
@@ -175,6 +182,11 @@ export default {
     onPageUpdated: function(pageNumber) {
       this.$data.pager.page = pageNumber;
       this.refresh();
+    },
+
+    // Called to open dialog.
+    onAddUser: function() {
+      this.$refs.add.onOpenDialog();
     }
   }
 };
