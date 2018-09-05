@@ -22,7 +22,7 @@
                     <v-flex xs12>
                       <v-text-field required class="mt-1" label="Customer token"
                         v-model="customerToken" hide-details prepend-icon="info"
-                        :rules="[rules.tenantToken]">
+                        :rules="[rules.validToken]">
                       </v-text-field>
                       <div class="verror">
                         <span v-if="!$v.customerToken.required && $v.$dirty">Customer token is required.</span>
@@ -98,7 +98,7 @@ export default {
     customerImageUrl: '',
     metadata: [],
     rules: {
-      tenantToken: value => {
+      validToken: value => {
         const pattern = /^[\w-]*$/;
         return (
           pattern.test(value) ||

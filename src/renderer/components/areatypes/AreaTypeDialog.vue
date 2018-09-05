@@ -23,15 +23,33 @@
                 <v-container fluid>
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" label="Name" v-model="typeName"
-                        prepend-icon="info"></v-text-field>
+                      <v-text-field required class="mt-1" label="Area Type token"
+                        v-model="typeToken" hide-details prepend-icon="info">
+                      </v-text-field>
+                      <div class="verror">
+                        <span v-if="!$v.typeToken.required && $v.$dirty">Area Type token is required.</span>
+                        <span v-if="!$v.typeToken.validToken && $v.$dirty">Area Type token is not valid.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" multi-line label="Description"
+                      <v-text-field required class="mt-1" label="Name" v-model="typeName"
+                        prepend-icon="info"></v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.typeName.$invalid && $v.$dirty">Name is required.</span>
+                      </div>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field required class="mt-1" multi-line label="Description"
                         v-model="typeDescription" prepend-icon="subject"></v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.typeDescription.$invalid && $v.$dirty">Description is required.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
                       <icon-selector v-model="typeIcon"></icon-selector>
+                      <div class="verror">
+                        <span v-if="$v.typeIcon.$invalid && $v.$dirty">Icon is required.</span>
+                      </div>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -60,11 +78,15 @@ import BaseDialog from "../common/BaseDialog";
 import IconSelector from "../common/IconSelector";
 import AreaTypesMultiselect from "./AreaTypesMultiselect";
 import MetadataPanel from "../common/MetadataPanel";
+import { required, helpers } from "vuelidate/lib/validators";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
 
 export default {
   data: () => ({
     active: null,
     dialogVisible: false,
+    typeToken: null,
     typeName: "",
     typeDescription: "",
     typeIcon: "",
@@ -73,6 +95,22 @@ export default {
     metadata: [],
     error: null
   }),
+
+  validations: {
+    typeToken: {
+      required,
+      validToken
+    },
+    typeName: {
+      required
+    },
+    typeDescription: {
+      required
+    },
+    typeIcon: {
+      required
+    }
+  },
 
   components: {
     BaseDialog,
@@ -87,6 +125,7 @@ export default {
     // Generate payload from UI.
     generatePayload: function() {
       var payload = {};
+      payload.token = this.$data.typeToken;
       payload.name = this.$data.typeName;
       payload.description = this.$data.typeDescription;
       payload.icon = this.$data.typeIcon;
@@ -97,6 +136,7 @@ export default {
 
     // Reset dialog contents.
     reset: function(e) {
+      this.$data.typeToken = null;
       this.$data.typeName = null;
       this.$data.typeDescription = null;
       this.$data.typeIcon = null;
@@ -104,12 +144,14 @@ export default {
       this.$data.typeContainedAreaTypeTokens = [];
       this.$data.metadata = [];
       this.$data.active = "details";
+      this.$v.$reset();
     },
 
     // Load dialog from a given payload.
     load: function(payload) {
       this.reset();
       if (payload) {
+        this.$data.typeToken = payload.token;
         this.$data.typeName = payload.name;
         this.$data.typeDescription = payload.description;
         this.$data.typeIcon = payload.icon;
@@ -145,6 +187,10 @@ export default {
 
     // Called after create button is clicked.
     onCreateClicked: function(e) {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
