@@ -20,24 +20,46 @@
                 <v-container fluid>
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" label="Name" v-model="typeName"
-                        prepend-icon="info"></v-text-field>
+                      <v-text-field required class="mt-1" label="Asset type token"
+                        v-model="typeToken" hide-details prepend-icon="info">
+                      </v-text-field>
+                      <div class="verror">
+                        <span v-if="!$v.typeToken.required && $v.$dirty">Asset type token is required.</span>
+                        <span v-if="!$v.typeToken.validToken && $v.$dirty">Asset type token is not valid.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" multi-line label="Description"
+                      <v-text-field required class="mt-1" label="Name" v-model="typeName"
+                        prepend-icon="info"></v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.typeName.$invalid && $v.$dirty">Name is required.</span>
+                      </div>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field required class="mt-1" multi-line label="Description"
                         v-model="typeDescription" prepend-icon="subject">
                       </v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.typeDescription.$invalid && $v.$dirty">Description is required.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
                       <v-select :items="categories" v-model="typeAssetCategory"
                         label="Select Category" light single-line auto
                         prepend-icon="subject" hide-details>
                       </v-select>
+                      <div class="verror">
+                        <span v-if="$v.typeAssetCategory.$invalid && $v.$dirty">Category is required.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
                       <v-text-field class="mt-1" label="Image URL"
                         v-model="typeImageUrl" prepend-icon="image">
                       </v-text-field>
+                      <div class="verror">
+                        <span v-if="!$v.typeImageUrl.required && $v.$dirty">Image URL is required.</span>
+                        <span v-if="!$v.typeImageUrl.url && $v.$dirty">URL is not valid.</span>
+                      </div>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -59,11 +81,15 @@ import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
 import IconSelector from "../common/IconSelector";
 import MetadataPanel from "../common/MetadataPanel";
+import { required, helpers, url } from "vuelidate/lib/validators";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
 
 export default {
   data: () => ({
     active: null,
     dialogVisible: false,
+    typeToken: null,
     typeName: null,
     typeDescription: null,
     typeImageUrl: null,
@@ -86,6 +112,26 @@ export default {
     ]
   }),
 
+  validations: {
+    typeToken: {
+      required,
+      validToken
+    },
+    typeName: {
+      required
+    },
+    typeDescription: {
+      required
+    },
+    typeImageUrl: {
+      required,
+      url
+    },
+    typeAssetCategory: {
+      required,
+    }
+  },
+
   components: {
     BaseDialog,
     IconSelector,
@@ -98,6 +144,7 @@ export default {
     // Generate payload from UI.
     generatePayload: function() {
       var payload = {};
+      payload.token = this.$data.typeToken;
       payload.name = this.$data.typeName;
       payload.description = this.$data.typeDescription;
       payload.assetCategory = this.$data.typeAssetCategory;
@@ -108,18 +155,21 @@ export default {
 
     // Reset dialog contents.
     reset: function(e) {
+      this.$data.typeToken = null;
       this.$data.typeName = null;
       this.$data.typeDescription = null;
       this.$data.typeAssetCategory = null;
       this.$data.typeImageUrl = null;
       this.$data.metadata = [];
       this.$data.active = "details";
+      this.$v.$reset();
     },
 
     // Load dialog from a given payload.
     load: function(payload) {
       this.reset();
       if (payload) {
+        this.$data.typeToken = payload.token;
         this.$data.typeName = payload.name;
         this.$data.typeDescription = payload.description;
         this.$data.typeAssetCategory = payload.assetCategory;
@@ -145,6 +195,10 @@ export default {
 
     // Called after create button is clicked.
     onCreateClicked: function(e) {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
