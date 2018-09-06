@@ -37,14 +37,23 @@
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="Command name"
                       v-model="cmdName" prepend-icon="info"></v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.cmdName.$invalid && $v.$dirty">Command name is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="Namespace"
                       v-model="cmdNamespace" prepend-icon="info"></v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.cmdNamespace.$invalid && $v.$dirty">Namespace is required.</span>
+                    </div>
                   </v-flex>
                   <v-flex xs12>
                     <v-text-field class="mt-1" multi-line label="Description"
                     v-model="cmdDescription" prepend-icon="subject"></v-text-field>
+                    <div class="verror">
+                      <span v-if="$v.cmdDescription.$invalid && $v.$dirty">Description is required.</span>
+                    </div>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -104,10 +113,11 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import MetadataPanel from '../common/MetadataPanel'
-import ParametersPanel from './ParametersPanel'
+import Utils from "../common/Utils"
+import BaseDialog from "../common/BaseDialog"
+import MetadataPanel from "../common/MetadataPanel"
+import ParametersPanel from "./ParametersPanel"
+import { required } from "vuelidate/lib/validators";
 
 export default {
 
@@ -125,137 +135,155 @@ export default {
     error: null
   }),
 
+  validations: {
+    cmdName: {
+      required
+    },
+    cmdNamespace: {
+      required
+    },
+    cmdDescription: {
+      required
+    }
+  },
+
   components: {
     BaseDialog,
     MetadataPanel,
     ParametersPanel
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel', 'deviceType'],
+  props: ["title", "width", "createLabel", "cancelLabel", "deviceType"],
 
   computed: {
     // Indicates if first page fields are filled in.
     firstPageComplete: function () {
-      return (!this.isBlank(this.$data.cmdName) &&
-        !this.isBlank(this.$data.cmdNamespace) &&
-        !this.isBlank(this.$data.cmdDescription))
+      this.$v.$touch();
+      return (!this.$v.cmdName.$invalid) && 
+        (!this.$v.cmdNamespace.$invalid) &&
+        (!this.$v.cmdDescription.$invalid);
     },
 
     // Indicates if second page fields are filled in.
     secondPageComplete: function () {
-      return this.firstPageComplete
+      return this.firstPageComplete;
     }
   },
 
   methods: {
     // Generate payload from UI.
     generatePayload: function () {
-      var payload = {}
-      payload.deviceTypeToken = this.deviceType.token
-      payload.name = this.$data.cmdName
-      payload.namespace = this.$data.cmdNamespace
-      payload.description = this.$data.cmdDescription
-      payload.parameters = this.$data.cmdParameters
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+      var payload = {};
+      payload.deviceTypeToken = this.deviceType.token;
+      payload.name = this.$data.cmdName;
+      payload.namespace = this.$data.cmdNamespace;
+      payload.description = this.$data.cmdDescription;
+      payload.parameters = this.$data.cmdParameters;
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
 
     // Reset dialog contents.
     reset: function () {
-      this.$data.cmdToken = null
-      this.$data.cmdName = null
-      this.$data.cmdNamespace = null
-      this.$data.cmdDescription = null
-      this.$data.metadata = []
-      this.$data.step = 1
+      this.$data.cmdToken = null;
+      this.$data.cmdName = null;
+      this.$data.cmdNamespace = null;
+      this.$data.cmdDescription = null;
+      this.$data.metadata = [];
+      this.$data.step = 1;
+      this.$v.$reset();
     },
 
     // Load dialog from a given payload.
     load: function (payload) {
-      this.reset()
+      this.reset();
 
       if (payload) {
-        this.$data.cmdToken = payload.token
-        this.$data.cmdName = payload.name
-        this.$data.cmdNamespace = payload.namespace
-        this.$data.cmdDescription = payload.description
-        this.$data.cmdParameters = payload.parameters
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.cmdToken = payload.token;
+        this.$data.cmdName = payload.name;
+        this.$data.cmdNamespace = payload.namespace;
+        this.$data.cmdDescription = payload.description;
+        this.$data.cmdParameters = payload.parameters;
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
     openDialog: function () {
-      this.$data.dialogVisible = true
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
     closeDialog: function () {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
     showError: function (error) {
-      this.$data.error = error
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
     onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
     onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called when a parameter is added.
     onParameterAdded: function (param) {
-      var params = this.$data.cmdParameters
-      params.push(param)
+      var params = this.$data.cmdParameters;
+      params.push(param);
     },
 
     // Called when a parameter is deleted.
     onParameterDeleted: function (name) {
-      var params = this.$data.cmdParameters
+      var params = this.$data.cmdParameters;
       for (var i = 0; i < params.length; i++) {
         if (params[i].name === name) {
-          params.splice(i, 1)
+          params.splice(i, 1);
         }
       }
     },
 
     // Called when a metadata entry has been added.
     onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     },
 
     // Called when a metadata entry has been deleted.
     onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
 
     // Called after token is copied.
     onTokenCopied: function (e) {
-      console.log('Token copied.')
-      this.$data.showTokenCopied = true
+      console.log("Token copied.");
+      this.$data.showTokenCopied = true;
     },
 
     // Called if unable to copy token.
     onTokenCopyFailed: function (e) {
-      console.log('Token copy failed.')
+      console.log("Token copy failed.");
     },
 
     // Tests whether a string is blank.
     isBlank: function (str) {
-      return (!str || /^\s*$/.test(str))
+      return (!str || /^\s*$/.test(str));
     }
   }
 }

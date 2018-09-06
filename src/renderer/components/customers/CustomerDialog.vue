@@ -140,7 +140,7 @@ export default {
       payload.description = this.$data.customerDescription;
       payload.imageUrl = this.$data.customerImageUrl;
       payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
-      return payload
+      return payload;
     },
 
     // Reset dialog contents.
