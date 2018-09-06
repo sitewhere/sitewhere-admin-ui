@@ -51,9 +51,6 @@
                         notChosenText="Choose an asset type from the list below:"
                         @assetTypeUpdated="onAssetTypeUpdated">
                       </asset-type-chooser>
-                      <div class="verror">
-                        <span v-if="$v.assetTypeToken.$invalid && $v.$dirty">Asset type is required.</span>
-                      </div>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -104,9 +101,6 @@ export default {
     assetImageUrl: {
       required,
       url
-    },
-    assetTypeToken: {
-      required
     }
   },
 
@@ -127,6 +121,7 @@ export default {
     // Generate payload from UI.
     generatePayload: function () {
       var payload = {};
+      payload.token = this.$data.assetToken;
       payload.name = this.$data.assetName;
       payload.imageUrl = this.$data.assetImageUrl;
       payload.assetTypeToken = this.$data.assetTypeToken;
@@ -135,16 +130,19 @@ export default {
     },
     // Reset dialog contents.
     reset: function (e) {
+      this.$data.assetToken = null;
       this.$data.assetName = null;
       this.$data.assetImageUrl = null;
       this.$data.assetTypeToken = null;
       this.$data.metadata = [];
       this.$data.active = "details";
+      this.$v.$reset();
     },
     // Load dialog from a given payload.
     load: function (payload) {
       this.reset();
       if (payload) {
+        this.$data.assetToken = payload.token;
         this.$data.assetName = payload.name;
         this.$data.assetImageUrl = payload.imageUrl;
         this.$data.assetTypeToken = payload.assetType.token;
@@ -165,6 +163,10 @@ export default {
     },
     // Called after create button is clicked.
     onCreateClicked: function (e) {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
