@@ -19,9 +19,21 @@
             <v-container fluid>
               <v-layout row wrap>
                 <v-flex xs12>
+                  <v-text-field required class="mt-1" label="Schedule token"
+                    v-model="scheduleToken" hide-details prepend-icon="info">
+                  </v-text-field>
+                  <div class="verror">
+                    <span v-if="!$v.scheduleToken.required && $v.$dirty">Schedule token is required.</span>
+                    <span v-if="!$v.scheduleToken.validToken && $v.$dirty">Schedule token is not valid.</span>
+                  </div>
+                </v-flex>
+                <v-flex xs12>
                   <v-text-field required class="mt-1" label="Schedule name"
                     v-model="scheduleName" hide-details prepend-icon="info">
                   </v-text-field>
+                  <div class="verror">
+                    <span v-if="$v.scheduleName.$invalid && $v.$dirty">Name is required.</span>
+                  </div>
                 </v-flex>
                 <v-flex xs12>
                   <date-time-picker v-model="scheduleStartDate"
@@ -37,6 +49,9 @@
                   <v-select required :items="triggerTypes"
                     v-model="scheduleType" label="Trigger type"
                     prepend-icon="info"></v-select>
+                  <div class="verror">
+                    <span v-if="$v.scheduleType.$invalid && $v.$dirty">Trigger type is required.</span>
+                  </div>
                 </v-flex>
                 <v-flex xs12>
                   <v-divider class="mb-3"></v-divider>
@@ -69,10 +84,13 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import MetadataPanel from '../common/MetadataPanel'
-import DateTimePicker from '../common/DateTimePicker'
+import Utils from "../common/Utils"
+import BaseDialog from "../common/BaseDialog"
+import MetadataPanel from "../common/MetadataPanel"
+import DateTimePicker from "../common/DateTimePicker"
+import { required, helpers } from "vuelidate/lib/validators";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
 
 export default {
 
@@ -80,6 +98,7 @@ export default {
     active: null,
     menu: null,
     dialogVisible: false,
+    scheduleToken: null,
     scheduleName: null,
     scheduleStartDate: null,
     scheduleEndDate: null,
@@ -90,15 +109,28 @@ export default {
     metadata: [],
     triggerTypes: [
       {
-        'text': 'Simple Trigger',
-        'value': 'SimpleTrigger'
+        "text": "Simple Trigger",
+        "value": "SimpleTrigger"
       }, {
-        'text': 'Cron Trigger',
-        'value': 'CronTrigger'
+        "text": "Cron Trigger",
+        "value": "CronTrigger"
       }
     ],
     error: null
   }),
+
+  validations: {
+    scheduleToken: {
+      required,
+      validToken
+    },
+    scheduleName: {
+      required
+    },
+    scheduleType: {
+      required
+    }
+  },
 
   components: {
     BaseDialog,
@@ -106,105 +138,113 @@ export default {
     DateTimePicker
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel'],
+  props: ["title", "width", "createLabel", "cancelLabel"],
 
   methods: {
     // Generate payload from UI.
     generatePayload: function () {
-      let payload = {}
-      payload.name = this.$data.scheduleName
-      payload.startDate = Utils.formatIso8601(this.$data.scheduleStartDate)
-      payload.endDate = Utils.formatIso8601(this.$data.scheduleEndDate)
-      payload.triggerType = this.$data.scheduleType
+      let payload = {};
+      payload.token = this.$data.scheduleToken;
+      payload.name = this.$data.scheduleName;
+      payload.startDate = Utils.formatIso8601(this.$data.scheduleStartDate);
+      payload.endDate = Utils.formatIso8601(this.$data.scheduleEndDate);
+      payload.triggerType = this.$data.scheduleType;
 
-      let triggerConfig = {}
-      payload.triggerConfiguration = triggerConfig
-      if (payload.triggerType === 'CronTrigger') {
-        triggerConfig.cronExpression = this.$data.scheduleCron
-      } else if (payload.triggerType === 'SimpleTrigger') {
-        triggerConfig.repeatInterval = this.$data.scheduleInterval
-        triggerConfig.repeatCount = this.$data.scheduleRepetitons
+      let triggerConfig = {};
+      payload.triggerConfiguration = triggerConfig;
+      if (payload.triggerType === "CronTrigger") {
+        triggerConfig.cronExpression = this.$data.scheduleCron;
+      } else if (payload.triggerType === "SimpleTrigger") {
+        triggerConfig.repeatInterval = this.$data.scheduleInterval;
+        triggerConfig.repeatCount = this.$data.scheduleRepetitons;
       }
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
 
     // Reset dialog contents.
     reset: function (e) {
-      this.$data.scheduleName = null
-      this.$data.scheduleStartDate = null
-      this.$data.scheduleEndDate = null
-      this.$data.scheduleType = null
-      this.$data.scheduleCron = null
-      this.$data.scheduleInterval = null
-      this.$data.scheduleRepetitons = null
-      this.$data.metadata = []
-      this.$data.active = 'details'
+      this.$data.scheduleToken = null;
+      this.$data.scheduleName = null;
+      this.$data.scheduleStartDate = null;
+      this.$data.scheduleEndDate = null;
+      this.$data.scheduleType = null;
+      this.$data.scheduleCron = null;
+      this.$data.scheduleInterval = null;
+      this.$data.scheduleRepetitons = null;
+      this.$data.metadata = [];
+      this.$data.active = "details";
+      this.$v.$reset();
     },
 
     // Load dialog from a given payload.
     load: function (payload) {
-      this.reset()
+      this.reset();
 
       if (payload) {
-        this.$data.scheduleName = payload.name
-        this.$data.scheduleStartDate = Utils.parseIso8601(payload.startDate)
-        this.$data.scheduleEndDate = Utils.parseIso8601(payload.endDate)
-        this.$data.scheduleType = payload.triggerType
+        this.$data.scheduleToken = payload.token;
+        this.$data.scheduleName = payload.name;
+        this.$data.scheduleStartDate = Utils.parseIso8601(payload.startDate);
+        this.$data.scheduleEndDate = Utils.parseIso8601(payload.endDate);
+        this.$data.scheduleType = payload.triggerType;
 
-        let triggerConfig = payload.triggerConfiguration
+        let triggerConfig = payload.triggerConfiguration;
         if (triggerConfig) {
-          if (payload.triggerType === 'CronTrigger') {
-            this.$data.scheduleCron = triggerConfig.cronExpression
-          } else if (payload.triggerType === 'SimpleTrigger') {
-            this.$data.scheduleInterval = triggerConfig.repeatInterval
-            this.$data.scheduleRepetitons = triggerConfig.repeatCount
+          if (payload.triggerType === "CronTrigger") {
+            this.$data.scheduleCron = triggerConfig.cronExpression;
+          } else if (payload.triggerType === "SimpleTrigger") {
+            this.$data.scheduleInterval = triggerConfig.repeatInterval;
+            this.$data.scheduleRepetitons = triggerConfig.repeatCount;
           }
         }
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
     openDialog: function () {
-      this.$data.dialogVisible = true
+      this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
     closeDialog: function () {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
     showError: function (error) {
-      this.$data.error = error
+      this.$data.error = error;
     },
 
     // Called after create button is clicked.
     onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
     onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
 
     // Called when a metadata entry has been deleted.
     onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
 
     // Called when a metadata entry has been added.
     onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     }
   }
 }
