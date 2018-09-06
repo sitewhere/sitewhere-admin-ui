@@ -10,9 +10,7 @@ cache:
   - node_modules
   - "$HOME/.cache/electron"
   - "$HOME/.cache/electron-builder"
-script:
--  npm run publish
-
+script: npm run publish
 before_cache:
 - rm -rf $HOME/.cache/electron-builder/wine
 branches:
