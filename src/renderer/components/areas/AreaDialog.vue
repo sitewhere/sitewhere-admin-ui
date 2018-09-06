@@ -89,7 +89,7 @@ import AreaBoundsPanel from './AreaBoundsPanel'
 import MetadataPanel from '../common/MetadataPanel'
 import { required, helpers, url } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
 
 export default {
 

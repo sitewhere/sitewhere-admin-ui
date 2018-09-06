@@ -90,7 +90,7 @@ import MetadataPanel from "../common/MetadataPanel"
 import DateTimePicker from "../common/DateTimePicker"
 import { required, helpers } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
 
 export default {
 

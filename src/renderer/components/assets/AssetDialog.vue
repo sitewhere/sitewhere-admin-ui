@@ -20,14 +20,30 @@
                 <v-container fluid>
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" label="Name"
-                        v-model="assetName" prepend-icon="info">
+                      <v-text-field required class="mt-1" label="Asset token"
+                        v-model="assetToken" hide-details prepend-icon="info">
                       </v-text-field>
+                      <div class="verror">
+                        <span v-if="!$v.assetToken.required && $v.$dirty">Asset token is required.</span>
+                        <span v-if="!$v.assetToken.validToken && $v.$dirty">Asset token is not valid.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field class="mt-1" label="Image URL"
+                      <v-text-field required class="mt-1" label="Name"
+                        v-model="assetName" prepend-icon="info">
+                      </v-text-field>
+                      <div class="verror">
+                        <span v-if="$v.assetName.$invalid && $v.$dirty">Name is required.</span>
+                      </div>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field required class="mt-1" label="Image URL"
                         v-model="assetImageUrl" prepend-icon="image">
                       </v-text-field>
+                      <div class="verror">
+                        <span v-if="!$v.assetImageUrl.required && $v.$dirty">Image URL is required.</span>
+                        <span v-if="!$v.assetImageUrl.url && $v.$dirty">URL is not valid.</span>
+                      </div>
                     </v-flex>
                     <v-flex xs12>
                       <asset-type-chooser :selectedToken="assetTypeToken"
@@ -35,6 +51,9 @@
                         notChosenText="Choose an asset type from the list below:"
                         @assetTypeUpdated="onAssetTypeUpdated">
                       </asset-type-chooser>
+                      <div class="verror">
+                        <span v-if="$v.assetTypeToken.$invalid && $v.$dirty">Asset type is required.</span>
+                      </div>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -52,23 +71,44 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import BaseDialog from '../common/BaseDialog'
-import IconSelector from '../common/IconSelector'
-import MetadataPanel from '../common/MetadataPanel'
-import AssetTypeChooser from '../assettypes/AssetTypeChooser'
+import Utils from "../common/Utils";
+import BaseDialog from "../common/BaseDialog";
+import IconSelector from "../common/IconSelector";
+import MetadataPanel from "../common/MetadataPanel";
+import AssetTypeChooser from "../assettypes/AssetTypeChooser";
+import { required, helpers, url } from "vuelidate/lib/validators";
+
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
 
 export default {
 
   data: () => ({
     active: null,
     dialogVisible: false,
+    assetToken: null,
     assetName: null,
     assetImageUrl: null,
     assetTypeToken: null,
     metadata: [],
     error: null
   }),
+
+  validations: {
+    assetToken: {
+      required,
+      validToken
+    },
+    assetName: {
+      required
+    },
+    assetImageUrl: {
+      required,
+      url
+    },
+    assetTypeToken: {
+      required
+    }
+  },
 
   components: {
     BaseDialog,
@@ -77,74 +117,74 @@ export default {
     AssetTypeChooser
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel'],
+  props: ["title", "width", "createLabel", "cancelLabel"],
 
   methods: {
     // Called when asset type is updated.
     onAssetTypeUpdated: function (assetType) {
-      this.$data.assetTypeToken = assetType ? assetType.token : null
+      this.$data.assetTypeToken = assetType ? assetType.token : null;
     },
     // Generate payload from UI.
     generatePayload: function () {
-      var payload = {}
-      payload.name = this.$data.assetName
-      payload.imageUrl = this.$data.assetImageUrl
-      payload.assetTypeToken = this.$data.assetTypeToken
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata)
-      return payload
+      var payload = {};
+      payload.name = this.$data.assetName;
+      payload.imageUrl = this.$data.assetImageUrl;
+      payload.assetTypeToken = this.$data.assetTypeToken;
+      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      return payload;
     },
     // Reset dialog contents.
     reset: function (e) {
-      this.$data.assetName = null
-      this.$data.assetImageUrl = null
-      this.$data.assetTypeToken = null
-      this.$data.metadata = []
-      this.$data.active = 'details'
+      this.$data.assetName = null;
+      this.$data.assetImageUrl = null;
+      this.$data.assetTypeToken = null;
+      this.$data.metadata = [];
+      this.$data.active = "details";
     },
     // Load dialog from a given payload.
     load: function (payload) {
-      this.reset()
+      this.reset();
       if (payload) {
-        this.$data.assetName = payload.name
-        this.$data.assetImageUrl = payload.imageUrl
-        this.$data.assetTypeToken = payload.assetType.token
-        this.$data.metadata = Utils.metadataToArray(payload.metadata)
+        this.$data.assetName = payload.name;
+        this.$data.assetImageUrl = payload.imageUrl;
+        this.$data.assetTypeToken = payload.assetType.token;
+        this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
     // Called to open the dialog.
     openDialog: function () {
-      this.$data.dialogVisible = true
+      this.$data.dialogVisible = true;
     },
     // Called to open the dialog.
     closeDialog: function () {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
     // Called to show an error message.
     showError: function (error) {
-      this.$data.error = error
+      this.$data.error = error;
     },
     // Called after create button is clicked.
     onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
+      var payload = this.generatePayload();
+      this.$emit("payload", payload);
     },
     // Called after cancel button is clicked.
     onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
+      this.$data.dialogVisible = false;
     },
     // Called when a metadata entry has been deleted.
     onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata
+      var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
-          metadata.splice(i, 1)
+          metadata.splice(i, 1);
         }
       }
     },
     // Called when a metadata entry has been added.
     onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata
-      metadata.push(entry)
+      var metadata = this.$data.metadata;
+      metadata.push(entry);
     }
   }
 }

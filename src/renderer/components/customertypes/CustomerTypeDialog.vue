@@ -80,7 +80,7 @@ import CustomerTypesMultiselect from "./CustomerTypesMultiselect";
 import MetadataPanel from "../common/MetadataPanel";
 import { required, helpers } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
 
 export default {
   data: () => ({

@@ -103,7 +103,7 @@ import {
   _listUsers
 } from "../../http/sitewhere-api-wrapper";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/)
+const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
 
 export default {
   data: () => ({
