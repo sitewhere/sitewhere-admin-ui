@@ -1,6 +1,7 @@
 <template>
   <span>
     <zone-dialog :area='area' title="Create Zone" width="600"
+      ref="dialog"
       createLabel="Create" cancelLabel="Cancel" mode='create'
       @payload="onCommit">
     </zone-dialog>
@@ -30,8 +31,8 @@ export default {
   methods: {
     // Send event to open dialog.
     onOpenDialog: function () {
-      this.$children[0].reset()
-      this.$children[0].openDialog()
+      this.$refs['dialog'].reset();
+      this.$refs['dialog'].openDialog();
     },
 
     // Handle payload commit.

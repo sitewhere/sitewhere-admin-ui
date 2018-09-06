@@ -24,8 +24,7 @@
                   <v-layout row wrap>
                     <v-flex xs12>
                       <v-text-field required class="mt-1" label="Token"
-                        v-model="typeToken" hide-details prepend-icon="info"
-                        :rules="[rules.validToken]">
+                        v-model="typeToken" hide-details prepend-icon="info">
                       </v-text-field>
                       <div class="verror">
                         <span v-if="$v.typeToken.$invalid && $v.$dirty">Customer type token is required or invalid.</span>
@@ -93,15 +92,6 @@ export default {
     typeContainedCustomerTypeIds: [],
     typeContainedCustomerTypeTokens: [],
     metadata: [],
-    rules: {
-      validToken: value => {
-        const pattern = /^[\w-]*$/;
-        return (
-          pattern.test(value) ||
-          "Customer typen token should be alphanumeric with no spaces."
-        );
-      }
-    },
     error: null
   }),
 

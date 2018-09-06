@@ -21,8 +21,7 @@
                   <v-layout row wrap>
                     <v-flex xs12>
                       <v-text-field required class="mt-1" label="Customer token"
-                        v-model="customerToken" hide-details prepend-icon="info"
-                        :rules="[rules.validToken]">
+                        v-model="customerToken" hide-details prepend-icon="info">
                       </v-text-field>
                       <div class="verror">
                         <span v-if="!$v.customerToken.required && $v.$dirty">Customer token is required.</span>
@@ -98,15 +97,6 @@ export default {
     customerDescription: '',
     customerImageUrl: '',
     metadata: [],
-    rules: {
-      validToken: value => {
-        const pattern = /^[\w-]*$/;
-        return (
-          pattern.test(value) ||
-          "Customer token should be alphanumeric with no spaces."
-        );
-      }
-    },
     error: null
   }),
 

@@ -24,8 +24,7 @@
                   <v-layout row wrap>
                     <v-flex xs12>
                       <v-text-field required class="mt-1" label="Token"
-                        v-model="areaToken" hide-details prepend-icon="info"
-                        :rules="[rules.validToken]">
+                        v-model="areaToken" hide-details prepend-icon="info">
                       </v-text-field>
                       <div class="verror">
                         <span v-if="!$v.areaToken.required && $v.$dirty">Area token is required.</span>
@@ -104,15 +103,6 @@ export default {
     areaImageUrl: '',
     areaBounds: [],
     metadata: [],
-    rules: {
-      validToken: value => {
-        const pattern = /^[\w-]*$/;
-        return (
-          pattern.test(value) ||
-          "Customer typen token should be alphanumeric with no spaces."
-        );
-      }
-    },
     error: null
   }),
 

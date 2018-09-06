@@ -20,8 +20,7 @@
                 <v-layout row wrap>
                   <v-flex xs12>
                     <v-text-field required class="mt-1" label="Tenant token"
-                      v-model="tenantToken" hide-details prepend-icon="info"
-                      :rules="[rules.tenantToken]">
+                      v-model="tenantToken" hide-details prepend-icon="info">
                     </v-text-field>
                     <div class="verror">
                       <span v-if="!$v.tenantToken.required && $v.$dirty">Tenant token is required.</span>
@@ -121,15 +120,6 @@ export default {
     templatesList: [],
     datasetsList: [],
     allUsers: [],
-    rules: {
-      tenantToken: value => {
-        const pattern = /^[\w-]*$/;
-        return (
-          pattern.test(value) ||
-          "Tenant token should be alphanumeric with no spaces."
-        );
-      }
-    },
     error: null
   }),
 
