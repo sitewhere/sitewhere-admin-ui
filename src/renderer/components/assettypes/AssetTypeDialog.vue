@@ -8,6 +8,9 @@
           <v-tabs-item key="details" href="#details">
             Details
           </v-tabs-item>
+          <v-tabs-item key="branding" href="#branding">
+            Branding
+          </v-tabs-item>
           <v-tabs-item key="metadata" href="#metadata">
             Metadata
           </v-tabs-item>
@@ -52,15 +55,6 @@
                         <span v-if="$v.typeAssetCategory.$invalid && $v.$dirty">Category is required.</span>
                       </div>
                     </v-flex>
-                    <v-flex xs12>
-                      <v-text-field class="mt-1" label="Image URL"
-                        v-model="typeImageUrl" prepend-icon="image">
-                      </v-text-field>
-                      <div class="verror">
-                        <span v-if="!$v.typeImageUrl.required && $v.$dirty">Image URL is required.</span>
-                        <span v-if="!$v.typeImageUrl.url && $v.$dirty">URL is not valid.</span>
-                      </div>
-                    </v-flex>
                   </v-layout>
                 </v-container>
                 </v-card-text>
@@ -69,6 +63,13 @@
           <v-tabs-content key="metadata" id="metadata">
             <metadata-panel :metadata="metadata"
               @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+          </v-tabs-content>
+          <v-tabs-content key="branding" id="branding">
+            <branding-panel 
+              ref="branding"
+              @payload="onBrandingChanged"
+              :branding="branding">
+            </branding-panel>
           </v-tabs-content>
         </v-tabs-items>
       </v-tabs>
@@ -80,6 +81,7 @@
 import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
 import IconSelector from "../common/IconSelector";
+import BrandingPanel from "../common/BrandingPanel";
 import MetadataPanel from "../common/MetadataPanel";
 import { required, helpers, url } from "vuelidate/lib/validators";
 
@@ -92,8 +94,8 @@ export default {
     typeToken: null,
     typeName: null,
     typeDescription: null,
-    typeImageUrl: null,
     typeAssetCategory: null,
+    branding: {},
     metadata: [],
     error: null,
     categories: [
@@ -123,10 +125,6 @@ export default {
     typeDescription: {
       required
     },
-    typeImageUrl: {
-      required,
-      url
-    },
     typeAssetCategory: {
       required,
     }
@@ -135,6 +133,7 @@ export default {
   components: {
     BaseDialog,
     IconSelector,
+    BrandingPanel,
     MetadataPanel
   },
 
@@ -148,7 +147,11 @@ export default {
       payload.name = this.$data.typeName;
       payload.description = this.$data.typeDescription;
       payload.assetCategory = this.$data.typeAssetCategory;
-      payload.imageUrl = this.$data.typeImageUrl;
+      payload.imageUrl = this.$data.branding.imageUrl;
+      payload.icon = this.$data.branding.icon;
+      payload.backgroundColor = this.$data.branding.backgroundColor;
+      payload.foregroundColor = this.$data.branding.foregroundColor;
+      payload.borderColor = this.$data.branding.borderColor;
       payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
       return payload;
     },
@@ -159,7 +162,12 @@ export default {
       this.$data.typeName = null;
       this.$data.typeDescription = null;
       this.$data.typeAssetCategory = null;
-      this.$data.typeImageUrl = null;
+      this.$data.branding = {};
+      this.$data.branding.imageUrl = null;
+      this.$data.branding.icon = null;
+      this.$data.branding.backgroundColor = null;
+      this.$data.branding.foregroundColor = null;
+      this.$data.branding.borderColor = null;
       this.$data.metadata = [];
       this.$data.active = "details";
       this.$v.$reset();
@@ -173,7 +181,12 @@ export default {
         this.$data.typeName = payload.name;
         this.$data.typeDescription = payload.description;
         this.$data.typeAssetCategory = payload.assetCategory;
-        this.$data.typeImageUrl = payload.imageUrl;
+        this.$data.branding = {};
+        this.$data.branding.imageUrl = payload.imageUrl;
+        this.$data.branding.icon = payload.icon;
+        this.$data.branding.backgroundColor = payload.backgroundColor;
+        this.$data.branding.foregroundColor = payload.foregroundColor;
+        this.$data.branding.borderColor = payload.borderColor;
         this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
@@ -222,6 +235,11 @@ export default {
     onMetadataAdded: function(entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
+    },
+
+    // Called when branding changes
+    onBrandingChanged: function (branding) {
+      this.$data.branding = branding;
     }
   }
 };
