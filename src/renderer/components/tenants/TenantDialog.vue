@@ -7,6 +7,9 @@
         <v-tabs-item key="details" href="#details">
           Tenant Details
         </v-tabs-item>
+        <v-tabs-item key="branding" href="#branding">
+          Branding
+        </v-tabs-item>
         <v-tabs-item key="metadata" href="#metadata">
           Metadata
         </v-tabs-item>
@@ -33,14 +36,6 @@
                     </v-text-field>
                     <div class="verror">
                       <span v-if="$v.tenantName.$invalid && $v.$dirty">Name is required.</span>
-                    </div>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Logo URL"
-                      v-model="tenantLogoUrl" hide-details prepend-icon="info">
-                    </v-text-field>
-                    <div class="verror">
-                      <span v-if="$v.tenantLogoUrl.$invalid && $v.$dirty">Logo is required or not valir URL.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
@@ -82,6 +77,13 @@
             </v-card-text>
           </v-card>
         </v-tabs-content>
+        <v-tabs-content key="branding" id="branding">
+          <branding-panel 
+            ref="branding"
+            @payload="onBrandingChanged"
+            :branding="branding">
+          </branding-panel>
+        </v-tabs-content>
         <v-tabs-content key="metadata" id="metadata">
           <metadata-panel :metadata="metadata"
             @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
@@ -94,6 +96,7 @@
 <script>
 import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
+import BrandingPanel from "../common/BrandingPanel";
 import MetadataPanel from "../common/MetadataPanel";
 import { required, url, helpers } from "vuelidate/lib/validators";
 import {
@@ -116,6 +119,7 @@ export default {
     tenantAuthUsers: [],
     tenantTemplateId: null,
     datasetTemplateId: null,
+    branding: {},
     metadata: [],
     templatesList: [],
     datasetsList: [],
@@ -130,10 +134,6 @@ export default {
     },
     tenantName: {
       required
-    },
-    tenantLogoUrl: {
-      required,
-      url
     },
     tenantAuthToken: {
       required
@@ -151,6 +151,7 @@ export default {
 
   components: {
     BaseDialog,
+    BrandingPanel,
     MetadataPanel
   },
 
@@ -162,7 +163,11 @@ export default {
       let payload = {};
       payload.token = this.$data.tenantToken;
       payload.name = this.$data.tenantName;
-      payload.imageUrl = this.$data.tenantLogoUrl;
+      payload.imageUrl = this.$data.branding.imageUrl;
+      payload.icon = this.$data.branding.icon;
+      payload.backgroundColor = this.$data.branding.backgroundColor;
+      payload.foregroundColor = this.$data.branding.foregroundColor;
+      payload.borderColor = this.$data.branding.borderColor;
       payload.authenticationToken = this.$data.tenantAuthToken;
       payload.authorizedUserIds = this.$data.tenantAuthUsers;
       payload.tenantTemplateId = this.$data.tenantTemplateId;
@@ -175,12 +180,17 @@ export default {
     reset: function(e) {
       this.$data.tenantToken = null;
       this.$data.tenantName = null;
-      this.$data.tenantLogoUrl = null;
       this.$data.tenantAuthToken = null;
       this.$data.tenantAuthUsers = [];
       this.$data.tenantTemplateId = null;
       this.$data.datasetTemplateId = null;
       this.$data.metadata = [];
+      this.$data.branding = {};
+      this.$data.branding.imageUrl = null;
+      this.$data.branding.icon = null;
+      this.$data.branding.backgroundColor = null;
+      this.$data.branding.foregroundColor = null;
+      this.$data.branding.borderColor = null;
       this.$data.active = "details";
       this.$v.$reset();
       
@@ -210,11 +220,16 @@ export default {
       if (payload) {
         this.$data.tenantToken = payload.token;
         this.$data.tenantName = payload.name;
-        this.$data.tenantLogoUrl = payload.imageUrl;
         this.$data.tenantAuthToken = payload.authenticationToken;
         this.$data.tenantAuthUsers = payload.authorizedUserIds;
         this.$data.tenantTemplateId = payload.tenantTemplateId;
         this.$data.datasetTemplateId = payload.datasetTemplateId;
+        this.$data.branding = {};
+        this.$data.branding.imageUrl = payload.imageUrl;
+        this.$data.branding.icon = payload.icon;
+        this.$data.branding.backgroundColor = payload.backgroundColor;
+        this.$data.branding.foregroundColor = payload.foregroundColor;
+        this.$data.branding.borderColor = payload.borderColor;
         this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
@@ -263,6 +278,11 @@ export default {
     onMetadataAdded: function(entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
+    },
+
+    // Called when branding changes
+    onBrandingChanged: function (branding) {
+      this.$data.branding = branding;
     }
   }
 };

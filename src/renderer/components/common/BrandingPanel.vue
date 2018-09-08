@@ -4,7 +4,7 @@
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs12>
-            <v-text-field required class="mt-1" label="Image URL"
+            <v-text-field class="mt-1" label="Image URL"
               v-model="imageUrl" prepend-icon="image">
             </v-text-field>
           </v-flex>
@@ -153,7 +153,6 @@ export default {
 
     // Load dialog from a given payload.
     load: function (payload) {
-      console.log('Loading branding')
       this.reset();
 
       if (payload) {

@@ -161,8 +161,6 @@ export default {
       this.$data.branding.backgroundColor = null;
       this.$data.branding.foregroundColor = null;
       this.$data.branding.borderColor = null;
-      console.log(this.$children);
-      //this.$refs['branding'].reset();
       this.$v.$reset();
     },
 
