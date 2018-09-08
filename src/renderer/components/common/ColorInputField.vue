@@ -42,6 +42,10 @@ export default {
 
   props: ["value", "text"],
 
+  created: function() {
+    this.$data.updatedColor = this.value;
+  },
+
   methods: {
     // Called when a color is chosen.
     onColorChosen: function(val) {
