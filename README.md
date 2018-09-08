@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/sitewhere/sitewhere-admin-ui.svg?branch=master)](https://travis-ci.org/sitewhere/sitewhere-admin-ui)
+
+---
+
 # SiteWhere Administrative User Interface
 
 The SiteWhere Administrative UI is an [Electron](https://electronjs.org/) application that
