@@ -7,6 +7,9 @@
         <v-tabs-item key="details" href="#details">
           Asset Details
         </v-tabs-item>
+        <v-tabs-item key="branding" href="#branding">
+          Branding
+        </v-tabs-item>
         <v-tabs-item key="metadata" href="#metadata">
           Metadata
         </v-tabs-item>
@@ -43,15 +46,6 @@
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field class="mt-1" label="Image URL"
-                      v-model="groupImageUrl" prepend-icon="image">
-                    </v-text-field>
-                    <div class="verror">
-                      <span v-if="!$v.groupImageUrl.required && $v.$dirty">Image URL is required.</span>
-                      <span v-if="!$v.groupImageUrl.url && $v.$dirty">URL is not valid.</span>
-                    </div>
-                  </v-flex>
-                  <v-flex xs12>
                     <roles-field :roles="groupRoles"
                       @onRolesUpdated="onRolesUpdated">
                     </roles-field>
@@ -60,6 +54,13 @@
               </v-container>
             </v-card-text>
           </v-card>
+        </v-tabs-content>
+        <v-tabs-content key="branding" id="branding">
+          <branding-panel 
+            ref="branding"
+            @payload="onBrandingChanged"
+            :branding="branding">
+          </branding-panel>
         </v-tabs-content>
         <v-tabs-content key="metadata" id="metadata">
           <metadata-panel :metadata="metadata"
@@ -73,6 +74,7 @@
 <script>
 import Utils from "../common/Utils"
 import BaseDialog from "../common/BaseDialog"
+import BrandingPanel from "../common/BrandingPanel";
 import MetadataPanel from "../common/MetadataPanel"
 import RolesField from "./RolesField"
 import { required, helpers, url } from "vuelidate/lib/validators";
@@ -90,6 +92,7 @@ export default {
     groupDescription: null,
     groupImageUrl: null,
     groupRoles: [],
+    branding: {},
     metadata: [],
     error: null
   }),
@@ -104,15 +107,12 @@ export default {
     },
     groupDescription: {
       required
-    },
-    groupImageUrl: {
-      required,
-      url
     }
   },
 
   components: {
     BaseDialog,
+    BrandingPanel,
     MetadataPanel,
     RolesField
   },
@@ -126,8 +126,12 @@ export default {
       payload.token = this.$data.groupToken;
       payload.name = this.$data.groupName;
       payload.description = this.$data.groupDescription;
-      payload.imageUrl = this.$data.groupImageUrl;
       payload.roles = this.$data.groupRoles;
+      payload.imageUrl = this.$data.branding.imageUrl;
+      payload.icon = this.$data.branding.icon;
+      payload.backgroundColor = this.$data.branding.backgroundColor;
+      payload.foregroundColor = this.$data.branding.foregroundColor;
+      payload.borderColor = this.$data.branding.borderColor;
       payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
       return payload;
     },
@@ -137,8 +141,13 @@ export default {
       this.$data.groupToken = null;
       this.$data.groupName = null;
       this.$data.groupDescription = null;
-      this.$data.groupImageUrl = null;
       this.$data.groupRoles = [];
+      this.$data.branding = {};
+      this.$data.branding.imageUrl = null;
+      this.$data.branding.icon = null;
+      this.$data.branding.backgroundColor = null;
+      this.$data.branding.foregroundColor = null;
+      this.$data.branding.borderColor = null;
       this.$data.metadata = [];
       this.$data.active = "details";
       this.$v.$reset();
@@ -152,8 +161,13 @@ export default {
         this.$data.groupToken = payload.token;
         this.$data.groupName = payload.name;
         this.$data.groupDescription = payload.description;
-        this.$data.groupImageUrl = payload.imageUrl;
         this.$data.groupRoles = payload.roles;
+        this.$data.branding = {};
+        this.$data.branding.imageUrl = payload.imageUrl;
+        this.$data.branding.icon = payload.icon;
+        this.$data.branding.backgroundColor = payload.backgroundColor;
+        this.$data.branding.foregroundColor = payload.foregroundColor;
+        this.$data.branding.borderColor = payload.borderColor;
         this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
@@ -199,6 +213,11 @@ export default {
     onMetadataAdded: function (entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
+    },
+
+    // Called when branding changes
+    onBrandingChanged: function (branding) {
+      this.$data.branding = branding;
     }
   }
 }
