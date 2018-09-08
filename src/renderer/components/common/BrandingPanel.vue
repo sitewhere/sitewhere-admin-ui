@@ -12,16 +12,16 @@
             <icon-selector v-model="icon"></icon-selector>
           </v-flex>
           <v-flex xs12>
-            <color-picker text="Background" v-model="backgroundColor">
-            </color-picker>
+            <color-input-field text="Background" v-model="backgroundColor">
+            </color-input-field>
           </v-flex>
           <v-flex xs12>
-            <color-picker text="Foreground" v-model="foregroundColor">
-            </color-picker>
+            <color-input-field text="Foreground" v-model="foregroundColor">
+            </color-input-field>
           </v-flex>
           <v-flex xs12>
-            <color-picker text="Border" v-model="borderColor">
-            </color-picker>
+            <color-input-field text="Border" v-model="borderColor">
+            </color-input-field>
           </v-flex>
         </v-layout>
       </v-container>
@@ -31,10 +31,9 @@
 
 <script>
 import IconSelector from "../common/IconSelector";
-import ColorPicker from "../common/ColorPicker"
+import ColorInputField from "../common/ColorInputField";
 
 export default {
-
   data: () => ({
     brandingImageUrl: null,
     brandingIcon: null,
@@ -46,20 +45,20 @@ export default {
 
   components: {
     IconSelector,
-    ColorPicker
+    ColorInputField
   },
 
   computed: {
     imageUrl: {
       // getter
-      get: function () {
+      get: function() {
         if (!this.$data.loaded) {
           this.load(this.$props.branding);
         }
         return this.$data.brandingImageUrl;
       },
       // setter
-      set: function (newValue) {
+      set: function(newValue) {
         this.$data.brandingImageUrl = newValue;
         var payload = this.generatePayload();
         this.$emit("payload", payload);
@@ -67,14 +66,14 @@ export default {
     },
     icon: {
       // getter
-      get: function () {
+      get: function() {
         if (!this.$data.loaded) {
           this.load(this.$props.branding);
         }
         return this.$data.brandingIcon;
       },
       // setter
-      set: function (newValue) {
+      set: function(newValue) {
         this.$data.brandingIcon = newValue;
         var payload = this.generatePayload();
         this.$emit("payload", payload);
@@ -82,14 +81,14 @@ export default {
     },
     backgroundColor: {
       // getter
-      get: function () {
+      get: function() {
         if (!this.$data.loaded) {
           this.load(this.$props.branding);
         }
         return this.$data.brandingBackgroundColor;
       },
       // setter
-      set: function (newValue) {
+      set: function(newValue) {
         this.$data.brandingBackgroundColor = newValue;
         var payload = this.generatePayload();
         this.$emit("payload", payload);
@@ -97,14 +96,14 @@ export default {
     },
     foregroundColor: {
       // getter
-      get: function () {
+      get: function() {
         if (!this.$data.loaded) {
           this.load(this.$props.branding);
         }
         return this.$data.brandingForegroundColor;
       },
       // setter
-      set: function (newValue) {
+      set: function(newValue) {
         this.$data.brandingForegroundColor = newValue;
         var payload = this.generatePayload();
         this.$emit("payload", payload);
@@ -112,14 +111,14 @@ export default {
     },
     borderColor: {
       // getter
-      get: function () {
+      get: function() {
         if (!this.$data.loaded) {
           this.load(this.$props.branding);
         }
         return this.$data.brandingBorderColor;
       },
       // setter
-      set: function (newValue) {
+      set: function(newValue) {
         this.$data.brandingBorderColor = newValue;
         var payload = this.generatePayload();
         this.$emit("payload", payload);
@@ -127,11 +126,11 @@ export default {
     }
   },
 
-  props: ['branding'],
+  props: ["branding"],
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
+    generatePayload: function() {
       var payload = {};
       payload.imageUrl = this.$data.brandingImageUrl;
       payload.icon = this.$data.brandingIcon;
@@ -143,7 +142,7 @@ export default {
     },
 
     // Reset dialog contents.
-    reset: function (e) {
+    reset: function(e) {
       this.$data.brandingImageUrl = null;
       this.$data.brandingIcon = null;
       this.$data.brandingBackgroundColor = null;
@@ -152,7 +151,7 @@ export default {
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
+    load: function(payload) {
       this.reset();
 
       if (payload) {
@@ -165,7 +164,7 @@ export default {
       this.$data.loaded = true;
     }
   }
-}
+};
 </script>
 
 <style scoped>
