@@ -11,6 +11,9 @@
           <v-tabs-item key="bounds" href="#bounds">
             Area Bounds
           </v-tabs-item>
+          <v-tabs-item key="branding" href="#branding">
+            Branding
+          </v-tabs-item>
           <v-tabs-item key="metadata" href="#metadata">
             Metadata
           </v-tabs-item>
@@ -53,13 +56,6 @@
                         <span v-if="$v.areaDescription.$invalid && $v.$dirty">Description is required.</span>
                       </div>
                     </v-flex>
-                    <v-flex xs12>
-                      <v-text-field required class="mt-1" label="Image URL" v-model="areaImageUrl" prepend-icon="image"></v-text-field>
-                      <div class="verror">
-                        <span v-if="!$v.areaImageUrl.required && $v.$dirty">Image URL is required.</span>
-                        <span v-if="!$v.areaImageUrl.url && $v.$dirty">URL is not valid.</span>
-                      </div>
-                    </v-flex>
                   </v-layout>
                 </v-container>
                 </v-card-text>
@@ -68,6 +64,13 @@
           <v-tabs-content key="bounds" id="bounds" :lazy="true">
             <area-bounds-panel :bounds="areaBounds"
               @boundsUpdated="onBoundsUpdated"/>
+          </v-tabs-content>
+          <v-tabs-content key="branding" id="branding">
+            <branding-panel 
+              ref="branding"
+              @payload="onBrandingChanged"
+              :branding="branding">
+            </branding-panel>
           </v-tabs-content>
           <v-tabs-content key="metadata" id="metadata">
             <metadata-panel :metadata="metadata"
@@ -80,12 +83,13 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import MapUtils from './MapUtils'
-import BaseDialog from '../common/BaseDialog'
-import AreaTypeSelector from '../areatypes/AreaTypeSelector'
-import AreaBoundsPanel from './AreaBoundsPanel'
-import MetadataPanel from '../common/MetadataPanel'
+import Utils from "../common/Utils";
+import MapUtils from "./MapUtils";
+import BaseDialog from "../common/BaseDialog";
+import AreaTypeSelector from "../areatypes/AreaTypeSelector";
+import AreaBoundsPanel from "./AreaBoundsPanel";
+import MetadataPanel from "../common/MetadataPanel";
+import BrandingPanel from "../common/BrandingPanel";
 import { required, helpers, url } from "vuelidate/lib/validators";
 
 const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
@@ -96,12 +100,12 @@ export default {
     active: null,
     dialogVisible: false,
     areaToken: null,
-    areaTypeId: '',
+    areaTypeId: "",
     areaTypeToken: null,
-    areaName: '',
-    areaDescription: '',
-    areaImageUrl: '',
+    areaName: "",
+    areaDescription: "",
     areaBounds: [],
+    branding: {},
     metadata: [],
     error: null
   }),
@@ -119,10 +123,6 @@ export default {
     },
     areaDescription: {
       required
-    },
-    areaImageUrl: {
-      required,
-      url
     }
   },
 
@@ -130,21 +130,26 @@ export default {
     BaseDialog,
     AreaTypeSelector,
     AreaBoundsPanel,
+    BrandingPanel,
     MetadataPanel
   },
 
-  props: ['title', 'width', 'createLabel', 'cancelLabel', 'parentArea'],
+  props: ["title", "width", "createLabel", "cancelLabel", "parentArea"],
 
   methods: {
     // Generate payload from UI.
     generatePayload: function () {
-      var payload = {}
+      var payload = {};
       payload.token = this.$data.areaToken;
       payload.areaTypeToken = this.$data.areaTypeToken;
       payload.parentAreaToken = this.parentArea ? this.parentArea.token : null;
       payload.name = this.$data.areaName;
       payload.description = this.$data.areaDescription;
-      payload.imageUrl = this.$data.areaImageUrl;
+      payload.imageUrl = this.$data.branding.imageUrl;
+      payload.icon = this.$data.branding.icon;
+      payload.backgroundColor = this.$data.branding.backgroundColor;
+      payload.foregroundColor = this.$data.branding.foregroundColor;
+      payload.borderColor = this.$data.branding.borderColor;
       payload.bounds = this.$data.areaBounds;
       payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
       return payload;
@@ -157,10 +162,15 @@ export default {
       this.$data.areaTypeToken = null;
       this.$data.areaName = null;
       this.$data.areaDescription = null;
-      this.$data.areaImageUrl = null;
+      this.$data.branding = {};
+      this.$data.branding.imageUrl = null;
+      this.$data.branding.icon = null;
+      this.$data.branding.backgroundColor = null;
+      this.$data.branding.foregroundColor = null;
+      this.$data.branding.borderColor = null;
       this.$data.areaBounds = [];
       this.$data.metadata = [];
-      this.$data.active = 'details';
+      this.$data.active = "details";
       this.$v.$reset();
     },
 
@@ -174,8 +184,13 @@ export default {
         this.$data.areaTypeToken = payload.areaType.token;
         this.$data.areaName = payload.name;
         this.$data.areaDescription = payload.description;
-        this.$data.areaImageUrl = payload.imageUrl;
         this.$data.areaBounds = payload.bounds;
+        this.$data.branding = {};
+        this.$data.branding.imageUrl = payload.imageUrl;
+        this.$data.branding.icon = payload.icon;
+        this.$data.branding.backgroundColor = payload.backgroundColor;
+        this.$data.branding.foregroundColor = payload.foregroundColor;
+        this.$data.branding.borderColor = payload.borderColor;
         this.$data.metadata = Utils.metadataToArray(payload.metadata);
       }
     },
@@ -207,7 +222,7 @@ export default {
         return;
       }
       var payload = this.generatePayload();
-      this.$emit('payload', payload);
+      this.$emit("payload", payload);
     },
 
     // Called after cancel button is clicked.
@@ -239,6 +254,11 @@ export default {
     onMetadataAdded: function (entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
+    },
+
+    // Called when branding changes
+    onBrandingChanged: function (branding) {
+      this.$data.branding = branding;
     }
   }
 }
