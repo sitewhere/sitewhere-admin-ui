@@ -6,10 +6,10 @@
       <v-tabs v-model="active">
         <v-tabs-bar dark color="primary">
           <v-tabs-item key="details" href="#details">
-            Area Details
+            Details
           </v-tabs-item>
           <v-tabs-item key="bounds" href="#bounds">
-            Area Bounds
+            Bounds
           </v-tabs-item>
           <v-tabs-item key="branding" href="#branding">
             Branding
@@ -92,10 +92,9 @@ import MetadataPanel from "../common/MetadataPanel";
 import BrandingPanel from "../common/BrandingPanel";
 import { required, helpers, url } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
+const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 export default {
-
   data: () => ({
     active: null,
     dialogVisible: false,
@@ -138,7 +137,7 @@ export default {
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
+    generatePayload: function() {
       var payload = {};
       payload.token = this.$data.areaToken;
       payload.areaTypeToken = this.$data.areaTypeToken;
@@ -156,7 +155,7 @@ export default {
     },
 
     // Reset dialog contents.
-    reset: function (e) {
+    reset: function(e) {
       this.$data.areaToken = null;
       this.$data.areaTypeId = null;
       this.$data.areaTypeToken = null;
@@ -175,7 +174,7 @@ export default {
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
+    load: function(payload) {
       this.reset();
 
       if (payload) {
@@ -196,27 +195,27 @@ export default {
     },
 
     // Called to open the dialog.
-    openDialog: function () {
+    openDialog: function() {
       this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
-    closeDialog: function () {
+    closeDialog: function() {
       this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
-    showError: function (error) {
+    showError: function(error) {
       this.$data.error = error;
     },
 
     // Called when area type is updated.
-    onAreaTypeUpdated: function (areaType) {
+    onAreaTypeUpdated: function(areaType) {
       this.$data.areaTypeToken = areaType ? areaType.token : null;
     },
 
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
+    onCreateClicked: function(e) {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
@@ -226,12 +225,12 @@ export default {
     },
 
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
+    onCancelClicked: function(e) {
       this.$data.dialogVisible = false;
     },
 
     // Called when area bounds are updated.
-    onBoundsUpdated: function (updated) {
+    onBoundsUpdated: function(updated) {
       if (updated) {
         let swBounds = MapUtils.leafletToSwBounds(updated);
         this.$data.areaBounds = swBounds;
@@ -241,7 +240,7 @@ export default {
     },
 
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
+    onMetadataDeleted: function(name) {
       var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
@@ -251,17 +250,17 @@ export default {
     },
 
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
+    onMetadataAdded: function(entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
     },
 
     // Called when branding changes
-    onBrandingChanged: function (branding) {
+    onBrandingChanged: function(branding) {
       this.$data.branding = branding;
     }
   }
-}
+};
 </script>
 
 <style scoped>
