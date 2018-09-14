@@ -44,7 +44,7 @@
               <area-alert-events :area="area"></area-alert-events>
             </v-tabs-content>
             <v-tabs-content key="zones" id="zones">
-              <area-zones :area="area"></area-zones>
+              <area-zones ref="zones" :area="area"></area-zones>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
@@ -57,6 +57,9 @@
         </navigation-action-button>
         <navigation-action-button icon="map" tooltip="Add Subarea"
           @action="onAddSubarea">
+        </navigation-action-button>
+         <navigation-action-button icon="draw-polygon" tooltip="Add Zone"
+          @action="onAddZone">
         </navigation-action-button>
         <navigation-action-button icon="edit" tooltip="Edit Area"
           @action="onEdit">
@@ -175,11 +178,17 @@ export default {
     },
     // Called after subarea added.
     onSubareaAdded: function() {
+      this.$data.active = "areas";
       this.$refs["subareas"].refresh();
     },
     // Called to add a zone.
     onAddZone: function() {
       this.$refs["zoneCreate"].onOpenDialog();
+    },
+    // Called after zone added.
+    onZoneAdded: function() {
+      this.$data.active = "zones";
+      this.$refs["zones"].refresh();
     },
     // Called when area is updated.
     onAreaUpdated: function() {
