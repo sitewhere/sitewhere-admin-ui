@@ -17,7 +17,7 @@
           <v-tabs-content key="settings" id="settings" :lazy="true">
             <v-card flat>
               <v-card-text>
-                <map-with-zone-overlay-panel height='450px' :area='area'
+                <map-with-zone-overlay-panel height='370px' :area='area'
                   :editedZoneToken='zoneToken' :bounds="zoneBounds"
                   :borderColor="zoneBorder" :fillColor="zoneFill"
                   :fillOpacity="zoneOpacity" @boundsUpdated="onBoundsUpdated">
@@ -36,7 +36,8 @@
                       </div>
                     </v-flex>
                     <v-flex xs8>
-                      <v-text-field required hide-details label="Zone name" v-model="zoneName"></v-text-field>
+                      <v-text-field required hide-details label="Zone name" 
+                        v-model="zoneName" prepend-icon="info"></v-text-field>
                       <div class="verror">
                         <span v-if="$v.zoneName.$invalid && $v.$dirty">Zone name is required.</span>
                       </div>
@@ -66,17 +67,16 @@
 </template>
 
 <script>
-import Utils from "../common/Utils"
-import BaseDialog from "../common/BaseDialog"
-import MetadataPanel from "../common/MetadataPanel"
-import ColorPicker from "../common/ColorPicker"
-import MapWithZoneOverlayPanel from "./MapWithZoneOverlayPanel"
+import Utils from "../common/Utils";
+import BaseDialog from "../common/BaseDialog";
+import MetadataPanel from "../common/MetadataPanel";
+import ColorPicker from "../common/ColorPicker";
+import MapWithZoneOverlayPanel from "./MapWithZoneOverlayPanel";
 import { required, helpers } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
+const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 export default {
-
   data: () => ({
     active: null,
     dialogVisible: false,
@@ -111,7 +111,7 @@ export default {
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
+    generatePayload: function() {
       var payload = {};
       payload.token = this.$data.zoneToken;
       payload.areaToken = this.area.token;
@@ -125,7 +125,7 @@ export default {
     },
 
     // Reset dialog contents.
-    reset: function (e) {
+    reset: function(e) {
       this.$data.zoneToken = null;
       this.$data.zoneName = "";
       this.$data.zoneBounds = [];
@@ -138,8 +138,8 @@ export default {
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
-      this.reset()
+    load: function(payload) {
+      this.reset();
       if (payload) {
         this.$data.zoneToken = payload.token;
         this.$data.zoneName = payload.name;
@@ -152,32 +152,32 @@ export default {
     },
 
     // Called to open the dialog.
-    openDialog: function () {
+    openDialog: function() {
       this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
-    closeDialog: function () {
+    closeDialog: function() {
       this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
-    showError: function (error) {
+    showError: function(error) {
       this.$data.error = error;
     },
 
     // Called when zone bounds are updated.
-    onBoundsUpdated: function (bounds) {
+    onBoundsUpdated: function(bounds) {
       this.$data.zoneBounds = bounds;
     },
 
     // Called when zone opacity value is updated.
-    onFillOpacityUpdated: function (opacity) {
+    onFillOpacityUpdated: function(opacity) {
       this.$data.zoneOpacity = opacity;
     },
 
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
+    onCreateClicked: function(e) {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
@@ -187,12 +187,12 @@ export default {
     },
 
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
+    onCancelClicked: function(e) {
       this.$data.dialogVisible = false;
     },
 
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
+    onMetadataDeleted: function(name) {
       var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
@@ -202,12 +202,12 @@ export default {
     },
 
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
+    onMetadataAdded: function(entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,7 +1,10 @@
 <template>
   <v-card flat hover>
     <v-card-text class="tenant" @click.stop="onOpenTenant" :style="tenantPanelStyle(tenant)">
-      <div class="tenant-logo" :style="tenantLogoStyle(tenant)">
+      <div v-if="tenant.imageUrl" class="tenant-logo" :style="tenantLogoStyle(tenant)">
+      </div>
+      <div v-else class="tenant-logo">
+        <font-awesome-icon class="ma-3" icon="question" size="xl"/>
       </div>
       <div class="tenant-divider"></div>
       <div class="tenant-name headline ellipsis mt-2">

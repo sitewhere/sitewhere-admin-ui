@@ -29,7 +29,7 @@
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="areas" id="areas">
-              <area-contained-areas :area="area"></area-contained-areas>
+              <area-contained-areas ref="subareas" :area="area"></area-contained-areas>
             </v-tabs-content>
             <v-tabs-content key="assignments" id="assignments">
               <area-assignments :area="area"></area-assignments>
@@ -48,11 +48,15 @@
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
-        <zone-create-dialog v-if="active === 'zones'" :area="area" @zoneAdded="onZoneAdded"/>
+        <area-create-dialog ref="areaCreate" :parentArea="area" @areaAdded="onSubareaAdded"/>
+        <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded"/>
       </div>
       <div slot="actions">
         <navigation-action-button v-if="parentArea" icon="arrow-circle-up" 
           tooltip="Up One Level" @action="onUpOneLevel">
+        </navigation-action-button>
+        <navigation-action-button icon="map" tooltip="Add Subarea"
+          @action="onAddSubarea">
         </navigation-action-button>
         <navigation-action-button icon="edit" tooltip="Edit Area"
           @action="onEdit">
@@ -82,6 +86,7 @@ import AreaLocationEvents from "./AreaLocationEvents";
 import AreaMeasurementEvents from "./AreaMeasurementEvents";
 import AreaAlertEvents from "./AreaAlertEvents";
 import AreaZones from "./AreaZones";
+import AreaCreateDialog from "./AreaCreateDialog";
 import AreaUpdateDialog from "./AreaUpdateDialog";
 import AreaDeleteDialog from "./AreaDeleteDialog";
 import ZoneCreateDialog from "./ZoneCreateDialog";
@@ -108,6 +113,7 @@ export default {
     AreaMeasurementEvents,
     AreaAlertEvents,
     AreaZones,
+    AreaCreateDialog,
     AreaDeleteDialog,
     AreaUpdateDialog,
     ZoneCreateDialog
@@ -162,6 +168,18 @@ export default {
     // Called to open area edit dialog.
     onEdit: function() {
       this.$refs["edit"].onOpenDialog();
+    },
+    // Called to add a subarea.
+    onAddSubarea: function() {
+      this.$refs["areaCreate"].onOpenDialog();
+    },
+    // Called after subarea added.
+    onSubareaAdded: function() {
+      this.$refs["subareas"].refresh();
+    },
+    // Called to add a zone.
+    onAddZone: function() {
+      this.$refs["zoneCreate"].onOpenDialog();
     },
     // Called when area is updated.
     onAreaUpdated: function() {
