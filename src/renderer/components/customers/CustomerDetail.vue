@@ -34,7 +34,7 @@
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="customers" id="customers">
-              <customer-contained-customers :customer="customer">
+              <customer-contained-customers ref="customers" :customer="customer">
               </customer-contained-customers>
             </v-tabs-content>
             <v-tabs-content key="assignments" id="assignments">
@@ -55,9 +55,13 @@
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
-        <zone-create-dialog v-if="active === 'zones'" :area="area" @zoneAdded="onZoneAdded"/>
+        <customer-create-dialog ref="customerCreate" :parentCustomer="customer" 
+          @customerAdded="onSubcustomerAdded"/>
       </div>
       <div slot="actions">
+        <navigation-action-button icon="building" tooltip="Add Subcustomer"
+          @action="onAddSubcustomer">
+        </navigation-action-button>
         <navigation-action-button icon="edit" tooltip="Edit Customer"
           @action="onEdit">
         </navigation-action-button>
@@ -85,6 +89,7 @@ import CustomerAssignments from "./CustomerAssignments";
 import CustomerLocationEvents from "./CustomerLocationEvents";
 import CustomerMeasurementEvents from "./CustomerMeasurementEvents";
 import CustomerAlertEvents from "./CustomerAlertEvents";
+import CustomerCreateDialog from "./CustomerCreateDialog";
 import CustomerUpdateDialog from "./CustomerUpdateDialog";
 import CustomerDeleteDialog from "./CustomerDeleteDialog";
 
@@ -109,6 +114,7 @@ export default {
     CustomerLocationEvents,
     CustomerMeasurementEvents,
     CustomerAlertEvents,
+    CustomerCreateDialog,
     CustomerDeleteDialog,
     CustomerUpdateDialog
   },
@@ -162,6 +168,15 @@ export default {
     // Called to open area edit dialog.
     onEdit: function() {
       this.$refs["edit"].onOpenDialog();
+    },
+    // Called to add a subcustomer.
+    onAddSubcustomer: function() {
+      this.$refs["customerCreate"].onOpenDialog();
+    },
+    // Called after subarea added.
+    onSubcustomerAdded: function() {
+      this.$data.active = "customers";
+      this.$refs["customers"].refresh();
     },
     // Called when customer is updated.
     onCustomerUpdated: function() {

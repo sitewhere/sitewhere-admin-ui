@@ -58,7 +58,7 @@
         <navigation-action-button icon="map" tooltip="Add Subarea"
           @action="onAddSubarea">
         </navigation-action-button>
-         <navigation-action-button icon="draw-polygon" tooltip="Add Zone"
+        <navigation-action-button icon="draw-polygon" tooltip="Add Zone"
           @action="onAddZone">
         </navigation-action-button>
         <navigation-action-button icon="edit" tooltip="Edit Area"
