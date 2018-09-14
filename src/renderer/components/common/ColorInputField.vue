@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0">
-  <v-layout row wrap>
+    <v-layout row wrap>
       <v-flex xs5>
         <v-text-field :label="text" v-model="updatedColor" 
           prepend-icon="color_lens">
@@ -12,8 +12,8 @@
           <chrome :value="chromeColor" @input="onColorChosen"></chrome>
         </v-menu>
       </v-flex>
-  </v-layout>
-</v-container>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

@@ -81,6 +81,7 @@
           <branding-panel 
             ref="branding"
             @payload="onBrandingChanged"
+            :validateImageUrlRequired=true
             :branding="branding">
           </branding-panel>
         </v-tabs-content>
@@ -255,6 +256,12 @@ export default {
       if (this.$v.$invalid) {
         return;
       }
+
+      if(!this.$refs['branding'].isValid()) {
+        this.$data.active = 'branding'
+        return
+      }
+      
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },

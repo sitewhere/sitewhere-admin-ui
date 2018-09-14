@@ -54,6 +54,7 @@
           <v-tabs-content key="branding" id="branding">
             <branding-panel 
               ref="branding"
+              :validateImageUrlRequired=true
               @payload="onBrandingChanged"
               :branding="branding">
             </branding-panel>
@@ -179,6 +180,10 @@ export default {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
+      }
+      if(!this.$refs['branding'].isValid()) {
+        this.$data.active = 'branding'
+        return
       }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
