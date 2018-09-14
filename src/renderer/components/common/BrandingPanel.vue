@@ -7,21 +7,36 @@
             <v-text-field class="mt-1" label="Image URL"
               v-model="imageUrl" prepend-icon="image">
             </v-text-field>
+            <div class="verror">
+              <span v-if="imageUrlRequired">ImageUrl is required.</span>
+            </div>
           </v-flex>
           <v-flex xs12>
             <icon-selector v-model="icon"></icon-selector>
+            <div class="verror">
+              <span v-if="iconRequired">Icon is required.</span>
+            </div>
           </v-flex>
           <v-flex xs12>
             <color-input-field text="Background" v-model="backgroundColor">
             </color-input-field>
+            <div class="verror">
+              <span v-if="backgroundColorRequired">Background color is required.</span>
+            </div>
           </v-flex>
           <v-flex xs12>
             <color-input-field text="Foreground" v-model="foregroundColor">
             </color-input-field>
+            <div class="verror">
+              <span v-if="foregroundColorRequired">Foreground color is required.</span>
+            </div>
           </v-flex>
           <v-flex xs12>
             <color-input-field text="Border" v-model="borderColor">
             </color-input-field>
+            <div class="verror">
+              <span v-if="borderColorRequired">Border color is required.</span>
+            </div>
           </v-flex>
         </v-layout>
       </v-container>
@@ -32,6 +47,7 @@
 <script>
 import IconSelector from "../common/IconSelector";
 import ColorInputField from "../common/ColorInputField";
+import Utils from "../common/Utils";
 
 export default {
   data: () => ({
@@ -40,7 +56,8 @@ export default {
     brandingBackgroundColor: null,
     brandingForegroundColor: null,
     brandingBorderColor: null,
-    loaded: false
+    loaded: false,
+    validated: false
   }),
 
   components: {
@@ -123,10 +140,75 @@ export default {
         var payload = this.generatePayload();
         this.$emit("payload", payload);
       }
+    },
+    imageUrlRequired: function () {
+      if (this.$props.validateImageUrlRequired === false || this.$data.validated === false) {
+        return false;
+      }
+      var valid = Utils.isBlank(this.$data.brandingImageUrl);
+      return valid;
+    },
+    iconRequired: function () {
+      if (this.$props.validateIconRequired === false || this.$data.validated === false) {
+        return false;
+      }
+      var valid = Utils.isBlank(this.$data.brandingIcon);
+      return valid;
+    },
+    backgroundColorRequired: function () {
+      if (this.$props.validateBackgroundColorRequired === false || this.$data.validated === false) {
+        return false;
+      }
+      var valid = Utils.isBlank(this.$data.brandingBackgroundColor);
+      return valid;
+    },
+    foregroundColorRequired: function () {
+      if (this.$props.validateForegroundColorRequired === false || this.$data.validated === false) {
+        return false;
+      }
+      var valid = Utils.isBlank(this.$data.brandingForegroundColor);
+      return valid;
+    },
+    borderColorRequired: function () {
+      if (this.$props.validateBorderColorRequired === false || this.$data.validated === false) {
+        return false;
+      }
+      var valid = Utils.isBlank(this.$data.brandingBorderColor);
+      return valid;
     }
   },
 
-  props: ["branding"],
+  props: {
+    branding: {
+      type: Object,
+      require: true
+    },
+    validateImageUrlRequired: {
+      type: Boolean,
+      require: false,
+      default: false
+    },
+    validateIconRequired: {
+      type: Boolean,
+      require: false,
+      default: false
+    },
+    validateBackgroundColorRequired: {
+      type: Boolean,
+      require: false,
+      default: false
+    },
+    validateForegroundColorRequired: {
+      type: Boolean,
+      require: false,
+      default: false
+    },
+    validateBorderColorRequired: {
+      type: Boolean,
+      require: false,
+      default: false
+    }
+  },
 
   methods: {
     // Generate payload from UI.
@@ -148,6 +230,7 @@ export default {
       this.$data.brandingBackgroundColor = null;
       this.$data.brandingForegroundColor = null;
       this.$data.brandingBorderColor = null;
+      this.$data.validated = false;
     },
 
     // Load dialog from a given payload.
@@ -162,6 +245,26 @@ export default {
         this.$data.brandingBorderColor = payload.borderColor;
       }
       this.$data.loaded = true;
+    },
+
+    isValid: function(payload) {
+      this.$data.validated = true;
+      if (this.$props.validateImageUrlRequired === true) {
+        return !Utils.isBlank(this.$data.brandingImageUrl);;
+      }
+      if (this.$props.validateIconRequired === true) {
+        return !Utils.isBlank(this.$data.brandingIcon);;
+      }
+      if (this.$props.validateBackgroundColorRequired === true) {
+        return !Utils.isBlank(this.$data.brandingBackgroundColor);;
+      }
+      if (this.$props.validateForegroundColorRequired === true) {
+        return !Utils.isBlank(this.$data.brandingForegroundColor);;
+      }
+      if (this.$props.validateBorderColorRequired === true) {
+        return !Utils.isBlank(this.$data.brandingBorderColor);;
+      }
+      return true;
     }
   }
 };
