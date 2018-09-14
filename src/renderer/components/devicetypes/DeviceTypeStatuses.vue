@@ -5,7 +5,7 @@
         <no-results-panel v-if="statuses.length === 0"
           text="No Device Statuses Found for Device Type">
         </no-results-panel>
-        <v-flex xs6 v-if="statuses.length > 0"
+        <v-flex xs4 v-if="statuses.length > 0"
           v-for="status in statuses" :key="status.code">
           <div>
             <device-status-panel :status="status"
@@ -20,42 +20,41 @@
 </template>
 
 <script>
-import NoResultsPanel from '../common/NoResultsPanel'
-import DeviceStatusPanel from '../statuses/DeviceStatusPanel'
-import {_listDeviceStatuses} from '../../http/sitewhere-api-wrapper'
+import NoResultsPanel from "../common/NoResultsPanel";
+import DeviceStatusPanel from "../statuses/DeviceStatusPanel";
+import { _listDeviceStatuses } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     statuses: null
   }),
 
-  props: ['deviceType'],
+  props: ["deviceType"],
 
   components: {
     NoResultsPanel,
     DeviceStatusPanel
   },
 
-  created: function () {
-    this.refresh()
+  created: function() {
+    this.refresh();
   },
 
   methods: {
     // Refresh list of assignments.
-    refresh: function () {
-      var component = this
+    refresh: function() {
+      var component = this;
       let options = {
         deviceTypeToken: this.deviceType.token
-      }
+      };
       _listDeviceStatuses(this.$store, options)
-        .then(function (response) {
-          component.statuses = response.data.results
-        }).catch(function (e) {
+        .then(function(response) {
+          component.statuses = response.data.results;
         })
+        .catch(function(e) {});
     }
   }
-}
+};
 </script>
 
 <style scoped>

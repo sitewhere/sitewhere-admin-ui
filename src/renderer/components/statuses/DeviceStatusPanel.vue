@@ -3,7 +3,7 @@
     <v-card hover>
       <v-toolbar flat dark dense card @click="onShowEditDialog"
         :style="{'background-color': status.backgroundColor, 'border': '1px solid ' + status.borderColor}">
-        <v-icon>{{ status.icon }}</v-icon>
+        <font-awesome-icon :icon="status.icon" size="lg"/>
         <v-toolbar-title :style="{'color': status.foregroundColor}">
           {{ status.name }}
         </v-toolbar-title>
@@ -32,40 +32,38 @@
 </template>
 
 <script>
-import DeviceStatusUpdateDialog from './DeviceStatusUpdateDialog'
-import DeviceStatusDeleteDialog from './DeviceStatusDeleteDialog'
+import DeviceStatusUpdateDialog from "./DeviceStatusUpdateDialog";
+import DeviceStatusDeleteDialog from "./DeviceStatusDeleteDialog";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     DeviceStatusUpdateDialog,
     DeviceStatusDeleteDialog
   },
 
-  props: ['status', 'deviceType'],
+  props: ["status", "deviceType"],
 
   methods: {
     // Show edit dialog.
-    onShowEditDialog: function () {
-      this.$refs['update'].onOpenDialog()
+    onShowEditDialog: function() {
+      this.$refs["update"].onOpenDialog();
     },
     // Show delete dialog.
-    onShowDeleteDialog: function () {
-      this.$refs['delete'].showDeleteDialog()
+    onShowDeleteDialog: function() {
+      this.$refs["delete"].showDeleteDialog();
     },
     // Called after status has been deleted.
-    onStatusDeleted: function () {
-      this.$emit('statusDeleted')
+    onStatusDeleted: function() {
+      this.$emit("statusDeleted");
     },
     // Called after status has been updated.
-    onStatusUpdated: function () {
-      this.$emit('statusUpdated')
+    onStatusUpdated: function() {
+      this.$emit("statusUpdated");
     }
   }
-}
+};
 </script>
 
 <style scoped>
