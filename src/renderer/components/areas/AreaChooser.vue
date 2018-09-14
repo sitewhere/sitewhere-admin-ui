@@ -7,7 +7,7 @@
       <v-list two-line>
         <v-list-tile avatar :key="area.token">
           <v-list-tile-avatar>
-            <img :src="area.imageUrl"></v-list-tile-avatar>
+            <img :src="area.imageUrl">
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-html="area.name"></v-list-tile-title>
@@ -31,7 +31,7 @@
           <v-list-tile avatar :key="area.token"
             @click.stop="onAreaChosen(area, true)">
             <v-list-tile-avatar>
-              <img :src="area.imageUrl"></v-list-tile-avatar>
+              <img :src="area.imageUrl">
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title v-html="area.name"></v-list-tile-title>
@@ -46,70 +46,69 @@
 </template>
 
 <script>
-import Lodash from 'lodash'
-import {_listAreas} from '../../http/sitewhere-api-wrapper'
+import Lodash from "lodash";
+import { _listAreas } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     area: null,
     areas: []
   }),
 
-  props: ['value', 'chosenText', 'notChosenText'],
+  props: ["value", "chosenText", "notChosenText"],
 
   // Initially load list of all sites.
-  created: function () {
-    var component = this
+  created: function() {
+    var component = this;
 
-    _listAreas(component.$store, {}, 'page=1&pageSize=0')
-      .then(function (response) {
-        component.areas = response.data.results
+    _listAreas(component.$store, {}, "page=1&pageSize=0")
+      .then(function(response) {
+        component.areas = response.data.results;
         if (component.value) {
-          component.onValueUpdated(component.value)
+          component.onValueUpdated(component.value);
         }
-      }).catch(function (e) {
       })
+      .catch(function(e) {});
   },
 
   watch: {
     value: {
       immediate: true,
-      handler (newVal, oldVal) {
-        this.onValueUpdated(newVal)
+      handler(newVal, oldVal) {
+        this.onValueUpdated(newVal);
       }
     }
   },
 
   methods: {
     // Called when token is updated.
-    onValueUpdated: function (token) {
-      let area = Lodash.find(this.areas, { 'token': token })
+    onValueUpdated: function(token) {
+      let area = Lodash.find(this.areas, { token: token });
       if (area) {
-        this.onAreaChosen(area, false)
+        this.onAreaChosen(area, false);
       } else {
-        this.onAreaRemoved(false)
+        this.onAreaRemoved(false);
       }
     },
     // Called whenan area is chosen.
-    onAreaChosen: function (area, emit) {
-      this.$data.area = area
+    onAreaChosen: function(area, emit) {
+      this.$data.area = area;
       if (emit) {
-        this.$emit('input', area.token)
-        this.$emit('areaUpdated', area)
+        this.$emit("input", area.token);
+        this.$emit("areaUpdated", area);
       }
     },
 
     // Allow another area to be chosen.
-    onAreaRemoved: function (emit) {
-      this.$data.area = null
+    onAreaRemoved: function(emit) {
+      this.$data.area = null;
       if (emit) {
-        this.$emit('input', null)
-        this.$emit('areaUpdated', null)
+        this.$emit("input", null);
+        this.$emit("areaUpdated", null);
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
