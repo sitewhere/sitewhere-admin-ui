@@ -23,6 +23,9 @@
     },
     "mac": {
       "category": "public.app-category.business"
+    },
+    "linux": {
+      "category": "Monitor"
     }
   },
   "repository": {

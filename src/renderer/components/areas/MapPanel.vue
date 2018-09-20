@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :style="{ 'height': height, 'width': '100%' }">
-      <v-map :zoom="13" :center="[47.413220, -1.219482]" ref="map">
+      <v-map :zoom="13" :center="[47.413220, -1.219482]" style="z-index: 1;" ref="map">
       </v-map>
     </div>
   </div>

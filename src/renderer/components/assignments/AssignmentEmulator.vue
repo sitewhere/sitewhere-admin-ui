@@ -14,52 +14,33 @@
               MQTT Settings
             </v-tabs-item>
             <v-spacer></v-spacer>
-            <v-btn v-if="mqttConnected" small class="green white--text ma-0">
-              <v-icon class="white--text mr-2" fa>plug</v-icon>
-              MQTT Connected
-            </v-btn>
+            <navigation-action-button icon="exclamation-triangle" tooltip="Add Alert"
+              @action="onAddAlertClicked">
+            </navigation-action-button>
+
+            <navigation-action-button icon="crosshairs" tooltip="Add Location"
+              @action="onEnterAddLocationMode">
+            </navigation-action-button>
+
+            <navigation-action-button icon="crosshairs" tooltip="Pan to Last Location"
+              @action="onPanToLastLocation">
+            </navigation-action-button>
+
+            <navigation-action-button icon="thermometer-full" tooltip="Add Measurements"
+              @action="onAddMeasurementsClicked">
+            </navigation-action-button>
+            <v-spacer></v-spacer>
+
+            <navigation-action-button v-if="mqttConnected" icon="plug" tooltip="MQTT Connected" class="green white--text ma-0">
+            </navigation-action-button>
+            <navigation-action-button v-if="!mqttConnected" icon="plug" tooltip="MQTT Connected" class="red white--text ma-0">
+            </navigation-action-button>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="emulator" id="emulator">
               <assignment-emulator-map ref="map" :assignment="assignment"
                 height="600px" @location="onLocationClicked">
               </assignment-emulator-map>
-              <v-speed-dial v-model="fab" direction="top" :hover="true"
-                class="action-chooser-fab"
-                transition="slide-y-reverse-transition">
-                <v-btn slot="activator" class="blue darken-3 elevation-5" dark
-                  fab hover>
-                  <v-icon style="margin-top: -10px;" class="fa-2x">fa-bolt</v-icon>
-                </v-btn>
-                <v-tooltip left>
-                  <v-btn fab dark small class="green darken-3 elevation-5"
-                      @click="onPanToLastLocation" slot="activator">
-                    <v-icon style="margin-top: -3px;">fa-crosshairs</v-icon>
-                  </v-btn>
-                  <span>Pan to Last Location</span>
-                </v-tooltip>
-                <v-tooltip left>
-                  <v-btn fab dark small class="green darken-3 elevation-5"
-                      @click="onEnterAddLocationMode" slot="activator">
-                    <v-icon>fa-plus</v-icon>
-                  </v-btn>
-                  <span>Add Location</span>
-                </v-tooltip>
-                <v-tooltip left>
-                  <v-btn fab dark small class="blue darken-3 elevation-5"
-                      @click="onAddMeasurementsClicked" slot="activator">
-                    <v-icon>fa-thermometer</v-icon>
-                  </v-btn>
-                  <span>Add Measurements</span>
-                </v-tooltip>
-                <v-tooltip left>
-                  <v-btn fab dark small class="red darken-3 elevation-5"
-                      @click="onAddAlertClicked" slot="activator">
-                    <v-icon>fa-warning</v-icon>
-                  </v-btn>
-                  <span>Add Alert</span>
-                </v-tooltip>
-              </v-speed-dial>
             </v-tabs-content>
             <v-tabs-content key="mqtt" id="mqtt">
               <v-card flat>
@@ -74,8 +55,8 @@
                     </v-layout>
                     <v-layout row wrap>
                       <v-flex xs12>
-                        <v-text-field class="mt-1" label="MQTT WebSocket Port"
-                          v-model="mqttWsPort" prepend-icon="storage">
+                        <v-text-field class="mt-1" label="MQTT Port"
+                          v-model="mqttPort" prepend-icon="storage">
                         </v-text-field>
                       </v-flex>
                     </v-layout>
@@ -113,6 +94,7 @@ import AssignmentEmulatorMap from './AssignmentEmulatorMap'
 import LocationCreateDialog from './LocationCreateDialog'
 import MeasurementsCreateDialog from './MeasurementsCreateDialog'
 import AlertCreateDialog from './AlertCreateDialog'
+import NavigationActionButton from "../common/NavigationActionButton";
 import {_getDeviceAssignment} from '../../http/sitewhere-api-wrapper'
 
 export default {
@@ -122,14 +104,13 @@ export default {
     assignment: null,
     mqttClient: null,
     mqttHostname: 'localhost',
-    mqttWsPort: 61623,
-    mqttTopic: 'SiteWhere/input/jsonbatch',
+    mqttPort: 1883,
+    mqttTopic: 'SiteWhere/default/input/json',
     mqttConnected: false,
     swUsername: 'admin',
     swPassword: 'password',
     active: null,
-    mapVisible: true,
-    fab: null
+    mapVisible: true
   }),
 
   components: {
@@ -137,7 +118,8 @@ export default {
     AssignmentEmulatorMap,
     LocationCreateDialog,
     MeasurementsCreateDialog,
-    AlertCreateDialog
+    AlertCreateDialog,
+    NavigationActionButton
   },
 
   created: function () {
@@ -233,6 +215,7 @@ export default {
 
     // Called after alert has been added.
     onAlertAdded: function () {
+      console.log("Alert added.");
     },
 
     // Asks map to pan to last recorded location.
@@ -270,7 +253,7 @@ export default {
 
       // Build URL based on form data.
       let url = 'mqtt://' + this.$data.mqttHostname + ':' +
-        this.$data.mqttWsPort
+        this.$data.mqttPort
 
       mqttClient = MQTT.connect(url)
       mqttClient.on('connect', function () {

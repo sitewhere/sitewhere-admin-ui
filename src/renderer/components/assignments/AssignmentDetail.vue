@@ -48,11 +48,9 @@
           :deviceType="assignment.device.deviceType"/>
       </div>
       <div slot="actions">
-        <!--
-        <navigation-action-button icon="fa-crosshairs" tooltip="Device Emulator"
+        <navigation-action-button icon="crosshairs" tooltip="Device Emulator"
           @action="onOpenEmulator">
         </navigation-action-button>
-        -->
         <navigation-action-button icon="times" tooltip="Delete Assignment"
           @action="onDelete">
         </navigation-action-button>
