@@ -39,7 +39,7 @@
           <v-tabs-items>
             <v-tabs-content key="emulator" id="emulator">
               <assignment-emulator-map ref="map" :assignment="assignment"
-                height="600px" @location="onLocationClicked">
+                height="800px" @location="onLocationClicked">
               </assignment-emulator-map>
             </v-tabs-content>
             <v-tabs-content key="mqtt" id="mqtt">

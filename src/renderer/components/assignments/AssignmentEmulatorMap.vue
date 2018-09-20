@@ -109,6 +109,7 @@ export default {
 
     // Called when map is clicked.
     onMapClicked: function (e) {
+      console.log("Clicked")
       this.exitAddLocationMode()
       this.$emit('location', e)
     },

@@ -11,10 +11,9 @@
             {{ props.item.value }}
           </td>
           <td v-if="!readOnly" width="20px">
-            <v-btn icon @click.native="onDeleteMx(props.item.name)"
-              v-tooltip:left="{ html: 'Delete Measurement' }">
-              <v-icon class="grey--text">delete</v-icon>
-            </v-btn>
+            <navigation-action-button icon="trash-alt" tooltip="Delete Measurements"
+              @action="onDeleteMx(props.item.name)">
+            </navigation-action-button>
           </td>
         </template>
       </v-data-table>
@@ -34,11 +33,10 @@
             </v-text-field>
           </v-flex>
           <v-flex xs1 class="pt-3">
-            <v-btn icon @click.native="onAddMx"
-              v-tooltip:left="{ html: 'Add Measurement' }">
-              <v-icon large class="white--text">add_circle</v-icon>
-            </v-btn>
-          </v-flex>
+            <navigation-action-button icon="plus-circle" tooltip="Add Measurements"
+              @action="onAddMx">
+            </navigation-action-button>
+         </v-flex>
         </v-layout>
       </v-container>
     </v-card-text>
@@ -46,7 +44,8 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
+import Utils from "../common/Utils";
+import NavigationActionButton from "../common/NavigationActionButton";
 
 export default {
 
@@ -63,6 +62,10 @@ export default {
     this.$data.newMxName = ''
     this.$data.newMxValue = 0.0
     this.$data.error = null
+  },
+
+  components: {
+    NavigationActionButton
   },
 
   computed: {

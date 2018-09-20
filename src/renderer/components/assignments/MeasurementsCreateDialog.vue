@@ -8,15 +8,15 @@
 </template>
 
 <script>
-import MeasurementsDialog from './MeasurementsDialog'
-import {_createMeasurementsForAssignment} from '../../http/sitewhere-api-wrapper'
+import MeasurementsDialog from "./MeasurementsDialog";
+import {_createMeasurementsForAssignment} from "../../http/sitewhere-api-wrapper";
 
 export default {
 
   data: () => ({
   }),
 
-  props: ['token'],
+  props: ["token"],
 
   components: {
     MeasurementsDialog
@@ -25,34 +25,44 @@ export default {
   methods: {
     // Get handle to nested dialog component.
     getDialogComponent: function () {
-      return this.$refs['dialog']
+      return this.$refs["dialog"];
     },
 
     // Loads the component from a json payload.
     load: function (payload) {
-      this.getDialogComponent().load(payload)
+      this.getDialogComponent().load(payload);
     },
 
     // Send event to open dialog.
     onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
+      this.getDialogComponent().reset();
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
     onCommit: function (payload) {
-      var component = this
-      _createMeasurementsForAssignment(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
+      var component = this;
+
+      console.log("Payload: ", payload);
+      for (var i = 0; i < payload.measurements.length; i++) {
+        var measurement = payload.measurements[i];
+        var measurementPayload = {
+          "eventType": "Measurement",
+          "name": measurement.name,
+          "value": measurement.value
+        };
+        _createMeasurementsForAssignment(this.$store, this.token, measurementPayload)
+          .then(function (response) {
+            component.onCommitted(response);
+          }).catch(function (e) {
+          });
+      }
     },
 
     // Handle successful commit.
     onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('measurementsAdded')
+      this.getDialogComponent().closeDialog();
+      this.$emit("measurementsAdded");
     }
   }
 }
