@@ -36,8 +36,10 @@ autoUpdater.on('update-not-available', () => {
     title: 'No Updates',
     message: 'Current version is up-to-date.'
   })
-  updater.enabled = true;
-  updater = null;
+  if (updater) {
+    updater.enabled = true;
+    updater = null;
+  }
 })
 
 autoUpdater.on('update-downloaded', () => {
@@ -54,8 +56,10 @@ autoUpdater.on('update-downloaded', () => {
 // export this to MenuItem click callback
 function checkForUpdates(menuItem, focusedWindow, event) {
   log.info('Checking for updates...');
-  updater = menuItem;
-  updater.enabled = false;
+  if (updater) {
+    updater = menuItem;
+    updater.enabled = false;
+  }
   autoUpdater.checkForUpdates();
 }
 module.exports.checkForUpdates = checkForUpdates;
