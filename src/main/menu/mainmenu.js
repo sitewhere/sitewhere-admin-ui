@@ -176,6 +176,10 @@ if (process.platform === 'darwin') {
     submenu: [
       {
         role: 'quit'
+      },
+      {
+        label: 'Check for Updates...',
+        click: require('../updater').checkForUpdates
       }
     ]
   })
