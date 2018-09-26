@@ -37,7 +37,7 @@
             </navigation-action-button>
           </v-tabs-bar>
           <v-tabs-items>
-            <v-tabs-content key="emulator" id="emulator">
+            <v-tabs-content key="emulator" id="emulator" :lazy="true">
               <assignment-emulator-map ref="map" :assignment="assignment"
                 height="800px" @location="onLocationClicked">
               </assignment-emulator-map>
@@ -88,27 +88,26 @@
 </template>
 
 <script>
-import MQTT from 'mqtt'
-import AssignmentListPanel from './AssignmentListPanel'
-import AssignmentEmulatorMap from './AssignmentEmulatorMap'
-import LocationCreateDialog from './LocationCreateDialog'
-import MeasurementsCreateDialog from './MeasurementsCreateDialog'
-import AlertCreateDialog from './AlertCreateDialog'
+import MQTT from "mqtt";
+import AssignmentListPanel from "./AssignmentListPanel";
+import AssignmentEmulatorMap from "./AssignmentEmulatorMap";
+import LocationCreateDialog from "./LocationCreateDialog";
+import MeasurementsCreateDialog from "./MeasurementsCreateDialog";
+import AlertCreateDialog from "./AlertCreateDialog";
 import NavigationActionButton from "../common/NavigationActionButton";
-import {_getDeviceAssignment} from '../../http/sitewhere-api-wrapper'
+import { _getDeviceAssignment } from "../../http/sitewhere-api-wrapper";
 
 export default {
-
   data: () => ({
     token: null,
     assignment: null,
     mqttClient: null,
-    mqttHostname: 'localhost',
+    mqttHostname: "localhost",
     mqttPort: 1883,
-    mqttTopic: 'SiteWhere/default/input/json',
+    mqttTopic: "SiteWhere/default/input/json",
     mqttConnected: false,
-    swUsername: 'admin',
-    swPassword: 'password',
+    swUsername: "admin",
+    swPassword: "password",
     active: null,
     mapVisible: true
   }),
@@ -122,148 +121,146 @@ export default {
     NavigationActionButton
   },
 
-  created: function () {
-    this.$data.token = this.$route.params.token
-    this.refresh()
+  created: function() {
+    this.$data.token = this.$route.params.token;
+    this.refresh();
   },
 
-  mounted: function () {
-    this.$data.mqttHostname = this.$el.ownerDocument.location.host
+  mounted: function() {
+    this.$data.mqttHostname = this.$el.ownerDocument.location.host;
   },
 
   watch: {
     // Monitor MQTT connection.
-    mqttConnected: function (value) {
-      console.log('MQTT connected ' + value)
+    mqttConnected: function(value) {
+      console.log("MQTT connected " + value);
     }
   },
 
   methods: {
     // Get map reference.
-    getMap: function () {
-      return this.$refs.map
+    getMap: function() {
+      return this.$refs.map;
     },
 
     // Get location create dialog reference.
-    getLocationCreateDialog: function () {
-      return this.$refs.locationCreate
+    getLocationCreateDialog: function() {
+      return this.$refs.locationCreate;
     },
 
     // Get location create dialog reference.
-    getMeasurementsCreateDialog: function () {
-      return this.$refs.mxCreate
+    getMeasurementsCreateDialog: function() {
+      return this.$refs.mxCreate;
     },
 
     // Get alert create dialog reference.
-    getAlertCreateDialog: function () {
-      return this.$refs.alertCreate
+    getAlertCreateDialog: function() {
+      return this.$refs.alertCreate;
     },
 
     // Called to refresh data.
-    refresh: function () {
-      var token = this.$data.token
-      var component = this
+    refresh: function() {
+      var token = this.$data.token;
+      var component = this;
 
       // Load site information.
       _getDeviceAssignment(this.$store, token)
-        .then(function (response) {
-          component.onAssignmentLoaded(response.data)
-        }).catch(function (e) {
+        .then(function(response) {
+          component.onAssignmentLoaded(response.data);
         })
+        .catch(function(e) {});
     },
 
     // Called after data is loaded.
-    onAssignmentLoaded: function (assignment) {
-      this.$data.assignment = assignment
+    onAssignmentLoaded: function(assignment) {
+      this.$data.assignment = assignment;
       var section = {
-        id: 'emulator',
-        title: 'Assignment Emulator',
-        icon: 'link',
-        route: '/admin/assignments/' + assignment.token + '/emulator',
-        longTitle: 'Emulate Assignment: ' + assignment.token
-      }
-      this.$store.commit('currentSection', section)
+        id: "emulator",
+        title: "Assignment Emulator",
+        icon: "link",
+        route: "/admin/assignments/" + assignment.token + "/emulator",
+        longTitle: "Emulate Assignment: " + assignment.token
+      };
+      this.$store.commit("currentSection", section);
 
       // Connect to MQTT broker with current settings.
-      this.establishMqttConnection()
+      this.establishMqttConnection();
     },
 
     // Called when a map location is clicked.
-    onLocationClicked: function (e) {
+    onLocationClicked: function(e) {
       let payload = {
         latitude: e.latlng.lat,
         longitude: e.latlng.lng,
         elevation: 0.0
-      }
-      this.getLocationCreateDialog().onOpenDialog()
-      this.getLocationCreateDialog().load(payload)
+      };
+      this.getLocationCreateDialog().onOpenDialog();
+      this.getLocationCreateDialog().load(payload);
     },
 
     // Called after a location has been added.
-    onLocationAdded: function () {
-      var component = this
+    onLocationAdded: function() {
+      var component = this;
 
       // Wait for data to become available.
-      setTimeout(function () {
-        component.getMap().refreshLocations()
-      }, 1000)
+      setTimeout(function() {
+        component.getMap().refreshLocations();
+      }, 1000);
     },
 
     // Called after measurements have been added.
-    onMeasurementsAdded: function () {
-    },
+    onMeasurementsAdded: function() {},
 
     // Called after alert has been added.
-    onAlertAdded: function () {
+    onAlertAdded: function() {
       console.log("Alert added.");
     },
 
     // Asks map to pan to last recorded location.
-    onPanToLastLocation: function () {
-      this.getMap().panToLastLocation()
+    onPanToLastLocation: function() {
+      this.getMap().panToLastLocation();
     },
 
     // Puts map in mode for adding location.
-    onEnterAddLocationMode: function () {
-      this.getMap().enterAddLocationMode()
+    onEnterAddLocationMode: function() {
+      this.getMap().enterAddLocationMode();
     },
 
     // Called when button for adding mx is clicked.
-    onAddMeasurementsClicked: function () {
-      this.getMeasurementsCreateDialog().onOpenDialog()
+    onAddMeasurementsClicked: function() {
+      this.getMeasurementsCreateDialog().onOpenDialog();
     },
 
     // Called when button for adding alert is clicked.
-    onAddAlertClicked: function () {
-      this.getAlertCreateDialog().onOpenDialog()
+    onAddAlertClicked: function() {
+      this.getAlertCreateDialog().onOpenDialog();
     },
 
     // Establish connection with MQTT broker.
-    establishMqttConnection: function () {
-      var component = this
+    establishMqttConnection: function() {
+      var component = this;
 
-      let mqttClient = this.$data.mqttClient
-      let mqttConnected = this.$data.mqttConnected
+      let mqttClient = this.$data.mqttClient;
+      let mqttConnected = this.$data.mqttConnected;
 
       // Kill any existing connection.
       if (mqttClient && mqttConnected) {
-        mqttClient.end()
-        this.$data.mqttConnected = false
+        mqttClient.end();
+        this.$data.mqttConnected = false;
       }
 
       // Build URL based on form data.
-      let url = 'mqtt://' + this.$data.mqttHostname + ':' +
-        this.$data.mqttPort
+      let url = "mqtt://" + this.$data.mqttHostname + ":" + this.$data.mqttPort;
 
-      mqttClient = MQTT.connect(url)
-      mqttClient.on('connect', function () {
-        component.$data.mqttConnected = true
-        mqttClient.subscribe(component.$data.mqttTopic)
-      })
-      this.$data.mqttClient = mqttClient
+      mqttClient = MQTT.connect(url);
+      mqttClient.on("connect", function() {
+        component.$data.mqttConnected = true;
+        mqttClient.subscribe(component.$data.mqttTopic);
+      });
+      this.$data.mqttClient = mqttClient;
     }
   }
-}
+};
 </script>
 
 <style scoped>
