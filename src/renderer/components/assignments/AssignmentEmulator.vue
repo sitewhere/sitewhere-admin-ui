@@ -135,6 +135,15 @@ export default {
     // Monitor MQTT connection.
     mqttConnected: function(value) {
       console.log("MQTT connected " + value);
+    },
+    mqttHostname: function(value) {
+      this.establishMqttConnection();
+    },
+    mqttPort: function(value) {
+      this.establishMqttConnection();
+    },
+    mqttTopic: function(value) {
+      this.establishMqttConnection();
     }
   },
 
@@ -246,12 +255,12 @@ export default {
 
       // Kill any existing connection.
       if (mqttClient && mqttConnected) {
-        mqttClient.end();
-        this.$data.mqttConnected = false;
+        this.killMqttConnection();
       }
 
       // Build URL based on form data.
       let url = "mqtt://" + this.$data.mqttHostname + ":" + this.$data.mqttPort;
+      console.log(`Connecting to MQTT via ${url}`);
 
       mqttClient = MQTT.connect(url);
       mqttClient.on("connect", function() {
@@ -259,6 +268,10 @@ export default {
         mqttClient.subscribe(component.$data.mqttTopic);
       });
       this.$data.mqttClient = mqttClient;
+    },
+    killMqttConnection: function() {
+      mqttClient.end();
+      this.$data.mqttConnected = false;
     }
   }
 };
