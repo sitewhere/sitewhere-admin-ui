@@ -1,26 +1,23 @@
 <template>
-  <v-container fluid grid-list-md>
-    <v-layout row wrap>
-      <v-map :zoom="zoom"
-        ref="map"  
-        :center="centerMarker" 
-        style="height: 800px; z-index: 1;">
-        <v-tilelayer :url="url"></v-tilelayer>
-      </v-map>
-      <div class="loc-overlay" v-if="addLocationMode">
-        <span class="loc-overlay-text">Click Map to Add Location Event</span>
-      </div>
-    </v-layout>  
-  </v-container>
+  <div>
+    <v-map :zoom="zoom"
+      ref="map"  
+      :center="centerMarker" 
+      style="height: 800px; z-index: 1;">
+      <v-tilelayer :url="url"></v-tilelayer>
+    </v-map>
+    <div class="loc-overlay" v-if="addLocationMode">
+      <span class="loc-overlay-text">Click Map to Add Location Event</span>
+    </div>
+  </div>
 </template>
 
 <script>
 import L from "leaflet";
-import {_listLocationsForAssignment} from "../../http/sitewhere-api-wrapper";
-import { lchown } from 'fs';
+import { _listLocationsForAssignment } from "../../http/sitewhere-api-wrapper";
+import { lchown } from "fs";
 
 export default {
-
   data: () => ({
     map: null,
     locations: null,
@@ -30,25 +27,23 @@ export default {
     areaLayers: [],
     zoom: 20,
     center: [34.102775330967646, -84.23660204977593],
-    url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
+    url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png"
   }),
 
   props: ["assignment", "height"],
 
-  components: {
-  },
+  components: {},
 
   // Only load site after map is mounted.
-  created: function () {
-  },
+  created: function() {},
 
-// Called when DOM is mounted.
-  mounted: function () {
+  // Called when DOM is mounted.
+  mounted: function() {
     this.onResetMap();
   },
   computed: {
     // Calculate center of Map
-    centerMarker: function () {
+    centerMarker: function() {
       if (this.$data.lastLocation) {
         return this.$data.lastLocation;
       }
@@ -61,48 +56,48 @@ export default {
 
   methods: {
     // Access the Leaflet map directly.
-    getMap: function () {
-      return this.$refs.map.mapObject
+    getMap: function() {
+      return this.$refs.map.mapObject;
     },
 
     // Perform additional reset logic.
-    onResetMap: function () {
-      var map = this.getMap()
-      var component = this
-      this.removeZoneLayer()
-      map.off("draw:created").on("draw:created", function (e) {
+    onResetMap: function() {
+      var map = this.getMap();
+      var component = this;
+      this.removeZoneLayer();
+      map.off("draw:created").on("draw:created", function(e) {
         component.onZoneDrawComplete(e);
       });
       this.refreshLocations();
     },
-    removeZoneLayer: function () {
+    removeZoneLayer: function() {
       var component = this;
       for (var i = 0; i < component.areaLayers.length; i++) {
         var areaLayer = component.areaLayers[i];
         this.getMap().removeLayer(areaLayer);
       }
-      component.areaLayers = []
+      component.areaLayers = [];
     },
 
     // Refresh list of locations.
-    refreshLocations: function () {
+    refreshLocations: function() {
       // Load list of locations for assignment.
       var component = this;
       _listLocationsForAssignment(this.$store, this.assignment.token)
-        .then(function (response) {
+        .then(function(response) {
           component.onLocationsLoaded(response.data.results);
-        }).catch(function (e) {
-        });
+        })
+        .catch(function(e) {});
     },
 
     // Called after locations are loaded for assignment.
-    onLocationsLoaded: function (locations) {
+    onLocationsLoaded: function(locations) {
       this.$data.locations = locations;
       this.addLocationsLayer();
     },
 
     // Add layer that contains recent locations.
-    addLocationsLayer: function () {
+    addLocationsLayer: function() {
       let lastLocation = null;
 
       // Add newest last.
@@ -146,44 +141,43 @@ export default {
     },
 
     // Called when map is clicked.
-    onMapClicked: function (e) {
-      this.exitAddLocationMode()
-      this.$emit("location", e)
+    onMapClicked: function(e) {
+      this.exitAddLocationMode();
+      this.$emit("location", e);
     },
 
     // Enter mode where next click adds a location.
-    enterAddLocationMode: function () {
-      this.$data.addLocationMode = true
+    enterAddLocationMode: function() {
+      this.$data.addLocationMode = true;
       var component = this;
       var map = this.getMap();
-      map.on("click", function (e) {
+      map.on("click", function(e) {
         component.onMapClicked(e);
       });
     },
 
     // Exit mode where next click adds a location.
-    exitAddLocationMode: function () {
-      this.$data.addLocationMode = false
+    exitAddLocationMode: function() {
+      this.$data.addLocationMode = false;
       var map = this.getMap();
       map.off("click");
     },
 
     // Pan to the last recorded location.
-    panToLastLocation: function () {
+    panToLastLocation: function() {
       if (this.$data.lastLocation) {
-        this.getMap().panTo(this.$data.lastLocation)
+        this.getMap().panTo(this.$data.lastLocation);
       }
     },
 
     // Called when zone drawing has been completed.
-    onZoneDrawComplete: function (e) {
+    onZoneDrawComplete: function(e) {
       this.addNewZoneLayer(e);
       var locations = this.leafletToSwBounds(e.layer._latlngs[0]);
       this.$emit("boundsUpdated", locations);
     }
-
   }
-}
+};
 </script>
 
 <style scoped>

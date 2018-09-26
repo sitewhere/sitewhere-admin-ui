@@ -6,7 +6,6 @@
       <v-card>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-slider></v-tabs-slider>
             <v-tabs-item key="emulator" href="#emulator">
               Emulator
             </v-tabs-item>
@@ -15,32 +14,34 @@
             </v-tabs-item>
             <v-spacer></v-spacer>
             <navigation-action-button icon="exclamation-triangle" tooltip="Add Alert"
-              @action="onAddAlertClicked">
-            </navigation-action-button>
-
+              @action="onAddAlertClicked"/>
             <navigation-action-button icon="crosshairs" tooltip="Add Location"
-              @action="onEnterAddLocationMode">
-            </navigation-action-button>
-
+              @action="onEnterAddLocationMode"/>
             <navigation-action-button icon="crosshairs" tooltip="Pan to Last Location"
-              @action="onPanToLastLocation">
-            </navigation-action-button>
-
+              @action="onPanToLastLocation"/>
             <navigation-action-button icon="thermometer-full" tooltip="Add Measurements"
-              @action="onAddMeasurementsClicked">
-            </navigation-action-button>
-            <v-spacer></v-spacer>
-
-            <navigation-action-button v-if="mqttConnected" icon="plug" tooltip="MQTT Connected" class="green white--text ma-0">
-            </navigation-action-button>
-            <navigation-action-button v-if="!mqttConnected" icon="plug" tooltip="MQTT Connected" class="red white--text ma-0">
-            </navigation-action-button>
+              @action="onAddMeasurementsClicked"/>
+            <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="emulator" id="emulator" :lazy="true">
-              <assignment-emulator-map ref="map" :assignment="assignment"
-                height="800px" @location="onLocationClicked">
-              </assignment-emulator-map>
+              <div>
+                <assignment-emulator-map ref="map" :assignment="assignment"
+                  height="800px" @location="onLocationClicked">
+                </assignment-emulator-map>
+                <v-card class="mqtt-overlay" raised color="green darken-2 white--text" v-if="mqttConnected">
+                  <v-card-text class="pa-2">
+                    <font-awesome-icon class="mr-2" icon="plug" size="lg"/>
+                    MQTT Connected
+                  </v-card-text>
+                </v-card>
+                <v-card class="mqtt-overlay" raised color="red darken-2 white--text" v-else>
+                  <v-card-text class="pa-2">
+                    <font-awesome-icon class="mr-2" icon="plug" size="lg"/>
+                    MQTT Disconnected
+                  </v-card-text>
+                </v-card>
+              </div>
             </v-tabs-content>
             <v-tabs-content key="mqtt" id="mqtt">
               <v-card flat>
@@ -264,10 +265,10 @@ export default {
 </script>
 
 <style scoped>
-.action-chooser-fab {
+.mqtt-overlay {
   position: absolute;
-  bottom: 48px;
-  right: 48px;
+  top: 20px;
+  right: 20px;
   z-index: 1000;
 }
 </style>
