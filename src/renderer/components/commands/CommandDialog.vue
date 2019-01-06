@@ -3,7 +3,7 @@
     <base-dialog :title="title" :width="width" :visible="dialogVisible"
       :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
       @createClicked="onCreateClicked" @cancelClicked="onCancelClicked"
-      hideButtons="true">
+      :hideButtons="true">
       <v-stepper v-model="step">
         <v-stepper-header>
           <v-stepper-step step="1" :complete="step > 1">Command</v-stepper-step>
