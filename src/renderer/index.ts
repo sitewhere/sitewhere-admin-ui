@@ -1,5 +1,5 @@
 import Vue from "vue";
-import App from "./App";
+import App from "./App.vue";
 import store from "./store";
 import router from "./router";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -53,7 +53,7 @@ L.Icon.Default.mergeOptions({
 customize(L.Draw.Polyline.prototype);
 customize(L.Edit.PolyVerticesEdit.prototype);
 
-function customize(prototype) {
+function customize(prototype: any) {
   var options = prototype.options;
   options.icon.options.iconSize = new L.Point(10, 10);
   options.touchIcon = options.icon;

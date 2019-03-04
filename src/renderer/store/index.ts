@@ -1,24 +1,44 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, { Store, StoreOptions } from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import { IUser } from "sitewhere-rest-api/dist/model/users-model";
+import { ITenant } from "sitewhere-rest-api/dist/model/tenants-model";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+/**
+ * SiteWhere user interface settings in store.
+ */
+export interface SiteWhereUiSettings {
+  protocol?: string;
+  server?: string;
+  port?: number;
+  jwt?: string;
+  user?: IUser;
+  authToken?: string;
+  authTenants?: any;
+  settings?: any;
+  selectedTenant?: ITenant;
+  currentSection?: string;
+  loading?: boolean;
+  error?: boolean;
+}
+
+const store: StoreOptions<SiteWhereUiSettings> = {
   plugins: [createPersistedState()],
   state: {
     protocol: "http",
     server: "localhost",
     port: 8080,
-    jwt: null,
-    user: null,
-    authToken: null,
+    jwt: undefined,
+    user: undefined,
+    authToken: undefined,
     authTenants: null,
     settings: null,
-    selectedTenant: null,
-    currentSection: null,
+    selectedTenant: undefined,
+    currentSection: undefined,
     loading: false,
-    error: null
+    error: undefined
   },
   mutations: {
     // Set server protocol.
@@ -87,11 +107,11 @@ export default new Vuex.Store({
 
     // Log out of the application.
     logOut(state) {
-      state.user = null;
-      state.authToken = null;
-      state.authTenants = null;
-      state.currentSection = null;
-      state.error = null;
+      state.user = undefined;
+      state.authToken = undefined;
+      state.authTenants = undefined;
+      state.currentSection = undefined;
+      state.error = undefined;
     }
   },
 
@@ -140,4 +160,6 @@ export default new Vuex.Store({
       return state.error;
     }
   }
-});
+};
+
+export default new Vuex.Store<SiteWhereUiSettings>(store);
