@@ -1,10 +1,16 @@
 <template>
-  <navigation-page icon="globe" title="Global Microservices"
-    loadingMessage="Loading global microservices list ..." :loaded="loaded">
+  <navigation-page
+    icon="globe"
+    title="Global Microservices"
+    loadingMessage="Loading global microservices list ..."
+    :loaded="loaded"
+  >
     <div slot="content">
-      <microservice-list v-if="topology" :topology="topology"
-        @microserviceClicked="onMicroserviceClicked">
-      </microservice-list>
+      <microservice-list
+        v-if="topology"
+        :topology="topology"
+        @microserviceClicked="onMicroserviceClicked"
+      ></microservice-list>
     </div>
   </navigation-page>
 </template>
@@ -12,7 +18,8 @@
 <script>
 import NavigationPage from "../common/NavigationPage";
 import MicroserviceList from "../microservice/MicroserviceList";
-import { _getGlobalTopology } from "../../http/sitewhere-api-wrapper";
+
+import { getGlobalTopology } from "../../rest/sitewhere-instance-api";
 
 export default {
   data: () => ({
@@ -41,7 +48,7 @@ export default {
 
       // Load configuration data.
       var component = this;
-      _getGlobalTopology(this.$store)
+      getGlobalTopology(this.$store)
         .then(function(response) {
           component.$data.topology = response.data;
           component.loaded = true;

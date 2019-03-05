@@ -7,12 +7,13 @@ import {
   IDeviceCreateRequest,
   IDevice,
   IDeviceSearchCriteria,
-  IDeviceResponseFormat
+  IDeviceResponseFormat,
+  IDeviceSearchResults
 } from "sitewhere-rest-api/dist/model/devices-model";
 import { ISearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
 import {
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignment
+  IDeviceAssignmentSearchResults
 } from "sitewhere-rest-api/dist/model/device-assignments-model";
 
 /**
@@ -79,13 +80,11 @@ export function listDevices(
   store: Store<SiteWhereUiSettings>,
   criteria: IDeviceSearchCriteria,
   format: IDeviceResponseFormat
-): Promise<AxiosResponse<IDevice[]>> {
+): Promise<AxiosResponse<IDeviceSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IDevice[]> = SiteWhere.API.Devices.listDevices(
-    axios,
-    criteria,
-    format
-  );
+  let api: AxiosPromise<
+    IDeviceSearchResults
+  > = SiteWhere.API.Devices.listDevices(axios, criteria, format);
   return loaderWrapper(store, api);
 }
 
@@ -101,10 +100,10 @@ export function listDeviceAssignmentHistory(
   token: string,
   criteria: ISearchCriteria,
   format: IDeviceAssignmentResponseFormat
-): Promise<AxiosResponse<IDeviceAssignment[]>> {
+): Promise<AxiosResponse<IDeviceAssignmentSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceAssignment[]
+    IDeviceAssignmentSearchResults
   > = SiteWhere.API.Devices.listDeviceAssignmentHistory(
     axios,
     token,

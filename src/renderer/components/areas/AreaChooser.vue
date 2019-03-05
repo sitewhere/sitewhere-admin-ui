@@ -1,9 +1,7 @@
 <template>
   <div>
     <div v-if="area">
-      <v-card-text>
-        {{ chosenText }}
-      </v-card-text>
+      <v-card-text>{{ chosenText }}</v-card-text>
       <v-list two-line>
         <v-list-tile avatar :key="area.token">
           <v-list-tile-avatar>
@@ -11,8 +9,7 @@
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-html="area.name"></v-list-tile-title>
-            <v-list-tile-sub-title v-html="area.description">
-            </v-list-tile-sub-title>
+            <v-list-tile-sub-title v-html="area.description"></v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-btn icon ripple @click.stop="onAreaRemoved(true)">
@@ -23,20 +20,16 @@
       </v-list>
     </div>
     <div v-else>
-      <v-card-text>
-        {{ notChosenText }}
-      </v-card-text>
+      <v-card-text>{{ notChosenText }}</v-card-text>
       <v-list v-if="areas" class="area-list" two-line>
         <template v-for="area in areas">
-          <v-list-tile avatar :key="area.token"
-            @click.stop="onAreaChosen(area, true)">
+          <v-list-tile avatar :key="area.token" @click.stop="onAreaChosen(area, true)">
             <v-list-tile-avatar>
               <img :src="area.imageUrl">
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title v-html="area.name"></v-list-tile-title>
-              <v-list-tile-sub-title v-html="area.description">
-              </v-list-tile-sub-title>
+              <v-list-tile-sub-title v-html="area.description"></v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </template>
@@ -47,7 +40,7 @@
 
 <script>
 import Lodash from "lodash";
-import { _listAreas } from "../../http/sitewhere-api-wrapper";
+import { listAreas } from "../../rest/sitewhere-areas-api";
 
 export default {
   data: () => ({
@@ -61,7 +54,7 @@ export default {
   created: function() {
     var component = this;
 
-    _listAreas(component.$store, {}, "page=1&pageSize=0")
+    listAreas(component.$store, {}, "page=1&pageSize=0")
       .then(function(response) {
         component.areas = response.data.results;
         if (component.value) {

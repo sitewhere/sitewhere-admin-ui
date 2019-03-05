@@ -1,15 +1,22 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-data-table class="elevation-0" :headers="headers" :items="metadata"
-        :rows-per-page-items="pagesize" :no-data-text="noDataText">
+      <v-data-table
+        class="elevation-0"
+        :headers="headers"
+        :items="metadata"
+        :rows-per-page-items="pagesize"
+        :no-data-text="noDataText"
+      >
         <template slot="items" slot-scope="props">
-          <td width="250px" :title="props.item.name">
-            {{ (props.item.name.length > 25) ? props.item.name.substring(0, 25) + "..." : props.item.name }}
-          </td>
-          <td width="370px" :title="props.item.value">
-            {{ (props.item.value.length > 50) ? props.item.value.substring(0, 50) + "..." : props.item.value }}
-          </td>
+          <td
+            width="250px"
+            :title="props.item.name"
+          >{{ (props.item.name.length > 25) ? props.item.name.substring(0, 25) + "..." : props.item.name }}</td>
+          <td
+            width="370px"
+            :title="props.item.value"
+          >{{ (props.item.value.length > 50) ? props.item.value.substring(0, 50) + "..." : props.item.value }}</td>
           <td v-if="!readOnly" width="20px">
             <v-tooltip left>
               <v-btn icon @click="onDeleteItem(props.item.name)" slot="activator">
@@ -21,9 +28,7 @@
         </template>
       </v-data-table>
     </v-card-text>
-    <v-alert error :value="true" class="ma-0" style="width: 100%" v-if="error">
-      {{error}}
-    </v-alert>
+    <v-alert error :value="true" class="ma-0" style="width: 100%" v-if="error">{{error}}</v-alert>
     <v-card-text v-if="!readOnly">
       <v-card raised>
         <v-container fluid class="mr-4 pt-1 pb-0">
@@ -31,15 +36,18 @@
             <v-flex xs4>
               <v-text-field light label="Name" v-model="newItemName"></v-text-field>
             </v-flex>
-            <v-flex xs1>
-            </v-flex>
+            <v-flex xs1></v-flex>
             <v-flex xs6>
               <v-text-field light label="Value" v-model="newItemValue"></v-text-field>
             </v-flex>
             <v-flex xs1 class="pt-3">
               <v-tooltip left>
                 <v-btn icon @click="onAddItem" slot="activator">
-                  <font-awesome-icon class="blue--text text--darken-2" icon="plus-circle" size="2x"/>
+                  <font-awesome-icon
+                    class="blue--text text--darken-2"
+                    icon="plus-circle"
+                    size="2x"
+                  />
                 </v-btn>
                 <span>Add Item</span>
               </v-tooltip>
@@ -52,7 +60,7 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
+import { arrayToMetadata, metadataToArray } from "../common/Utils";
 
 export default {
   data: () => ({
@@ -120,12 +128,12 @@ export default {
   methods: {
     // Converts associative format to flat.
     buildFlatMetadata: function(input) {
-      return Utils.metadataToArray(input);
+      return metadataToArray(input);
     },
 
     // Converts flat format into associative.
     buildAssociativeMetadata: function(input) {
-      return Utils.arrayToMetadata(input);
+      return arrayToMetadata(input);
     },
 
     // Let owner know an item was deleted.

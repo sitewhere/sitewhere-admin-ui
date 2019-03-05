@@ -1,42 +1,38 @@
 <template>
   <v-card :hover="!headerMode" class="white">
     <v-card-text @click="onOpenAssignment" :style="styleForStatus" class="assn-root">
-      <asset-mini-panel class="assn-asset" :assignment="assignment">
-      </asset-mini-panel>
+      <asset-mini-panel class="assn-asset" :assignment="assignment"></asset-mini-panel>
       <div class="assn-separator1"></div>
-      <device-mini-panel class="assn-device" :device="assignment.device">
-      </device-mini-panel>
+      <device-mini-panel class="assn-device" :device="assignment.device"></device-mini-panel>
       <div class="assn-separator2"></div>
       <div class="assn-assigned-label">Assigned:</div>
-      <div class="assn-assigned-value">
-        {{ formatDate(assignment.activeDate) }}
-      </div>
+      <div class="assn-assigned-value">{{ formatDate(assignment.activeDate) }}</div>
       <div class="assn-released-label">Released:</div>
-      <div class="assn-released-value">
-        {{ formatDate(assignment.releasedDate) }}
-      </div>
+      <div class="assn-released-value">{{ formatDate(assignment.releasedDate) }}</div>
       <div class="assn-status-label">Status:</div>
-      <assignment-status-button @click.stop="ignore" :assignment="assignment"
-        v-if="assignment.status !== 'Released'" @statusUpdated="refresh"
-        class="assn-status-button">
-      </assignment-status-button>
+      <assignment-status-button
+        @click.stop="ignore"
+        :assignment="assignment"
+        v-if="assignment.status !== 'Released'"
+        @statusUpdated="refresh"
+        class="assn-status-button"
+      ></assignment-status-button>
       <div class="assn-status-value" v-if="assignment.status === 'Released'">Released</div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import Style from '../common/Style'
-import AssetMiniPanel from './AssetMiniPanel'
-import DeviceMiniPanel from '../devices/DeviceMiniPanel'
-import AssignmentStatusButton from './AssignmentStatusButton'
+import Style from "../common/Style";
+import AssetMiniPanel from "./AssetMiniPanel";
+import DeviceMiniPanel from "../devices/DeviceMiniPanel";
+import AssignmentStatusButton from "./AssignmentStatusButton";
+
+import { formatDate } from "../common/Utils";
 
 export default {
-
-  data: function () {
-    return {
-    }
+  data: function() {
+    return {};
   },
 
   components: {
@@ -45,41 +41,36 @@ export default {
     AssignmentStatusButton
   },
 
-  props: ['assignment', 'headerMode'],
+  props: ["assignment", "headerMode"],
 
   computed: {
-    styleForStatus: function () {
-      return Style.styleForAssignmentStatus(this.assignment)
+    styleForStatus: function() {
+      return Style.styleForAssignmentStatus(this.assignment);
     }
   },
 
   methods: {
-    ignore: function () {
-    },
+    ignore: function() {},
 
     // Create background image style.
-    backgroundImageStyle: function (image) {
+    backgroundImageStyle: function(image) {
       return {
-        'background-image': 'url(' + image + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%'
-      }
+        "background-image": "url(" + image + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%"
+      };
     },
     // Fire event to have parent refresh content.
-    refresh: function () {
-      this.$emit('refresh')
+    refresh: function() {
+      this.$emit("refresh");
     },
     // Called when assignment is clicked.
-    onOpenAssignment: function () {
-      this.$emit('assignmentOpened', this.assignment)
-    },
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    onOpenAssignment: function() {
+      this.$emit("assignmentOpened", this.assignment);
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -92,7 +83,7 @@ export default {
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 100%
+  width: 100%;
 }
 .assn-device {
   position: absolute;
@@ -151,7 +142,7 @@ export default {
   font-size: 12px;
 }
 .assn-separator1 {
-  position:absolute;
+  position: absolute;
   width: 10px;
   border-left: 1px solid #ddd;
   top: 10px;
@@ -159,7 +150,7 @@ export default {
   left: 310px;
 }
 .assn-separator2 {
-  position:absolute;
+  position: absolute;
   width: 10px;
   border-left: 1px solid #ddd;
   top: 10px;

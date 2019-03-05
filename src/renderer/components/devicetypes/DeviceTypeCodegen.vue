@@ -5,15 +5,13 @@
         <v-toolbar-title>Google Protocol Buffers Definition</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip left>
-          <v-btn class="ma-0" dark icon @click="onProtobufDownload"
-            slot="activator">
+          <v-btn class="ma-0" dark icon @click="onProtobufDownload" slot="activator">
             <v-icon>fa-download</v-icon>
           </v-btn>
           <span>Download Code</span>
         </v-tooltip>
         <v-tooltip left>
-          <v-btn class="ml-0 mr-2" dark icon @click="refresh"
-            slot="activator">
+          <v-btn class="ml-0 mr-2" dark icon @click="refresh" slot="activator">
             <v-icon>fa-refresh</v-icon>
           </v-btn>
           <span>Refresh Code</span>
@@ -27,46 +25,46 @@
 </template>
 
 <script>
-import {
-  createCoreApiUrl,
-  _getDeviceTypeProtobuf
-} from '../../http/sitewhere-api-wrapper'
+import { createCoreApiUrl } from "../../rest/sitewhere-api-wrapper";
+import { getDeviceType } from "../../rest/sitewhere-device-types-api";
 
 export default {
-
   data: () => ({
     protobuf: null
   }),
 
-  props: ['deviceType'],
+  props: ["deviceType"],
 
-  created: function () {
-    this.refresh()
+  created: function() {
+    this.refresh();
   },
 
   methods: {
     // Refresh list of assignments.
-    refresh: function () {
-      var component = this
-      _getDeviceTypeProtobuf(this.$store, this.deviceType.token)
-        .then(function (response) {
-          component.protobuf = response.data
-        }).catch(function (e) {
+    refresh: function() {
+      var component = this;
+      getDeviceType(this.$store, this.deviceType.token)
+        .then(function(response) {
+          component.protobuf = response.data;
         })
+        .catch(function(e) {});
     },
 
     // Called to download protobuf definition.
-    onProtobufDownload: function () {
-      var tenant = this.$store.getters.selectedTenant
+    onProtobufDownload: function() {
+      var tenant = this.$store.getters.selectedTenant;
       if (tenant) {
-        let url = createCoreApiUrl(this.$store) + 'devicetypes/' +
-          this.deviceType.token + '/spec.proto?tenantAuthToken=' +
-          tenant.authenticationToken
-        window.open(url, '_blank')
+        let url =
+          createCoreApiUrl(this.$store) +
+          "devicetypes/" +
+          this.deviceType.token +
+          "/spec.proto?tenantAuthToken=" +
+          tenant.authenticationToken;
+        window.open(url, "_blank");
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

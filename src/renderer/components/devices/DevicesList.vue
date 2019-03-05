@@ -1,55 +1,59 @@
 <template>
   <div>
-    <navigation-page icon="microchip" title="Manage Devices"
-      loadingMessage="Loading devices ..." :loaded="loaded">
+    <navigation-page
+      icon="microchip"
+      title="Manage Devices"
+      loadingMessage="Loading devices ..."
+      :loaded="loaded"
+    >
       <div slot="content">
-        <device-list-filter-bar ref="filters" @filter="onFilterUpdated">
-        </device-list-filter-bar>
+        <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
         <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="devices">
           <v-layout row wrap>
-             <v-flex xs6 v-for="(device) in devices" :key="device.token">
-              <device-list-panel :device="device" @assignDevice="onAssignDevice"
-                @deviceOpened="onOpenDevice">
-              </device-list-panel>
+            <v-flex xs6 v-for="(device) in devices" :key="device.token">
+              <device-list-panel
+                :device="device"
+                @assignDevice="onAssignDevice"
+                @deviceOpened="onOpenDevice"
+              ></device-list-panel>
             </v-flex>
           </v-layout>
         </v-container>
-        <pager :results="results" :pageSizes="pageSizes"
-          @pagingUpdated="updatePaging">
-        </pager>
+        <pager :results="results" :pageSizes="pageSizes" @pagingUpdated="updatePaging"></pager>
         <device-create-dialog ref="add" @deviceAdded="onDeviceAdded"/>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="plus" tooltip="Add Device"
-          @action="onAddDevice">
-        </navigation-action-button>
-        <navigation-action-button v-if="filter.deviceType" icon="bolt" 
-          tooltip="Execute Batch Command" @action="onBatchCommandInvocation">
-        </navigation-action-button>
-        <navigation-action-button icon="filter" 
-          tooltip="Filter Device List" @action="onShowFilterCriteria">
-        </navigation-action-button>
+        <navigation-action-button icon="plus" tooltip="Add Device" @action="onAddDevice"></navigation-action-button>
+        <navigation-action-button
+          v-if="filter.deviceType"
+          icon="bolt"
+          tooltip="Execute Batch Command"
+          @action="onBatchCommandInvocation"
+        ></navigation-action-button>
+        <navigation-action-button
+          icon="filter"
+          tooltip="Filter Device List"
+          @action="onShowFilterCriteria"
+        ></navigation-action-button>
       </div>
     </navigation-page>
-    <assignment-create-dialog ref="assign"
-       @assignmentCreated="onAssignmentCreated">
-    </assignment-create-dialog>
-    <batch-command-create-dialog ref="batch" :filter="filter">
-    </batch-command-create-dialog>
+    <assignment-create-dialog ref="assign" @assignmentCreated="onAssignmentCreated"></assignment-create-dialog>
+    <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
   </div>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
-import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import DeviceListPanel from "./DeviceListPanel";
 import DeviceListFilterBar from "./DeviceListFilterBar";
 import DeviceCreateDialog from "./DeviceCreateDialog";
 import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog";
 import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog";
-import { _listDevices } from "../../http/sitewhere-api-wrapper";
+
+import { routeTo } from "../common/Utils";
+import { listDevices } from "../../rest/sitewhere-devices-api";
 
 export default {
   data: () => ({
@@ -108,7 +112,7 @@ export default {
       options.includeDeleted = false;
       options.excludeAssigned = false;
 
-      _listDevices(this.$store, options, paging)
+      listDevices(this.$store, options, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;
@@ -153,7 +157,7 @@ export default {
 
     // Called to open detail page for device.
     onOpenDevice: function(device) {
-      Utils.routeTo(this, "/devices/" + device.token);
+      routeTo(this, "/devices/" + device.token);
     },
 
     // Called to open dialog.

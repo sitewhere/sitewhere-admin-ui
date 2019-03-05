@@ -1,16 +1,22 @@
 <template>
   <div>
-    <asset-dialog ref="dialog" title="Create Asset" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </asset-dialog>
+    <asset-dialog
+      ref="dialog"
+      title="Create Asset"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></asset-dialog>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import AssetDialog from "./AssetDialog";
-import { _createAsset } from "../../http/sitewhere-api-wrapper";
+
+import { createAsset } from "../../rest/sitewhere-assets-api";
 
 export default {
   data: () => ({}),
@@ -35,7 +41,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createAsset(this.$store, payload)
+      createAsset(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

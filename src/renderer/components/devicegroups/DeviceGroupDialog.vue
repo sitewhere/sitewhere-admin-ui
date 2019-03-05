@@ -1,18 +1,19 @@
 <template>
-  <base-dialog :title="title" :width="width" :visible="dialogVisible"
-    :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-    @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
+  <base-dialog
+    :title="title"
+    :width="width"
+    :visible="dialogVisible"
+    :createLabel="createLabel"
+    :cancelLabel="cancelLabel"
+    :error="error"
+    @createClicked="onCreateClicked"
+    @cancelClicked="onCancelClicked"
+  >
     <v-tabs v-model="active">
       <v-tabs-bar dark color="primary">
-        <v-tabs-item key="details" href="#details">
-          Asset Details
-        </v-tabs-item>
-        <v-tabs-item key="branding" href="#branding">
-          Branding
-        </v-tabs-item>
-        <v-tabs-item key="metadata" href="#metadata">
-          Metadata
-        </v-tabs-item>
+        <v-tabs-item key="details" href="#details">Asset Details</v-tabs-item>
+        <v-tabs-item key="branding" href="#branding">Branding</v-tabs-item>
+        <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
@@ -22,33 +23,51 @@
               <v-container fluid>
                 <v-layout row wrap>
                   <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Device Group token"
-                      v-model="groupToken" hide-details prepend-icon="info">
-                    </v-text-field>
+                    <v-text-field
+                      required
+                      class="mt-1"
+                      label="Device Group token"
+                      v-model="groupToken"
+                      hide-details
+                      prepend-icon="info"
+                    ></v-text-field>
                     <div class="verror">
-                      <span v-if="!$v.groupToken.required && $v.$dirty">Device Group token is required.</span>
-                      <span v-if="!$v.groupToken.validToken && $v.$dirty">Device Group token is not valid.</span>
+                      <span
+                        v-if="!$v.groupToken.required && $v.$dirty"
+                      >Device Group token is required.</span>
+                      <span
+                        v-if="!$v.groupToken.validToken && $v.$dirty"
+                      >Device Group token is not valid.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Group name"
-                      v-model="groupName" prepend-icon="info"></v-text-field>
+                    <v-text-field
+                      required
+                      class="mt-1"
+                      label="Group name"
+                      v-model="groupName"
+                      prepend-icon="info"
+                    ></v-text-field>
                     <div class="verror">
                       <span v-if="$v.groupName.$invalid && $v.$dirty">Name is required.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field class="mt-1" multi-line label="Description"
-                      v-model="groupDescription" prepend-icon="subject">
-                    </v-text-field>
+                    <v-text-field
+                      class="mt-1"
+                      multi-line
+                      label="Description"
+                      v-model="groupDescription"
+                      prepend-icon="subject"
+                    ></v-text-field>
                     <div class="verror">
-                      <span v-if="$v.groupDescription.$invalid && $v.$dirty">Description is required.</span>
+                      <span
+                        v-if="$v.groupDescription.$invalid && $v.$dirty"
+                      >Description is required.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <roles-field :roles="groupRoles"
-                      @onRolesUpdated="onRolesUpdated">
-                    </roles-field>
+                    <roles-field :roles="groupRoles" @onRolesUpdated="onRolesUpdated"></roles-field>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -56,16 +75,19 @@
           </v-card>
         </v-tabs-content>
         <v-tabs-content key="branding" id="branding">
-          <branding-panel 
+          <branding-panel
             ref="branding"
-            :validateImageUrlRequired=true
+            :validateImageUrlRequired="true"
             @payload="onBrandingChanged"
-            :branding="branding">
-          </branding-panel>
+            :branding="branding"
+          ></branding-panel>
         </v-tabs-content>
         <v-tabs-content key="metadata" id="metadata">
-          <metadata-panel :metadata="metadata"
-            @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+          <metadata-panel
+            :metadata="metadata"
+            @itemDeleted="onMetadataDeleted"
+            @itemAdded="onMetadataAdded"
+          />
         </v-tabs-content>
       </v-tabs-items>
     </v-tabs>
@@ -73,17 +95,17 @@
 </template>
 
 <script>
-import Utils from "../common/Utils"
-import BaseDialog from "../common/BaseDialog"
+import BaseDialog from "../common/BaseDialog";
 import BrandingPanel from "../common/BrandingPanel";
-import MetadataPanel from "../common/MetadataPanel"
-import RolesField from "./RolesField"
+import MetadataPanel from "../common/MetadataPanel";
+import RolesField from "./RolesField";
 import { required, helpers, url } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
+import { arrayToMetadata, metadataToArray } from "../common/Utils";
+
+const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 export default {
-
   data: () => ({
     active: null,
     menu: null,
@@ -122,7 +144,7 @@ export default {
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
+    generatePayload: function() {
       var payload = {};
       payload.token = this.$data.groupToken;
       payload.name = this.$data.groupName;
@@ -133,12 +155,12 @@ export default {
       payload.backgroundColor = this.$data.branding.backgroundColor;
       payload.foregroundColor = this.$data.branding.foregroundColor;
       payload.borderColor = this.$data.branding.borderColor;
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      payload.metadata = arrayToMetadata(this.$data.metadata);
       return payload;
     },
 
     // Reset dialog contents.
-    reset: function (e) {
+    reset: function(e) {
       this.$data.groupToken = null;
       this.$data.groupName = null;
       this.$data.groupDescription = null;
@@ -155,7 +177,7 @@ export default {
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
+    load: function(payload) {
       this.reset();
 
       if (payload) {
@@ -169,44 +191,44 @@ export default {
         this.$data.branding.backgroundColor = payload.backgroundColor;
         this.$data.branding.foregroundColor = payload.foregroundColor;
         this.$data.branding.borderColor = payload.borderColor;
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
+        this.$data.metadata = metadataToArray(payload.metadata);
       }
     },
     // Called to open the dialog.
-    openDialog: function () {
+    openDialog: function() {
       this.$data.dialogVisible = true;
     },
     // Called to open the dialog.
-    closeDialog: function () {
+    closeDialog: function() {
       this.$data.dialogVisible = false;
     },
     // Called to show an error message.
-    showError: function (error) {
+    showError: function(error) {
       this.$data.error = error;
     },
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
+    onCreateClicked: function(e) {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       }
-      if(!this.$refs['branding'].isValid()) {
-        this.$data.active = 'branding'
-        return
+      if (!this.$refs["branding"].isValid()) {
+        this.$data.active = "branding";
+        return;
       }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
+    onCancelClicked: function(e) {
       this.$data.dialogVisible = false;
     },
     // Called when roles are updated.
-    onRolesUpdated: function (roles) {
+    onRolesUpdated: function(roles) {
       this.$data.groupRoles = roles;
     },
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
+    onMetadataDeleted: function(name) {
       var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
@@ -215,17 +237,17 @@ export default {
       }
     },
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
+    onMetadataAdded: function(entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
     },
 
     // Called when branding changes
-    onBrandingChanged: function (branding) {
+    onBrandingChanged: function(branding) {
       this.$data.branding = branding;
     }
   }
-}
+};
 </script>
 
 <style scoped>

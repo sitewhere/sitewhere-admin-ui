@@ -5,27 +5,26 @@
     </v-list-tile-content>
     <v-list-tile-action>
       <actions-block @edited="onCommandUpdated" @deleted="onCommandDeleted">
-        <command-update-dialog slot="edit" ref="update"
-          :token="command.token" :deviceType="deviceType">
-        </command-update-dialog>
-        <command-delete-dialog slot="delete"
-          :token="command.token">
-        </command-delete-dialog>
+        <command-update-dialog
+          slot="edit"
+          ref="update"
+          :token="command.token"
+          :deviceType="deviceType"
+        ></command-update-dialog>
+        <command-delete-dialog slot="delete" :token="command.token"></command-delete-dialog>
       </actions-block>
     </v-list-tile-action>
   </v-list-tile>
 </template>
 
 <script>
-import ActionsBlock from '../common/ActionsBlock'
-import CommandHtml from './CommandHtml'
-import CommandDeleteDialog from './CommandDeleteDialog'
-import CommandUpdateDialog from './CommandUpdateDialog'
+import ActionsBlock from "../common/ActionsBlock";
+import CommandHtml from "./CommandHtml";
+import CommandDeleteDialog from "./CommandDeleteDialog";
+import CommandUpdateDialog from "./CommandUpdateDialog";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     ActionsBlock,
@@ -34,29 +33,29 @@ export default {
     CommandUpdateDialog
   },
 
-  props: ['command', 'deviceType'],
+  props: ["command", "deviceType"],
 
   methods: {
     // Opens update dialog on tile click.
-    onUpdateCommand: function () {
-      this.$refs['update'].onOpenDialog()
+    onUpdateCommand: function() {
+      this.$refs["update"].onOpenDialog();
     },
 
     // Called after command has been deleted.
-    onCommandDeleted: function () {
-      this.$emit('commandDeleted')
+    onCommandDeleted: function() {
+      this.$emit("commandDeleted");
     },
 
     // Called after command has been updated.
-    onCommandUpdated: function () {
-      this.$emit('commandUpdated')
+    onCommandUpdated: function() {
+      this.$emit("commandUpdated");
     }
   }
-}
+};
 </script>
 
 <style scoped>
 .command-comment {
-  font-family: 'courier';
+  font-family: "courier";
 }
 </style>

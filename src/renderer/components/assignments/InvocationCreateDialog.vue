@@ -1,23 +1,28 @@
 <template>
   <div>
-    <invocation-dialog ref="dialog" title="Invoke Device Command" width="600"
-      resetOnOpen="true" createLabel="Invoke" cancelLabel="Cancel"
-      :deviceType="deviceType" @payload="onCommit"
-      @scheduleUpdated="onScheduleUpdated">
-    </invocation-dialog>
-    <floating-action-button label="Invoke Command" icon="bolt"
-      @action="onOpenDialog">
-    </floating-action-button>
+    <invocation-dialog
+      ref="dialog"
+      title="Invoke Device Command"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Invoke"
+      cancelLabel="Cancel"
+      :deviceType="deviceType"
+      @payload="onCommit"
+      @scheduleUpdated="onScheduleUpdated"
+    ></invocation-dialog>
+    <floating-action-button label="Invoke Command" icon="bolt" @action="onOpenDialog"></floating-action-button>
   </div>
 </template>
 
 <script>
 import InvocationDialog from "./InvocationDialog";
 import FloatingActionButton from "../common/FloatingActionButton";
+
 import {
-  _createCommandInvocationForAssignment,
-  _scheduleCommandInvocation
-} from "../../http/sitewhere-api-wrapper";
+  createCommandInvocationForAssignment,
+  scheduleCommandInvocation
+} from "../../rest/sitewhere-device-assignments-api";
 
 export default {
   data: () => ({
@@ -52,7 +57,7 @@ export default {
     onCommit: function(payload) {
       var component = this;
       if (this.schedule) {
-        _scheduleCommandInvocation(
+        scheduleCommandInvocation(
           this.$store,
           this.token,
           this.schedule,
@@ -63,7 +68,7 @@ export default {
           })
           .catch(function(e) {});
       } else {
-        _createCommandInvocationForAssignment(this.$store, this.token, payload)
+        createCommandInvocationForAssignment(this.$store, this.token, payload)
           .then(function(response) {
             component.onCommitted(response);
           })

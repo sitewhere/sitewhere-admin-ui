@@ -1,15 +1,21 @@
 <template>
   <div>
-    <device-dialog ref="dialog" title="Create Device" width="700" createLabel="Create"
-      cancelLabel="Cancel" @payload="onCommit">
-    </device-dialog>
+    <device-dialog
+      ref="dialog"
+      title="Create Device"
+      width="700"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></device-dialog>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import DeviceDialog from "./DeviceDialog";
-import { _createDevice } from "../../http/sitewhere-api-wrapper";
+
+import { createDevice } from "../../rest/sitewhere-devices-api";
 
 export default {
   data: () => ({}),
@@ -34,7 +40,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createDevice(this.$store, payload)
+      createDevice(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

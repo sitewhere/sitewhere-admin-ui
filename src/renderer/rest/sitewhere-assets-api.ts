@@ -7,7 +7,8 @@ import {
   IAssetCreateRequest,
   IAsset,
   IAssetSearchCriteria,
-  IAssetResponseFormat
+  IAssetResponseFormat,
+  IAssetSearchResults
 } from "sitewhere-rest-api/dist/model/assets-model";
 
 /**
@@ -71,9 +72,9 @@ export function listAssets(
   store: Store<SiteWhereUiSettings>,
   criteria: IAssetSearchCriteria,
   format: IAssetResponseFormat
-): Promise<AxiosResponse<IAsset[]>> {
+): Promise<AxiosResponse<IAssetSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IAsset[]> = SiteWhere.API.Assets.listAssets(
+  let api: AxiosPromise<IAssetSearchResults> = SiteWhere.API.Assets.listAssets(
     axios,
     criteria,
     format

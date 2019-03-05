@@ -1,9 +1,6 @@
 <template>
   <div>
-    <v-map :zoom="zoom"
-      ref="map"  
-      :center="centerMarker" 
-      style="height: 800px; z-index: 1;">
+    <v-map :zoom="zoom" ref="map" :center="centerMarker" style="height: 800px; z-index: 1;">
       <v-tilelayer :url="url"></v-tilelayer>
     </v-map>
     <div class="loc-overlay" v-if="addLocationMode">
@@ -14,7 +11,8 @@
 
 <script>
 import L from "leaflet";
-import { _listLocationsForAssignment } from "../../http/sitewhere-api-wrapper";
+
+import { listLocationsForAssignment } from "../../rest/sitewhere-device-assignments-api";
 import { lchown } from "fs";
 
 export default {
@@ -83,7 +81,7 @@ export default {
     refreshLocations: function() {
       // Load list of locations for assignment.
       var component = this;
-      _listLocationsForAssignment(this.$store, this.assignment.token)
+      listLocationsForAssignment(this.$store, this.assignment.token)
         .then(function(response) {
           component.onLocationsLoaded(response.data.results);
         })

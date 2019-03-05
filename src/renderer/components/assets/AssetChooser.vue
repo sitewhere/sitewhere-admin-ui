@@ -1,17 +1,14 @@
 <template>
   <div v-if="asset">
-    <v-card-text class="subheading">
-      {{ chosenText }}
-    </v-card-text>
+    <v-card-text class="subheading">{{ chosenText }}</v-card-text>
     <v-list two-line>
       <v-list-tile avatar :key="asset.token">
         <v-list-tile-avatar>
-          <img :src="asset.imageUrl"></v-list-tile-avatar>
+          <img :src="asset.imageUrl">
         </v-list-tile-avatar>
         <v-list-tile-content>
           <v-list-tile-title v-html="asset.name"></v-list-tile-title>
-          <v-list-tile-sub-title v-html="asset.token">
-          </v-list-tile-sub-title>
+          <v-list-tile-sub-title v-html="asset.token"></v-list-tile-sub-title>
         </v-list-tile-content>
         <v-list-tile-action>
           <v-btn icon ripple @click.stop="onAssetRemoved(true)">
@@ -22,20 +19,16 @@
     </v-list>
   </div>
   <div v-else>
-    <v-card-text class="subheading">
-      {{ notChosenText }}
-    </v-card-text>
+    <v-card-text class="subheading">{{ notChosenText }}</v-card-text>
     <v-list v-if="assets" class="asset-list" two-line>
       <template v-for="asset in assets">
-        <v-list-tile avatar :key="asset.token"
-          @click.stop="onAssetChosen(asset, true)">
+        <v-list-tile avatar :key="asset.token" @click.stop="onAssetChosen(asset, true)">
           <v-list-tile-avatar>
-            <img :src="asset.imageUrl"></v-list-tile-avatar>
+            <img :src="asset.imageUrl">
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-html="asset.name"></v-list-tile-title>
-            <v-list-tile-sub-title v-html="asset.token">
-            </v-list-tile-sub-title>
+            <v-list-tile-sub-title v-html="asset.token"></v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </template>
@@ -44,74 +37,74 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import Lodash from 'lodash'
-import {_listAssets} from '../../http/sitewhere-api-wrapper'
+import Lodash from "lodash";
+
+import { pagingForAllResults } from "../common/Utils";
+import { listAssets } from "../../rest/sitewhere-assets-api";
 
 export default {
-
   data: () => ({
     asset: null,
     assets: []
   }),
 
-  props: ['selected', 'selectedToken', 'chosenText', 'notChosenText'],
+  props: ["selected", "selectedToken", "chosenText", "notChosenText"],
 
   // Initially load list of all assets.
-  created: function () {
-    var component = this
+  created: function() {
+    var component = this;
 
     // Search options.
-    let options = {}
-    options.includeAssetType = true
+    let options = {};
+    options.includeAssetType = true;
 
-    let paging = Utils.pagingForAllResults()
-    _listAssets(this.$store, options, paging)
-      .then(function (response) {
-        component.assets = response.data.results
+    let paging = pagingForAllResults();
+    listAssets(this.$store, options, paging)
+      .then(function(response) {
+        component.assets = response.data.results;
         if (component.selected) {
-          component.onAssetChosen(component.selected)
+          component.onAssetChosen(component.selected);
         }
-      }).catch(function (e) {
       })
+      .catch(function(e) {});
   },
 
   watch: {
-    selected: function (value) {
+    selected: function(value) {
       if (value) {
-        this.onAssetChosen(value, false)
+        this.onAssetChosen(value, false);
       } else {
-        this.onAssetRemoved(false)
+        this.onAssetRemoved(false);
       }
     },
-    selectedToken: function (value) {
-      let asset = Lodash.find(this.assets, { 'token': value })
+    selectedToken: function(value) {
+      let asset = Lodash.find(this.assets, { token: value });
       if (asset) {
-        this.onAssetChosen(asset, false)
+        this.onAssetChosen(asset, false);
       } else {
-        this.onAssetRemoved(false)
+        this.onAssetRemoved(false);
       }
     }
   },
 
   methods: {
     // Called when an asset is chosen.
-    onAssetChosen: function (asset, emit) {
-      this.$data.asset = asset
+    onAssetChosen: function(asset, emit) {
+      this.$data.asset = asset;
       if (emit) {
-        this.$emit('assetUpdated', asset)
+        this.$emit("assetUpdated", asset);
       }
     },
 
     // Allow another asset to be chosen.
-    onAssetRemoved: function (emit) {
-      this.$data.asset = null
+    onAssetRemoved: function(emit) {
+      this.$data.asset = null;
       if (emit) {
-        this.$emit('assetUpdated', null)
+        this.$emit("assetUpdated", null);
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

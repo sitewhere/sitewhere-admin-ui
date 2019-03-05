@@ -1,14 +1,19 @@
 <template>
-  <navigation-page icon="cog" title="Asset Types"
-    loadingMessage="Loading asset types ..." :loaded="loaded">
+  <navigation-page
+    icon="cog"
+    title="Asset Types"
+    loadingMessage="Loading asset types ..."
+    :loaded="loaded"
+  >
     <div v-if="assetTypes" slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(assetType) in assetTypes"
-            :key="assetType.token">
-            <asset-type-list-entry :assetType="assetType"
-              @assetTypeOpened="onOpenAssetType" @assetTypeDeleted="refresh">
-            </asset-type-list-entry>
+          <v-flex xs6 v-for="(assetType) in assetTypes" :key="assetType.token">
+            <asset-type-list-entry
+              :assetType="assetType"
+              @assetTypeOpened="onOpenAssetType"
+              @assetTypeDeleted="refresh"
+            ></asset-type-list-entry>
           </v-flex>
         </v-layout>
       </v-container>
@@ -16,9 +21,7 @@
       <asset-type-create-dialog ref="add" @assetTypeAdded="onAssetTypeAdded"/>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Asset Type"
-        @action="onAddAssetType">
-      </navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Asset Type" @action="onAddAssetType"></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -29,7 +32,8 @@ import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import AssetTypeListEntry from "./AssetTypeListEntry";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog";
-import { _listAssetTypes } from "../../http/sitewhere-api-wrapper";
+
+import { listAssetTypes } from "../../rest/sitewhere-asset-types-api";
 
 export default {
   data: () => ({
@@ -60,7 +64,7 @@ export default {
       var paging = this.$data.paging.query;
       var component = this;
       var options = {};
-      _listAssetTypes(this.$store, options, paging)
+      listAssetTypes(this.$store, options, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;

@@ -1,27 +1,17 @@
 <template>
   <div class="command-content">
-    <div class='command-desc'>/** {{ command.description }} **/</div>
-    <span class="command-name" @click.native="commandClicked">
-      {{ command.name }}
-    </span>
+    <div class="command-desc">/** {{ command.description }} **/</div>
+    <span class="command-name" @click.native="commandClicked">{{ command.name }}</span>
     (
     <span v-for="(parameter, index) in command.parameters" :key="parameter.name">
-      <span v-if="index > 0"> ,</span>
+      <span v-if="index > 0">,</span>
       <strong v-if="parameter.required">
-        <span class="command-param-name">
-          {{ parameter.name }}
-        </span>:
-        <span class="command-param-type">
-          {{ parameter.type }}
-        </span>
+        <span class="command-param-name">{{ parameter.name }}</span>:
+        <span class="command-param-type">{{ parameter.type }}</span>
       </strong>
       <span v-else>
-        <span class="command-param-name">
-          {{ parameter.name }}
-        </span>:
-        <span class="command-param-type">
-          {{ parameter.type }}
-        </span>
+        <span class="command-param-name">{{ parameter.name }}</span>:
+        <span class="command-param-type">{{ parameter.type }}</span>
       </span>
     </span>
     )
@@ -30,20 +20,17 @@
 
 <script>
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
+  props: ["command"],
 
-  props: ['command'],
-
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>
 .command-content {
-  font-family: 'courier';
+  font-family: "courier";
   font-size: 14px;
   width: 100%;
 }
@@ -56,21 +43,21 @@ export default {
 }
 
 .command-desc {
-	color: #060;
-	font-style: italic;
-	max-width: 90%;
+  color: #060;
+  font-style: italic;
+  max-width: 90%;
 }
 
 .command-name {
-	color: #060;
-	font-weight: bold;
+  color: #060;
+  font-weight: bold;
 }
 
 .command-param-name {
-	color: #333;
+  color: #333;
 }
 
 .command-param-type {
-	color: #666;
+  color: #666;
 }
 </style>

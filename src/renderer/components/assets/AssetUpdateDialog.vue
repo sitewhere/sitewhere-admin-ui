@@ -1,68 +1,72 @@
 <template>
   <div>
-    <asset-dialog ref="dialog" title="Edit Asset" width="600"
-      resetOnOpen="true" createLabel="Update" cancelLabel="Cancel"
-      @payload="onCommit">
-    </asset-dialog>
+    <asset-dialog
+      ref="dialog"
+      title="Edit Asset"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Update"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></asset-dialog>
   </div>
 </template>
 
 <script>
-import FloatingActionButton from '../common/FloatingActionButton'
-import AssetDialog from './AssetDialog'
-import {_getAsset, _updateAsset} from '../../http/sitewhere-api-wrapper'
+import FloatingActionButton from "../common/FloatingActionButton";
+import AssetDialog from "./AssetDialog";
+
+import { getAsset, updateAsset } from "../../rest/sitewhere-assets-api";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     FloatingActionButton,
     AssetDialog
   },
 
-  props: ['token'],
+  props: ["token"],
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getAsset(this.$store, this.token)
-        .then(function (response) {
-          component.onDataLoaded(response)
-        }).catch(function (e) {
+    onOpenDialog: function() {
+      var component = this;
+      getAsset(this.$store, this.token)
+        .then(function(response) {
+          component.onDataLoaded(response);
         })
+        .catch(function(e) {});
     },
 
     // Called after data is loaded.
-    onDataLoaded: function (response) {
-      this.getDialogComponent().load(response.data)
-      this.getDialogComponent().openDialog()
+    onDataLoaded: function(response) {
+      this.getDialogComponent().load(response.data);
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateAsset(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
+    onCommit: function(payload) {
+      var component = this;
+      updateAsset(this.$store, this.token, payload)
+        .then(function(response) {
+          component.onCommitted(response);
         })
+        .catch(function(e) {});
     },
 
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('assetUpdated')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("assetUpdated");
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,19 +1,23 @@
 <template>
   <span>
-    <device-status-dialog ref="dialog" :deviceType="deviceType"
-      title="Create Device Status" width="600"
-      createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
-    </device-status-dialog>
-    <floating-action-button label="Add Status" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
+    <device-status-dialog
+      ref="dialog"
+      :deviceType="deviceType"
+      title="Create Device Status"
+      width="600"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></device-status-dialog>
+    <floating-action-button label="Add Status" icon="plus" @action="onOpenDialog"></floating-action-button>
   </span>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import DeviceStatusDialog from "./DeviceStatusDialog";
-import { _createDeviceStatus } from "../../http/sitewhere-api-wrapper";
+
+import { createDeviceStatus } from "../../rest/sitewhere-device-statuses-api";
 
 export default {
   data: () => ({}),
@@ -40,7 +44,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createDeviceStatus(this.$store, payload)
+      createDeviceStatus(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

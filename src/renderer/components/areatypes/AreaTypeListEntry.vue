@@ -19,21 +19,17 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
+import { routeTo } from "../common/Utils";
 
 export default {
   data: () => ({}),
-
-  components: {
-    Utils
-  },
 
   props: ["areaType", "areaTypes"],
 
   methods: {
     // Callen when card is clicked.
     onAreaTypeClicked: function() {
-      Utils.routeTo(this, "/areatypes/" + this.areaType.token);
+      routeTo(this, "/areatypes/" + this.areaType.token);
     }
   }
 };

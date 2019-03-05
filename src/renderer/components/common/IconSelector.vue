@@ -4,8 +4,7 @@
       <v-container fluid class="pa-0">
         <v-layout row wrap>
           <v-flex xs12>
-            <v-text-field label="Icon" v-model="icon" prepend-icon="image">
-            </v-text-field>
+            <v-text-field label="Icon" v-model="icon" prepend-icon="image"></v-text-field>
           </v-flex>
         </v-layout>
       </v-container>
@@ -15,11 +14,16 @@
         <v-layout row wrap>
           <v-flex class="faicon" xs1 v-for="(icon) in iconsSolid" :key="icon">
             <v-tooltip left>
-              <font-awesome-icon class="faicon text--grey" :icon="icon" size="lg" 
-                @click="onIconSelected(icon)" slot="activator"/>
+              <font-awesome-icon
+                class="faicon text--grey"
+                :icon="icon"
+                size="lg"
+                @click="onIconSelected(icon)"
+                slot="activator"
+              />
               <span>{{ icon }}</span>
             </v-tooltip>
-        </v-flex>
+          </v-flex>
         </v-layout>
       </v-container>
     </v-card>

@@ -1,104 +1,113 @@
 <template>
   <div>
-    <v-data-table v-if="zones && zones.length > 0" class="elevation-2 pa-0"
-      :headers="headers" :items="zones" :hide-actions="true"
-      no-data-text="No Zones Found for Area">
+    <v-data-table
+      v-if="zones && zones.length > 0"
+      class="elevation-2 pa-0"
+      :headers="headers"
+      :items="zones"
+      :hide-actions="true"
+      no-data-text="No Zones Found for Area"
+    >
       <template slot="items" slot-scope="props">
         <td width="30%" :title="props.item.name">
           <span class="zone-name">
             <div class="zone-outer" :style="{'border-color': props.item.borderColor}">
-              <div class="zone-inner"
-                :style="{'background-color': props.item.fillColor, 'opacity': props.item.opacity}">
-              </div>
-            </div>{{ props.item.name }}
+              <div
+                class="zone-inner"
+                :style="{'background-color': props.item.fillColor, 'opacity': props.item.opacity}"
+              ></div>
+            </div>
+            {{ props.item.name }}
           </span>
         </td>
-        <td width="40%" :title="props.item.token" class="zone-token">
-          {{ props.item.token }}
-        </td>
-        <td width="10%" style="white-space: nowrap" :title="formatDate(props.item.createdDate)">
-          {{ formatDate(props.item.createdDate) }}
-        </td>
-        <td width="10%" style="white-space: nowrap" :title="formatDate(props.item.updatedDate)">
-          {{ formatDate(props.item.updatedDate) }}
-        </td>
+        <td width="40%" :title="props.item.token" class="zone-token">{{ props.item.token }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.createdDate)"
+        >{{ formatDate(props.item.createdDate) }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.updatedDate)"
+        >{{ formatDate(props.item.updatedDate) }}</td>
         <td width="1%" style="white-space: nowrap" title="Edit/Delete">
           <actions-block @edited="refresh" @deleted="refresh">
-            <zone-update-dialog slot="edit" :area="area"
-              :token="props.item.token">
-            </zone-update-dialog>
-            <zone-delete-dialog slot="delete" :token="props.item.token">
-            </zone-delete-dialog>
+            <zone-update-dialog slot="edit" :area="area" :token="props.item.token"></zone-update-dialog>
+            <zone-delete-dialog slot="delete" :token="props.item.token"></zone-delete-dialog>
           </actions-block>
         </td>
       </template>
     </v-data-table>
-    <pager :pageSizes="pageSizes" :results="results"
-      @pagingUpdated="updatePaging">
-      <no-results-panel slot="noresults"
-        text="No Zones Found">
-      </no-results-panel>
+    <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging">
+      <no-results-panel slot="noresults" text="No Zones Found"></no-results-panel>
     </pager>
   </div>
 </template>
 
 <script>
-import Pager from '../common/Pager'
-import ActionsBlock from '../common/ActionsBlock'
-import NoResultsPanel from '../common/NoResultsPanel'
-import ZoneUpdateDialog from './ZoneUpdateDialog'
-import ZoneDeleteDialog from './ZoneDeleteDialog'
-import {_listZones} from '../../http/sitewhere-api-wrapper'
+import Pager from "../common/Pager";
+import ActionsBlock from "../common/ActionsBlock";
+import NoResultsPanel from "../common/NoResultsPanel";
+import ZoneUpdateDialog from "./ZoneUpdateDialog";
+import ZoneDeleteDialog from "./ZoneDeleteDialog";
+
+import { listZones } from "../../rest/sitewhere-zones-api";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
     zones: null,
     headers: [
       {
-        align: 'left',
+        align: "left",
         sortable: false,
-        text: 'Name',
-        value: 'name'
-      }, {
-        align: 'left',
+        text: "Name",
+        value: "name"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Token',
-        value: 'token'
-      }, {
-        align: 'left',
+        text: "Token",
+        value: "token"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Created Date',
-        value: 'created'
-      }, {
-        align: 'left',
+        text: "Created Date",
+        value: "created"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Updated Date',
-        value: 'updated'
-      }, {
-        align: 'left',
+        text: "Updated Date",
+        value: "updated"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: '',
-        value: 'edit'
+        text: "",
+        value: "edit"
       }
     ],
     pageSizes: [
       {
-        text: '25',
+        text: "25",
         value: 25
-      }, {
-        text: '50',
+      },
+      {
+        text: "50",
         value: 50
-      }, {
-        text: '100',
+      },
+      {
+        text: "100",
         value: 100
       }
     ]
   }),
 
-  props: ['area'],
+  props: ["area"],
 
   components: {
     Pager,
@@ -110,58 +119,58 @@ export default {
 
   watch: {
     // Refresh component if area is updated.
-    area: function (value) {
-      this.refresh()
+    area: function(value) {
+      this.refresh();
     }
   },
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list of assignments.
-    refresh: function () {
-      var component = this
+    refresh: function() {
+      var component = this;
       var options = {
         areaToken: this.area.token
-      }
-      var paging = this.$data.paging.query
-      _listZones(this.$store, options, paging)
-        .then(function (response) {
-          component.results = response.data
-          component.zones = response.data.results
-        }).catch(function (e) {
+      };
+      var paging = this.$data.paging.query;
+      listZones(this.$store, options, paging)
+        .then(function(response) {
+          component.results = response.data;
+          component.zones = response.data.results;
         })
+        .catch(function(e) {});
     },
 
     // Called when page number is updated.
-    onPageUpdated: function (pageNumber) {
-      this.$data.pager.page = pageNumber
-      this.refresh()
+    onPageUpdated: function(pageNumber) {
+      this.$data.pager.page = pageNumber;
+      this.refresh();
     },
 
     // Format date.
-    formatDate: function (date) {
+    formatDate: function(date) {
       if (!date) {
-        return 'N/A'
+        return "N/A";
       }
-      return this.$moment(date).format('YYYY-MM-DD H:mm:ss')
+      return this.$moment(date).format("YYYY-MM-DD H:mm:ss");
     },
 
     // Called when a zone is deleted.
-    onZoneDeleted: function () {
-      this.refresh()
+    onZoneDeleted: function() {
+      this.refresh();
     },
 
     // Called when a zone is updated.
-    onZoneUpdated: function () {
-      this.refresh()
+    onZoneUpdated: function() {
+      this.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>

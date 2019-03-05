@@ -1,15 +1,21 @@
 <template>
   <div>
-    <device-group-dialog ref="dialog" title="Create Device Group" width="700"
-      createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
-    </device-group-dialog>
+    <device-group-dialog
+      ref="dialog"
+      title="Create Device Group"
+      width="700"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></device-group-dialog>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import DeviceGroupDialog from "./DeviceGroupDialog";
-import { _createDeviceGroup } from "../../http/sitewhere-api-wrapper";
+
+import { createDeviceGroup } from "../../rest/sitewhere-device-groups-api";
 
 export default {
   data: () => ({}),
@@ -34,7 +40,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createDeviceGroup(this.$store, payload)
+      createDeviceGroup(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

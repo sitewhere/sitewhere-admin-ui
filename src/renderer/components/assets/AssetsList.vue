@@ -1,36 +1,31 @@
 <template>
-  <navigation-page icon="car" title="Assets"
-    loadingMessage="Loading assets ..." :loaded="loaded">
+  <navigation-page icon="car" title="Assets" loadingMessage="Loading assets ..." :loaded="loaded">
     <div v-if="assets" slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(asset) in assets" :key="asset.token">
-            <asset-list-entry :asset="asset" @assetOpened="onOpenAsset">
-            </asset-list-entry>
+          <v-flex xs6 v-for="(asset) in assets" :key="asset.token">
+            <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
           </v-flex>
         </v-layout>
       </v-container>
-      <pager :results="results" :pageSizes="pageSizes"
-        @pagingUpdated="updatePaging">
-      </pager>
+      <pager :results="results" :pageSizes="pageSizes" @pagingUpdated="updatePaging"></pager>
       <asset-create-dialog ref="add" @assetAdded="onAssetAdded"/>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Asset"
-        @action="onAddAsset">
-      </navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Asset" @action="onAddAsset"></navigation-action-button>
     </div>
   </navigation-page>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import AssetListEntry from "./AssetListEntry";
 import AssetCreateDialog from "./AssetCreateDialog";
-import { _listAssets } from "../../http/sitewhere-api-wrapper";
+
+import { routeTo } from "../common/Utils";
+import { listAssets } from "../../rest/sitewhere-assets-api";
 
 export default {
   data: () => ({
@@ -75,7 +70,7 @@ export default {
       var paging = this.$data.paging.query;
       var component = this;
       var options = {};
-      _listAssets(this.$store, options, paging)
+      listAssets(this.$store, options, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;
@@ -88,7 +83,7 @@ export default {
 
     // Called on open.
     onOpenAsset: function(asset) {
-      Utils.routeTo(this, "/assets/" + asset.token);
+      routeTo(this, "/assets/" + asset.token);
     },
 
     // Called to open dialog.

@@ -8,7 +8,8 @@ import {
   IUserCreateRequest,
   IUserSearchCriteria,
   IUserResponseFormat,
-  IGrantedAuthorityHierarchyNode
+  IGrantedAuthorityHierarchyNode,
+  IUserSearchResults
 } from "sitewhere-rest-api/dist/model/users-model";
 
 /**
@@ -86,9 +87,9 @@ export function listUsers(
   store: Store<SiteWhereUiSettings>,
   criteria: IUserSearchCriteria,
   format: IUserResponseFormat
-): Promise<AxiosResponse<IUser[]>> {
+): Promise<AxiosResponse<IUserSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IUser[]> = SiteWhere.API.Users.listUsers(
+  let api: AxiosPromise<IUserSearchResults> = SiteWhere.API.Users.listUsers(
     axios,
     criteria,
     format

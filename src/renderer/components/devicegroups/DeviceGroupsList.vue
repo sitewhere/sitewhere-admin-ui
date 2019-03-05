@@ -1,26 +1,23 @@
 <template>
-  <navigation-page icon="cubes" title="Manage Device Groups"
-    loadingMessage="Loading device groups ..." :loaded="loaded">
+  <navigation-page
+    icon="cubes"
+    title="Manage Device Groups"
+    loadingMessage="Loading device groups ..."
+    :loaded="loaded"
+  >
     <div slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="groups">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(group) in groups" :key="group.token">
-            <device-group-list-panel :group="group" class="mb-1"
-              @click.native="onOpenGroup(group)">
-            </device-group-list-panel>
+          <v-flex xs6 v-for="(group) in groups" :key="group.token">
+            <device-group-list-panel :group="group" class="mb-1" @click.native="onOpenGroup(group)"></device-group-list-panel>
           </v-flex>
         </v-layout>
       </v-container>
-      <pager :results="results" :pageSizes="pageSizes"
-        @pagingUpdated="updatePaging">
-      </pager>
-      <device-group-create-dialog ref="add" @groupAdded="refresh">
-      </device-group-create-dialog>
+      <pager :results="results" :pageSizes="pageSizes" @pagingUpdated="updatePaging"></pager>
+      <device-group-create-dialog ref="add" @groupAdded="refresh"></device-group-create-dialog>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Device Group"
-        @action="onAddDeviceGroup">
-      </navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Device Group" @action="onAddDeviceGroup"></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -28,11 +25,12 @@
 <script>
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
-import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import DeviceGroupListPanel from "./DeviceGroupListPanel";
 import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog";
-import { _listDeviceGroups } from "../../http/sitewhere-api-wrapper";
+
+import { routeTo } from "../common/Utils";
+import { listDeviceGroups } from "../../rest/sitewhere-device-groups-api";
 
 export default {
   data: () => ({
@@ -77,7 +75,7 @@ export default {
       this.$data.loaded = false;
       let paging = this.$data.paging.query;
       let component = this;
-      _listDeviceGroups(this.$store, null, false, paging)
+      listDeviceGroups(this.$store, null, false, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;
@@ -90,7 +88,7 @@ export default {
 
     // Called to open detail page for group.
     onOpenGroup: function(group) {
-      Utils.routeTo(this, "/groups/" + group.token);
+      routeTo(this, "/groups/" + group.token);
     },
 
     // Called to open dialog.

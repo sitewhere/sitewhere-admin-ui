@@ -1,44 +1,47 @@
 <template>
-  <v-select :items="customers" item-text="name" item-value="token"
-    v-model="selectedToken" hide-details single-line>
-  </v-select>
+  <v-select
+    :items="customers"
+    item-text="name"
+    item-value="token"
+    v-model="selectedToken"
+    hide-details
+    single-line
+  ></v-select>
 </template>
 
 <script>
-import {_listCustomers} from '../../http/sitewhere-api-wrapper'
+import { listCustomers } from "../../rest/sitewhere-customers-api";
 
 export default {
-
   data: () => ({
     customers: [],
     selectedToken: null
   }),
 
-  props: ['value'],
+  props: ["value"],
 
   watch: {
-    value: function (updated) {
-      this.$data.selectedToken = updated
+    value: function(updated) {
+      this.$data.selectedToken = updated;
     },
-    selectedToken: function (updated) {
-      this.$emit('input', updated)
+    selectedToken: function(updated) {
+      this.$emit("input", updated);
     }
   },
 
   // Initially load list of all customers.
-  created: function () {
-    this.$data.selectedToken = this.value
-    var component = this
-    _listCustomers(component.$store, {}, 'page=1&pageSize=0')
-      .then(function (response) {
-        component.$data.customers = response.data.results
-      }).catch(function (e) {
+  created: function() {
+    this.$data.selectedToken = this.value;
+    var component = this;
+    listCustomers(component.$store, {}, "page=1&pageSize=0")
+      .then(function(response) {
+        component.$data.customers = response.data.results;
       })
+      .catch(function(e) {});
   },
 
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

@@ -7,7 +7,8 @@ import {
   IDeviceStatusCreateRequest,
   IDeviceStatus,
   IDeviceStatusSearchCriteria,
-  IDeviceStatusResponseFormat
+  IDeviceStatusResponseFormat,
+  IDeviceStatusSearchResults
 } from "sitewhere-rest-api/dist/model/device-statuses-model";
 
 /**
@@ -70,10 +71,10 @@ export function listDeviceStatuses(
   store: Store<SiteWhereUiSettings>,
   criteria: IDeviceStatusSearchCriteria,
   format: IDeviceStatusResponseFormat
-): Promise<AxiosResponse<IDeviceStatus[]>> {
+): Promise<AxiosResponse<IDeviceStatusSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceStatus[]
+    IDeviceStatusSearchResults
   > = SiteWhere.API.DeviceStatuses.listDeviceStatuses(axios, criteria, format);
   return loaderWrapper(store, api);
 }

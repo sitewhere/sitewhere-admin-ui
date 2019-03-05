@@ -2,17 +2,11 @@
   <v-card flat hover>
     <v-card-text class="group">
       <div class="group-image" :style="backgroundImageStyle"></div>
-      <div class="group-name ellipsis title">
-        {{ group.name }}
-      </div>
-      <div class="group-token ellipsis subheading">
-        {{ group.token }}
-      </div>
-      <div class="group-description ellipsis">
-        {{ group.description }}
-      </div>
-      <div class="group-roles ellipsis">
-        Roles: <strong>{{ rolesView  }}</strong>
+      <div class="group-name ellipsis title">{{ group.name }}</div>
+      <div class="group-token ellipsis subheading">{{ group.token }}</div>
+      <div class="group-description ellipsis">{{ group.description }}</div>
+      <div class="group-roles ellipsis">Roles:
+        <strong>{{ rolesView }}</strong>
       </div>
     </v-card-text>
   </v-card>

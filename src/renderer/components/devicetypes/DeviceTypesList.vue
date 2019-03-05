@@ -1,13 +1,15 @@
 <template>
-  <navigation-page icon="cog" title="Manage Device Types"
-    loadingMessage="Loading device types ..." :loaded="loaded">
+  <navigation-page
+    icon="cog"
+    title="Manage Device Types"
+    loadingMessage="Loading device types ..."
+    :loaded="loaded"
+  >
     <div slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="deviceTypes">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(deviceType) in deviceTypes"
-            :key="deviceType.token">
-            <device-type-list-entry :deviceType="deviceType">
-            </device-type-list-entry>
+          <v-flex xs6 v-for="(deviceType) in deviceTypes" :key="deviceType.token">
+            <device-type-list-entry :deviceType="deviceType"></device-type-list-entry>
           </v-flex>
         </v-layout>
       </v-container>
@@ -15,9 +17,7 @@
       <device-type-create-dialog ref="add" @deviceTypeAdded="onDeviceTypeAdded"/>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Device Type"
-        @action="onAddDeviceType">
-      </navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Device Type" @action="onAddDeviceType"></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -28,7 +28,8 @@ import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import DeviceTypeListEntry from "./DeviceTypeListEntry";
 import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog";
-import { _listDeviceTypes } from "../../http/sitewhere-api-wrapper";
+
+import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
 
 export default {
   data: () => ({
@@ -58,7 +59,7 @@ export default {
       this.$data.loaded = false;
       var paging = this.$data.paging.query;
       var component = this;
-      _listDeviceTypes(this.$store, false, true, paging)
+      listDeviceTypes(this.$store, false, true, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;

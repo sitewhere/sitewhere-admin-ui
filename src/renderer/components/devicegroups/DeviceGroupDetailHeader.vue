@@ -1,11 +1,13 @@
 <template>
-  <navigation-header-panel v-if="group" :imageUrl="group.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="200px">
+  <navigation-header-panel
+    v-if="group"
+    :imageUrl="group.imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="200px"
+  >
     <span slot="content">
       <header-field label="Token">
-        <clipboard-copy-field :field="group.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
+        <clipboard-copy-field :field="group.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
       <header-field label="Name">
         <span>{{ group.name }}</span>
@@ -24,16 +26,15 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import ClipboardCopyField from '../common/ClipboardCopyField'
-import HeaderField from '../common/HeaderField'
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
+import ClipboardCopyField from "../common/ClipboardCopyField";
+import HeaderField from "../common/HeaderField";
+
+import { formatDate } from "../common/Utils";
 
 export default {
-
-  data: function () {
-    return {
-    }
+  data: function() {
+    return {};
   },
 
   components: {
@@ -42,25 +43,25 @@ export default {
     HeaderField
   },
 
-  props: ['group'],
+  props: ["group"],
 
   computed: {
-    rolesView: function () {
-      return this.group.roles.join(', ')
+    rolesView: function() {
+      return this.group.roles.join(", ");
     },
     // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'devicegroups/' + this.group.token + '/label/qrcode'
+    qrCodeUrl: function() {
+      return "devicegroups/" + this.group.token + "/label/qrcode";
     }
   },
 
   methods: {
     // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    formatDate: function(date) {
+      return formatDate(date);
     }
   }
-}
+};
 </script>
 
 <style scoped>

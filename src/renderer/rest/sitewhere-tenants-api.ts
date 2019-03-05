@@ -9,7 +9,8 @@ import {
   ITenantSearchCriteria,
   ITenantResponseFormat,
   ITenantTemplate,
-  IDatasetTemplate
+  IDatasetTemplate,
+  ITenantSearchResults
 } from "sitewhere-rest-api/dist/model/tenants-model";
 
 /**
@@ -76,13 +77,11 @@ export function listTenants(
   store: Store<SiteWhereUiSettings>,
   criteria: ITenantSearchCriteria,
   format: ITenantResponseFormat
-): Promise<AxiosResponse<ITenant[]>> {
+): Promise<AxiosResponse<ITenantSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<ITenant[]> = SiteWhere.API.Tenants.listTenants(
-    axios,
-    criteria,
-    format
-  );
+  let api: AxiosPromise<
+    ITenantSearchResults
+  > = SiteWhere.API.Tenants.listTenants(axios, criteria, format);
   return loaderWrapper(store, api);
 }
 

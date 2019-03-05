@@ -1,8 +1,11 @@
 <template>
   <v-list v-if="sections" dense class="pt-0">
     <v-list-group v-for="navsect in sections" :value="navsect.active" :key="navsect.id">
-      <v-list-tile v-if="isAuthForSection(navsect)"
-        @click.native="onSectionClicked(navsect)" slot="item">
+      <v-list-tile
+        v-if="isAuthForSection(navsect)"
+        @click.native="onSectionClicked(navsect)"
+        slot="item"
+      >
         <v-list-tile-action>
           <font-awesome-icon :icon="navsect.icon" size="lg"/>
         </v-list-tile-action>
@@ -13,8 +16,11 @@
           <v-icon dark>keyboard_arrow_down</v-icon>
         </v-list-tile-action>
       </v-list-tile>
-      <v-list-tile @click="onSectionClicked(navsub)"
-        v-for="navsub in navsect.subsections" :key="navsub.id">
+      <v-list-tile
+        @click="onSectionClicked(navsub)"
+        v-for="navsub in navsect.subsections"
+        :key="navsub.id"
+      >
         <v-list-tile-content>
           <v-list-tile-title>{{ navsub.title }}</v-list-tile-title>
         </v-list-tile-content>
@@ -27,7 +33,7 @@
 </template>
 
 <script>
-import Utils from "./Utils";
+import { isAuthForAll } from "./Utils";
 
 export default {
   data: () => ({
@@ -41,7 +47,7 @@ export default {
     // Determines whether user is authorized for section.
     isAuthForSection: function(section) {
       if (section.requireAll) {
-        return Utils.isAuthForAll(this, section.requireAll);
+        return isAuthForAll(this, section.requireAll);
       }
       return true;
     },

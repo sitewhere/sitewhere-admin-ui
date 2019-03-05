@@ -10,7 +10,9 @@ import {
   IDeviceGroupResponseFormat,
   IDeviceGroupElementCreateRequest,
   IDeviceGroupElementResponseFormat,
-  IDeviceGroupElement
+  IDeviceGroupElement,
+  IDeviceGroupSearchResults,
+  IDeviceGroupElementSearchResults
 } from "sitewhere-rest-api/dist/model/device-groups-model";
 
 /**
@@ -73,10 +75,10 @@ export function listDeviceGroups(
   store: Store<SiteWhereUiSettings>,
   criteria: IDeviceGroupSearchCriteria,
   format: IDeviceGroupResponseFormat
-): Promise<AxiosResponse<IDeviceGroup[]>> {
+): Promise<AxiosResponse<IDeviceGroupSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceGroup[]
+    IDeviceGroupSearchResults
   > = SiteWhere.API.DeviceGroups.listDeviceGroups(axios, criteria, format);
   return loaderWrapper(store, api);
 }
@@ -93,10 +95,10 @@ export function listDeviceGroupElements(
   token: string,
   criteria: IDeviceGroupSearchCriteria,
   format: IDeviceGroupElementResponseFormat
-): Promise<AxiosResponse<IDeviceGroupElement[]>> {
+): Promise<AxiosResponse<IDeviceGroupElementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceGroupElement[]
+    IDeviceGroupElementSearchResults
   > = SiteWhere.API.DeviceGroups.listDeviceGroupElements(
     axios,
     token,

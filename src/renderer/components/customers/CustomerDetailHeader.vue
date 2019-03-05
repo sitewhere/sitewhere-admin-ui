@@ -1,16 +1,19 @@
 <template>
-  <navigation-header-panel v-if="customer" :imageUrl="customer.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="200px">
+  <navigation-header-panel
+    v-if="customer"
+    :imageUrl="customer.imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="200px"
+  >
     <span slot="content">
       <header-field label="Token">
-        <clipboard-copy-field :field="customer.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
+        <clipboard-copy-field :field="customer.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
-      <linked-header-field label="Customer Type"
+      <linked-header-field
+        label="Customer Type"
         :text="customer.customerType.name"
-        :url="'/customertypes/' + customer.customerType.token">
-      </linked-header-field>
+        :url="'/customertypes/' + customer.customerType.token"
+      ></linked-header-field>
       <header-field label="Name">
         <span>{{ customer.name }}</span>
       </header-field>
@@ -28,18 +31,17 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import LinkedHeaderField from '../common/LinkedHeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
+import HeaderField from "../common/HeaderField";
+import LinkedHeaderField from "../common/LinkedHeaderField";
+import ClipboardCopyField from "../common/ClipboardCopyField";
+
+import { formatDate } from "../common/Utils";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['customer'],
+  props: ["customer"],
 
   components: {
     NavigationHeaderPanel,
@@ -50,18 +52,11 @@ export default {
 
   computed: {
     // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'customers/' + this.customer.token + '/label/qrcode'
-    }
-  },
-
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    qrCodeUrl: function() {
+      return "customers/" + this.customer.token + "/label/qrcode";
     }
   }
-}
+};
 </script>
 
 <style scoped>

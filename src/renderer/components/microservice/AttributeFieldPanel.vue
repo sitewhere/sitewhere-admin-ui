@@ -2,58 +2,85 @@
   <v-layout row wrap class="mb-3">
     <v-flex xs4 class="text-xs-right subheading mt-1 pr-4">
       <v-tooltip top v-if="attribute.required">
-        <font-awesome-icon class="mr-1 red--text" icon="asterisk" 
-          size="xs" slot="activator"/>
+        <font-awesome-icon class="mr-1 red--text" icon="asterisk" size="xs" slot="activator"/>
         <span>Attribute is required</span>
       </v-tooltip>
       <strong>{{ attribute.name }}</strong>:
       <v-tooltip right>
-        <font-awesome-icon class="grey--text text--lighten-2" 
-          icon="question-circle" size="sm" slot="activator"/>
+        <font-awesome-icon
+          class="grey--text text--lighten-2"
+          icon="question-circle"
+          size="sm"
+          slot="activator"
+        />
         <span>{{ attribute.description }}</span>
       </v-tooltip>
     </v-flex>
     <v-flex xs6>
-      <v-text-field v-if="readOnly" :required="attribute.required"
-        v-model="displayValue" hide-details single-line disabled>
-      </v-text-field>
-      <v-select v-else-if="attribute.choices"
-        :items="attribute.choices" hide-details v-model="editedConstValue"
-        item-text="name" item-value="value">
-      </v-select>
-      <v-text-field v-else-if="attribute.type === 'String'"
-        :required="attribute.required" v-model="editedConstValue"
-        hide-details single-line>
-      </v-text-field>
-      <v-text-field v-else-if="attribute.type === 'Integer'"
-        :required="attribute.required" type="number"
-        v-model="editedConstValue" hide-details single-line>
-      </v-text-field>
-      <v-switch v-else-if="attribute.type === 'Boolean'"
-        :label="attribute.name" v-model="editedBooleanValue" hide-details>
-      </v-switch>
+      <v-text-field
+        v-if="readOnly"
+        :required="attribute.required"
+        v-model="displayValue"
+        hide-details
+        single-line
+        disabled
+      ></v-text-field>
+      <v-select
+        v-else-if="attribute.choices"
+        :items="attribute.choices"
+        hide-details
+        v-model="editedConstValue"
+        item-text="name"
+        item-value="value"
+      ></v-select>
+      <v-text-field
+        v-else-if="attribute.type === 'String'"
+        :required="attribute.required"
+        v-model="editedConstValue"
+        hide-details
+        single-line
+      ></v-text-field>
+      <v-text-field
+        v-else-if="attribute.type === 'Integer'"
+        :required="attribute.required"
+        type="number"
+        v-model="editedConstValue"
+        hide-details
+        single-line
+      ></v-text-field>
+      <v-switch
+        v-else-if="attribute.type === 'Boolean'"
+        :label="attribute.name"
+        v-model="editedBooleanValue"
+        hide-details
+      ></v-switch>
       <device-type-selector
         v-else-if="attribute.type === 'DeviceTypeReference'"
-        v-model="editedConstValue">
-      </device-type-selector>
-      <customer-selector v-else-if="attribute.type === 'CustomerReference'"
-        v-model="editedConstValue">
-      </customer-selector>
-      <area-selector v-else-if="attribute.type === 'AreaReference'"
-        v-model="editedConstValue">
-      </area-selector>
-      <scripts-selector v-else-if="attribute.type === 'Script'"
-        v-model="editedConstValue" :identifier="identifier" 
-        :tenantToken="tenantToken">
-      </scripts-selector>
+        v-model="editedConstValue"
+      ></device-type-selector>
+      <customer-selector
+        v-else-if="attribute.type === 'CustomerReference'"
+        v-model="editedConstValue"
+      ></customer-selector>
+      <area-selector v-else-if="attribute.type === 'AreaReference'" v-model="editedConstValue"></area-selector>
+      <scripts-selector
+        v-else-if="attribute.type === 'Script'"
+        v-model="editedConstValue"
+        :identifier="identifier"
+        :tenantToken="tenantToken"
+      ></scripts-selector>
     </v-flex>
     <v-flex xs2 class="pl-2">
       <span v-if="readOnly && editedEnvVar">
-        <strong>ENV</strong>: {{editedEnvVar}}
+        <strong>ENV</strong>
+        : {{editedEnvVar}}
       </span>
-      <v-text-field v-else-if="!readOnly" v-model="editedEnvVar"
-        hide-details placeholder="Env Variable">
-      </v-text-field>
+      <v-text-field
+        v-else-if="!readOnly"
+        v-model="editedEnvVar"
+        hide-details
+        placeholder="Env Variable"
+      ></v-text-field>
     </v-flex>
   </v-layout>
 </template>

@@ -1,12 +1,10 @@
 <template>
-  <navigation-page icon="map" title="Areas"
-    loadingMessage="Loading areas ..." :loaded="loaded">
+  <navigation-page icon="map" title="Areas" loadingMessage="Loading areas ..." :loaded="loaded">
     <div slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="areas">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(area) in areas" :key="area.token">
-            <area-list-entry :area="area" @openArea="onOpenArea">
-            </area-list-entry>
+          <v-flex xs6 v-for="(area) in areas" :key="area.token">
+            <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
           </v-flex>
         </v-layout>
       </v-container>
@@ -14,9 +12,7 @@
       <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Area"
-        @action="onAddArea">
-      </navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Area" @action="onAddArea"></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -24,11 +20,12 @@
 <script>
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
-import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import AreaListEntry from "./AreaListEntry";
 import AreaCreateDialog from "./AreaCreateDialog";
-import { _listAreas } from "../../http/sitewhere-api-wrapper";
+
+import { routeTo } from "../common/Utils";
+import { listAreas } from "../../rest/sitewhere-areas-api";
 
 export default {
   data: () => ({
@@ -64,7 +61,7 @@ export default {
       options.includeAssignments = false;
       options.includeZones = false;
 
-      _listAreas(this.$store, options, paging)
+      listAreas(this.$store, options, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;
@@ -76,7 +73,7 @@ export default {
     },
     // Called to open an area.
     onOpenArea: function(area) {
-      Utils.routeTo(this, "/areas/" + area.token);
+      routeTo(this, "/areas/" + area.token);
     },
 
     // Called to open dialog.

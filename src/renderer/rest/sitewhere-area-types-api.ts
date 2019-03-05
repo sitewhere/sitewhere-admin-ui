@@ -7,7 +7,8 @@ import {
   IAreaTypeCreateRequest,
   IAreaType,
   IAreaTypeSearchCriteria,
-  IAreaTypeResponseFormat
+  IAreaTypeResponseFormat,
+  IAreaTypeSearchResults
 } from "sitewhere-rest-api/dist/model/area-types-model";
 
 /**
@@ -74,13 +75,11 @@ export function listAreaTypes(
   store: Store<SiteWhereUiSettings>,
   criteria: IAreaTypeSearchCriteria,
   format: IAreaTypeResponseFormat
-): Promise<AxiosResponse<IAreaType[]>> {
+): Promise<AxiosResponse<IAreaTypeSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IAreaType[]> = SiteWhere.API.AreaTypes.listAreaTypes(
-    axios,
-    criteria,
-    format
-  );
+  let api: AxiosPromise<
+    IAreaTypeSearchResults
+  > = SiteWhere.API.AreaTypes.listAreaTypes(axios, criteria, format);
   return loaderWrapper(store, api);
 }
 

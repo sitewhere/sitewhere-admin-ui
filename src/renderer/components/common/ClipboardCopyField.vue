@@ -2,14 +2,24 @@
   <span>
     {{ field }}
     <v-tooltip right>
-      <span slot="activator" v-clipboard="field" :key="field" 
-        @success="onFieldCopied" @error="onFieldCopyFailed">
-        <font-awesome-icon class="grey--text text--lighten-1 mt-1" icon="copy" 
-          size="sm" style="vertical-align: top;"/>
+      <span
+        slot="activator"
+        v-clipboard="field"
+        :key="field"
+        @success="onFieldCopied"
+        @error="onFieldCopyFailed"
+      >
+        <font-awesome-icon
+          class="grey--text text--lighten-1 mt-1"
+          icon="copy"
+          size="sm"
+          style="vertical-align: top;"
+        />
       </span>
       <span>Copy to Clipboard</span>
     </v-tooltip>
-    <v-snackbar :timeout="2000" success v-model="showFieldCopied">{{ message }}
+    <v-snackbar :timeout="2000" success v-model="showFieldCopied">
+      {{ message }}
       <v-btn dark flat @click="showFieldCopied = false">Close</v-btn>
     </v-snackbar>
   </span>

@@ -1,14 +1,15 @@
 <template>
-  <navigation-page icon="building" title="Customers"
-    loadingMessage="Loading customers ..." :loaded="loaded">
+  <navigation-page
+    icon="building"
+    title="Customers"
+    loadingMessage="Loading customers ..."
+    :loaded="loaded"
+  >
     <div slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="customers">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(customer) in customers"
-            :key="customer.token">
-            <customer-list-entry :customer="customer"
-              @openCustomer="onOpenCustomer">
-            </customer-list-entry>
+          <v-flex xs6 v-for="(customer) in customers" :key="customer.token">
+            <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
           </v-flex>
         </v-layout>
       </v-container>
@@ -16,9 +17,7 @@
       <customer-create-dialog ref="add" @customerAdded="onCustomerAdded"/>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Customer"
-        @action="onAddCustomer">
-      </navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Customer" @action="onAddCustomer"></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -26,11 +25,12 @@
 <script>
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
-import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import CustomerListEntry from "./CustomerListEntry";
 import CustomerCreateDialog from "./CustomerCreateDialog";
-import { _listCustomers } from "../../http/sitewhere-api-wrapper";
+
+import { routeTo } from "../common/Utils";
+import { listCustomers } from "../../rest/sitewhere-customers-api";
 
 export default {
   data: () => ({
@@ -65,7 +65,7 @@ export default {
       options.includeCustomerType = true;
       options.includeAssignments = false;
 
-      _listCustomers(this.$store, options, paging)
+      listCustomers(this.$store, options, paging)
         .then(function(response) {
           component.results = response.data;
           component.customers = response.data.results;
@@ -77,7 +77,7 @@ export default {
     },
     // Called to open a customer.
     onOpenCustomer: function(customer) {
-      Utils.routeTo(this, "/customers/" + customer.token);
+      routeTo(this, "/customers/" + customer.token);
     },
 
     // Called to open dialog.

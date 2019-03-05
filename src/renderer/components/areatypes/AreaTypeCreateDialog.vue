@@ -1,16 +1,23 @@
 <template>
   <div>
-    <area-type-dialog ref="dialog" title="Create Area Type" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit" :areaTypes="areaTypes">
-    </area-type-dialog>
+    <area-type-dialog
+      ref="dialog"
+      title="Create Area Type"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+      :areaTypes="areaTypes"
+    ></area-type-dialog>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import AreaTypeDialog from "./AreaTypeDialog";
-import { _createAreaType } from "../../http/sitewhere-api-wrapper";
+
+import { createAreaType } from "../../rest/sitewhere-area-types-api";
 
 export default {
   data: () => ({}),
@@ -37,7 +44,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createAreaType(this.$store, payload)
+      createAreaType(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

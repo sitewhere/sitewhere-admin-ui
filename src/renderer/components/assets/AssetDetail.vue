@@ -1,60 +1,55 @@
 <template>
   <div>
-    <navigation-page v-if="asset" icon="car" :title="asset.name"
-      loadingMessage="Loading asset ..." :loaded="loaded">
+    <navigation-page
+      v-if="asset"
+      icon="car"
+      :title="asset.name"
+      loadingMessage="Loading asset ..."
+      :loaded="loaded"
+    >
       <div slot="content">
-        <asset-detail-header v-if="asset" :asset="asset"
+        <asset-detail-header
+          v-if="asset"
+          :asset="asset"
           @assetDeleted="onAssetDeleted"
-          @assetUpdated="onAssetUpdated">
-        </asset-detail-header>
+          @assetUpdated="onAssetUpdated"
+        ></asset-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="assignments" href="#assignments">
-              Assignments
-            </v-tabs-item>
+            <v-tabs-item key="assignments" href="#assignments">Assignments</v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="assignments" id="assignments">
               <v-layout row wrap v-if="assignments">
                 <v-flex xs12>
-                  <assignment-list-panel :assignment="assignment"
+                  <assignment-list-panel
+                    :assignment="assignment"
                     v-for="(assignment) in assignments"
                     :key="assignment.token"
                     @assignmentOpened="onOpenAssignment"
-                    class="ma-2">
-                  </assignment-list-panel>
+                    class="ma-2"
+                  ></assignment-list-panel>
                 </v-flex>
               </v-layout>
               <pager :results="results" @pagingUpdated="updatePaging">
-                <no-results-panel slot="noresults"
-                  text="No Assignments Found for Asset">
-                </no-results-panel>
+                <no-results-panel slot="noresults" text="No Assignments Found for Asset"></no-results-panel>
               </pager>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Device"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Device"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <asset-update-dialog ref="edit" :token="token"
-      @asseUpdated="onAssetUpdated">
-    </asset-update-dialog>
-    <asset-delete-dialog ref="delete" :token="token"
-      @assetDeleted="onAssetDeleted">
-    </asset-delete-dialog>
+    <asset-update-dialog ref="edit" :token="token" @asseUpdated="onAssetUpdated"></asset-update-dialog>
+    <asset-delete-dialog ref="delete" :token="token" @assetDeleted="onAssetDeleted"></asset-delete-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
@@ -63,10 +58,10 @@ import AssetDetailHeader from "./AssetDetailHeader";
 import AssignmentListPanel from "../assignments/AssignmentListPanel";
 import AssetDeleteDialog from "./AssetDeleteDialog";
 import AssetUpdateDialog from "./AssetUpdateDialog";
-import {
-  _getAsset,
-  _listDeviceAssignments
-} from "../../http/sitewhere-api-wrapper";
+
+import { routeTo } from "../common/Utils";
+import { getAsset } from "../../rest/sitewhere-assets-api";
+import { listDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
 
 export default {
   data: () => ({
@@ -119,7 +114,7 @@ export default {
       var component = this;
 
       // Load asset information.
-      _getAsset(this.$store, token)
+      getAsset(this.$store, token)
         .then(function(response) {
           component.loaded = true;
           component.onDataLoaded(response.data);
@@ -139,7 +134,7 @@ export default {
       options.includeDevice = true;
       options.includeAsset = true;
 
-      _listDeviceAssignments(this.$store, options, paging)
+      listDeviceAssignments(this.$store, options, paging)
         .then(function(response) {
           component.results = response.data;
           component.$data.assignments = response.data.results;
@@ -171,14 +166,11 @@ export default {
     },
     // Called when asset is deleted.
     onAssetDeleted: function() {
-      Utils.routeTo(this, "/assets");
+      routeTo(this, "/assets");
     },
     // Called to open detail page for assignment.
     onOpenAssignment: function(assignment) {
-      Utils.routeTo(
-        this,
-        "/assignments/" + encodeURIComponent(assignment.token)
-      );
+      routeTo(this, "/assignments/" + encodeURIComponent(assignment.token));
     }
   }
 };

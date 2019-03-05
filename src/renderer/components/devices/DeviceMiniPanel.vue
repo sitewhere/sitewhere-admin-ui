@@ -2,21 +2,15 @@
   <div>
     <div v-if="device">
       <span class="assn-device-image" :style="imageStyle"></span>
-      <div class="assn-device-title ellipsis">
-        {{ device.deviceType.name }}
-      </div>
-      <div class="assn-device-value1 ellipsis">
-        {{ device.token }}
-      </div>
-      <div class="assn-device-value2 ellipsis">
-        {{ device.comments  }}
-      </div>
+      <div class="assn-device-title ellipsis">{{ device.deviceType.name }}</div>
+      <div class="assn-device-value1 ellipsis">{{ device.token }}</div>
+      <div class="assn-device-value2 ellipsis">{{ device.comments }}</div>
       <div class="assn-device-tag">Device</div>
     </div>
     <div v-else>
       <div>
         <span class="assn-device-missing">
-          <v-icon class="red--text">warning</v-icon> Referenced device does not exist!
+          <v-icon class="red--text">warning</v-icon>Referenced device does not exist!
         </span>
       </div>
     </div>
@@ -25,25 +19,24 @@
 
 <script>
 export default {
-  data: () => ({
-  }),
+  data: () => ({}),
 
-  props: ['device'],
+  props: ["device"],
 
   computed: {
     // Create background image style.
-    imageStyle: function () {
+    imageStyle: function() {
       return {
-        'background-color': '#fff',
-        'background-image': 'url(' + this.device.deviceType.imageUrl + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%',
-        'border': '1px solid #eee'
-      }
+        "background-color": "#fff",
+        "background-image": "url(" + this.device.deviceType.imageUrl + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%",
+        border: "1px solid #eee"
+      };
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -52,7 +45,7 @@ export default {
   top: 8px;
   left: 10px;
   width: 70px;
-	bottom: 10px;
+  bottom: 10px;
 }
 .assn-device-title {
   position: absolute;
@@ -80,8 +73,8 @@ export default {
 }
 .assn-device-tag {
   position: absolute;
-	top: 3px;
-	left: 3px;
+  top: 3px;
+  left: 3px;
   background-color: #3a87ad;
   color: #f0f0f0;
   font-size: 10px;

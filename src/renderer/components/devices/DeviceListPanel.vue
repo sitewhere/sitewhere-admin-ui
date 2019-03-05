@@ -1,23 +1,18 @@
 <template>
   <v-card flat hover class="pa-2" :style="styleForDevice()">
     <v-card-text @click="onOpenDevice" class="device-root">
-      <div class="device-image"
-        :style="backgroundImageStyle(device.deviceType.imageUrl)"></div>
-      <div class="title device-type ellipsis">
-        {{ device.deviceType.name }}
-      </div>
-      <div class="subheading device-token ellipsis">
-        {{ device.token }}
-      </div>
-      <div class="device-comments ellipsis">
-        {{ device.comments }}
-      </div>
-      <div v-if="hasAssignedAsset" class="device-asset"
-        :style="backgroundImageStyle(device.assignment.assetImageUrl)"></div>
+      <div class="device-image" :style="backgroundImageStyle(device.deviceType.imageUrl)"></div>
+      <div class="title device-type ellipsis">{{ device.deviceType.name }}</div>
+      <div class="subheading device-token ellipsis">{{ device.token }}</div>
+      <div class="device-comments ellipsis">{{ device.comments }}</div>
+      <div
+        v-if="hasAssignedAsset"
+        class="device-asset"
+        :style="backgroundImageStyle(device.assignment.assetImageUrl)"
+      ></div>
       <div v-else-if="!device.assignment" class="device-assign-button">
         <v-tooltip top>
-          <v-btn dark icon class="blue ml-0"
-            @click.stop="onAssignDevice" slot="activator">
+          <v-btn dark icon class="blue ml-0" @click.stop="onAssignDevice" slot="activator">
             <font-awesome-icon icon="tag" size="lg"/>
           </v-btn>
           <span>Assign Device</span>
@@ -28,8 +23,9 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import Style from "../common/Style";
+
+import { formatDate } from "../common/Utils";
 
 export default {
   data: function() {
@@ -75,11 +71,6 @@ export default {
     // Open device assignment dialog.
     onAssignDevice: function() {
       this.$emit("assignDevice", this.device);
-    },
-
-    // Format date.
-    formatDate: function(date) {
-      return Utils.formatDate(date);
     }
   }
 };

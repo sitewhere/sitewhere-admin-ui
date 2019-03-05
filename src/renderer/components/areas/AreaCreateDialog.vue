@@ -1,16 +1,23 @@
 <template>
   <div>
-    <area-dialog ref="dialog" title="Create Area" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit" :parentArea="parentArea">
-    </area-dialog>
+    <area-dialog
+      ref="dialog"
+      title="Create Area"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+      :parentArea="parentArea"
+    ></area-dialog>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import AreaDialog from "./AreaDialog";
-import { _createArea } from "../../http/sitewhere-api-wrapper";
+
+import { createArea } from "../../rest/sitewhere-areas-api";
 
 export default {
   data: () => ({}),
@@ -37,7 +44,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createArea(this.$store, payload)
+      createArea(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

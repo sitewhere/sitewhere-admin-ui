@@ -2,9 +2,7 @@
   <v-layout row wrap>
     <v-flex xs12>
       <v-card flat>
-        <div class="no-results" :style="noResultsStyle">
-          {{text}}
-        </div>
+        <div class="no-results" :style="noResultsStyle">{{text}}</div>
       </v-card>
     </v-flex>
   </v-layout>
@@ -12,49 +10,46 @@
 
 <script>
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['text', 'minHeight', 'fontSize', 'padding'],
+  props: ["text", "minHeight", "fontSize", "padding"],
 
   computed: {
-    noResultsStyle: function () {
+    noResultsStyle: function() {
       return {
-        'min-height': this.defaultedMinHeight,
-        'font-size': this.defaultedFontSize,
-        'padding': this.defaultedPadding
-      }
+        "min-height": this.defaultedMinHeight,
+        "font-size": this.defaultedFontSize,
+        padding: this.defaultedPadding
+      };
     },
 
     // Minimum height with default fallback.
-    defaultedMinHeight: function () {
+    defaultedMinHeight: function() {
       if (this.minHeight) {
-        return this.minHeight
+        return this.minHeight;
       }
-      return '100px'
+      return "100px";
     },
 
     // Font size with default fallback.
-    defaultedFontSize: function () {
+    defaultedFontSize: function() {
       if (this.fontSize) {
-        return this.fontSize
+        return this.fontSize;
       }
-      return '20px'
+      return "20px";
     },
 
     // Padding with default fallback.
-    defaultedPadding: function () {
+    defaultedPadding: function() {
       if (this.padding) {
-        return this.padding
+        return this.padding;
       }
-      return '40px'
+      return "40px";
     }
   },
 
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

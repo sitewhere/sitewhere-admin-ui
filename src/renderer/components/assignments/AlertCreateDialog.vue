@@ -1,21 +1,25 @@
 <template>
   <div>
-    <alert-dialog ref="dialog" title="Create Alert Event" width="600"
-      createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
-    </alert-dialog>
+    <alert-dialog
+      ref="dialog"
+      title="Create Alert Event"
+      width="600"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></alert-dialog>
   </div>
 </template>
 
 <script>
-import AlertDialog from './AlertDialog'
-import {_createAlertForAssignment} from '../../http/sitewhere-api-wrapper'
+import AlertDialog from "./AlertDialog";
+
+import { createAlertForAssignment } from "../../rest/sitewhere-device-assignments-api";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['token'],
+  props: ["token"],
 
   components: {
     AlertDialog
@@ -23,38 +27,38 @@ export default {
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Loads the component from a json payload.
-    load: function (payload) {
-      this.getDialogComponent().load(payload)
+    load: function(payload) {
+      this.getDialogComponent().load(payload);
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
+    onOpenDialog: function() {
+      this.getDialogComponent().reset();
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _createAlertForAssignment(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
+    onCommit: function(payload) {
+      var component = this;
+      createAlertForAssignment(this.$store, this.token, payload)
+        .then(function(response) {
+          component.onCommitted(response);
         })
+        .catch(function(e) {});
     },
 
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('alertAdded')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("alertAdded");
     }
   }
-}
+};
 </script>
 
 <style scoped>

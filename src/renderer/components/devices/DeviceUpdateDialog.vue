@@ -1,65 +1,69 @@
 <template>
   <div>
-    <device-dialog ref="dialog" title="Edit Device" width="700"
-      createLabel="Update" cancelLabel="Cancel" @payload="onCommit">
-    </device-dialog>
+    <device-dialog
+      ref="dialog"
+      title="Edit Device"
+      width="700"
+      createLabel="Update"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></device-dialog>
   </div>
 </template>
 
 <script>
-import DeviceDialog from './DeviceDialog'
-import {_getDevice, _updateDevice} from '../../http/sitewhere-api-wrapper'
+import DeviceDialog from "./DeviceDialog";
+
+import { getDevice, updateDevice } from "../../rest/sitewhere-devices-api";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     DeviceDialog
   },
 
-  props: ['token'],
+  props: ["token"],
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
     // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
+    onOpenDialog: function() {
+      var component = this;
 
-      let options = {}
-      options.includeDeviceType = true
+      let options = {};
+      options.includeDeviceType = true;
 
-      _getDevice(this.$store, this.token, options)
-        .then(function (response) {
-          component.onLoaded(response)
-        }).catch(function (e) {
+      getDevice(this.$store, this.token, options)
+        .then(function(response) {
+          component.onLoaded(response);
         })
+        .catch(function(e) {});
     },
     // Called after data is loaded.
-    onLoaded: function (response) {
-      this.getDialogComponent().load(response.data)
-      this.getDialogComponent().openDialog()
+    onLoaded: function(response) {
+      this.getDialogComponent().load(response.data);
+      this.getDialogComponent().openDialog();
     },
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateDevice(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
+    onCommit: function(payload) {
+      var component = this;
+      updateDevice(this.$store, this.token, payload)
+        .then(function(response) {
+          component.onCommitted(response);
         })
+        .catch(function(e) {});
     },
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('deviceUpdated')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("deviceUpdated");
     }
   }
-}
+};
 </script>
 
 <style scoped>

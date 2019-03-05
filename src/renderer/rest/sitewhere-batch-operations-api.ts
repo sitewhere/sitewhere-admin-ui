@@ -8,9 +8,10 @@ import {
   IBatchOperationSearchCriteria,
   IBatchOperationResponseFormat,
   IBatchOperationElementResponseFormat,
-  IBatchElement,
   IBatchCommandInvocationRequest,
-  IBatchCommandForCriteriaRequest
+  IBatchCommandForCriteriaRequest,
+  IBatchOperationSearchResults,
+  IBatchElementSearchResults
 } from "sitewhere-rest-api/dist/model/batch-operations-model";
 import { ISearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
 
@@ -40,10 +41,10 @@ export function listBatchOperations(
   store: Store<SiteWhereUiSettings>,
   criteria: IBatchOperationSearchCriteria,
   format: IBatchOperationResponseFormat
-): Promise<AxiosResponse<IBatchOperation[]>> {
+): Promise<AxiosResponse<IBatchOperationSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IBatchOperation[]
+    IBatchOperationSearchResults
   > = SiteWhere.API.BatchOperations.listBatchOperations(
     axios,
     criteria,
@@ -64,10 +65,10 @@ export function listBatchOperationElements(
   token: string,
   criteria: ISearchCriteria,
   format: IBatchOperationElementResponseFormat
-): Promise<AxiosResponse<IBatchElement[]>> {
+): Promise<AxiosResponse<IBatchElementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IBatchElement[]
+    IBatchElementSearchResults
   > = SiteWhere.API.BatchOperations.listBatchOperationElements(
     axios,
     token,

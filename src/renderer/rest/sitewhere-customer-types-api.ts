@@ -7,7 +7,8 @@ import {
   ICustomerTypeCreateRequest,
   ICustomerType,
   ICustomerTypeSearchCriteria,
-  ICustomerTypeResponseFormat
+  ICustomerTypeResponseFormat,
+  ICustomerTypeSearchResults
 } from "sitewhere-rest-api/dist/model/customer-types-model";
 
 /**
@@ -70,10 +71,10 @@ export function listCustomerTypes(
   store: Store<SiteWhereUiSettings>,
   criteria: ICustomerTypeSearchCriteria,
   format: ICustomerTypeResponseFormat
-): Promise<AxiosResponse<ICustomerType[]>> {
+): Promise<AxiosResponse<ICustomerTypeSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    ICustomerType[]
+    ICustomerTypeSearchResults
   > = SiteWhere.API.CustomerTypes.listCustomerTypes(axios, criteria, format);
   return loaderWrapper(store, api);
 }

@@ -1,12 +1,16 @@
 <template>
   <span>
     <v-card hover>
-      <v-toolbar flat dark dense card @click="onShowEditDialog"
-        :style="{'background-color': status.backgroundColor, 'border': '1px solid ' + status.borderColor}">
+      <v-toolbar
+        flat
+        dark
+        dense
+        card
+        @click="onShowEditDialog"
+        :style="{'background-color': status.backgroundColor, 'border': '1px solid ' + status.borderColor}"
+      >
         <font-awesome-icon :icon="status.icon" size="lg"/>
-        <v-toolbar-title :style="{'color': status.foregroundColor}">
-          {{ status.name }}
-        </v-toolbar-title>
+        <v-toolbar-title :style="{'color': status.foregroundColor}">{{ status.name }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip class="ma-0 pa-0" top>
           <v-btn class="ma-0 pa-0" icon slot="activator" @click.stop="onShowEditDialog">
@@ -22,12 +26,18 @@
         </v-tooltip>
       </v-toolbar>
     </v-card>
-    <device-status-update-dialog ref="update" :deviceType="deviceType"
-      :status="status" @statusUpdated="onStatusUpdated">
-    </device-status-update-dialog>
-    <device-status-delete-dialog ref="delete" :deviceType="deviceType"
-      :status="status" @statusDeleted="onStatusDeleted">
-    </device-status-delete-dialog>
+    <device-status-update-dialog
+      ref="update"
+      :deviceType="deviceType"
+      :status="status"
+      @statusUpdated="onStatusUpdated"
+    ></device-status-update-dialog>
+    <device-status-delete-dialog
+      ref="delete"
+      :deviceType="deviceType"
+      :status="status"
+      @statusDeleted="onStatusDeleted"
+    ></device-status-delete-dialog>
   </span>
 </template>
 

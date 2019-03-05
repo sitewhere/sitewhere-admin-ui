@@ -7,7 +7,8 @@ import {
   IZoneCreateRequest,
   IZone,
   IZoneSearchCriteria,
-  IZoneResponseFormat
+  IZoneResponseFormat,
+  IZoneSearchResults
 } from "sitewhere-rest-api/dist/model/zones-model";
 
 /**
@@ -68,9 +69,9 @@ export function listZones(
   store: Store<SiteWhereUiSettings>,
   criteria: IZoneSearchCriteria,
   format: IZoneResponseFormat
-): Promise<AxiosResponse<IZone[]>> {
+): Promise<AxiosResponse<IZoneSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IZone[]> = SiteWhere.API.Zones.listZones(
+  let api: AxiosPromise<IZoneSearchResults> = SiteWhere.API.Zones.listZones(
     axios,
     criteria,
     format

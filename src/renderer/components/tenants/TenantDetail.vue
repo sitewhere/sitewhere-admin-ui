@@ -1,41 +1,36 @@
 <template>
   <div>
-    <navigation-page v-if="tenant" icon="fa-map" :title="tenant.name"
-      loadingMessage="Loading tenant configuration ..." :loaded="loaded">
+    <navigation-page
+      v-if="tenant"
+      icon="fa-map"
+      :title="tenant.name"
+      loadingMessage="Loading tenant configuration ..."
+      :loaded="loaded"
+    >
       <div slot="content">
-        <tenant-detail-header :tenant="tenant">
-        </tenant-detail-header>
+        <tenant-detail-header :tenant="tenant"></tenant-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="microservices" href="#microservices">
-              Microservices
-            </v-tabs-item>
+            <v-tabs-item key="microservices" href="#microservices">Microservices</v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="microservices" id="microservices">
-              <microservice-list :topology="tenantTopology"
-                @microserviceClicked="onMicroserviceClicked">
-              </microservice-list>
+              <microservice-list
+                :topology="tenantTopology"
+                @microserviceClicked="onMicroserviceClicked"
+              ></microservice-list>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Tenant"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Tenant"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <tenant-update-dialog ref="edit" :tenantToken="tenantToken"
-      @tenantUpdated="onTenantEdited">
-    </tenant-update-dialog>
-    <tenant-delete-dialog ref="delete" :tenantToken="tenantToken"
-      @tenantDeleted="onTenantDeleted">
-    </tenant-delete-dialog>
+    <tenant-update-dialog ref="edit" :tenantToken="tenantToken" @tenantUpdated="onTenantEdited"></tenant-update-dialog>
+    <tenant-delete-dialog ref="delete" :tenantToken="tenantToken" @tenantDeleted="onTenantDeleted"></tenant-delete-dialog>
   </div>
 </template>
 
@@ -47,10 +42,9 @@ import TenantDetailHeader from "./TenantDetailHeader";
 import TenantUpdateDialog from "./TenantUpdateDialog";
 import TenantDeleteDialog from "./TenantDeleteDialog";
 import MicroserviceList from "../microservice/MicroserviceList";
-import {
-  _getTenant,
-  _getTenantTopology
-} from "../../http/sitewhere-api-wrapper";
+
+import { getTenant } from "../../rest/sitewhere-tenants-api";
+import { getTenantTopology } from "../../rest/sitewhere-instance-api";
 
 export default {
   data: () => ({
@@ -94,7 +88,7 @@ export default {
 
       // Load configuration data.
       var component = this;
-      _getTenantTopology(this.$store)
+      getTenantTopology(this.$store)
         .then(function(response) {
           component.$data.tenantTopology = response.data;
         })
@@ -105,7 +99,7 @@ export default {
     refreshTenant: function() {
       this.$data.loaded = false;
       var component = this;
-      _getTenant(this.$store, this.$data.tenantToken, true)
+      getTenant(this.$store, this.$data.tenantToken, true)
         .then(function(response) {
           component.loaded = true;
           component.onLoaded(response.data);

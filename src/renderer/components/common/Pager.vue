@@ -1,6 +1,6 @@
 <template>
   <v-card class="grey lighten-3 black--text pa-0">
-    <slot  v-if="results && results.numResults === 0" name="noresults"></slot>
+    <slot v-if="results && results.numResults === 0" name="noresults"></slot>
     <v-divider></v-divider>
     <v-container v-if="results && results.numResults > 0" class="ma-0 pa-0">
       <v-layout row wrap>
@@ -9,44 +9,69 @@
         </v-flex>
         <v-flex xs3>
           <v-btn-toggle v-model="pageSize" class="mt-1">
-            <v-btn flat :value="entry.value"
-              v-for="entry in pageSizesWithDefaults" :key="entry.value">
-              {{ entry.text }}
-            </v-btn>
+            <v-btn
+              flat
+              :value="entry.value"
+              v-for="entry in pageSizesWithDefaults"
+              :key="entry.value"
+            >{{ entry.text }}</v-btn>
           </v-btn-toggle>
         </v-flex>
         <v-flex xs4>
           <v-tooltip top>
-            <v-btn :disabled="!previousEnabled" icon light class="ml-0 mr-0"
-              @click="onFirstPage" slot="activator">
+            <v-btn
+              :disabled="!previousEnabled"
+              icon
+              light
+              class="ml-0 mr-0"
+              @click="onFirstPage"
+              slot="activator"
+            >
               <font-awesome-icon class="grey--text text--darken-1" icon="fast-backward" size="lg"/>
-           </v-btn>
+            </v-btn>
             <span>First Page</span>
           </v-tooltip>
           <v-tooltip top>
-            <v-btn :disabled="!previousEnabled" icon light class="ml-0 mr-0"
-              @click="onPreviousPage" slot="activator">
+            <v-btn
+              :disabled="!previousEnabled"
+              icon
+              light
+              class="ml-0 mr-0"
+              @click="onPreviousPage"
+              slot="activator"
+            >
               <font-awesome-icon class="grey--text text--darken-1" icon="backward" size="lg"/>
             </v-btn>
             <span>Previous Page</span>
           </v-tooltip>
           <v-tooltip top>
-            <v-btn icon light class="ml-0 mr-0"
-              @click="onRefresh" slot="activator">
+            <v-btn icon light class="ml-0 mr-0" @click="onRefresh" slot="activator">
               <font-awesome-icon class="grey--text text--darken-1" icon="sync" size="lg"/>
             </v-btn>
             <span>Refresh</span>
           </v-tooltip>
           <v-tooltip top>
-            <v-btn :disabled="!nextEnabled" icon light class="ml-0 mr-0"
-              @click="onNextPage" slot="activator">
+            <v-btn
+              :disabled="!nextEnabled"
+              icon
+              light
+              class="ml-0 mr-0"
+              @click="onNextPage"
+              slot="activator"
+            >
               <font-awesome-icon class="grey--text text--darken-1" icon="forward" size="lg"/>
             </v-btn>
             <span>Next Page</span>
           </v-tooltip>
           <v-tooltip top>
-            <v-btn :disabled="!nextEnabled" icon light class="ml-0 mr-0"
-              @click="onLastPage" slot="activator">
+            <v-btn
+              :disabled="!nextEnabled"
+              icon
+              light
+              class="ml-0 mr-0"
+              @click="onLastPage"
+              slot="activator"
+            >
               <font-awesome-icon class="grey--text text--darken-1" icon="fast-forward" size="lg"/>
             </v-btn>
             <span>Last Page</span>

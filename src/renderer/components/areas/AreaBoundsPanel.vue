@@ -1,6 +1,5 @@
 <template>
-  <map-panel height='450px' ref="map" @resetMap="onResetMap">
-  </map-panel>
+  <map-panel height="450px" ref="map" @resetMap="onResetMap"></map-panel>
 </template>
 
 <script>

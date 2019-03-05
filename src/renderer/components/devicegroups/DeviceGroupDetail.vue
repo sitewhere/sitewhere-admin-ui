@@ -1,54 +1,48 @@
 <template>
   <div>
-    <navigation-page icon="cubes" title="Manage Device Group"
-      loadingMessage="Loading device group ..." :loaded="loaded">
+    <navigation-page
+      icon="cubes"
+      title="Manage Device Group"
+      loadingMessage="Loading device group ..."
+      :loaded="loaded"
+    >
       <div slot="content">
-        <device-group-detail-header :group="group"
-          @deviceGroupUpdated="refresh" @deviceGroupDeleted="onDeviceGroupDeleted">
-        </device-group-detail-header>
+        <device-group-detail-header
+          :group="group"
+          @deviceGroupUpdated="refresh"
+          @deviceGroupDeleted="onDeviceGroupDeleted"
+        ></device-group-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
             <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-            <v-tabs-item key="elements" href="#elements">
-              Group Elements
-            </v-tabs-item>
+            <v-tabs-item key="elements" href="#elements">Group Elements</v-tabs-item>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="elements" id="elements">
-              <device-group-element-list-panel ref="list" :token="token">
-              </device-group-element-list-panel>
-              <floating-action-button label="Add Group Element" icon="plus"
-                @action="onAddElement">
-              </floating-action-button>
+              <device-group-element-list-panel ref="list" :token="token"></device-group-element-list-panel>
+              <floating-action-button label="Add Group Element" icon="plus" @action="onAddElement"></floating-action-button>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
-        <device-group-element-create-dialog ref="create" :token="token"
-          @elementAdded="onElementAdded">
-        </device-group-element-create-dialog>
+        <device-group-element-create-dialog
+          ref="create"
+          :token="token"
+          @elementAdded="onElementAdded"
+        ></device-group-element-create-dialog>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Device Group"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Device Group"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Device Group" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Device Group" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <device-group-update-dialog ref="edit" :token="token"
-      @groupUpdated="onDeviceGroupUpdated">
-    </device-group-update-dialog>
-    <device-group-delete-dialog ref="delete" :token="token"
-      @groupDeleted="onDeviceGroupDeleted">
-    </device-group-delete-dialog>
+    <device-group-update-dialog ref="edit" :token="token" @groupUpdated="onDeviceGroupUpdated"></device-group-update-dialog>
+    <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted"></device-group-delete-dialog>
   </div>
 </template>
 
 <script>
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
-import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import FloatingActionButton from "../common/FloatingActionButton";
 import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader";
@@ -56,7 +50,8 @@ import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog";
 import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog";
 import DeviceGroupElementListPanel from "./DeviceGroupElementListPanel";
 import DeviceGroupElementCreateDialog from "./DeviceGroupElementCreateDialog";
-import { _getDeviceGroup } from "../../http/sitewhere-api-wrapper";
+
+import { getDeviceGroup } from "../../rest/sitewhere-device-groups-api";
 
 export default {
   data: () => ({
@@ -119,7 +114,7 @@ export default {
 
       let component = this;
       // Load information.
-      _getDeviceGroup(this.$store, this.$data.token)
+      getDeviceGroup(this.$store, this.$data.token)
         .then(function(response) {
           component.loaded = true;
           component.onDeviceGroupLoaded(response.data);

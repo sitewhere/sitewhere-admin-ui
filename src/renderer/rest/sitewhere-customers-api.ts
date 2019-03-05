@@ -7,7 +7,8 @@ import {
   ICustomerCreateRequest,
   ICustomer,
   ICustomerSearchCriteria,
-  ICustomerResponseFormat
+  ICustomerResponseFormat,
+  ICustomerSearchResults
 } from "sitewhere-rest-api/dist/model/customers-model";
 import {
   ISearchCriteria,
@@ -15,7 +16,7 @@ import {
 } from "sitewhere-rest-api/dist/model/common-model";
 import {
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignment
+  IDeviceAssignmentSearchResults
 } from "sitewhere-rest-api/dist/model/device-assignments-model";
 import {
   IDeviceLocation,
@@ -87,13 +88,11 @@ export function listCustomers(
   store: Store<SiteWhereUiSettings>,
   criteria: ICustomerSearchCriteria,
   format: ICustomerResponseFormat
-): Promise<AxiosResponse<ICustomer[]>> {
+): Promise<AxiosResponse<ICustomerSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<ICustomer[]> = SiteWhere.API.Customers.listCustomers(
-    axios,
-    criteria,
-    format
-  );
+  let api: AxiosPromise<
+    ICustomerSearchResults
+  > = SiteWhere.API.Customers.listCustomers(axios, criteria, format);
   return loaderWrapper(store, api);
 }
 
@@ -126,10 +125,10 @@ export function listAssignmentsForCustomer(
   token: string,
   criteria: ISearchCriteria,
   format: IDeviceAssignmentResponseFormat
-): Promise<AxiosResponse<IDeviceAssignment[]>> {
+): Promise<AxiosResponse<IDeviceAssignmentSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceAssignment[]
+    IDeviceAssignmentSearchResults
   > = SiteWhere.API.Customers.listAssignmentsForCustomer(
     axios,
     token,

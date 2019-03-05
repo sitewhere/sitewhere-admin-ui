@@ -2,18 +2,22 @@
   <div>
     <v-container fluid grid-list-md v-if="statuses">
       <v-layout row wrap>
-        <no-results-panel v-if="statuses.length === 0"
-          text="No Device Statuses Found for Device Type">
-        </no-results-panel>
-        <v-flex xs4 v-if="statuses.length > 0"
-          v-for="status in statuses" :key="status.code">
-          <div>
-            <device-status-panel :status="status"
-              :deviceType="deviceType" @statusDeleted="refresh"
-              @statusUpdated="refresh">
-            </device-status-panel>
-          </div>
-        </v-flex>
+        <no-results-panel
+          v-if="statuses.length === 0"
+          text="No Device Statuses Found for Device Type"
+        ></no-results-panel>
+        <div v-else>
+          <v-flex xs4 v-for="status in statuses" :key="status.code">
+            <div>
+              <device-status-panel
+                :status="status"
+                :deviceType="deviceType"
+                @statusDeleted="refresh"
+                @statusUpdated="refresh"
+              ></device-status-panel>
+            </div>
+          </v-flex>
+        </div>
       </v-layout>
     </v-container>
   </div>
@@ -22,7 +26,8 @@
 <script>
 import NoResultsPanel from "../common/NoResultsPanel";
 import DeviceStatusPanel from "../statuses/DeviceStatusPanel";
-import { _listDeviceStatuses } from "../../http/sitewhere-api-wrapper";
+
+import { listDeviceStatuses } from "../../rest/sitewhere-device-statuses-api";
 
 export default {
   data: () => ({
@@ -47,7 +52,7 @@ export default {
       let options = {
         deviceTypeToken: this.deviceType.token
       };
-      _listDeviceStatuses(this.$store, options)
+      listDeviceStatuses(this.$store, options)
         .then(function(response) {
           component.statuses = response.data.results;
         })

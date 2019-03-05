@@ -1,19 +1,22 @@
 <template>
-  <navigation-header-panel v-if="asset" :imageUrl="asset.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="190px">
+  <navigation-header-panel
+    v-if="asset"
+    :imageUrl="asset.imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="190px"
+  >
     <span slot="content">
       <header-field label="Token">
-        <clipboard-copy-field :field="asset.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
+        <clipboard-copy-field :field="asset.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
       <header-field label="Name">
         <span>{{ asset.name }}</span>
       </header-field>
-      <linked-header-field label="Asset Type"
+      <linked-header-field
+        label="Asset Type"
         :text="asset.assetType.name"
-        :url="'/assettypes/' + asset.assetType.token">
-      </linked-header-field>
+        :url="'/assettypes/' + asset.assetType.token"
+      ></linked-header-field>
       <header-field label="Image URL">
         <span>{{ asset.imageUrl }}</span>
       </header-field>
@@ -28,18 +31,17 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import LinkedHeaderField from '../common/LinkedHeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
+import HeaderField from "../common/HeaderField";
+import LinkedHeaderField from "../common/LinkedHeaderField";
+import ClipboardCopyField from "../common/ClipboardCopyField";
+
+import { formatDate } from "../common/Utils";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['asset'],
+  props: ["asset"],
 
   components: {
     NavigationHeaderPanel,
@@ -50,18 +52,11 @@ export default {
 
   computed: {
     // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'assets/' + this.asset.token + '/label/qrcode'
-    }
-  },
-
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    qrCodeUrl: function() {
+      return "assets/" + this.asset.token + "/label/qrcode";
     }
   }
-}
+};
 </script>
 
 <style scoped>

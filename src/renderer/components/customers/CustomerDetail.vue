@@ -1,7 +1,12 @@
 <template>
   <div>
-    <navigation-page v-if="customer" icon="building" :title="customer.name"
-      loadingMessage="Loading customer ..." :loaded="loaded">
+    <navigation-page
+      v-if="customer"
+      icon="building"
+      :title="customer.name"
+      loadingMessage="Loading customer ..."
+      :loaded="loaded"
+    >
       <div v-if="customer.parentCustomer" slot="actions">
         <v-tooltip left>
           <v-btn icon slot="activator" @click="onUpOneLevel">
@@ -11,76 +16,61 @@
         </v-tooltip>
       </div>
       <div v-if="customer" slot="content">
-        <customer-detail-header :customer="customer">
-        </customer-detail-header>
+        <customer-detail-header :customer="customer"></customer-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="customers" href="#customers">
-              Subcustomers
-            </v-tabs-item>
-            <v-tabs-item key="assignments" href="#assignments">
-              Assigned Devices
-            </v-tabs-item>
-            <v-tabs-item key="locations" href="#locations">
-              Locations
-            </v-tabs-item>
-            <v-tabs-item key="measurements" href="#measurements">
-              Measurements
-            </v-tabs-item>
-            <v-tabs-item key="alerts" href="#alerts">
-              Alerts
-            </v-tabs-item>
+            <v-tabs-item key="customers" href="#customers">Subcustomers</v-tabs-item>
+            <v-tabs-item key="assignments" href="#assignments">Assigned Devices</v-tabs-item>
+            <v-tabs-item key="locations" href="#locations">Locations</v-tabs-item>
+            <v-tabs-item key="measurements" href="#measurements">Measurements</v-tabs-item>
+            <v-tabs-item key="alerts" href="#alerts">Alerts</v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="customers" id="customers">
-              <customer-contained-customers ref="customers" :customer="customer">
-              </customer-contained-customers>
+              <customer-contained-customers ref="customers" :customer="customer"></customer-contained-customers>
             </v-tabs-content>
             <v-tabs-content key="assignments" id="assignments">
-              <customer-assignments :customer="customer">
-              </customer-assignments>
+              <customer-assignments :customer="customer"></customer-assignments>
             </v-tabs-content>
             <v-tabs-content key="locations" id="locations">
-              <customer-location-events :customer="customer">
-              </customer-location-events>
+              <customer-location-events :customer="customer"></customer-location-events>
             </v-tabs-content>
             <v-tabs-content key="measurements" id="measurements">
-              <customer-measurement-events :customer="customer">
-              </customer-measurement-events>
+              <customer-measurement-events :customer="customer"></customer-measurement-events>
             </v-tabs-content>
             <v-tabs-content key="alerts" id="alerts">
-              <customer-alert-events :customer="customer">
-              </customer-alert-events>
+              <customer-alert-events :customer="customer"></customer-alert-events>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
-        <customer-create-dialog ref="customerCreate" :parentCustomer="customer" 
-          @customerAdded="onSubcustomerAdded"/>
+        <customer-create-dialog
+          ref="customerCreate"
+          :parentCustomer="customer"
+          @customerAdded="onSubcustomerAdded"
+        />
       </div>
       <div slot="actions">
-        <navigation-action-button icon="building" tooltip="Add Subcustomer"
-          @action="onAddSubcustomer">
-        </navigation-action-button>
-        <navigation-action-button icon="edit" tooltip="Edit Customer"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Customer"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button
+          icon="building"
+          tooltip="Add Subcustomer"
+          @action="onAddSubcustomer"
+        ></navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Customer" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Customer" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <customer-update-dialog ref="edit" :token="token"
-      :parentCustomer="parentCustomer" @customerUpdated="onCustomerUpdated">
-    </customer-update-dialog>
-    <customer-delete-dialog ref="delete" :token="token"
-      @customerDeleted="onCustomerDeleted">
-    </customer-delete-dialog>
+    <customer-update-dialog
+      ref="edit"
+      :token="token"
+      :parentCustomer="parentCustomer"
+      @customerUpdated="onCustomerUpdated"
+    ></customer-update-dialog>
+    <customer-delete-dialog ref="delete" :token="token" @customerDeleted="onCustomerDeleted"></customer-delete-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import CustomerDetailHeader from "./CustomerDetailHeader";
@@ -93,7 +83,8 @@ import CustomerCreateDialog from "./CustomerCreateDialog";
 import CustomerUpdateDialog from "./CustomerUpdateDialog";
 import CustomerDeleteDialog from "./CustomerDeleteDialog";
 
-import { _getCustomer } from "../../http/sitewhere-api-wrapper";
+import { routeTo } from "../common/Utils";
+import { getCustomer } from "../../rest/sitewhere-customers-api";
 
 export default {
   data: () => ({
@@ -105,7 +96,6 @@ export default {
   }),
 
   components: {
-    Utils,
     NavigationPage,
     NavigationActionButton,
     CustomerDetailHeader,
@@ -143,7 +133,7 @@ export default {
       var component = this;
 
       // Load area information.
-      _getCustomer(this.$store, token)
+      getCustomer(this.$store, token)
         .then(function(response) {
           component.loaded = true;
           component.onLoaded(response.data);
@@ -187,11 +177,11 @@ export default {
     },
     // Called when customer is deleted.
     onCustomerDeleted: function() {
-      Utils.routeTo(this, "/customers");
+      routeTo(this, "/customers");
     },
     // Move up one level in the area hierarchy.
     onUpOneLevel: function() {
-      Utils.routeTo(this, "/customers/" + this.customer.parentCustomer.token);
+      routeTo(this, "/customers/" + this.customer.parentCustomer.token);
     }
   }
 };

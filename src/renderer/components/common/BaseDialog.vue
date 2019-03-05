@@ -7,15 +7,19 @@
       <error-banner :error="error"></error-banner>
       <v-card-text class="pa-0">
         <slot>
-            <div>Your content goes here!</div>
+          <div>Your content goes here!</div>
         </slot>
       </v-card-text>
       <v-card-actions v-if="!hideButtons">
         <v-spacer></v-spacer>
-        <v-btn class="grey--text darken-1" flat="flat"
-          @click="onCancelClicked">{{cancelLabel}}</v-btn>
-        <v-btn v-if="!hideCreate" :disabled="invalid" class="blue--text darken-1" flat="flat"
-          @click="onCreateClicked">{{createLabel}}</v-btn>
+        <v-btn class="grey--text darken-1" flat="flat" @click="onCancelClicked">{{cancelLabel}}</v-btn>
+        <v-btn
+          v-if="!hideCreate"
+          :disabled="invalid"
+          class="blue--text darken-1"
+          flat="flat"
+          @click="onCreateClicked"
+        >{{createLabel}}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

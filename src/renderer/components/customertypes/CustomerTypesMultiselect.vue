@@ -4,8 +4,7 @@
       <template v-for="(customerType) in customerTypes">
         <v-list-tile :key="customerType.id">
           <v-list-tile-action>
-            <v-checkbox v-model="selected" :value="customerType.id">
-            </v-checkbox>
+            <v-checkbox v-model="selected" :value="customerType.id"></v-checkbox>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
@@ -17,9 +16,7 @@
         <v-divider :key="'div-' + customerType.id"></v-divider>
       </template>
     </v-list>
-    <v-card-text v-else>
-      No customer types available.
-    </v-card-text>
+    <v-card-text v-else>No customer types available.</v-card-text>
   </v-card>
 </template>
 

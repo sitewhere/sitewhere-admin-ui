@@ -1,63 +1,60 @@
 <template>
   <div>
-    <navigation-page v-if="customerType" icon="cog"
-      :title="customerType.name" loadingMessage="Loading customer type ..."
-      :loaded="loaded">
+    <navigation-page
+      v-if="customerType"
+      icon="cog"
+      :title="customerType.name"
+      loadingMessage="Loading customer type ..."
+      :loaded="loaded"
+    >
       <div v-if="customerType" slot="content">
-        <customer-type-detail-header :customerType="customerType"
+        <customer-type-detail-header
+          :customerType="customerType"
           :customerTypes="customerTypes"
           @customerTypeDeleted="onCustomerTypeDeleted"
-          @customerTypeUpdated="onCustomerTypeUpdated">
-        </customer-type-detail-header>
+          @customerTypeUpdated="onCustomerTypeUpdated"
+        ></customer-type-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="instances" href="#instances">
-              Customers of Type
-            </v-tabs-item>
+            <v-tabs-item key="instances" href="#instances">Customers of Type</v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="instances" id="instances">
               <v-container fluid grid-list-md v-if="customers">
                 <v-layout row wrap>
-                  <v-flex xs6 v-for="(customer) in customers"
-                    :key="customer.token">
-                    <customer-list-entry :customer="customer"
-                      @openCustomer="onOpenCustomer">
-                    </customer-list-entry>
-                 </v-flex>
+                  <v-flex xs6 v-for="(customer) in customers" :key="customer.token">
+                    <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
+                  </v-flex>
                 </v-layout>
               </v-container>
               <pager :results="results" @pagingUpdated="updatePaging">
-                <no-results-panel slot="noresults"
-                  text="No Customers of This Type Found">
-                </no-results-panel>
+                <no-results-panel slot="noresults" text="No Customers of This Type Found"></no-results-panel>
               </pager>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Customer Type"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Customer Type"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Customer Type" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Customer Type" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <customer-type-update-dialog ref="edit" :token="token"
+    <customer-type-update-dialog
+      ref="edit"
+      :token="token"
       :customerTypes="customerTypes"
-      @customerTypeUpdated="onCustomerTypeUpdated">
-    </customer-type-update-dialog>
-    <customer-type-delete-dialog ref="delete" :token="token"
-      @customerTypeDeleted="onCustomerTypeDeleted">
-    </customer-type-delete-dialog>
+      @customerTypeUpdated="onCustomerTypeUpdated"
+    ></customer-type-update-dialog>
+    <customer-type-delete-dialog
+      ref="delete"
+      :token="token"
+      @customerTypeDeleted="onCustomerTypeDeleted"
+    ></customer-type-delete-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
 import NavigationPage from "../common/NavigationPage";
@@ -66,11 +63,13 @@ import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader";
 import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog";
 import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog";
 import CustomerListEntry from "../customers/CustomerListEntry";
+
+import { routeTo } from "../common/Utils";
+import { listCustomers } from "../../rest/sitewhere-customers-api";
 import {
-  _getCustomerType,
-  _listCustomerTypes,
-  _listCustomers
-} from "../../http/sitewhere-api-wrapper";
+  getCustomerType,
+  listCustomerTypes
+} from "../../rest/sitewhere-customer-types-api";
 
 export default {
   data: () => ({
@@ -124,7 +123,7 @@ export default {
       var component = this;
 
       // Load customer type information.
-      _getCustomerType(this.$store, token)
+      getCustomerType(this.$store, token)
         .then(function(response) {
           component.loaded = true;
           component.onDataLoaded(response.data);
@@ -132,7 +131,7 @@ export default {
         .catch(function(e) {
           component.loaded = true;
         });
-      _listCustomerTypes(this.$store, false, "page=1&pageSize=0")
+      listCustomerTypes(this.$store, false, "page=1&pageSize=0")
         .then(function(response) {
           component.$data.customerTypes = response.data.results;
         })
@@ -150,7 +149,7 @@ export default {
       options.includeCustomerType = false;
       options.includeAssignments = false;
 
-      _listCustomers(this.$store, options, this.$data.paging)
+      listCustomers(this.$store, options, this.$data.paging)
         .then(function(response) {
           component.results = response.data;
           component.customers = response.data.results;
@@ -182,11 +181,11 @@ export default {
     },
     // Called when customer type is deleted.
     onCustomerTypeDeleted: function() {
-      Utils.routeTo(this, "/customertypes");
+      routeTo(this, "/customertypes");
     },
     // Called to open a customer.
     onOpenCustomer: function(customer) {
-      Utils.routeTo(this, "/customers/" + customer.token);
+      routeTo(this, "/customers/" + customer.token);
     }
   }
 };

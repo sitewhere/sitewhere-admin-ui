@@ -1,15 +1,20 @@
 <template>
   <v-dialog v-model="visible" persistent :width="width">
-    <v-card >
+    <v-card>
       <v-toolbar dense flat card dark color="primary">
         <v-toolbar-title>{{title}}</v-toolbar-title>
       </v-toolbar>
-      <v-alert class="ma-0" error v-bind:value="true" style="width: 100%" slot="error" v-if="error">
-        {{error}}
-      </v-alert>
+      <v-alert
+        class="ma-0"
+        error
+        v-bind:value="true"
+        style="width: 100%"
+        slot="error"
+        v-if="error"
+      >{{error}}</v-alert>
       <v-card-text class="pa-0">
         <slot>
-            <div>Your content goes here!</div>
+          <div>Your content goes here!</div>
         </slot>
       </v-card-text>
       <v-card-actions>

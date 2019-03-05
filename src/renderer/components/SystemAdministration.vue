@@ -1,33 +1,32 @@
 <template>
   <v-app v-if="user">
     <error-banner :error="error"></error-banner>
-    <v-progress-linear v-if="loading" class="call-progress pa-0 ma-0">
-    </v-progress-linear>
-    <v-navigation-drawer dark fixed mini-variant.sync="false"
-      v-model="drawer" app>
+    <v-progress-linear v-if="loading" class="call-progress pa-0 ma-0"></v-progress-linear>
+    <v-navigation-drawer dark fixed mini-variant.sync="false" v-model="drawer" app>
       <v-list>
         <v-list-tile tag="div">
-          <img src="https://s3.amazonaws.com/sitewhere-demo/sitewhere-white.png"
-            style="height: 40px;" />
+          <img
+            src="https://s3.amazonaws.com/sitewhere-demo/sitewhere-white.png"
+            style="height: 40px;"
+          >
         </v-list-tile>
       </v-list>
       <v-divider></v-divider>
-      <navigation :sections="sections" @sectionSelected="onSectionClicked">
-      </navigation>
+      <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
     </v-navigation-drawer>
     <v-toolbar fixed class="grey darken-3" dark app>
       <v-toolbar-side-icon class="grey--text" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <font-awesome-icon :icon="section.icon" size="lg" />
+      <font-awesome-icon :icon="section.icon" size="lg"/>
       <v-toolbar-title class="subheading">{{ section.longTitle }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu bottom right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
-          <font-awesome-icon icon="user" class="mr-2" />
+          <font-awesome-icon icon="user" class="mr-2"/>
           {{ fullname }}
         </v-btn>
         <v-list>
           <v-list-tile @click="onUserAction(action)" v-for="action in userActions" :key="action.id">
-            <font-awesome-icon :icon="action.icon" class="mr-2" />
+            <font-awesome-icon :icon="action.icon" class="mr-2"/>
             <v-list-tile-title v-text="action.title"></v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -45,7 +44,8 @@
 <script>
 import Navigation from "./common/Navigation";
 import ErrorBanner from "./common/ErrorBanner";
-import { _getJwt } from "../http/sitewhere-api-wrapper";
+
+import { getJwt } from "../rest/sitewhere-api-wrapper";
 
 export default {
   data: () => ({
@@ -161,7 +161,7 @@ export default {
     // Set up timer for reloading JWT.
     refreshJwt: function() {
       var component = this;
-      _getJwt(this.$store)
+      getJwt(this.$store)
         .then(function(response) {
           console.log("Refreshed JWT.");
           var jwt = response.headers["x-sitewhere-jwt"];

@@ -1,19 +1,20 @@
 <template>
   <div>
-    <base-dialog :title="title" :width="width" :visible="dialogVisible"
-      :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-      @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
+    <base-dialog
+      :title="title"
+      :width="width"
+      :visible="dialogVisible"
+      :createLabel="createLabel"
+      :cancelLabel="cancelLabel"
+      :error="error"
+      @createClicked="onCreateClicked"
+      @cancelClicked="onCancelClicked"
+    >
       <v-tabs v-model="active">
         <v-tabs-bar dark color="primary">
-          <v-tabs-item key="details" href="#details">
-            Command Details
-          </v-tabs-item>
-          <v-tabs-item key="schedule" href="#schedule">
-            Schedule
-          </v-tabs-item>
-          <v-tabs-item key="metadata" href="#metadata">
-            Metadata
-          </v-tabs-item>
+          <v-tabs-item key="details" href="#details">Command Details</v-tabs-item>
+          <v-tabs-item key="schedule" href="#schedule">Schedule</v-tabs-item>
+          <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
           <v-tabs-slider></v-tabs-slider>
         </v-tabs-bar>
         <v-tabs-items>
@@ -23,20 +24,28 @@
                 <v-container fluid>
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-select :items="commands" v-model="commandSelection"
-                        label="Command" item-text="name" item-value="token"
-                        light single-line auto prepend-icon="flash_on"
-                        hide-details></v-select>
+                      <v-select
+                        :items="commands"
+                        v-model="commandSelection"
+                        label="Command"
+                        item-text="name"
+                        item-value="token"
+                        light
+                        single-line
+                        auto
+                        prepend-icon="flash_on"
+                        hide-details
+                      ></v-select>
                     </v-flex>
                     <v-card v-if="command" style="width: 100%;">
-                      <v-card-text>
-                        {{ command.description }}
-                      </v-card-text>
+                      <v-card-text>{{ command.description }}</v-card-text>
                       <v-card-text class="pt-0" v-if="command.parameters.length">
                         <v-flex xs12 v-for="(param) in command.parameters" :key="param.name">
-                          <v-text-field :label="param.name"
-                            :required="param.required" v-model="parameters[param.name]">
-                          </v-text-field>
+                          <v-text-field
+                            :label="param.name"
+                            :required="param.required"
+                            v-model="parameters[param.name]"
+                          ></v-text-field>
                         </v-flex>
                       </v-card-text>
                     </v-card>
@@ -46,12 +55,14 @@
             </v-card>
           </v-tabs-content>
           <v-tabs-content key="schedule" id="schedule">
-            <schedule-chooser>
-            </schedule-chooser>
+            <schedule-chooser></schedule-chooser>
           </v-tabs-content>
           <v-tabs-content key="metadata" id="metadata">
-            <metadata-panel :metadata="metadata"
-              @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+            <metadata-panel
+              :metadata="metadata"
+              @itemDeleted="onMetadataDeleted"
+              @itemAdded="onMetadataAdded"
+            />
           </v-tabs-content>
         </v-tabs-items>
       </v-tabs>
@@ -61,14 +72,13 @@
 
 <script>
 import Lodash from "lodash";
-import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
 import MetadataPanel from "../common/MetadataPanel";
 import ScheduleChooser from "../schedules/ScheduleChooser";
-import {
-  _listDeviceCommands,
-  _listSchedules
-} from "../../http/sitewhere-api-wrapper";
+
+import { arrayToMetadata, metadataToArray } from "../common/Utils";
+import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
+import { listSchedules } from "../../rest/sitewhere-schedules-api";
 
 export default {
   data: () => ({
@@ -130,7 +140,7 @@ export default {
       payload.target = "Assignment";
       payload.commandToken = this.$data.commandSelection;
       payload.parameterValues = this.$data.parameters;
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      payload.metadata = arrayToMetadata(this.$data.metadata);
       return payload;
     },
 
@@ -147,14 +157,14 @@ export default {
       options.deviceTypeToken = this.deviceType.token;
 
       var component = this;
-      _listDeviceCommands(this.$store, options)
+      listDeviceCommands(this.$store, options)
         .then(function(response) {
           component.$data.commands = response.data.results;
         })
         .catch(function(e) {
           component.showError(e);
         });
-      _listSchedules(this.$store, null)
+      listSchedules(this.$store, null)
         .then(function(response) {
           component.$data.schedules = response.data.results;
         })
@@ -169,7 +179,7 @@ export default {
 
       if (payload) {
         this.$data.commandSelection = payload.xxx;
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
+        this.$data.metadata = metadataToArray(payload.metadata);
       }
     },
 

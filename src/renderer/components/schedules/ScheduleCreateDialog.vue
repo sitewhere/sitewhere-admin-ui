@@ -1,16 +1,22 @@
 <template>
   <div>
-    <schedule-dialog ref="dialog" title="Create Schedule"
-      width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </schedule-dialog>
+    <schedule-dialog
+      ref="dialog"
+      title="Create Schedule"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></schedule-dialog>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import ScheduleDialog from "./ScheduleDialog";
-import { _createSchedule } from "../../http/sitewhere-api-wrapper";
+
+import { createSchedule } from "../../rest/sitewhere-schedules-api";
 
 export default {
   data: () => ({}),
@@ -36,7 +42,7 @@ export default {
     onCommit: function(payload) {
       console.log(payload);
       var component = this;
-      _createSchedule(this.$store, payload)
+      createSchedule(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

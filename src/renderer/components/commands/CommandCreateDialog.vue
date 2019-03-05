@@ -1,20 +1,24 @@
 <template>
   <div>
-    <command-dialog ref="dialog" title="Create Command" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
+    <command-dialog
+      ref="dialog"
+      title="Create Command"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
       :deviceType="deviceType"
-      @payload="onCommit">
-    </command-dialog>
-    <floating-action-button label="Add Command" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
+      @payload="onCommit"
+    ></command-dialog>
+    <floating-action-button label="Add Command" icon="plus" @action="onOpenDialog"></floating-action-button>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import CommandDialog from "./CommandDialog";
-import { _createDeviceCommand } from "../../http/sitewhere-api-wrapper";
+
+import { createDeviceCommand } from "../../rest/sitewhere-device-commands-api";
 
 export default {
   data: () => ({}),
@@ -41,7 +45,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createDeviceCommand(this.$store, payload)
+      createDeviceCommand(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

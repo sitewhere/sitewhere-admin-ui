@@ -4,9 +4,7 @@
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs12>
-            <v-text-field class="mt-1" label="Image URL"
-              v-model="imageUrl" prepend-icon="image">
-            </v-text-field>
+            <v-text-field class="mt-1" label="Image URL" v-model="imageUrl" prepend-icon="image"></v-text-field>
             <div class="verror">
               <span v-if="imageUrlRequired">ImageUrl is required.</span>
             </div>
@@ -18,22 +16,19 @@
             </div>
           </v-flex>
           <v-flex xs12>
-            <color-input-field text="Background" v-model="backgroundColor">
-            </color-input-field>
+            <color-input-field text="Background" v-model="backgroundColor"></color-input-field>
             <div class="verror">
               <span v-if="backgroundColorRequired">Background color is required.</span>
             </div>
           </v-flex>
           <v-flex xs12>
-            <color-input-field text="Foreground" v-model="foregroundColor">
-            </color-input-field>
+            <color-input-field text="Foreground" v-model="foregroundColor"></color-input-field>
             <div class="verror">
               <span v-if="foregroundColorRequired">Foreground color is required.</span>
             </div>
           </v-flex>
           <v-flex xs12>
-            <color-input-field text="Border" v-model="borderColor">
-            </color-input-field>
+            <color-input-field text="Border" v-model="borderColor"></color-input-field>
             <div class="verror">
               <span v-if="borderColorRequired">Border color is required.</span>
             </div>
@@ -47,7 +42,8 @@
 <script>
 import IconSelector from "../common/IconSelector";
 import ColorInputField from "../common/ColorInputField";
-import Utils from "../common/Utils";
+
+import { isBlank } from "../common/Utils";
 
 export default {
   data: () => ({
@@ -141,39 +137,54 @@ export default {
         this.$emit("payload", payload);
       }
     },
-    imageUrlRequired: function () {
-      if (this.$props.validateImageUrlRequired === false || this.$data.validated === false) {
+    imageUrlRequired: function() {
+      if (
+        this.$props.validateImageUrlRequired === false ||
+        this.$data.validated === false
+      ) {
         return false;
       }
-      var valid = Utils.isBlank(this.$data.brandingImageUrl);
+      var valid = isBlank(this.$data.brandingImageUrl);
       return valid;
     },
-    iconRequired: function () {
-      if (this.$props.validateIconRequired === false || this.$data.validated === false) {
+    iconRequired: function() {
+      if (
+        this.$props.validateIconRequired === false ||
+        this.$data.validated === false
+      ) {
         return false;
       }
-      var valid = Utils.isBlank(this.$data.brandingIcon);
+      var valid = isBlank(this.$data.brandingIcon);
       return valid;
     },
-    backgroundColorRequired: function () {
-      if (this.$props.validateBackgroundColorRequired === false || this.$data.validated === false) {
+    backgroundColorRequired: function() {
+      if (
+        this.$props.validateBackgroundColorRequired === false ||
+        this.$data.validated === false
+      ) {
         return false;
       }
-      var valid = Utils.isBlank(this.$data.brandingBackgroundColor);
+      var valid = isBlank(this.$data.brandingBackgroundColor);
       return valid;
     },
-    foregroundColorRequired: function () {
-      if (this.$props.validateForegroundColorRequired === false || this.$data.validated === false) {
+    foregroundColorRequired: function() {
+      if (
+        this.$props.validateForegroundColorRequired === false ||
+        this.$data.validated === false
+      ) {
         return false;
       }
-      var valid = Utils.isBlank(this.$data.brandingForegroundColor);
+      var valid = isBlank(this.$data.brandingForegroundColor);
       return valid;
     },
-    borderColorRequired: function () {
-      if (this.$props.validateBorderColorRequired === false || this.$data.validated === false) {
+    borderColorRequired: function() {
+      if (
+        this.$props.validateBorderColorRequired === false ||
+        this.$data.validated === false
+      ) {
         return false;
       }
-      var valid = Utils.isBlank(this.$data.brandingBorderColor);
+      var valid = isBlank(this.$data.brandingBorderColor);
       return valid;
     }
   },
@@ -250,19 +261,19 @@ export default {
     isValid: function(payload) {
       this.$data.validated = true;
       if (this.$props.validateImageUrlRequired === true) {
-        return !Utils.isBlank(this.$data.brandingImageUrl);;
+        return !isBlank(this.$data.brandingImageUrl);
       }
       if (this.$props.validateIconRequired === true) {
-        return !Utils.isBlank(this.$data.brandingIcon);;
+        return !isBlank(this.$data.brandingIcon);
       }
       if (this.$props.validateBackgroundColorRequired === true) {
-        return !Utils.isBlank(this.$data.brandingBackgroundColor);;
+        return !isBlank(this.$data.brandingBackgroundColor);
       }
       if (this.$props.validateForegroundColorRequired === true) {
-        return !Utils.isBlank(this.$data.brandingForegroundColor);;
+        return !isBlank(this.$data.brandingForegroundColor);
       }
       if (this.$props.validateBorderColorRequired === true) {
-        return !Utils.isBlank(this.$data.brandingBorderColor);;
+        return !isBlank(this.$data.brandingBorderColor);
       }
       return true;
     }

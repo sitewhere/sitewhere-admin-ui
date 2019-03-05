@@ -1,11 +1,10 @@
 <template>
-    <v-tooltip left>
-        <div class="sizer" slot="activator" @click="openLink()">
-            <svg class="cfill" :viewBox="viewBox" v-html="svg">
-            </svg>
-        </div>
-      <span>{{ title }}</span>
-    </v-tooltip>
+  <v-tooltip left>
+    <div class="sizer" slot="activator" @click="openLink()">
+      <svg class="cfill" :viewBox="viewBox" v-html="svg"></svg>
+    </div>
+    <span>{{ title }}</span>
+  </v-tooltip>
 </template>
 
 <script>

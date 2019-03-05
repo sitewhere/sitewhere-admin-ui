@@ -7,7 +7,8 @@ import {
   IScheduleCreateRequest,
   ISchedule,
   IScheduleSearchCriteria,
-  IScheduleResponseFormat
+  IScheduleResponseFormat,
+  IScheduleSearchResults
 } from "sitewhere-rest-api/dist/model/schedules-model";
 
 /**
@@ -91,12 +92,10 @@ export function listSchedules(
   store: Store<SiteWhereUiSettings>,
   criteria: IScheduleSearchCriteria,
   format: IScheduleResponseFormat
-): Promise<AxiosResponse<ISchedule[]>> {
+): Promise<AxiosResponse<IScheduleSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<ISchedule[]> = SiteWhere.API.Schedules.listSchedules(
-    axios,
-    criteria,
-    format
-  );
+  let api: AxiosPromise<
+    IScheduleSearchResults
+  > = SiteWhere.API.Schedules.listSchedules(axios, criteria, format);
   return loaderWrapper(store, api);
 }

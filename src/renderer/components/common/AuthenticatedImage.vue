@@ -1,9 +1,9 @@
 <template>
-  <img v-if="!hidden"/>
+  <img v-if="!hidden">
 </template>
 
 <script>
-import { _imageAuthGet } from "../../http/sitewhere-api-wrapper";
+import { imageAuthGet } from "../../rest/sitewhere-api-wrapper";
 
 export default {
   data: () => ({

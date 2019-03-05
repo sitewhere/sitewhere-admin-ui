@@ -7,7 +7,8 @@ import {
   IDeviceTypeCreateRequest,
   IDeviceType,
   IDeviceTypeSearchCriteria,
-  IDeviceTypeResponseFormat
+  IDeviceTypeResponseFormat,
+  IDeviceTypeSearchResults
 } from "sitewhere-rest-api/dist/model/device-types-model";
 
 /**
@@ -71,10 +72,10 @@ export function listDeviceTypes(
   store: Store<SiteWhereUiSettings>,
   criteria: IDeviceTypeSearchCriteria,
   format: IDeviceTypeResponseFormat
-): Promise<AxiosResponse<IDeviceType[]>> {
+): Promise<AxiosResponse<IDeviceTypeSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceType[]
+    IDeviceTypeSearchResults
   > = SiteWhere.API.DeviceTypes.listDeviceTypes(axios, criteria, format);
   return loaderWrapper(store, api);
 }

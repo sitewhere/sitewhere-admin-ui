@@ -1,29 +1,22 @@
 <template>
   <div>
-    <navigation-page v-if="assignment" icon="link"
+    <navigation-page
+      v-if="assignment"
+      icon="link"
       title="Manage Device Assignment"
-      loadingMessage="Loading device assignment ..." :loaded="loaded">
+      loadingMessage="Loading device assignment ..."
+      :loaded="loaded"
+    >
       <div slot="content">
-        <assignment-detail-header :assignment="assignment">
-        </assignment-detail-header>
+        <assignment-detail-header :assignment="assignment"></assignment-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
             <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-            <v-tabs-item key="assignments" href="#assignments">
-              Locations
-            </v-tabs-item>
-            <v-tabs-item key="measurements" href="#measurements">
-              Measurements
-            </v-tabs-item>
-            <v-tabs-item key="alerts" href="#alerts">
-              Alerts
-            </v-tabs-item>
-            <v-tabs-item key="invocations" href="#invocations">
-              Command Invocations
-            </v-tabs-item>
-            <v-tabs-item key="responses" href="#responses">
-              Command Responses
-            </v-tabs-item>
+            <v-tabs-item key="assignments" href="#assignments">Locations</v-tabs-item>
+            <v-tabs-item key="measurements" href="#measurements">Measurements</v-tabs-item>
+            <v-tabs-item key="alerts" href="#alerts">Alerts</v-tabs-item>
+            <v-tabs-item key="invocations" href="#invocations">Command Invocations</v-tabs-item>
+            <v-tabs-item key="responses" href="#responses">Command Responses</v-tabs-item>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="assignments" id="assignments">
@@ -43,27 +36,27 @@
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
-        <invocation-create-dialog v-if="active === 'invocations'"
-          :token="token" @invocationAdded="onInvocationAdded"
-          :deviceType="assignment.device.deviceType"/>
+        <invocation-create-dialog
+          v-if="active === 'invocations'"
+          :token="token"
+          @invocationAdded="onInvocationAdded"
+          :deviceType="assignment.device.deviceType"
+        />
       </div>
       <div slot="actions">
-        <navigation-action-button icon="crosshairs" tooltip="Device Emulator"
-          @action="onOpenEmulator">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Assignment"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button
+          icon="crosshairs"
+          tooltip="Device Emulator"
+          @action="onOpenEmulator"
+        ></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Assignment" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <assignment-delete-dialog ref="delete" :token="token"
-      @assignmentDeleted="onAssignmentDeleted">
-    </assignment-delete-dialog>
+    <assignment-delete-dialog ref="delete" :token="token" @assignmentDeleted="onAssignmentDeleted"></assignment-delete-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import AssignmentDetailHeader from "./AssignmentDetailHeader";
@@ -75,7 +68,8 @@ import AssignmentResponseEvents from "./AssignmentResponseEvents";
 import AssignmentDeleteDialog from "./AssignmentDeleteDialog";
 import InvocationCreateDialog from "./InvocationCreateDialog";
 
-import { _getDeviceAssignment } from "../../http/sitewhere-api-wrapper";
+import { routeTo } from "../common/Utils";
+import { getDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";
 
 export default {
   data: () => ({
@@ -111,7 +105,7 @@ export default {
       var component = this;
 
       // Load site information.
-      _getDeviceAssignment(this.$store, token)
+      getDeviceAssignment(this.$store, token)
         .then(function(response) {
           component.loaded = true;
           component.onAssignmentLoaded(response.data);
@@ -138,11 +132,11 @@ export default {
     },
     // Called when site is deleted.
     onAssignmentDeleted: function() {
-      Utils.routeTo(this, "/areas");
+      routeTo(this, "/areas");
     },
     // Called when emulator is opened.
     onOpenEmulator: function() {
-      Utils.routeTo(this, "/assignments/" + this.$data.token + "/emulator");
+      routeTo(this, "/assignments/" + this.$data.token + "/emulator");
     },
     // Called if command invocation is added.
     onInvocationAdded: function() {

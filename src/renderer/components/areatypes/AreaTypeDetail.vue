@@ -1,17 +1,22 @@
 <template>
   <div>
-    <navigation-page v-if="areaType" icon="cog" :title="areaType.name"
-      loadingMessage="Loading area type ..." :loaded="loaded">
+    <navigation-page
+      v-if="areaType"
+      icon="cog"
+      :title="areaType.name"
+      loadingMessage="Loading area type ..."
+      :loaded="loaded"
+    >
       <div v-if="areaType" slot="content">
-        <area-type-detail-header :areaType="areaType" :areaTypes="areaTypes"
+        <area-type-detail-header
+          :areaType="areaType"
+          :areaTypes="areaTypes"
           @areaTypeDeleted="onAreaTypeDeleted"
-          @areaTypeUpdated="onAreaTypeUpdated">
-        </area-type-detail-header>
+          @areaTypeUpdated="onAreaTypeUpdated"
+        ></area-type-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="areas" href="#areas">
-              Areas of Type
-            </v-tabs-item>
+            <v-tabs-item key="areas" href="#areas">Areas of Type</v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
@@ -19,40 +24,33 @@
               <v-container fluid grid-list-md v-if="areas">
                 <v-layout row wrap>
                   <v-flex xs6 v-for="(area) in areas" :key="area.token">
-                    <area-list-entry :area="area" @openArea="onOpenArea">
-                    </area-list-entry>
-                 </v-flex>
+                    <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
+                  </v-flex>
                 </v-layout>
               </v-container>
               <pager :results="results" @pagingUpdated="updatePaging">
-                <no-results-panel slot="noresults"
-                  text="No Areas of This Type Found">
-                </no-results-panel>
+                <no-results-panel slot="noresults" text="No Areas of This Type Found"></no-results-panel>
               </pager>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Area Type"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Area Type"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Area Type" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Area Type" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <area-type-update-dialog ref="edit" :token="token"
-      :areaTypes="areaTypes" @areaTypeUpdated="onAreaTypeUpdated">
-    </area-type-update-dialog>
-    <area-type-delete-dialog ref="delete" :token="token"
-      @areaTypeDeleted="onAreaTypeDeleted">
-    </area-type-delete-dialog>
+    <area-type-update-dialog
+      ref="edit"
+      :token="token"
+      :areaTypes="areaTypes"
+      @areaTypeUpdated="onAreaTypeUpdated"
+    ></area-type-update-dialog>
+    <area-type-delete-dialog ref="delete" :token="token" @areaTypeDeleted="onAreaTypeDeleted"></area-type-delete-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
 import NavigationPage from "../common/NavigationPage";
@@ -61,11 +59,13 @@ import AreaTypeDetailHeader from "./AreaTypeDetailHeader";
 import AreaTypeDeleteDialog from "./AreaTypeDeleteDialog";
 import AreaTypeUpdateDialog from "./AreaTypeUpdateDialog";
 import AreaListEntry from "../areas/AreaListEntry";
+
+import { routeTo } from "../common/Utils";
 import {
-  _getAreaType,
-  _listAreaTypes,
-  _listAreas
-} from "../../http/sitewhere-api-wrapper";
+  getAreaType,
+  listAreaTypes
+} from "../../rest/sitewhere-area-types-api";
+import { listAreas } from "../../rest/sitewhere-areas-api";
 
 export default {
   data: () => ({
@@ -119,7 +119,7 @@ export default {
       var component = this;
 
       // Load area information.
-      _getAreaType(this.$store, token)
+      getAreaType(this.$store, token)
         .then(function(response) {
           component.loaded = true;
           component.onDataLoaded(response.data);
@@ -127,7 +127,7 @@ export default {
         .catch(function(e) {
           component.loaded = true;
         });
-      _listAreaTypes(this.$store, false, "page=1&pageSize=0")
+      listAreaTypes(this.$store, false, "page=1&pageSize=0")
         .then(function(response) {
           component.$data.areaTypes = response.data.results;
         })
@@ -146,7 +146,7 @@ export default {
       options.includeAssignments = false;
       options.includeZones = false;
 
-      _listAreas(this.$store, options, this.$data.paging)
+      listAreas(this.$store, options, this.$data.paging)
         .then(function(response) {
           component.results = response.data;
           component.areas = response.data.results;
@@ -178,11 +178,11 @@ export default {
     },
     // Called when area type is deleted.
     onAreaTypeDeleted: function() {
-      Utils.routeTo(this, "/areatypes");
+      routeTo(this, "/areatypes");
     },
     // Called to open an area.
     onOpenArea: function(area) {
-      Utils.routeTo(this, "/areas/" + area.token);
+      routeTo(this, "/areas/" + area.token);
     }
   }
 };

@@ -1,60 +1,53 @@
 <template>
   <div>
-    <navigation-page icon="calendar" title="Manage Schedules"
-      loadingMessage="Loading schedules ..." :loaded="loaded">
+    <navigation-page
+      icon="calendar"
+      title="Manage Schedules"
+      loadingMessage="Loading schedules ..."
+      :loaded="loaded"
+    >
       <div slot="content">
         <v-layout row wrap v-if="schedules">
           <v-flex xs12>
-            <no-results-panel v-if="schedules.length === 0"
-              text="No Schedules Found">
-            </no-results-panel>
-            <v-data-table v-if="schedules.length > 0" class="elevation-2 pa-0"
-              :headers="headers" :items="schedules"
-              :hide-actions="true" no-data-text="No Schedules Found"
-              total-items="0">
+            <no-results-panel v-if="schedules.length === 0" text="No Schedules Found"></no-results-panel>
+            <v-data-table
+              v-if="schedules.length > 0"
+              class="elevation-2 pa-0"
+              :headers="headers"
+              :items="schedules"
+              :hide-actions="true"
+              no-data-text="No Schedules Found"
+              total-items="0"
+            >
               <template slot="items" slot-scope="props">
-                <td width="17%" :title="props.item.name">
-                  {{ props.item.name }}
-                </td>
-                <td width="15%" :title="props.item.triggerType">
-                  {{ props.item.triggerType }}
-                </td>
-                <td width="35%" :title="props.item.token">
-                  {{ props.item.token }}
-                </td>
-                <td width="18%"
-                  :title="utils.formatDate(props.item.createdDate)">
-                  {{ utils.formatDate(props.item.createdDate) }}
-                </td>
+                <td width="17%" :title="props.item.name">{{ props.item.name }}</td>
+                <td width="15%" :title="props.item.triggerType">{{ props.item.triggerType }}</td>
+                <td width="35%" :title="props.item.token">{{ props.item.token }}</td>
+                <td
+                  width="18%"
+                  :title="formatDate(props.item.createdDate)"
+                >{{ formatDate(props.item.createdDate) }}</td>
                 <td width="15%">
                   <actions-block @edited="refresh" @deleted="refresh">
-                    <schedule-update-dialog slot="edit" :token="props.item.token">
-                    </schedule-update-dialog>
-                    <schedule-delete-dialog slot="delete" :token="props.item.token">
-                    </schedule-delete-dialog>
+                    <schedule-update-dialog slot="edit" :token="props.item.token"></schedule-update-dialog>
+                    <schedule-delete-dialog slot="delete" :token="props.item.token"></schedule-delete-dialog>
                   </actions-block>
                 </td>
               </template>
             </v-data-table>
           </v-flex>
         </v-layout>
-        <pager :pageSizes="pageSizes" :results="results"
-          @pagingUpdated="updatePaging">
-        </pager>
-      <schedule-create-dialog ref="add" @scheduleAdded="refresh">
-      </schedule-create-dialog>
+        <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging"></pager>
+        <schedule-create-dialog ref="add" @scheduleAdded="refresh"></schedule-create-dialog>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="plus" tooltip="Add Schedule"
-          @action="onAddSchedule">
-        </navigation-action-button>
+        <navigation-action-button icon="plus" tooltip="Add Schedule" @action="onAddSchedule"></navigation-action-button>
       </div>
     </navigation-page>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
@@ -63,7 +56,9 @@ import NoResultsPanel from "../common/NoResultsPanel";
 import ScheduleCreateDialog from "./ScheduleCreateDialog";
 import ScheduleUpdateDialog from "./ScheduleUpdateDialog";
 import ScheduleDeleteDialog from "./ScheduleDeleteDialog";
-import { _listSchedules } from "../../http/sitewhere-api-wrapper";
+
+import { formatDate } from "../common/Utils";
+import { listSchedules } from "../../rest/sitewhere-schedules-api";
 
 export default {
   data: () => ({
@@ -130,13 +125,6 @@ export default {
     ScheduleDeleteDialog
   },
 
-  computed: {
-    // Accessor for utility functions.
-    utils: function() {
-      return Utils;
-    }
-  },
-
   methods: {
     // Update paging values and run query.
     updatePaging: function(paging) {
@@ -153,7 +141,7 @@ export default {
       // Schedule filter options.
       let options = {};
 
-      _listSchedules(this.$store, options, paging)
+      listSchedules(this.$store, options, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;

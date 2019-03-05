@@ -1,65 +1,69 @@
 <template>
   <div>
-    <tenant-dialog ref="dialog" title="Edit Tenant" width="700"
-      createLabel="Update" cancelLabel="Cancel" @payload="onCommit">
-    </tenant-dialog>
+    <tenant-dialog
+      ref="dialog"
+      title="Edit Tenant"
+      width="700"
+      createLabel="Update"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></tenant-dialog>
   </div>
 </template>
 
 <script>
-import TenantDialog from './TenantDialog'
-import {_getTenant, _updateTenant} from '../../http/sitewhere-api-wrapper'
+import TenantDialog from "./TenantDialog";
+
+import { getTenant, updateTenant } from "../../rest/sitewhere-tenants-api";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     TenantDialog
   },
 
-  props: ['tenantToken'],
+  props: ["tenantToken"],
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getTenant(this.$store, this.tenantToken)
-        .then(function (response) {
-          component.onLoaded(response)
-        }).catch(function (e) {
+    onOpenDialog: function() {
+      var component = this;
+      getTenant(this.$store, this.tenantToken)
+        .then(function(response) {
+          component.onLoaded(response);
         })
+        .catch(function(e) {});
     },
 
     // Called after data is loaded.
-    onLoaded: function (response) {
-      this.getDialogComponent().load(response.data)
-      this.getDialogComponent().openDialog()
+    onLoaded: function(response) {
+      this.getDialogComponent().load(response.data);
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateTenant(this.$store, this.tenantToken, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
+    onCommit: function(payload) {
+      var component = this;
+      updateTenant(this.$store, this.tenantToken, payload)
+        .then(function(response) {
+          component.onCommitted(response);
         })
+        .catch(function(e) {});
     },
 
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('tenantUpdated')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("tenantUpdated");
     }
   }
-}
+};
 </script>
 
 <style scoped>

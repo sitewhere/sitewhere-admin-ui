@@ -92,7 +92,7 @@ export function loaderWrapper<T>(
  * @param store
  * @param imageUrl
  */
-export function _imageAuthGet(
+export function imageAuthGet(
   store: Store<SiteWhereUiSettings>,
   imageUrl: string
 ) {
@@ -105,7 +105,7 @@ export function _imageAuthGet(
  * Get a JWT based on credentials passed with basic auth.
  * @param store
  */
-export function _getJwt(
+export function getJwt(
   store: Store<SiteWhereUiSettings>
 ): Promise<AxiosResponse<any>> {
   let axios: AxiosInstance = createAuthApiCall(store);

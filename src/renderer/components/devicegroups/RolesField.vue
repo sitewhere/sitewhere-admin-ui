@@ -1,20 +1,21 @@
 <template>
   <v-card>
     <div>
-      <span v-if="editedRoles.length" class="subheading pl-2 pt-2">Roles: </span>
+      <span v-if="editedRoles.length" class="subheading pl-2 pt-2">Roles:</span>
       <span v-else class="subheading pl-2 pt-2">No roles currently assigned</span>
-      <v-chip close v-for="role in editedRoles" :key="role"
-        class="grey white--text" @input="onRoleDeleted(role)">
-        {{ role }}
-      </v-chip>
+      <v-chip
+        close
+        v-for="role in editedRoles"
+        :key="role"
+        class="grey white--text"
+        @input="onRoleDeleted(role)"
+      >{{ role }}</v-chip>
     </div>
     <div>
       <v-container fluid>
         <v-layout row wrap>
           <v-flex xs11>
-            <v-text-field label="Add role" hide-details
-              v-model="newRole">
-            </v-text-field>
+            <v-text-field label="Add role" hide-details v-model="newRole"></v-text-field>
           </v-flex>
           <v-flex xs1>
             <v-tooltip left>

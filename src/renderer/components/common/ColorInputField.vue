@@ -2,9 +2,7 @@
   <v-container fluid class="pa-0">
     <v-layout row wrap>
       <v-flex xs5>
-        <v-text-field :label="text" v-model="updatedColor" 
-          prepend-icon="color_lens">
-        </v-text-field>
+        <v-text-field :label="text" v-model="updatedColor" prepend-icon="color_lens"></v-text-field>
       </v-flex>
       <v-flex xs7>
         <v-menu offset-y top :close-on-content-click="false" v-model="menu">

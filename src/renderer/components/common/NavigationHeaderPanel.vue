@@ -8,9 +8,7 @@
       <span class="header-content">
         <slot name="content"></slot>
       </span>
-      <authenticated-image class="header-qrcode" :style="qrCodeStyle"
-        :url="qrCodeUrl">
-      </authenticated-image>
+      <authenticated-image class="header-qrcode" :style="qrCodeStyle" :url="qrCodeUrl"></authenticated-image>
       <span class="options-menu">
         <slot name="options"></slot>
       </span>

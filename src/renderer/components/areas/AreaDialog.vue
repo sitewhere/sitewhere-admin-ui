@@ -1,22 +1,21 @@
 <template>
   <div>
-    <base-dialog :title="title" :width="width" :visible="dialogVisible"
-      :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-      @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
+    <base-dialog
+      :title="title"
+      :width="width"
+      :visible="dialogVisible"
+      :createLabel="createLabel"
+      :cancelLabel="cancelLabel"
+      :error="error"
+      @createClicked="onCreateClicked"
+      @cancelClicked="onCancelClicked"
+    >
       <v-tabs v-model="active">
         <v-tabs-bar dark color="primary">
-          <v-tabs-item key="details" href="#details">
-            Details
-          </v-tabs-item>
-          <v-tabs-item key="bounds" href="#bounds">
-            Bounds
-          </v-tabs-item>
-          <v-tabs-item key="branding" href="#branding">
-            Branding
-          </v-tabs-item>
-          <v-tabs-item key="metadata" href="#metadata">
-            Metadata
-          </v-tabs-item>
+          <v-tabs-item key="details" href="#details">Details</v-tabs-item>
+          <v-tabs-item key="bounds" href="#bounds">Bounds</v-tabs-item>
+          <v-tabs-item key="branding" href="#branding">Branding</v-tabs-item>
+          <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
           <v-tabs-slider></v-tabs-slider>
         </v-tabs-bar>
         <v-tabs-items>
@@ -26,55 +25,69 @@
                 <v-container fluid>
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-text-field required class="mt-1" label="Token"
-                        v-model="areaToken" hide-details prepend-icon="info">
-                      </v-text-field>
+                      <v-text-field
+                        required
+                        class="mt-1"
+                        label="Token"
+                        v-model="areaToken"
+                        hide-details
+                        prepend-icon="info"
+                      ></v-text-field>
                       <div class="verror">
                         <span v-if="!$v.areaToken.required && $v.$dirty">Area token is required.</span>
                         <span v-if="!$v.areaToken.validToken && $v.$dirty">Area token is not valid.</span>
                       </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field required class="mt-1" label="Area name" 
-                        v-model="areaName" prepend-icon="info">
-                      </v-text-field>
+                      <v-text-field
+                        required
+                        class="mt-1"
+                        label="Area name"
+                        v-model="areaName"
+                        prepend-icon="info"
+                      ></v-text-field>
                       <div class="verror">
                         <span v-if="$v.areaName.$invalid && $v.$dirty">Area name is required.</span>
                       </div>
                     </v-flex>
                     <v-flex xs12>
-                      <area-type-selector v-model="areaTypeId"
-                        @areaTypeUpdated="onAreaTypeUpdated">
-                      </area-type-selector>
+                      <area-type-selector v-model="areaTypeId" @areaTypeUpdated="onAreaTypeUpdated"></area-type-selector>
                       <div class="verror">
                         <span v-if="$v.areaTypeId.$invalid && $v.$dirty">Area Type is required.</span>
                       </div>
                     </v-flex>
                     <v-flex xs12>
-                      <v-text-field required class="mt-1" multi-line label="Description" v-model="areaDescription" prepend-icon="subject"></v-text-field>
+                      <v-text-field
+                        required
+                        class="mt-1"
+                        multi-line
+                        label="Description"
+                        v-model="areaDescription"
+                        prepend-icon="subject"
+                      ></v-text-field>
                       <div class="verror">
-                        <span v-if="$v.areaDescription.$invalid && $v.$dirty">Description is required.</span>
+                        <span
+                          v-if="$v.areaDescription.$invalid && $v.$dirty"
+                        >Description is required.</span>
                       </div>
                     </v-flex>
                   </v-layout>
                 </v-container>
-                </v-card-text>
+              </v-card-text>
             </v-card>
           </v-tabs-content>
           <v-tabs-content key="bounds" id="bounds" :lazy="true">
-            <area-bounds-panel :bounds="areaBounds"
-              @boundsUpdated="onBoundsUpdated"/>
+            <area-bounds-panel :bounds="areaBounds" @boundsUpdated="onBoundsUpdated"/>
           </v-tabs-content>
           <v-tabs-content key="branding" id="branding">
-            <branding-panel 
-              ref="branding"
-              @payload="onBrandingChanged"
-              :branding="branding">
-            </branding-panel>
+            <branding-panel ref="branding" @payload="onBrandingChanged" :branding="branding"></branding-panel>
           </v-tabs-content>
           <v-tabs-content key="metadata" id="metadata">
-            <metadata-panel :metadata="metadata"
-              @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+            <metadata-panel
+              :metadata="metadata"
+              @itemDeleted="onMetadataDeleted"
+              @itemAdded="onMetadataAdded"
+            />
           </v-tabs-content>
         </v-tabs-items>
       </v-tabs>
@@ -83,7 +96,6 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import MapUtils from "./MapUtils";
 import BaseDialog from "../common/BaseDialog";
 import AreaTypeSelector from "../areatypes/AreaTypeSelector";
@@ -92,6 +104,7 @@ import MetadataPanel from "../common/MetadataPanel";
 import BrandingPanel from "../common/BrandingPanel";
 import { required, helpers, url } from "vuelidate/lib/validators";
 
+import { metadataToArray, arrayToMetadata } from "../common/Utils";
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 export default {
@@ -150,7 +163,7 @@ export default {
       payload.foregroundColor = this.$data.branding.foregroundColor;
       payload.borderColor = this.$data.branding.borderColor;
       payload.bounds = this.$data.areaBounds;
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      payload.metadata = arrayToMetadata(this.$data.metadata);
       return payload;
     },
 
@@ -190,7 +203,7 @@ export default {
         this.$data.branding.backgroundColor = payload.backgroundColor;
         this.$data.branding.foregroundColor = payload.foregroundColor;
         this.$data.branding.borderColor = payload.borderColor;
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
+        this.$data.metadata = metadataToArray(payload.metadata);
       }
     },
 

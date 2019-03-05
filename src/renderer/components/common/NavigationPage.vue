@@ -2,9 +2,7 @@
   <div>
     <v-toolbar flat dark dense card class="primary">
       <font-awesome-icon :icon="icon" size="lg"/>
-      <v-toolbar-title class="white--text">
-        {{ title }}
-      </v-toolbar-title>
+      <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <slot name="actions"></slot>
     </v-toolbar>

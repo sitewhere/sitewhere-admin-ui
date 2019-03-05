@@ -1,18 +1,19 @@
 <template>
-  <base-dialog :title="title" :width="width" :visible="dialogVisible"
-    :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-    @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
+  <base-dialog
+    :title="title"
+    :width="width"
+    :visible="dialogVisible"
+    :createLabel="createLabel"
+    :cancelLabel="cancelLabel"
+    :error="error"
+    @createClicked="onCreateClicked"
+    @cancelClicked="onCancelClicked"
+  >
     <v-tabs v-model="active">
       <v-tabs-bar dark color="primary">
-        <v-tabs-item key="details" href="#details">
-          Details
-        </v-tabs-item>
-        <v-tabs-item key="branding" href="#branding">
-          Branding
-        </v-tabs-item>
-        <v-tabs-item key="metadata" href="#metadata">
-          Metadata
-        </v-tabs-item>
+        <v-tabs-item key="details" href="#details">Details</v-tabs-item>
+        <v-tabs-item key="branding" href="#branding">Branding</v-tabs-item>
+        <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
@@ -22,34 +23,59 @@
               <v-container fluid>
                 <v-layout row wrap>
                   <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Device Type token"
-                      v-model="typeToken" hide-details prepend-icon="info">
-                    </v-text-field>
+                    <v-text-field
+                      required
+                      class="mt-1"
+                      label="Device Type token"
+                      v-model="typeToken"
+                      hide-details
+                      prepend-icon="info"
+                    ></v-text-field>
                     <div class="verror">
-                      <span v-if="!$v.typeToken.required && $v.$dirty">Device Type token is required.</span>
-                      <span v-if="!$v.typeToken.validToken && $v.$dirty">Device Type token is not valid.</span>
+                      <span
+                        v-if="!$v.typeToken.required && $v.$dirty"
+                      >Device Type token is required.</span>
+                      <span
+                        v-if="!$v.typeToken.validToken && $v.$dirty"
+                      >Device Type token is not valid.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Type name"
-                      v-model="typeName" prepend-icon="info"></v-text-field>
+                    <v-text-field
+                      required
+                      class="mt-1"
+                      label="Type name"
+                      v-model="typeName"
+                      prepend-icon="info"
+                    ></v-text-field>
                     <div class="verror">
                       <span v-if="$v.typeName.$invalid && $v.$dirty">Name is required.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field class="mt-1" multi-line label="Description"
-                      v-model="typeDescription" prepend-icon="subject">
-                    </v-text-field>
+                    <v-text-field
+                      class="mt-1"
+                      multi-line
+                      label="Description"
+                      v-model="typeDescription"
+                      prepend-icon="subject"
+                    ></v-text-field>
                     <div class="verror">
                       <span v-if="$v.typeDescription.$invalid && $v.$dirty">Description is required.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-select required :items="containerPolicies" v-model="typeContainerPolicy"
-                      label="Container policy" prepend-icon="developer_board"></v-select>
+                    <v-select
+                      required
+                      :items="containerPolicies"
+                      v-model="typeContainerPolicy"
+                      label="Container policy"
+                      prepend-icon="developer_board"
+                    ></v-select>
                     <div class="verror">
-                      <span v-if="$v.typeContainerPolicy.$invalid && $v.$dirty">Container policy is required.</span>
+                      <span
+                        v-if="$v.typeContainerPolicy.$invalid && $v.$dirty"
+                      >Container policy is required.</span>
                     </div>
                   </v-flex>
                 </v-layout>
@@ -58,16 +84,19 @@
           </v-card>
         </v-tabs-content>
         <v-tabs-content key="branding" id="branding">
-          <branding-panel 
+          <branding-panel
             ref="branding"
-            :validateImageUrlRequired=true
+            :validateImageUrlRequired="true"
             @payload="onBrandingChanged"
-            :branding="branding">
-          </branding-panel>
+            :branding="branding"
+          ></branding-panel>
         </v-tabs-content>
         <v-tabs-content key="metadata" id="metadata">
-          <metadata-panel :metadata="metadata"
-            @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+          <metadata-panel
+            :metadata="metadata"
+            @itemDeleted="onMetadataDeleted"
+            @itemAdded="onMetadataAdded"
+          />
         </v-tabs-content>
       </v-tabs-items>
     </v-tabs>
@@ -75,17 +104,17 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
 import BrandingPanel from "../common/BrandingPanel";
 import MetadataPanel from "../common/MetadataPanel";
 import AssetTypeChooser from "../assettypes/AssetTypeChooser";
+
+import { arrayToMetadata, metadataToArray } from "../common/Utils";
 import { required, helpers, url } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
+const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 export default {
-
   data: () => ({
     active: null,
     dialogVisible: false,
@@ -99,11 +128,12 @@ export default {
     metadata: [],
     containerPolicies: [
       {
-        "text": "Standalone Device",
-        "value": "Standalone"
-      }, {
-        "text": "Composite Device",
-        "value": "Composite"
+        text: "Standalone Device",
+        value: "Standalone"
+      },
+      {
+        text: "Composite Device",
+        value: "Composite"
       }
     ],
     error: null
@@ -136,7 +166,7 @@ export default {
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
+    generatePayload: function() {
       var payload = {};
       payload.token = this.$data.typeToken;
       payload.name = this.$data.typeName;
@@ -147,11 +177,11 @@ export default {
       payload.foregroundColor = this.$data.branding.foregroundColor;
       payload.borderColor = this.$data.branding.borderColor;
       payload.containerPolicy = this.$data.typeContainerPolicy;
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      payload.metadata = arrayToMetadata(this.$data.metadata);
       return payload;
     },
     // Reset dialog contents.
-    reset: function () {
+    reset: function() {
       this.$data.typeToken = null;
       this.$data.typeName = null;
       this.$data.typeDescription = null;
@@ -167,7 +197,7 @@ export default {
       this.$v.$reset();
     },
     // Load dialog from a given payload.
-    load: function (payload) {
+    load: function(payload) {
       this.reset();
 
       if (payload) {
@@ -181,40 +211,40 @@ export default {
         this.$data.branding.backgroundColor = payload.backgroundColor;
         this.$data.branding.foregroundColor = payload.foregroundColor;
         this.$data.branding.borderColor = payload.borderColor;
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
+        this.$data.metadata = metadataToArray(payload.metadata);
       }
     },
     // Called to open the dialog.
-    openDialog: function () {
+    openDialog: function() {
       this.$data.dialogVisible = true;
     },
     // Called to open the dialog.
-    closeDialog: function () {
+    closeDialog: function() {
       this.$data.dialogVisible = false;
     },
     // Called to show an error message.
-    showError: function (error) {
+    showError: function(error) {
       this.$data.error = error;
     },
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
+    onCreateClicked: function(e) {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       }
-      if(!this.$refs['branding'].isValid()) {
-        this.$data.active = 'branding'
-        return
+      if (!this.$refs["branding"].isValid()) {
+        this.$data.active = "branding";
+        return;
       }
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
+    onCancelClicked: function(e) {
       this.$data.dialogVisible = false;
     },
     // Called when an asset type is chosen or removed.
-    onAssetTypeUpdated: function (assetType) {
+    onAssetTypeUpdated: function(assetType) {
       if (assetType) {
         this.$data.typeAssetTypeToken = assetType.token;
       } else {
@@ -222,7 +252,7 @@ export default {
       }
     },
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
+    onMetadataDeleted: function(name) {
       var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
@@ -231,17 +261,17 @@ export default {
       }
     },
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
+    onMetadataAdded: function(entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
     },
 
     // Called when branding changes
-    onBrandingChanged: function (branding) {
+    onBrandingChanged: function(branding) {
       this.$data.branding = branding;
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,20 +1,30 @@
 <template>
-  <navigation-page icon="globe"
+  <navigation-page
+    icon="globe"
     title="Manage Global Microservice"
-    loadingMessage="Loading microservice configuration ..." :loaded="loaded">
+    loadingMessage="Loading microservice configuration ..."
+    :loaded="loaded"
+  >
     <div slot="content">
-      <unsaved-updates-warning class="mb-3" :unsaved="dirty"
-        @save="onSaveConfiguration" @revert="onRevertConfiguration">
-      </unsaved-updates-warning>
-      <microservice-editor :config="config" :configModel="configModel"
-        :identifier="identifier" @dirty="onConfigurationUpdated">
-      </microservice-editor>
+      <unsaved-updates-warning
+        class="mb-3"
+        :unsaved="dirty"
+        @save="onSaveConfiguration"
+        @revert="onRevertConfiguration"
+      ></unsaved-updates-warning>
+      <microservice-editor
+        :config="config"
+        :configModel="configModel"
+        :identifier="identifier"
+        @dirty="onConfigurationUpdated"
+      ></microservice-editor>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="arrow-left"
+      <navigation-action-button
+        icon="arrow-left"
         tooltip="Back To Global Microservices"
-        @action="onBackToList">
-      </navigation-action-button>
+        @action="onBackToList"
+      ></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -24,11 +34,12 @@ import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import MicroserviceEditor from "../microservice/MicroserviceEditor";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning";
+
 import {
-  _getConfigurationModel,
-  _getGlobalConfiguration,
-  _updateGlobalConfiguration
-} from "../../http/sitewhere-api-wrapper";
+  getConfigurationModel,
+  getGlobalConfiguration,
+  updateGlobalConfiguration
+} from "../../rest/sitewhere-instance-api";
 
 export default {
   data: () => ({
@@ -58,7 +69,7 @@ export default {
 
       // Load configuration data.
       var component = this;
-      _getConfigurationModel(this.$store, this.$data.identifier)
+      getConfigurationModel(this.$store, this.$data.identifier)
         .then(function(response) {
           component.loaded = true;
           component.$data.configModel = response.data;
@@ -75,7 +86,7 @@ export default {
         .catch(function(e) {
           component.loaded = true;
         });
-      _getGlobalConfiguration(this.$store, this.$data.identifier)
+      getGlobalConfiguration(this.$store, this.$data.identifier)
         .then(function(response) {
           component.$data.config = response.data;
         })
@@ -90,7 +101,7 @@ export default {
     // Called when configuration is to be saved.
     onSaveConfiguration: function() {
       var component = this;
-      _updateGlobalConfiguration(
+      updateGlobalConfiguration(
         this.$store,
         this.$data.identifier,
         this.$data.config

@@ -1,39 +1,53 @@
 <template>
   <div>
-    <navigation-page icon="list-alt" title="Manage Batch Operations"
-      loadingMessage="Loading batch operations ..." :loaded="loaded">
+    <navigation-page
+      icon="list-alt"
+      title="Manage Batch Operations"
+      loadingMessage="Loading batch operations ..."
+      :loaded="loaded"
+    >
       <div slot="content">
         <v-layout row wrap v-if="operations">
           <v-flex xs12>
-            <no-results-panel v-if="operations.length === 0"
-              text="No Batch Operations Found">
-            </no-results-panel>
-            <v-data-table v-if="operations.length > 0" class="elevation-2 pa-0"
-              :headers="headers" :items="operations"
-              :hide-actions="true" no-data-text="No Batch Operations Found">
+            <no-results-panel v-if="operations.length === 0" text="No Batch Operations Found"></no-results-panel>
+            <v-data-table
+              v-if="operations.length > 0"
+              class="elevation-2 pa-0"
+              :headers="headers"
+              :items="operations"
+              :hide-actions="true"
+              no-data-text="No Batch Operations Found"
+            >
               <template slot="items" slot-scope="props">
-                <td width="15%" :title="props.item.operationType">
-                  {{ props.item.operationType }}
-                </td>
-                <td width="15%" :title="props.item.processingStatus">
-                  {{ props.item.processingStatus }}
-                </td>
-                <td width="15%" style="white-space: nowrap"
-                  :title="utils.formatDate(props.item.createdDate)">
-                  {{ utils.formatDate(props.item.createdDate) }}
-                </td>
-                <td width="20%" style="white-space: nowrap"
-                  :title="utils.formatDate(props.item.processingStartedDate)">
-                  {{ utils.formatDate(props.item.processingStartedDate) }}
-                </td>
-                <td width="20%" style="white-space: nowrap"
-                  :title="utils.formatDate(props.item.processingEndedDate)">
-                  {{ utils.formatDate(props.item.processingEndedDate) }}
-                </td>
+                <td width="15%" :title="props.item.operationType">{{ props.item.operationType }}</td>
+                <td
+                  width="15%"
+                  :title="props.item.processingStatus"
+                >{{ props.item.processingStatus }}</td>
+                <td
+                  width="15%"
+                  style="white-space: nowrap"
+                  :title="formatDate(props.item.createdDate)"
+                >{{ formatDate(props.item.createdDate) }}</td>
+                <td
+                  width="20%"
+                  style="white-space: nowrap"
+                  :title="formatDate(props.item.processingStartedDate)"
+                >{{ formatDate(props.item.processingStartedDate) }}</td>
+                <td
+                  width="20%"
+                  style="white-space: nowrap"
+                  :title="formatDate(props.item.processingEndedDate)"
+                >{{ formatDate(props.item.processingEndedDate) }}</td>
                 <td width="10%" title="View Batch Operation">
                   <v-tooltip left>
-                    <v-btn dark icon class="green darken-2" slot="activator"
-                      @click.stop="openBatchOperation(props.item.token)">
+                    <v-btn
+                      dark
+                      icon
+                      class="green darken-2"
+                      slot="activator"
+                      @click.stop="openBatchOperation(props.item.token)"
+                    >
                       <font-awesome-icon class="ma-1 navbutton" icon="arrow-right" size="lg"/>
                     </v-btn>
                     <span>Batch Operation Detail</span>
@@ -43,20 +57,19 @@
             </v-data-table>
           </v-flex>
         </v-layout>
-        <pager :pageSizes="pageSizes" :results="results"
-          @pagingUpdated="updatePaging">
-        </pager>
+        <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging"></pager>
       </div>
     </navigation-page>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
-import { _listBatchOperations } from "../../http/sitewhere-api-wrapper";
+
+import { formatDate, routeTo } from "../common/Utils";
+import { listBatchOperations } from "../../rest/sitewhere-batch-operations-api";
 
 export default {
   data: () => ({
@@ -124,13 +137,6 @@ export default {
     NoResultsPanel
   },
 
-  computed: {
-    // Accessor for utility functions.
-    utils: function() {
-      return Utils;
-    }
-  },
-
   methods: {
     // Update paging values and run query.
     updatePaging: function(paging) {
@@ -143,7 +149,7 @@ export default {
       this.$data.loaded = false;
       var component = this;
       var paging = this.$data.paging.query;
-      _listBatchOperations(this.$store, paging)
+      listBatchOperations(this.$store, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;
@@ -162,7 +168,7 @@ export default {
 
     // Open detail page for batch operation.
     openBatchOperation: function(token) {
-      Utils.routeTo(this, "/batch/" + token);
+      routeTo(this, "/batch/" + token);
     }
   }
 };

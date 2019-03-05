@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex, { Store, StoreOptions } from "vuex";
+import Vuex, { StoreOptions } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import { IUser } from "sitewhere-rest-api/dist/model/users-model";
 import { ITenant } from "sitewhere-rest-api/dist/model/tenants-model";

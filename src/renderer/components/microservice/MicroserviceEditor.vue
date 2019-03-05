@@ -2,12 +2,8 @@
   <span>
     <v-tabs v-if="context" v-model="active">
       <v-tabs-bar dark color="primary">
-        <v-tabs-item key="microservices" href="#microservices">
-          Configuration
-        </v-tabs-item>
-        <v-tabs-item key="scripts" href="#scripts">
-          Scripts
-        </v-tabs-item>
+        <v-tabs-item key="microservices" href="#microservices">Configuration</v-tabs-item>
+        <v-tabs-item key="scripts" href="#scripts">Scripts</v-tabs-item>
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
@@ -15,41 +11,57 @@
           <v-card flat>
             <v-card-text>
               <!-- Banner shown above microservice content -->
-              <microservice-banner :context="context"
-                :contextStack="contextStack" @popContext="onPopContext"
-                @popToContext="onPopToContext" @configureCurrent="onOpenUpdateDialog">
-              </microservice-banner>
+              <microservice-banner
+                :context="context"
+                :contextStack="contextStack"
+                @popContext="onPopContext"
+                @popToContext="onPopToContext"
+                @configureCurrent="onOpenUpdateDialog"
+              ></microservice-banner>
               <!-- Grouped attributes for current context -->
               <v-card class="mb-2">
-                <component-attributes :context="context" :groups="groups"
-                  :identifier="identifier" :tenantToken="tenantToken" 
-                  :readOnly="true" :dirty="dirty">
-                </component-attributes>
+                <component-attributes
+                  :context="context"
+                  :groups="groups"
+                  :identifier="identifier"
+                  :tenantToken="tenantToken"
+                  :readOnly="true"
+                  :dirty="dirty"
+                ></component-attributes>
               </v-card>
               <!-- Elements -->
               <v-card>
-                <component-content :content="content" @addComponent="onAddComponent"
+                <component-content
+                  :content="content"
+                  @addComponent="onAddComponent"
                   @pushContext="onPushChildContext"
-                  @deleteComponent="onDeleteComponent">
-                </component-content>
+                  @deleteComponent="onDeleteComponent"
+                ></component-content>
               </v-card>
             </v-card-text>
           </v-card>
         </v-tabs-content>
         <v-tabs-content key="scripts" id="scripts">
-          <scripts-manager :identifier="identifier" :tenantToken="tenantToken">
-          </scripts-manager>
+          <scripts-manager :identifier="identifier" :tenantToken="tenantToken"></scripts-manager>
         </v-tabs-content>
       </v-tabs-items>
     </v-tabs>
-    <attributes-create-dialog ref="create" :context="editContext"
-      :groups="editGroups" :identifier="identifier" :tenantToken="tenantToken"
-      @componentAdded="onComponentAdded">
-    </attributes-create-dialog>
-    <attributes-update-dialog ref="update" :context="editContext"
-      :groups="editGroups" :identifier="identifier" :tenantToken="tenantToken"
-      @attributesUpdated="onAttributesUpdated">
-    </attributes-update-dialog>
+    <attributes-create-dialog
+      ref="create"
+      :context="editContext"
+      :groups="editGroups"
+      :identifier="identifier"
+      :tenantToken="tenantToken"
+      @componentAdded="onComponentAdded"
+    ></attributes-create-dialog>
+    <attributes-update-dialog
+      ref="update"
+      :context="editContext"
+      :groups="editGroups"
+      :identifier="identifier"
+      :tenantToken="tenantToken"
+      @attributesUpdated="onAttributesUpdated"
+    ></attributes-update-dialog>
   </span>
 </template>
 
@@ -399,7 +411,7 @@ export default {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
         c
       ) {
-        let r = (crypto.getRandomValues(new Uint8Array(1))[0] % 16) | 0;
+        let r = crypto.getRandomValues(new Uint8Array(1))[0] % 16 | 0;
         let v = c === "x" ? r : (r & 0x3) | 0x8;
         return v.toString(16);
       });

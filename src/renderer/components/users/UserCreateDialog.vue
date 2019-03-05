@@ -1,15 +1,21 @@
 <template>
   <div>
-    <user-dialog ref="dialog" title="Create User"
-      width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </user-dialog>
+    <user-dialog
+      ref="dialog"
+      title="Create User"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></user-dialog>
   </div>
 </template>
 
 <script>
 import UserDialog from "./UserDialog";
-import { _createUser } from "../../http/sitewhere-api-wrapper";
+
+import { createUser } from "../../rest/sitewhere-users-api";
 
 export default {
   data: () => ({}),
@@ -34,7 +40,7 @@ export default {
     onCommit: function(payload) {
       console.log(payload);
       var component = this;
-      _createUser(this.$store, payload)
+      createUser(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

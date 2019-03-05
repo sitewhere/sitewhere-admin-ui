@@ -1,44 +1,57 @@
 <template>
   <div v-if="assignment">
     <v-app>
-      <assignment-list-panel :assignment="assignment" headerMode="false">
-      </assignment-list-panel>
+      <assignment-list-panel :assignment="assignment" headerMode="false"></assignment-list-panel>
       <v-card>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="emulator" href="#emulator">
-              Emulator
-            </v-tabs-item>
-            <v-tabs-item key="mqtt" href="#mqtt">
-              MQTT Settings
-            </v-tabs-item>
+            <v-tabs-item key="emulator" href="#emulator">Emulator</v-tabs-item>
+            <v-tabs-item key="mqtt" href="#mqtt">MQTT Settings</v-tabs-item>
             <v-spacer></v-spacer>
-            <navigation-action-button icon="exclamation-triangle" tooltip="Add Alert"
-              @action="onAddAlertClicked"/>
-            <navigation-action-button icon="crosshairs" tooltip="Add Location"
-              @action="onEnterAddLocationMode"/>
-            <navigation-action-button icon="crosshairs" tooltip="Pan to Last Location"
-              @action="onPanToLastLocation"/>
-            <navigation-action-button icon="thermometer-full" tooltip="Add Measurements"
-              @action="onAddMeasurementsClicked"/>
+            <navigation-action-button
+              icon="exclamation-triangle"
+              tooltip="Add Alert"
+              @action="onAddAlertClicked"
+            />
+            <navigation-action-button
+              icon="crosshairs"
+              tooltip="Add Location"
+              @action="onEnterAddLocationMode"
+            />
+            <navigation-action-button
+              icon="crosshairs"
+              tooltip="Pan to Last Location"
+              @action="onPanToLastLocation"
+            />
+            <navigation-action-button
+              icon="thermometer-full"
+              tooltip="Add Measurements"
+              @action="onAddMeasurementsClicked"
+            />
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="emulator" id="emulator" :lazy="true">
               <div>
-                <assignment-emulator-map ref="map" :assignment="assignment"
-                  height="800px" @location="onLocationClicked">
-                </assignment-emulator-map>
-                <v-card class="mqtt-overlay" raised color="green darken-2 white--text" v-if="mqttConnected">
+                <assignment-emulator-map
+                  ref="map"
+                  :assignment="assignment"
+                  height="800px"
+                  @location="onLocationClicked"
+                ></assignment-emulator-map>
+                <v-card
+                  class="mqtt-overlay"
+                  raised
+                  color="green darken-2 white--text"
+                  v-if="mqttConnected"
+                >
                   <v-card-text class="pa-2">
-                    <font-awesome-icon class="mr-2" icon="plug" size="lg"/>
-                    MQTT Connected
+                    <font-awesome-icon class="mr-2" icon="plug" size="lg"/>MQTT Connected
                   </v-card-text>
                 </v-card>
                 <v-card class="mqtt-overlay" raised color="red darken-2 white--text" v-else>
                   <v-card-text class="pa-2">
-                    <font-awesome-icon class="mr-2" icon="plug" size="lg"/>
-                    MQTT Disconnected
+                    <font-awesome-icon class="mr-2" icon="plug" size="lg"/>MQTT Disconnected
                   </v-card-text>
                 </v-card>
               </div>
@@ -49,23 +62,32 @@
                   <v-container fluid>
                     <v-layout row wrap>
                       <v-flex xs12>
-                        <v-text-field class="mt-1" label="MQTT Hostname"
-                          v-model="mqttHostname" prepend-icon="storage">
-                        </v-text-field>
+                        <v-text-field
+                          class="mt-1"
+                          label="MQTT Hostname"
+                          v-model="mqttHostname"
+                          prepend-icon="storage"
+                        ></v-text-field>
                       </v-flex>
                     </v-layout>
                     <v-layout row wrap>
                       <v-flex xs12>
-                        <v-text-field class="mt-1" label="MQTT Port"
-                          v-model="mqttPort" prepend-icon="storage">
-                        </v-text-field>
+                        <v-text-field
+                          class="mt-1"
+                          label="MQTT Port"
+                          v-model="mqttPort"
+                          prepend-icon="storage"
+                        ></v-text-field>
                       </v-flex>
                     </v-layout>
                     <v-layout row wrap>
                       <v-flex xs12>
-                        <v-text-field class="mt-1" label="MQTT Topic"
-                          v-model="mqttTopic" prepend-icon="compare_arrows">
-                        </v-text-field>
+                        <v-text-field
+                          class="mt-1"
+                          label="MQTT Topic"
+                          v-model="mqttTopic"
+                          prepend-icon="compare_arrows"
+                        ></v-text-field>
                       </v-flex>
                     </v-layout>
                   </v-container>
@@ -75,15 +97,13 @@
           </v-tabs-items>
         </v-tabs>
       </v-card>
-      <location-create-dialog ref="locationCreate" :token="token"
-        @locationAdded="onLocationAdded">
-      </location-create-dialog>
-      <measurements-create-dialog ref="mxCreate" :token="token"
-        @locationAdded="onMeasurementsAdded">
-      </measurements-create-dialog>
-      <alert-create-dialog ref="alertCreate" :token="token"
-        @locationAdded="onAlertAdded">
-      </alert-create-dialog>
+      <location-create-dialog ref="locationCreate" :token="token" @locationAdded="onLocationAdded"></location-create-dialog>
+      <measurements-create-dialog
+        ref="mxCreate"
+        :token="token"
+        @locationAdded="onMeasurementsAdded"
+      ></measurements-create-dialog>
+      <alert-create-dialog ref="alertCreate" :token="token" @locationAdded="onAlertAdded"></alert-create-dialog>
     </v-app>
   </div>
 </template>
@@ -96,7 +116,8 @@ import LocationCreateDialog from "./LocationCreateDialog";
 import MeasurementsCreateDialog from "./MeasurementsCreateDialog";
 import AlertCreateDialog from "./AlertCreateDialog";
 import NavigationActionButton from "../common/NavigationActionButton";
-import { _getDeviceAssignment } from "../../http/sitewhere-api-wrapper";
+
+import { getDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";
 
 export default {
   data: () => ({
@@ -174,7 +195,7 @@ export default {
       var component = this;
 
       // Load site information.
-      _getDeviceAssignment(this.$store, token)
+      getDeviceAssignment(this.$store, token)
         .then(function(response) {
           component.onAssignmentLoaded(response.data);
         })

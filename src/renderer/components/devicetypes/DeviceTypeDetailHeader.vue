@@ -1,11 +1,13 @@
 <template>
-  <navigation-header-panel v-if="deviceType" :imageUrl="deviceType.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="220px">
+  <navigation-header-panel
+    v-if="deviceType"
+    :imageUrl="deviceType.imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="220px"
+  >
     <span slot="content">
       <header-field label="Token">
-        <clipboard-copy-field :field="deviceType.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
+        <clipboard-copy-field :field="deviceType.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
       <header-field label="Name">
         <span>{{ deviceType.name }}</span>
@@ -30,17 +32,16 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
+import HeaderField from "../common/HeaderField";
+import ClipboardCopyField from "../common/ClipboardCopyField";
+
+import { formatDate } from "../common/Utils";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['deviceType'],
+  props: ["deviceType"],
 
   components: {
     NavigationHeaderPanel,
@@ -50,18 +51,11 @@ export default {
 
   computed: {
     // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'devicetypes/' + this.deviceType.token + '/label/qrcode'
-    }
-  },
-
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    qrCodeUrl: function() {
+      return "devicetypes/" + this.deviceType.token + "/label/qrcode";
     }
   }
-}
+};
 </script>
 
 <style scoped>

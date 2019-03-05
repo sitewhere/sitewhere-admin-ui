@@ -1,9 +1,7 @@
 <template>
   <div>
     <div v-if="deviceType">
-      <v-card-text>
-        {{ chosenText }}
-      </v-card-text>
+      <v-card-text>{{ chosenText }}</v-card-text>
       <v-list two-line>
         <v-list-tile avatar :key="deviceType.token">
           <v-list-tile-avatar>
@@ -11,8 +9,7 @@
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-html="deviceType.name"></v-list-tile-title>
-            <v-list-tile-sub-title v-html="deviceType.description">
-            </v-list-tile-sub-title>
+            <v-list-tile-sub-title v-html="deviceType.description"></v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-btn icon ripple @click.stop="onDeviceTypeRemoved(true)">
@@ -23,20 +20,20 @@
       </v-list>
     </div>
     <div v-else>
-      <v-card-text>
-        {{ notChosenText }}
-      </v-card-text>
+      <v-card-text>{{ notChosenText }}</v-card-text>
       <v-list v-if="deviceTypes" class="device-type-list" two-line>
         <template v-for="deviceType in deviceTypes">
-          <v-list-tile avatar :key="deviceType.token"
-            @click.stop="onDeviceTypeChosen(deviceType, true)">
+          <v-list-tile
+            avatar
+            :key="deviceType.token"
+            @click.stop="onDeviceTypeChosen(deviceType, true)"
+          >
             <v-list-tile-avatar>
               <img :src="deviceType.imageUrl">
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title v-html="deviceType.name"></v-list-tile-title>
-              <v-list-tile-sub-title v-html="deviceType.description">
-              </v-list-tile-sub-title>
+              <v-list-tile-sub-title v-html="deviceType.description"></v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </template>
@@ -47,7 +44,8 @@
 
 <script>
 import Lodash from "lodash";
-import { _listDeviceTypes } from "../../http/sitewhere-api-wrapper";
+
+import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
 
 export default {
   data: () => ({
@@ -61,7 +59,7 @@ export default {
   created: function() {
     var component = this;
 
-    _listDeviceTypes(this.$store, false, true)
+    listDeviceTypes(this.$store, false, true)
       .then(function(response) {
         component.deviceTypes = response.data.results;
         if (component.value) {

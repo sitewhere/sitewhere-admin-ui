@@ -2,52 +2,54 @@
   <v-card v-if="selectedVersion" height="100%">
     <v-card-text height="100%">
       <v-toolbar dense dark color="primary">
-        <v-toolbar-title class="subheading">
-          {{ scriptTitle }}
-        </v-toolbar-title>
+        <v-toolbar-title class="subheading">{{ scriptTitle }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip top>
           <v-btn dark color="red darken-3" slot="activator" @click="onActivate">
-            <font-awesome-icon class="mr-2" icon="bolt" size="lg"/>
-            Activate
+            <font-awesome-icon class="mr-2" icon="bolt" size="lg"/>Activate
           </v-btn>
           <span>Make Version Active</span>
         </v-tooltip>
         <v-tooltip top>
           <v-btn dark color="blue" slot="activator" @click="onClone">
-            <font-awesome-icon class="mr-2" icon="copy" size="lg"/>
-            Clone
+            <font-awesome-icon class="mr-2" icon="copy" size="lg"/>Clone
           </v-btn>
           <span>Clone as New Version</span>
         </v-tooltip>
         <v-tooltip top>
           <v-btn dark color="green" slot="activator" @click="onSave">
-            <font-awesome-icon class="mr-2" icon="upload" size="lg"/>
-            Save
+            <font-awesome-icon class="mr-2" icon="upload" size="lg"/>Save
           </v-btn>
           <span>Upload Changes</span>
         </v-tooltip>
       </v-toolbar>
       <v-card height="100%">
-        <editor v-model="content" @init="editorInit" lang="groovy" theme="chrome" 
-          :options="aceOptions" width="100%" height="500"></editor>
+        <editor
+          v-model="content"
+          @init="editorInit"
+          lang="groovy"
+          theme="chrome"
+          :options="aceOptions"
+          width="100%"
+          height="500"
+        ></editor>
       </v-card>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import Utils from "../common/Utils";
+import { formatDate } from "../common/Utils";
 import {
-  _getGlobalScriptContent,
-  _getTenantScriptContent,
-  _updateGlobalScript,
-  _updateTenantScript,
-  _cloneGlobalScript,
-  _cloneTenantScript,
-  _activateGlobalScript,
-  _activateTenantScript
-} from "../../http/sitewhere-api-wrapper";
+  getGlobalScriptContent,
+  getTenantScriptContent,
+  updateGlobalScript,
+  updateTenantScript,
+  cloneGlobalScript,
+  cloneTenantScript,
+  activateGlobalScript,
+  activateTenantScript
+} from "../../rest/sitewhere-scripting-api";
 
 export default {
   data: () => ({
@@ -104,16 +106,11 @@ export default {
       require("brace/snippets/javascript"); //snippet
     },
 
-    // Format date.
-    formatDate: function(date) {
-      return Utils.formatDate(date);
-    },
-
     // Update content.
     updateContent: function() {
       var component = this;
       if (!this.tenantToken) {
-        _getGlobalScriptContent(
+        getGlobalScriptContent(
           this.$store,
           this.identifier,
           this.$data.selectedScript.id,
@@ -126,7 +123,7 @@ export default {
             console.log(e);
           });
       } else {
-        _getTenantScriptContent(
+        getTenantScriptContent(
           this.$store,
           this.identifier,
           this.tenantToken,
@@ -154,7 +151,7 @@ export default {
         content: btoa(this.$data.content)
       };
       if (!this.tenantToken) {
-        _updateGlobalScript(
+        updateGlobalScript(
           this.$store,
           this.identifier,
           this.$data.selectedScript.id,
@@ -168,7 +165,7 @@ export default {
             console.log(e);
           });
       } else {
-        _updateTenantScript(
+        updateTenantScript(
           this.$store,
           this.identifier,
           this.tenantToken,
@@ -192,7 +189,7 @@ export default {
         comment: "I am a clone."
       };
       if (!this.tenantToken) {
-        _cloneGlobalScript(
+        cloneGlobalScript(
           this.$store,
           this.identifier,
           this.$data.selectedScript.id,
@@ -206,7 +203,7 @@ export default {
             console.log(e);
           });
       } else {
-        _cloneTenantScript(
+        cloneTenantScript(
           this.$store,
           this.identifier,
           this.tenantToken,
@@ -227,7 +224,7 @@ export default {
     onActivate: function() {
       var component = this;
       if (!this.tenantToken) {
-        _activateGlobalScript(
+        activateGlobalScript(
           this.$store,
           this.identifier,
           this.$data.selectedScript.id,
@@ -240,7 +237,7 @@ export default {
             console.log(e);
           });
       } else {
-        _activateTenantScript(
+        activateTenantScript(
           this.$store,
           this.identifier,
           this.tenantToken,

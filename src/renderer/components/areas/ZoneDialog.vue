@@ -1,55 +1,74 @@
 <template>
   <span>
-    <base-dialog :title="title" :width="width" :visible="dialogVisible"
-      :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-      @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
+    <base-dialog
+      :title="title"
+      :width="width"
+      :visible="dialogVisible"
+      :createLabel="createLabel"
+      :cancelLabel="cancelLabel"
+      :error="error"
+      @createClicked="onCreateClicked"
+      @cancelClicked="onCancelClicked"
+    >
       <v-tabs v-model="active">
         <v-tabs-bar dark color="primary">
-          <v-tabs-item key="settings" href="#settings">
-            Zone Settings
-          </v-tabs-item>
-          <v-tabs-item key="metadata" href="#metadata">
-            Metadata
-          </v-tabs-item>
+          <v-tabs-item key="settings" href="#settings">Zone Settings</v-tabs-item>
+          <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
           <v-tabs-slider></v-tabs-slider>
         </v-tabs-bar>
         <v-tabs-items>
           <v-tabs-content key="settings" id="settings" :lazy="true">
             <v-card flat>
               <v-card-text>
-                <map-with-zone-overlay-panel height='370px' :area='area'
-                  :editedZoneToken='zoneToken' :bounds="zoneBounds"
-                  :borderColor="zoneBorder" :fillColor="zoneFill"
-                  :fillOpacity="zoneOpacity" @boundsUpdated="onBoundsUpdated">
-                </map-with-zone-overlay-panel>
+                <map-with-zone-overlay-panel
+                  height="370px"
+                  :area="area"
+                  :editedZoneToken="zoneToken"
+                  :bounds="zoneBounds"
+                  :borderColor="zoneBorder"
+                  :fillColor="zoneFill"
+                  :fillOpacity="zoneOpacity"
+                  @boundsUpdated="onBoundsUpdated"
+                ></map-with-zone-overlay-panel>
               </v-card-text>
               <v-card-text>
                 <v-container fluid class="pt-0 pb-0 mr-2">
                   <v-layout row wrap>
                     <v-flex xs12>
-                      <v-text-field required class="mt-1" label="Token"
-                        v-model="zoneToken" hide-details prepend-icon="info">
-                      </v-text-field>
+                      <v-text-field
+                        required
+                        class="mt-1"
+                        label="Token"
+                        v-model="zoneToken"
+                        hide-details
+                        prepend-icon="info"
+                      ></v-text-field>
                       <div class="verror">
                         <span v-if="!$v.zoneToken.required && $v.$dirty">Zone token is required.</span>
                         <span v-if="!$v.zoneToken.validToken && $v.$dirty">Zone token is not valid.</span>
                       </div>
                     </v-flex>
                     <v-flex xs8>
-                      <v-text-field required hide-details label="Zone name" 
-                        v-model="zoneName" prepend-icon="info"></v-text-field>
+                      <v-text-field
+                        required
+                        hide-details
+                        label="Zone name"
+                        v-model="zoneName"
+                        prepend-icon="info"
+                      ></v-text-field>
                       <div class="verror">
                         <span v-if="$v.zoneName.$invalid && $v.$dirty">Zone name is required.</span>
                       </div>
-                     </v-flex>
-                    <v-flex xs2 pa-2>
-                      <color-picker text="Border" v-model="zoneBorder">
-                      </color-picker>
                     </v-flex>
                     <v-flex xs2 pa-2>
-                      <color-picker text="Fill" v-model="zoneFill"
-                        @opacityChanged="onFillOpacityUpdated">
-                      </color-picker>
+                      <color-picker text="Border" v-model="zoneBorder"></color-picker>
+                    </v-flex>
+                    <v-flex xs2 pa-2>
+                      <color-picker
+                        text="Fill"
+                        v-model="zoneFill"
+                        @opacityChanged="onFillOpacityUpdated"
+                      ></color-picker>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -57,8 +76,11 @@
             </v-card>
           </v-tabs-content>
           <v-tabs-content key="metadata" id="metadata">
-            <metadata-panel :metadata="metadata"
-              @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+            <metadata-panel
+              :metadata="metadata"
+              @itemDeleted="onMetadataDeleted"
+              @itemAdded="onMetadataAdded"
+            />
           </v-tabs-content>
         </v-tabs-items>
       </v-tabs>
@@ -67,12 +89,13 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
 import MetadataPanel from "../common/MetadataPanel";
 import ColorPicker from "../common/ColorPicker";
 import MapWithZoneOverlayPanel from "./MapWithZoneOverlayPanel";
 import { required, helpers } from "vuelidate/lib/validators";
+
+import { metadataToArray, arrayToMetadata } from "../common/Utils";
 
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
@@ -120,7 +143,7 @@ export default {
       payload.borderColor = this.$data.zoneBorder;
       payload.fillColor = this.$data.zoneFill;
       payload.opacity = this.$data.zoneOpacity;
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      payload.metadata = arrayToMetadata(this.$data.metadata);
       return payload;
     },
 
@@ -147,7 +170,7 @@ export default {
         this.$data.zoneBorder = payload.borderColor;
         this.$data.zoneFill = payload.fillColor;
         this.$data.zoneOpacity = payload.opacity;
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
+        this.$data.metadata = metadataToArray(payload.metadata);
       }
     },
 

@@ -7,7 +7,8 @@ import {
   IAreaCreateRequest,
   IArea,
   IAreaSearchCriteria,
-  IAreaResponseFormat
+  IAreaResponseFormat,
+  IAreaSearchResults
 } from "sitewhere-rest-api/dist/model/areas-model";
 import {
   ISearchCriteria,
@@ -15,7 +16,7 @@ import {
 } from "sitewhere-rest-api/dist/model/common-model";
 import {
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignment
+  IDeviceAssignmentSearchResults
 } from "sitewhere-rest-api/dist/model/device-assignments-model";
 import {
   IDeviceLocation,
@@ -81,9 +82,9 @@ export function listAreas(
   store: Store<SiteWhereUiSettings>,
   criteria: IAreaSearchCriteria,
   format: IAreaResponseFormat
-): Promise<AxiosResponse<IArea[]>> {
+): Promise<AxiosResponse<IAreaSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IArea[]> = SiteWhere.API.Areas.listAreas(
+  let api: AxiosPromise<IAreaSearchResults> = SiteWhere.API.Areas.listAreas(
     axios,
     criteria,
     format
@@ -117,10 +118,10 @@ export function listAssignmentsForArea(
   token: string,
   criteria: ISearchCriteria,
   format: IDeviceAssignmentResponseFormat
-): Promise<AxiosResponse<IDeviceAssignment[]>> {
+): Promise<AxiosResponse<IDeviceAssignmentSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceAssignment[]
+    IDeviceAssignmentSearchResults
   > = SiteWhere.API.Areas.listAssignmentsForArea(
     axios,
     token,

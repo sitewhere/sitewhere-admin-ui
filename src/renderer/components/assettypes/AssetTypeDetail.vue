@@ -1,17 +1,22 @@
 <template>
   <div>
-    <navigation-page v-if="assetType" icon="cog" :title="assetType.name"
-      loadingMessage="Loading asset type ..." :loaded="loaded">
+    <navigation-page
+      v-if="assetType"
+      icon="cog"
+      :title="assetType.name"
+      loadingMessage="Loading asset type ..."
+      :loaded="loaded"
+    >
       <div slot="content">
-        <asset-type-detail-header v-if="assetType" :assetType="assetType"
+        <asset-type-detail-header
+          v-if="assetType"
+          :assetType="assetType"
           @assetTypeDeleted="onAssetTypeDeleted"
-          @assetTypeUpdated="onAssetTypeUpdated">
-        </asset-type-detail-header>
+          @assetTypeUpdated="onAssetTypeUpdated"
+        ></asset-type-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="assets" href="#assets">
-              Assets
-            </v-tabs-item>
+            <v-tabs-item key="assets" href="#assets">Assets</v-tabs-item>
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
@@ -19,40 +24,36 @@
               <v-container fluid grid-list-md v-if="assets">
                 <v-layout row wrap>
                   <v-flex xs6 v-for="(asset) in assets" :key="asset.token">
-                    <asset-list-entry :asset="asset" @assetOpened="onOpenAsset">
-                    </asset-list-entry>
-                 </v-flex>
+                    <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
+                  </v-flex>
                 </v-layout>
               </v-container>
               <pager :results="results" @pagingUpdated="updatePaging">
-                <no-results-panel slot="noresults"
-                  text="No Assets of This Type Found">
-                </no-results-panel>
+                <no-results-panel slot="noresults" text="No Assets of This Type Found"></no-results-panel>
               </pager>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Asset Type"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Asset Type"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Asset Type" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Asset Type" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <asset-type-update-dialog ref="update"
-      :token="assetType.token" @assetTypeUpdated="onAssetTypeUpdated">
-    </asset-type-update-dialog>
-    <asset-type-delete-dialog ref="delete"
-      :token="assetType.token" @assetTypeDeleted="onAssetTypeDeleted">
-    </asset-type-delete-dialog>
+    <asset-type-update-dialog
+      ref="update"
+      :token="assetType.token"
+      @assetTypeUpdated="onAssetTypeUpdated"
+    ></asset-type-update-dialog>
+    <asset-type-delete-dialog
+      ref="delete"
+      :token="assetType.token"
+      @assetTypeDeleted="onAssetTypeDeleted"
+    ></asset-type-delete-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
@@ -61,7 +62,10 @@ import AssetTypeDetailHeader from "./AssetTypeDetailHeader";
 import AssetTypeDeleteDialog from "./AssetTypeDeleteDialog";
 import AssetTypeUpdateDialog from "./AssetTypeUpdateDialog";
 import AssetListEntry from "../assets/AssetListEntry";
-import { _getAssetType, _listAssets } from "../../http/sitewhere-api-wrapper";
+
+import { routeTo } from "../common/Utils";
+import { getAssetType } from "../../rest/sitewhere-asset-types-api";
+import { listAssets } from "../../rest/sitewhere-assets-api";
 
 export default {
   data: () => ({
@@ -114,7 +118,7 @@ export default {
       var component = this;
 
       // Load area information.
-      _getAssetType(this.$store, token)
+      getAssetType(this.$store, token)
         .then(function(response) {
           component.loaded = true;
           component.onDataLoaded(response.data);
@@ -132,7 +136,7 @@ export default {
       let options = {};
       options.assetTypeToken = this.$data.token;
 
-      _listAssets(this.$store, options, paging)
+      listAssets(this.$store, options, paging)
         .then(function(response) {
           component.results = response.data;
           component.$data.assets = response.data.results;
@@ -164,11 +168,11 @@ export default {
     },
     // Called when asset type is deleted.
     onAssetTypeDeleted: function() {
-      Utils.routeTo(this, "/assettypes");
+      routeTo(this, "/assettypes");
     },
     // Open clicked asset.
     onOpenAsset: function(asset) {
-      Utils.routeTo(this, "/assets/" + asset.token);
+      routeTo(this, "/assets/" + asset.token);
     }
   }
 };

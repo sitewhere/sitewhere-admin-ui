@@ -1,17 +1,23 @@
 <template>
   <span>
-    <zone-dialog :area='area' title="Create Zone" width="600"
+    <zone-dialog
+      :area="area"
+      title="Create Zone"
+      width="600"
       ref="dialog"
-      createLabel="Create" cancelLabel="Cancel" mode='create'
-      @payload="onCommit">
-    </zone-dialog>
+      createLabel="Create"
+      cancelLabel="Cancel"
+      mode="create"
+      @payload="onCommit"
+    ></zone-dialog>
   </span>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import ZoneDialog from "./ZoneDialog";
-import { _createZone } from "../../http/sitewhere-api-wrapper";
+
+import { createZone } from "../../rest/sitewhere-zones-api";
 
 export default {
   data: () => ({}),
@@ -33,7 +39,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createZone(this.$store, payload)
+      createZone(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

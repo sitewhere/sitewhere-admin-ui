@@ -1,16 +1,23 @@
 <template>
   <div>
-    <customer-type-dialog ref="dialog" title="Create Customer Type" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit" :customerTypes="customerTypes">
-    </customer-type-dialog>
+    <customer-type-dialog
+      ref="dialog"
+      title="Create Customer Type"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+      :customerTypes="customerTypes"
+    ></customer-type-dialog>
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import CustomerTypeDialog from "./CustomerTypeDialog";
-import { _createCustomerType } from "../../http/sitewhere-api-wrapper";
+
+import { createCustomerType } from "../../rest/sitewhere-customer-types-api";
 
 export default {
   data: () => ({}),
@@ -37,7 +44,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _createCustomerType(this.$store, payload)
+      createCustomerType(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

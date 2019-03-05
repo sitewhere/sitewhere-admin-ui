@@ -1,24 +1,28 @@
 <template>
-  <navigation-page icon="cog" title="Area Types"
-    loadingMessage="Loading area types ..." :loaded="loaded">
+  <navigation-page
+    icon="cog"
+    title="Area Types"
+    loadingMessage="Loading area types ..."
+    :loaded="loaded"
+  >
     <div v-if="areaTypes" slot="content">
       <v-container fluid grid-list-md style="background-color: #f5f5f5;">
         <v-layout row wrap>
-           <v-flex xs6 v-for="(areaType) in areaTypes" :key="areaType.token">
-            <area-type-list-entry :areaType="areaType" :areaTypes="areaTypes"
-              @areaTypeOpened="onOpenAreaType" @areaTypeDeleted="refresh">
-            </area-type-list-entry>
+          <v-flex xs6 v-for="(areaType) in areaTypes" :key="areaType.token">
+            <area-type-list-entry
+              :areaType="areaType"
+              :areaTypes="areaTypes"
+              @areaTypeOpened="onOpenAreaType"
+              @areaTypeDeleted="refresh"
+            ></area-type-list-entry>
           </v-flex>
         </v-layout>
       </v-container>
       <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded"
-        :areaTypes="areaTypes"/>
+      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded" :areaTypes="areaTypes"/>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Area Type"
-        @action="onAddAreaType">
-      </navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Area Type" @action="onAddAreaType"></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -29,7 +33,8 @@ import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import AreaTypeListEntry from "./AreaTypeListEntry";
 import AreaTypeCreateDialog from "./AreaTypeCreateDialog";
-import { _listAreaTypes } from "../../http/sitewhere-api-wrapper";
+
+import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
 
 export default {
   data: () => ({
@@ -59,7 +64,7 @@ export default {
       this.$data.loaded = false;
       var paging = this.$data.paging.query;
       var component = this;
-      _listAreaTypes(this.$store, false, paging)
+      listAreaTypes(this.$store, false, paging)
         .then(function(response) {
           component.loaded = true;
           component.results = response.data;

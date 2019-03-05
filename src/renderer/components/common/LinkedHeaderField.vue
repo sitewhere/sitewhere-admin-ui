@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import HeaderField from "./HeaderField";
+
+import { routeTo } from "../common/Utils";
 
 export default {
   data: () => ({}),
@@ -20,7 +21,7 @@ export default {
   methods: {
     // Handle link clicked.
     onLinkClicked: function() {
-      Utils.routeTo(this, this.url);
+      routeTo(this, this.url);
     }
   }
 };

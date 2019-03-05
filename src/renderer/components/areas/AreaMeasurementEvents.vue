@@ -1,90 +1,96 @@
 <template>
   <div>
-    <v-data-table v-if="mxs && mxs.length > 0" class="elevation-2 pa-0"
-      :headers="headers" :items="mxs" :hide-actions="true"
+    <v-data-table
+      v-if="mxs && mxs.length > 0"
+      class="elevation-2 pa-0"
+      :headers="headers"
+      :items="mxs"
+      :hide-actions="true"
       no-data-text="No Measurements Found for Area"
-      :total-items="0">
+      :total-items="0"
+    >
       <template slot="items" slot-scope="props">
-        <td width="30%" :title="props.item.assetName">
-          {{ props.item.assetName }}
-        </td>
-        <td width="25%" :title="props.item.name">
-          {{ props.item.name }}
-        </td>
-        <td width="25%" :title="props.item.value">
-          {{ props.item.value }}
-        </td>
-        <td width="10%" style="white-space: nowrap" :title="formatDate(props.item.eventDate)">
-          {{ formatDate(props.item.eventDate) }}
-        </td>
-        <td width="10%" style="white-space: nowrap" :title="formatDate(props.item.receivedDate)">
-          {{ formatDate(props.item.receivedDate) }}
-        </td>
+        <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
+        <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
+        <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.eventDate)"
+        >{{ formatDate(props.item.eventDate) }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.receivedDate)"
+        >{{ formatDate(props.item.receivedDate) }}</td>
       </template>
     </v-data-table>
-    <pager :pageSizes="pageSizes" :results="results"
-      @pagingUpdated="updatePaging">
-      <no-results-panel slot="noresults"
-        text="No Measurements Found">
-      </no-results-panel>
+    <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging">
+      <no-results-panel slot="noresults" text="No Measurements Found"></no-results-panel>
     </pager>
   </div>
 </template>
 
 <script>
-import Pager from '../common/Pager'
-import NoResultsPanel from '../common/NoResultsPanel'
-import {_listMeasurementsForArea} from '../../http/sitewhere-api-wrapper'
+import Pager from "../common/Pager";
+import NoResultsPanel from "../common/NoResultsPanel";
+
+import { listMeasurementsForArea } from "../../rest/sitewhere-areas-api";
 
 export default {
-
   data: () => ({
     results: null,
     paging: null,
     mxs: null,
     headers: [
       {
-        align: 'left',
+        align: "left",
         sortable: false,
-        text: 'Asset',
-        value: 'asset'
-      }, {
-        align: 'left',
+        text: "Asset",
+        value: "asset"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Measurement Name',
-        value: 'mxname'
-      }, {
-        align: 'left',
+        text: "Measurement Name",
+        value: "mxname"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Measurement Value',
-        value: 'mxvalue'
-      }, {
-        align: 'left',
+        text: "Measurement Value",
+        value: "mxvalue"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Event Date',
-        value: 'event'
-      }, {
-        align: 'left',
+        text: "Event Date",
+        value: "event"
+      },
+      {
+        align: "left",
         sortable: false,
-        text: 'Received Date',
-        value: 'received'
+        text: "Received Date",
+        value: "received"
       }
     ],
     pageSizes: [
       {
-        text: '25',
+        text: "25",
         value: 25
-      }, {
-        text: '50',
+      },
+      {
+        text: "50",
         value: 50
-      }, {
-        text: '100',
+      },
+      {
+        text: "100",
         value: 100
       }
     ]
   }),
 
-  props: ['area'],
+  props: ["area"],
 
   components: {
     Pager,
@@ -93,46 +99,46 @@ export default {
 
   watch: {
     // Refresh component if area is updated.
-    area: function (value) {
-      this.refresh()
+    area: function(value) {
+      this.refresh();
     }
   },
 
   methods: {
     // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
+    updatePaging: function(paging) {
+      this.$data.paging = paging;
+      this.refresh();
     },
 
     // Refresh list of assignments.
-    refresh: function () {
-      var component = this
-      var areaToken = this.area.token
-      var query = this.$data.paging.query
-      _listMeasurementsForArea(this.$store, areaToken, query)
-        .then(function (response) {
-          component.results = response.data
-          component.mxs = response.data.results
-        }).catch(function (e) {
+    refresh: function() {
+      var component = this;
+      var areaToken = this.area.token;
+      var query = this.$data.paging.query;
+      listMeasurementsForArea(this.$store, areaToken, query)
+        .then(function(response) {
+          component.results = response.data;
+          component.mxs = response.data.results;
         })
+        .catch(function(e) {});
     },
 
     // Called when page number is updated.
-    onPageUpdated: function (pageNumber) {
-      this.$data.pager.page = pageNumber
-      this.refresh()
+    onPageUpdated: function(pageNumber) {
+      this.$data.pager.page = pageNumber;
+      this.refresh();
     },
 
     // Format date.
-    formatDate: function (date) {
+    formatDate: function(date) {
       if (!date) {
-        return 'N/A'
+        return "N/A";
       }
-      return this.$moment(date).format('YYYY-MM-DD H:mm:ss')
+      return this.$moment(date).format("YYYY-MM-DD H:mm:ss");
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
+import { routeTo } from "../common/Utils";
 
 export default {
   data: () => ({}),
@@ -49,7 +49,7 @@ export default {
   methods: {
     // Callen when card is clicked.
     onAssetTypeClicked: function() {
-      Utils.routeTo(this, "/assettypes/" + this.assetType.token);
+      routeTo(this, "/assettypes/" + this.assetType.token);
     }
   }
 };

@@ -3,17 +3,19 @@
     <v-card-text class="pa-0">
       <v-toolbar dense class="grey lighten-3 black--text elevation-0" dark>
         <v-toolbar-title class="namespace-title subheading">
-          <strong>Namespace:</strong> {{ namespace.value }}
+          <strong>Namespace:</strong>
+          {{ namespace.value }}
         </v-toolbar-title>
       </v-toolbar>
       <v-list two-line dense>
-        <div v-for="(command, index) in namespace.commands"
-          :key="command.token">
+        <div v-for="(command, index) in namespace.commands" :key="command.token">
           <v-divider v-if="index > 0"></v-divider>
-          <command-panel :command="command" :deviceType="deviceType"
+          <command-panel
+            :command="command"
+            :deviceType="deviceType"
             @commandDeleted="onCommandDeleted"
-            @commandUpdated="onCommandUpdated">
-          </command-panel>
+            @commandUpdated="onCommandUpdated"
+          ></command-panel>
         </div>
       </v-list>
     </v-card-text>
@@ -21,35 +23,33 @@
 </template>
 
 <script>
-import CommandPanel from '../commands/CommandPanel'
+import CommandPanel from "../commands/CommandPanel";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     CommandPanel
   },
 
-  props: ['namespace', 'deviceType'],
+  props: ["namespace", "deviceType"],
 
   methods: {
     // Called after command has been deleted.
-    onCommandDeleted: function () {
-      this.$emit('commandDeleted')
+    onCommandDeleted: function() {
+      this.$emit("commandDeleted");
     },
 
     // Called after command has been updated.
-    onCommandUpdated: function () {
-      this.$emit('commandUpdated')
+    onCommandUpdated: function() {
+      this.$emit("commandUpdated");
     }
   }
-}
+};
 </script>
 
 <style scoped>
 .namespace-title {
-  font-family: 'courier'
+  font-family: "courier";
 }
 </style>

@@ -1,11 +1,13 @@
 <template>
-  <navigation-header-panel v-if="assetType" :imageUrl="assetType.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="190px">
+  <navigation-header-panel
+    v-if="assetType"
+    :imageUrl="assetType.imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="190px"
+  >
     <span slot="content">
       <header-field label="Token">
-        <clipboard-copy-field :field="assetType.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
+        <clipboard-copy-field :field="assetType.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
       <header-field label="Name">
         <span>{{ assetType.name }}</span>
@@ -24,17 +26,16 @@
 </template>
 
 <script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
+import HeaderField from "../common/HeaderField";
+import ClipboardCopyField from "../common/ClipboardCopyField";
+
+import { formatDate } from "../common/Utils";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['assetType'],
+  props: ["assetType"],
 
   components: {
     NavigationHeaderPanel,
@@ -44,18 +45,11 @@ export default {
 
   computed: {
     // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'assettypes/' + this.assetType.token + '/label/qrcode'
-    }
-  },
-
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
+    qrCodeUrl: function() {
+      return "assettypes/" + this.assetType.token + "/label/qrcode";
     }
   }
-}
+};
 </script>
 
 <style scoped>

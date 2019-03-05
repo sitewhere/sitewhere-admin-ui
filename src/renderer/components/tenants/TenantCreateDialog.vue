@@ -1,19 +1,25 @@
 <template>
   <div>
-    <tenant-dialog ref="dialog" title="Create Tenant"
-      width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </tenant-dialog>
+    <tenant-dialog
+      ref="dialog"
+      title="Create Tenant"
+      width="600"
+      resetOnOpen="true"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></tenant-dialog>
     <!-- <floating-action-button label="Add Tenant" icon="plus"
       @action="onOpenDialog">
-    </floating-action-button> -->
+    </floating-action-button>-->
   </div>
 </template>
 
 <script>
 import FloatingActionButton from "../common/FloatingActionButton";
 import TenantDialog from "./TenantDialog";
-import { _createTenant } from "../../http/sitewhere-api-wrapper";
+
+import { createTenant } from "../../rest/sitewhere-tenants-api";
 
 export default {
   data: () => ({}),
@@ -39,7 +45,7 @@ export default {
     onCommit: function(payload) {
       console.log(payload);
       var component = this;
-      _createTenant(this.$store, payload)
+      createTenant(this.$store, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

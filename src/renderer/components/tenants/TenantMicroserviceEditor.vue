@@ -1,24 +1,33 @@
 <template>
-  <navigation-page v-if="tenant" icon="microchip"
+  <navigation-page
+    v-if="tenant"
+    icon="microchip"
     title="Manage Tenant Microservice"
-    loadingMessage="Loading tenant engine configuration ..." :loaded="loaded">
+    loadingMessage="Loading tenant engine configuration ..."
+    :loaded="loaded"
+  >
     <div slot="content">
-      <tenant-runtimes-block :identifier="identifier"
-        :tenantToken="tenantToken">
-      </tenant-runtimes-block>
-      <unsaved-updates-warning class="mb-3" :unsaved="dirty"
-        @save="onSaveConfiguration" @revert="onRevertConfiguration">
-      </unsaved-updates-warning>
-      <microservice-editor :config="config" :configModel="configModel"
-        :identifier="identifier" :tenantToken="tenantToken"
-        @dirty="onConfigurationUpdated">
-      </microservice-editor>
+      <tenant-runtimes-block :identifier="identifier" :tenantToken="tenantToken"></tenant-runtimes-block>
+      <unsaved-updates-warning
+        class="mb-3"
+        :unsaved="dirty"
+        @save="onSaveConfiguration"
+        @revert="onRevertConfiguration"
+      ></unsaved-updates-warning>
+      <microservice-editor
+        :config="config"
+        :configModel="configModel"
+        :identifier="identifier"
+        :tenantToken="tenantToken"
+        @dirty="onConfigurationUpdated"
+      ></microservice-editor>
     </div>
     <div slot="actions">
-      <navigation-action-button icon="arrow-left"
+      <navigation-action-button
+        icon="arrow-left"
         tooltip="Back To Tenant Microservices"
-        @action="onBackToList">
-      </navigation-action-button>
+        @action="onBackToList"
+      ></navigation-action-button>
     </div>
   </navigation-page>
 </template>
@@ -29,12 +38,13 @@ import NavigationActionButton from "../common/NavigationActionButton";
 import TenantRuntimesBlock from "./TenantRuntimesBlock";
 import MicroserviceEditor from "../microservice/MicroserviceEditor";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning";
+
+import { getTenant } from "../../rest/sitewhere-tenants-api";
 import {
-  _getTenant,
-  _getConfigurationModel,
-  _getTenantConfiguration,
-  _updateTenantConfiguration
-} from "../../http/sitewhere-api-wrapper";
+  getConfigurationModel,
+  getTenantConfiguration,
+  updateTenantConfiguration
+} from "../../rest/sitewhere-instance-api";
 
 export default {
   data: () => ({
@@ -71,7 +81,7 @@ export default {
 
       // Load configuration data.
       var component = this;
-      _getConfigurationModel(this.$store, this.$data.identifier)
+      getConfigurationModel(this.$store, this.$data.identifier)
         .then(function(response) {
           component.$data.configModel = response.data;
           var microservice = response.data.microserviceDetails;
@@ -92,7 +102,7 @@ export default {
         .catch(function(e) {
           component.loaded = true;
         });
-      _getTenantConfiguration(
+      getTenantConfiguration(
         this.$store,
         this.$data.tenantToken,
         this.$data.identifier
@@ -106,7 +116,7 @@ export default {
     // Refresh only tenant information.
     refreshTenant: function() {
       var component = this;
-      _getTenant(this.$store, this.$data.tenantToken, true)
+      getTenant(this.$store, this.$data.tenantToken, true)
         .then(function(response) {
           component.onLoaded(response.data);
         })
@@ -127,7 +137,7 @@ export default {
     // Called when configuration is to be saved.
     onSaveConfiguration: function() {
       var component = this;
-      _updateTenantConfiguration(
+      updateTenantConfiguration(
         this.$store,
         this.$data.tenantToken,
         this.$data.identifier,

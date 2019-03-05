@@ -10,17 +10,13 @@
 </template>
 
 <script>
-
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
+  props: ["label"],
 
-  props: ['label'],
-
-  methods: {
-  }
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

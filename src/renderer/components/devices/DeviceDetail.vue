@@ -1,16 +1,18 @@
 <template>
   <div>
-    <navigation-page v-if="device" icon="microchip" title="Manage Device"
-      loadingMessage="Loading device ..." :loaded="loaded">
+    <navigation-page
+      v-if="device"
+      icon="microchip"
+      title="Manage Device"
+      loadingMessage="Loading device ..."
+      :loaded="loaded"
+    >
       <div slot="content">
-        <device-detail-header :device="device" @deviceDeleted="onDeviceDeleted">
-        </device-detail-header>
+        <device-detail-header :device="device" @deviceDeleted="onDeviceDeleted"></device-detail-header>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
             <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-            <v-tabs-item key="assignments" href="#assignments">
-              Assignment History
-            </v-tabs-item>
+            <v-tabs-item key="assignments" href="#assignments">Assignment History</v-tabs-item>
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="assignments" id="assignments">
@@ -20,25 +22,16 @@
         </v-tabs>
       </div>
       <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Device"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Device"
-          @action="onDelete">
-        </navigation-action-button>
+        <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"></navigation-action-button>
+        <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"></navigation-action-button>
       </div>
     </navigation-page>
-    <device-update-dialog ref="edit" :token="token"
-      @deviceUpdated="onDeviceUpdated">
-    </device-update-dialog>
-    <device-delete-dialog ref="delete" :token="token"
-      @deviceDeleted="onDeviceDeleted">
-    </device-delete-dialog>
+    <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"></device-update-dialog>
+    <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"></device-delete-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import NavigationPage from "../common/NavigationPage";
 import NavigationActionButton from "../common/NavigationActionButton";
 import DeviceDetailHeader from "./DeviceDetailHeader";
@@ -46,7 +39,8 @@ import DeviceAssignmentHistory from "./DeviceAssignmentHistory";
 import DeviceUpdateDialog from "./DeviceUpdateDialog";
 import DeviceDeleteDialog from "./DeviceDeleteDialog";
 
-import { _getDevice } from "../../http/sitewhere-api-wrapper";
+import { routeTo } from "../common/Utils";
+import { getDevice } from "../../rest/sitewhere-devices-api";
 
 export default {
   data: () => ({
@@ -97,7 +91,7 @@ export default {
       options.includeNested = true;
 
       // Load information.
-      _getDevice(this.$store, token, options)
+      getDevice(this.$store, token, options)
         .then(function(response) {
           component.loaded = true;
           component.onDeviceLoaded(response.data);
@@ -132,7 +126,7 @@ export default {
     },
     // Called after device is deleted.
     onDeviceDeleted: function() {
-      Utils.routeTo(this, "/devices");
+      routeTo(this, "/devices");
     }
   }
 };

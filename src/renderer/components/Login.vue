@@ -1,103 +1,119 @@
 <template>
-<v-app>
-  <main>
-    <div class="background">
-      <div class="facets"></div>
-      <div class="overlay"></div>
-    </div>
-    <div class="social">
-      <div style="padding-top: 240px;">
-        <social-button :settings="settings" type="Discord" 
-          :svg="discordSvgContent" :title="discordTitle" 
-          url="https://discord.gg/sq7sH7B" width="400" height="400">
-        </social-button>
-        <social-button :settings="settings" type="GitHub" 
-          :svg="githubSvgContent" :title="githubTitle" 
-          url="https://github.com/sitewhere/sitewhere" width="400" height="400">
-        </social-button>
-        <social-button :settings="settings" type="Website" 
-          :svg="websiteSvgContent" :title="websiteTitle" 
-          url="http://sitewhere.io/en/" width="400" height="400">
-        </social-button>
-        <social-button :settings="settings" type="Twitter" 
-          :svg="twitterSvgContent" :title="twitterTitle" 
-          url="https://twitter.com/sitewhere" width="400" height="400">
-        </social-button>
+  <v-app>
+    <main>
+      <div class="background">
+        <div class="facets"></div>
+        <div class="overlay"></div>
       </div>
-    </div>
-    <v-container>
-      <div style="width: 550px; margin-left: auto; margin-right: auto; position: relative; padding-top: 220px; padding-left: 50px;">
-        <div class="sitewhere-logo"></div>
-        <error-banner :error="error"></error-banner>
-        <v-card-text class="ma-0 pa-1">
-          <div style="width: 100%; text-align: center; color: #333; font-size: 35px; font-family: RobotoRegular">
-            Instance Administration
-          </div>
-        </v-card-text>
-        <v-card-text>
-          <v-layout row wrap>
-            <v-flex xs12 class="mb-2">
-              <v-text-field hide-details label="Username" v-model="username">
-              </v-text-field>
-              <div class="verror">
-                <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
-              </div>
-            </v-flex>
-            <v-flex xs12 class="mb-4">
-              <v-text-field hide-details label="Password" v-model="password"
-                type="password">
-              </v-text-field>
-              <div class="verror">
-                <span v-if="$v.password.$invalid && $v.$dirty">Password is required.</span>
-              </div>
-            </v-flex>
-            <v-flex xs3 class="pr-3">
-              <v-select required :items="protocols" v-model="protocol"
-                label="Protocol"></v-select>
-            </v-flex>
-            <v-flex xs5 class="pr-3">
-              <v-text-field hide-details label="Server" v-model="server">
-              </v-text-field>
-            </v-flex>
-            <v-flex xs4>
-              <v-text-field hide-details label="Port" type="number"
-                v-model="port">
-              </v-text-field>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-        <v-card-actions class="pr-2">
-          <v-spacer></v-spacer>
-          <v-btn type="submit" primary dark @click.native="onLogin" :loading="loggingIn">
-            Login
-          </v-btn>
-        </v-card-actions>
-        <v-dialog v-model="noserver" max-width="300">
-          <v-card>
-            <v-card-title class="headline">Instance Not Available</v-card-title>
-            <v-card-text>The server location specified could not be contacted. Verify that
-              you have started a SiteWhere instance and the microservices have
-              started successfully.
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn primary flat @click.native="noserver = false">OK</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+      <div class="social">
+        <div style="padding-top: 240px;">
+          <social-button
+            :settings="settings"
+            type="Discord"
+            :svg="discordSvgContent"
+            :title="discordTitle"
+            url="https://discord.gg/sq7sH7B"
+            width="400"
+            height="400"
+          ></social-button>
+          <social-button
+            :settings="settings"
+            type="GitHub"
+            :svg="githubSvgContent"
+            :title="githubTitle"
+            url="https://github.com/sitewhere/sitewhere"
+            width="400"
+            height="400"
+          ></social-button>
+          <social-button
+            :settings="settings"
+            type="Website"
+            :svg="websiteSvgContent"
+            :title="websiteTitle"
+            url="http://sitewhere.io/en/"
+            width="400"
+            height="400"
+          ></social-button>
+          <social-button
+            :settings="settings"
+            type="Twitter"
+            :svg="twitterSvgContent"
+            :title="twitterTitle"
+            url="https://twitter.com/sitewhere"
+            width="400"
+            height="400"
+          ></social-button>
+        </div>
       </div>
-    </v-container>
-  </main>
-</v-app>
+      <v-container>
+        <div
+          style="width: 550px; margin-left: auto; margin-right: auto; position: relative; padding-top: 220px; padding-left: 50px;"
+        >
+          <div class="sitewhere-logo"></div>
+          <error-banner :error="error"></error-banner>
+          <v-card-text class="ma-0 pa-1">
+            <div
+              style="width: 100%; text-align: center; color: #333; font-size: 35px; font-family: RobotoRegular"
+            >Instance Administration</div>
+          </v-card-text>
+          <v-card-text>
+            <v-layout row wrap>
+              <v-flex xs12 class="mb-2">
+                <v-text-field hide-details label="Username" v-model="username"></v-text-field>
+                <div class="verror">
+                  <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
+                </div>
+              </v-flex>
+              <v-flex xs12 class="mb-4">
+                <v-text-field hide-details label="Password" v-model="password" type="password"></v-text-field>
+                <div class="verror">
+                  <span v-if="$v.password.$invalid && $v.$dirty">Password is required.</span>
+                </div>
+              </v-flex>
+              <v-flex xs3 class="pr-3">
+                <v-select required :items="protocols" v-model="protocol" label="Protocol"></v-select>
+              </v-flex>
+              <v-flex xs5 class="pr-3">
+                <v-text-field hide-details label="Server" v-model="server"></v-text-field>
+              </v-flex>
+              <v-flex xs4>
+                <v-text-field hide-details label="Port" type="number" v-model="port"></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+          <v-card-actions class="pr-2">
+            <v-spacer></v-spacer>
+            <v-btn type="submit" primary dark @click.native="onLogin" :loading="loggingIn">Login</v-btn>
+          </v-card-actions>
+          <v-dialog v-model="noserver" max-width="300">
+            <v-card>
+              <v-card-title class="headline">Instance Not Available</v-card-title>
+              <v-card-text>
+                The server location specified could not be contacted. Verify that
+                you have started a SiteWhere instance and the microservices have
+                started successfully.
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn primary flat @click.native="noserver = false">OK</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
+      </v-container>
+    </main>
+  </v-app>
 </template>
 
 <script>
 import ErrorBanner from "./common/ErrorBanner";
 import SocialButton from "./SocialButton";
+
 import { required } from "vuelidate/lib/validators";
-import { _getJwt, _getUser } from "../http/sitewhere-api-wrapper";
 import { Settings } from "../libraries/Settings.ts";
 import { GoogleAnalytics } from "../libraries/GoogleAnalytics.ts";
+import { getJwt } from "../rest/sitewhere-api-wrapper";
+import { getUser } from "../rest/sitewhere-users-api";
 
 export default {
   data: () => ({
@@ -193,7 +209,7 @@ export default {
       this.$store.commit("authToken", token);
       this.$store.commit("selectedTenant", null);
 
-      _getJwt(this.$store)
+      getJwt(this.$store)
         .then(function(response) {
           var jwt = response.headers["x-sitewhere-jwt"];
           component.$store.commit("jwt", jwt);
@@ -213,7 +229,7 @@ export default {
       var component = this;
       this.$data.loggingIn = true;
 
-      _getUser(this.$store, this.username)
+      getUser(this.$store, this.username)
         .then(function(response) {
           component.$store.commit("user", response.data);
           component.$router.push("/system");

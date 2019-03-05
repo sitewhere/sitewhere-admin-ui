@@ -3,25 +3,22 @@
     <v-container fluid grid-list-md v-if="areas">
       <v-layout row wrap>
         <v-flex xs6 v-for="(area) in areas" :key="area.token">
-          <area-list-entry :area="area" @openArea="onOpenArea">
-          </area-list-entry>
-       </v-flex>
+          <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
+        </v-flex>
       </v-layout>
     </v-container>
     <pager :results="results" @pagingUpdated="updatePaging">
-      <no-results-panel slot="noresults"
-        text="No Contained Areas Found">
-      </no-results-panel>
+      <no-results-panel slot="noresults" text="No Contained Areas Found"></no-results-panel>
     </pager>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
+import { routeTo } from "../common/Utils";
 import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
 import AreaListEntry from "./AreaListEntry";
-import { _listAreas } from "../../http/sitewhere-api-wrapper";
+import { listAreas } from "../../rest/sitewhere-areas-api";
 
 export default {
   data: () => ({
@@ -66,7 +63,7 @@ export default {
       options.includeAssignments = false;
       options.includeZones = false;
 
-      _listAreas(this.$store, options, paging)
+      listAreas(this.$store, options, paging)
         .then(function(response) {
           component.results = response.data;
           component.areas = response.data.results;
@@ -82,7 +79,7 @@ export default {
 
     // Called to open an area.
     onOpenArea: function(area) {
-      Utils.routeTo(this, "/areas/" + area.token);
+      routeTo(this, "/areas/" + area.token);
     }
   }
 };

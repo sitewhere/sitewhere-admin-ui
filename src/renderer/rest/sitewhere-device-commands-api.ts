@@ -7,7 +7,8 @@ import {
   IDeviceCommandCreateRequest,
   IDeviceCommand,
   IDeviceCommandSearchCriteria,
-  IDeviceCommandResponseFormat
+  IDeviceCommandResponseFormat,
+  IDeviceCommandSearchResults
 } from "sitewhere-rest-api/dist/model/device-commands-model";
 
 /**
@@ -70,10 +71,10 @@ export function listDeviceCommands(
   store: Store<SiteWhereUiSettings>,
   criteria: IDeviceCommandSearchCriteria,
   format: IDeviceCommandResponseFormat
-): Promise<AxiosResponse<IDeviceCommand[]>> {
+): Promise<AxiosResponse<IDeviceCommandSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceCommand[]
+    IDeviceCommandSearchResults
   > = SiteWhere.API.DeviceCommands.listDeviceCommands(axios, criteria, format);
   return loaderWrapper(store, api);
 }
@@ -88,10 +89,10 @@ export function listDeviceCommandsByNamespace(
   store: Store<SiteWhereUiSettings>,
   criteria: IDeviceCommandSearchCriteria,
   format: IDeviceCommandResponseFormat
-): Promise<AxiosResponse<IDeviceCommand[]>> {
+): Promise<AxiosResponse<IDeviceCommandSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceCommand[]
+    IDeviceCommandSearchResults
   > = SiteWhere.API.DeviceCommands.listDeviceCommandsForNamespace(
     axios,
     criteria,

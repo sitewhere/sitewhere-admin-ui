@@ -3,11 +3,15 @@
     <v-card>
       <v-card-text class="subheading pa-0 pl-2">
         <v-container fluid>
-          <attribute-field-panel v-for="attribute in attributeGroup.attributes"
-            :key="attribute.name" :attribute="attribute" :identifier="identifier"
-            :tenantToken="tenantToken" :readOnly="readOnly"
-            @attributeUpdated="onAttributeUpdated">
-          </attribute-field-panel>
+          <attribute-field-panel
+            v-for="attribute in attributeGroup.attributes"
+            :key="attribute.name"
+            :attribute="attribute"
+            :identifier="identifier"
+            :tenantToken="tenantToken"
+            :readOnly="readOnly"
+            @attributeUpdated="onAttributeUpdated"
+          ></attribute-field-panel>
         </v-container>
       </v-card-text>
     </v-card>
@@ -15,25 +19,23 @@
 </template>
 
 <script>
-import AttributeFieldPanel from './AttributeFieldPanel'
+import AttributeFieldPanel from "./AttributeFieldPanel";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['attributeGroup', 'readOnly', 'identifier', 'tenantToken'],
+  props: ["attributeGroup", "readOnly", "identifier", "tenantToken"],
 
   components: {
     AttributeFieldPanel
   },
 
   methods: {
-    onAttributeUpdated: function (updated) {
-      this.$emit('attributeUpdated', updated)
+    onAttributeUpdated: function(updated) {
+      this.$emit("attributeUpdated", updated);
     }
   }
-}
+};
 </script>
 
 <style scoped>

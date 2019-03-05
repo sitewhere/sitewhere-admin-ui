@@ -1,18 +1,19 @@
 <template>
-  <base-dialog :title="title" :width="width" :visible="dialogVisible"
-    :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-    @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
+  <base-dialog
+    :title="title"
+    :width="width"
+    :visible="dialogVisible"
+    :createLabel="createLabel"
+    :cancelLabel="cancelLabel"
+    :error="error"
+    @createClicked="onCreateClicked"
+    @cancelClicked="onCancelClicked"
+  >
     <v-tabs v-model="active">
       <v-tabs-bar dark color="primary">
-        <v-tabs-item key="details" href="#details">
-          Tenant Details
-        </v-tabs-item>
-        <v-tabs-item key="branding" href="#branding">
-          Branding
-        </v-tabs-item>
-        <v-tabs-item key="metadata" href="#metadata">
-          Metadata
-        </v-tabs-item>
+        <v-tabs-item key="details" href="#details">Tenant Details</v-tabs-item>
+        <v-tabs-item key="branding" href="#branding">Branding</v-tabs-item>
+        <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
@@ -22,52 +23,85 @@
               <v-container fluid>
                 <v-layout row wrap>
                   <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Tenant token"
-                      v-model="tenantToken" hide-details prepend-icon="info">
-                    </v-text-field>
+                    <v-text-field
+                      required
+                      class="mt-1"
+                      label="Tenant token"
+                      v-model="tenantToken"
+                      hide-details
+                      prepend-icon="info"
+                    ></v-text-field>
                     <div class="verror">
                       <span v-if="!$v.tenantToken.required && $v.$dirty">Tenant token is required.</span>
-                      <span v-if="!$v.tenantToken.validToken && $v.$dirty">Tenant token is not valid.</span>
+                      <span
+                        v-if="!$v.tenantToken.validToken && $v.$dirty"
+                      >Tenant token is not valid.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Name"
-                      v-model="tenantName" hide-details prepend-icon="info">
-                    </v-text-field>
+                    <v-text-field
+                      required
+                      class="mt-1"
+                      label="Name"
+                      v-model="tenantName"
+                      hide-details
+                      prepend-icon="info"
+                    ></v-text-field>
                     <div class="verror">
                       <span v-if="$v.tenantName.$invalid && $v.$dirty">Name is required.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field required class="mt-1"
-                      label="Authentication Token" v-model="tenantAuthToken"
-                      hide-details prepend-icon="https">
-                    </v-text-field>
+                    <v-text-field
+                      required
+                      class="mt-1"
+                      label="Authentication Token"
+                      v-model="tenantAuthToken"
+                      hide-details
+                      prepend-icon="https"
+                    ></v-text-field>
                     <div class="verror">
-                      <span v-if="$v.tenantAuthToken.$invalid && $v.$dirty">Authentication Token is required.</span>
+                      <span
+                        v-if="$v.tenantAuthToken.$invalid && $v.$dirty"
+                      >Authentication Token is required.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-select label="Authorized users"
-                      v-bind:items="allUsers" v-model="tenantAuthUsers" multiple
-                      item-text="username" item-value="username"
-                      chips prepend-icon="info">
-                    </v-select>
+                    <v-select
+                      label="Authorized users"
+                      v-bind:items="allUsers"
+                      v-model="tenantAuthUsers"
+                      multiple
+                      item-text="username"
+                      item-value="username"
+                      chips
+                      prepend-icon="info"
+                    ></v-select>
                   </v-flex>
                   <v-flex xs12>
-                    <v-select required :items="templatesList"
-                      v-model="tenantTemplateId" label="Template"
-                      item-text="name" item-value="id"
-                      prepend-icon="info"></v-select>
+                    <v-select
+                      required
+                      :items="templatesList"
+                      v-model="tenantTemplateId"
+                      label="Template"
+                      item-text="name"
+                      item-value="id"
+                      prepend-icon="info"
+                    ></v-select>
                     <div class="verror">
                       <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty">Template is required.</span>
                     </div>
                   </v-flex>
                   <v-flex xs12>
-                    <v-select required :items="datasetsList"
-                      v-model="datasetTemplateId" label="Dataset"
-                      item-text="name" item-value="id"
-                      prepend-icon="info"></v-select>
+                    <v-select
+                      required
+                      :items="datasetsList"
+                      v-model="datasetTemplateId"
+                      label="Dataset"
+                      item-text="name"
+                      item-value="id"
+                      prepend-icon="info"
+                    ></v-select>
                     <div class="verror">
                       <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty">Dataset is required.</span>
                     </div>
@@ -78,16 +112,19 @@
           </v-card>
         </v-tabs-content>
         <v-tabs-content key="branding" id="branding">
-          <branding-panel 
+          <branding-panel
             ref="branding"
             @payload="onBrandingChanged"
-            :validateImageUrlRequired=true
-            :branding="branding">
-          </branding-panel>
+            :validateImageUrlRequired="true"
+            :branding="branding"
+          ></branding-panel>
         </v-tabs-content>
         <v-tabs-content key="metadata" id="metadata">
-          <metadata-panel :metadata="metadata"
-            @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+          <metadata-panel
+            :metadata="metadata"
+            @itemDeleted="onMetadataDeleted"
+            @itemAdded="onMetadataAdded"
+          />
         </v-tabs-content>
       </v-tabs-items>
     </v-tabs>
@@ -95,18 +132,19 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import BaseDialog from "../common/BaseDialog";
 import BrandingPanel from "../common/BrandingPanel";
 import MetadataPanel from "../common/MetadataPanel";
+
+import { arrayToMetadata, metadataToArray } from "../common/Utils";
 import { required, url, helpers } from "vuelidate/lib/validators";
 import {
-  _getTenantTemplates,
-  _getDatasetTemplates,
-  _listUsers
-} from "../../http/sitewhere-api-wrapper";
+  listTenantTemplates,
+  listDatasetTemplates
+} from "../../rest/sitewhere-tenants-api";
+import { listUsers } from "../../rest/sitewhere-users-api";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
+const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 export default {
   data: () => ({
@@ -173,7 +211,7 @@ export default {
       payload.authorizedUserIds = this.$data.tenantAuthUsers;
       payload.tenantTemplateId = this.$data.tenantTemplateId;
       payload.datasetTemplateId = this.$data.datasetTemplateId;
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      payload.metadata = arrayToMetadata(this.$data.metadata);
       return payload;
     },
 
@@ -194,20 +232,20 @@ export default {
       this.$data.branding.borderColor = null;
       this.$data.active = "details";
       this.$v.$reset();
-      
+
       // Reload tenant templates list.
       var component = this;
-      _getTenantTemplates(this.$store)
+      listTenantTemplates(this.$store)
         .then(function(response) {
           component.templatesList = response.data;
         })
         .catch(function(e) {});
-      _getDatasetTemplates(this.$store)
+      listDatasetTemplates(this.$store)
         .then(function(response) {
           component.datasetsList = response.data;
         })
         .catch(function(e) {});
-      _listUsers(this.$store, false, 1000)
+      listUsers(this.$store, false, 1000)
         .then(function(response) {
           component.allUsers = response.data.results;
         })
@@ -231,7 +269,7 @@ export default {
         this.$data.branding.backgroundColor = payload.backgroundColor;
         this.$data.branding.foregroundColor = payload.foregroundColor;
         this.$data.branding.borderColor = payload.borderColor;
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
+        this.$data.metadata = metadataToArray(payload.metadata);
       }
     },
 
@@ -257,11 +295,11 @@ export default {
         return;
       }
 
-      if(!this.$refs['branding'].isValid()) {
-        this.$data.active = 'branding'
-        return
+      if (!this.$refs["branding"].isValid()) {
+        this.$data.active = "branding";
+        return;
       }
-      
+
       var payload = this.generatePayload();
       this.$emit("payload", payload);
     },
@@ -288,7 +326,7 @@ export default {
     },
 
     // Called when branding changes
-    onBrandingChanged: function (branding) {
+    onBrandingChanged: function(branding) {
       this.$data.branding = branding;
     }
   }

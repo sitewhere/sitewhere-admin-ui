@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
+import { routeTo } from "../common/Utils";
 
 export default {
   data: () => ({}),
@@ -33,7 +33,7 @@ export default {
   methods: {
     // Callen when card is clicked.
     onCustomerTypeClicked: function() {
-      Utils.routeTo(this, "/customertypes/" + this.customerType.token);
+      routeTo(this, "/customertypes/" + this.customerType.token);
     }
   }
 };
