@@ -129,21 +129,21 @@ export function updateGlobalConfiguration(
 /**
  * Get microservice tenant configuration content.
  * @param store
- * @param tenantId
  * @param identifier
+ * @param tenantId
  */
 export function getTenantConfiguration(
   store: Store<SiteWhereUiSettings>,
-  tenantId: string,
-  identifier: string
+  identifier: string,
+  tenantId: string
 ): Promise<AxiosResponse<IElementContent>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IElementContent
   > = SiteWhere.API.Instance.getTenantConfiguration(
     axios,
-    tenantId,
-    identifier
+    identifier,
+    tenantId
   );
   return loaderWrapper(store, api);
 }
@@ -157,8 +157,8 @@ export function getTenantConfiguration(
  */
 export function updateTenantConfiguration(
   store: Store<SiteWhereUiSettings>,
-  tenantId: string,
   identifier: string,
+  tenantId: string,
   content: IElementContent
 ): Promise<AxiosResponse<void>> {
   let axios: AxiosInstance = createCoreApiCall(store);
@@ -166,8 +166,8 @@ export function updateTenantConfiguration(
     void
   > = SiteWhere.API.Instance.updateTenantConfiguration(
     axios,
-    tenantId,
     identifier,
+    tenantId,
     content
   );
   return loaderWrapper(store, api);

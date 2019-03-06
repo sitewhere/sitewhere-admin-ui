@@ -24,10 +24,6 @@ import { routeTo } from "../common/Utils";
 export default {
   data: () => ({}),
 
-  components: {
-    Utils
-  },
-
   props: ["assetType"],
 
   computed: {

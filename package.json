@@ -59,6 +59,8 @@
     "sass-loader": "^7.1.0",
     "tslint": "^5.13.1",
     "typescript": "^3.3.3333",
+    "vue-class-component": "^7.0.1",
+    "vue-property-decorator": "^8.0.0",
     "vue-template-compiler": "^2.6.8",
     "vue2-ace-editor": "0.0.11",
     "webpack": "^4.29.6"
@@ -80,6 +82,7 @@
     "moment": "^2.21.0",
     "mqtt": "^2.16.0",
     "resolve-url-loader": "^2.2.1",
+    "sitewhere-rest-api": "0.0.2",
     "sockjs-client": "^1.1.4",
     "source-map-support": "^0.5.8",
     "sticky-js": "^1.2.0",
