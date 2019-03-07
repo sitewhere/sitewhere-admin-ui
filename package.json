@@ -49,6 +49,7 @@
     "@types/node": "^10.7.1",
     "@types/universal-analytics": "^0.4.2",
     "@types/uuid": "^3.4.3",
+    "@types/vuelidate": "^0.7.4",
     "electron": "^2.0.17",
     "electron-builder": "^20.39.0",
     "electron-updater": "^3.2.3",

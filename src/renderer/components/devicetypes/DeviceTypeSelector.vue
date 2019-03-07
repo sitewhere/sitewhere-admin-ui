@@ -9,39 +9,44 @@
   ></v-select>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+
+import { handleError } from "../common/Utils";
+import { AxiosResponse } from "axios";
 import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
+import {
+  IDeviceType,
+  IDeviceTypeResponseFormat,
+  IDeviceTypeSearchCriteria,
+  IDeviceTypeSearchResults
+} from "sitewhere-rest-api/dist/model/device-types-model";
 
-export default {
-  data: () => ({
-    deviceTypes: [],
-    selectedToken: null
-  }),
+@Component
+export default class DeviceTypeSelector extends Vue {
+  deviceTypes: IDeviceType[] = [];
+  selectedToken: string | null = null;
 
-  props: ["value"],
+  @Prop(String) readonly value!: string;
 
-  watch: {
-    value: function(updated) {
-      this.$data.selectedToken = updated;
-    },
-    selectedToken: function(updated) {
-      this.$emit("input", updated);
+  async created() {
+    this.selectedToken = this.value;
+    let criteria: IDeviceTypeSearchCriteria = {
+      pageNumber: 1,
+      pageSize: 0
+    };
+    let format: IDeviceTypeResponseFormat = { includeAsset: true };
+    try {
+      let response: AxiosResponse<
+        IDeviceTypeSearchResults
+      > = await listDeviceTypes(this.$store, criteria, format);
+      this.deviceTypes = response.data.results;
+    } catch (err) {
+      handleError(err);
     }
-  },
-
-  // Initially load list of all sites.
-  created: function() {
-    this.$data.selectedToken = this.value;
-    var component = this;
-    listDeviceTypes(this.$store, false, true)
-      .then(function(response) {
-        component.$data.deviceTypes = response.data.results;
-      })
-      .catch(function(e) {});
-  },
-
-  methods: {}
-};
+  }
+}
 </script>
 
 <style scoped>

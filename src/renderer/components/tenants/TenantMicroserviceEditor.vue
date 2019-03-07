@@ -41,6 +41,7 @@ import TenantRuntimesBlock from "./TenantRuntimesBlock.vue";
 import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
 
+import { handleError } from "../common/Utils";
 import { WithRoute } from "../common/WithRoute";
 import { AxiosResponse } from "axios";
 import {
@@ -52,6 +53,8 @@ import {
   IConfigurationModel,
   IElementContent
 } from "sitewhere-rest-api/dist/model/configuration-model";
+import { ITenant } from "sitewhere-rest-api/dist/model/tenants-model";
+import { getTenant } from "../../rest/sitewhere-tenants-api";
 
 @Component({
   components: {
@@ -67,50 +70,75 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
   identifier: string | null = null;
   config: IElementContent | null = null;
   configModel: IConfigurationModel | null = null;
+  tenant: ITenant | null = null;
   dirty: boolean = false;
   loaded: boolean = false;
 
   created() {
     this.tenantToken = this.$route.params.tenantToken;
     this.identifier = this.$route.params.identifier;
-    this.refresh();
+    this.refreshModel();
+    this.refreshConfiguration();
+    this.refreshTenant();
   }
 
-  // Called to refresh data.
-  refresh() {
-    this.loaded = false;
+  // Called to refresh configuration model.
+  async refreshModel() {
+    if (this.identifier) {
+      try {
+        let response: AxiosResponse<
+          IConfigurationModel
+        > = await getConfigurationModel(this.$store, this.identifier);
+        this.configModel = response.data;
+        var microservice = response.data.microserviceDetails;
+        var section = {
+          id: "tenants",
+          title: "Manage Microservice",
+          icon: "layer-group",
+          route: "/tenants/" + this.tenantToken + "/" + microservice.identifier,
+          longTitle: "Manage Tenant Microservice: " + microservice.name
+        };
+        this.loaded = true;
+        this.$store.commit("currentSection", section);
+      } catch (err) {
+        handleError(err);
+      }
+    }
+  }
 
-    // Load configuration data.
+  // Called to refresh configuration data.
+  async refreshConfiguration() {
     if (this.identifier && this.tenantToken) {
-      var component = this;
-      getConfigurationModel(this.$store, this.identifier)
-        .then(function(response) {
-          component.configModel = response.data;
-          var microservice = response.data.microserviceDetails;
-          var section = {
-            id: "tenants",
-            title: "Manage Microservice",
-            icon: "layer-group",
-            route:
-              "/tenants/" +
-              component.tenantToken +
-              "/" +
-              microservice.identifier,
-            longTitle: "Manage Tenant Microservice: " + microservice.name
-          };
-          component.loaded = true;
-          component.$store.commit("currentSection", section);
-        })
-        .catch(function(e) {
-          console.log(e);
-        });
-      getTenantConfiguration(this.$store, this.identifier, this.tenantToken)
-        .then(function(response) {
-          component.config = response.data;
-        })
-        .catch(function(e) {
-          console.log(e);
-        });
+      this.loaded = false;
+      try {
+        let configResponse: AxiosResponse<
+          IElementContent
+        > = await getTenantConfiguration(
+          this.$store,
+          this.identifier,
+          this.tenantToken
+        );
+        this.config = configResponse.data;
+        this.loaded = true;
+      } catch (err) {
+        handleError(err);
+      }
+    }
+  }
+
+  // Called to refresh tenant information.
+  async refreshTenant() {
+    if (this.identifier && this.tenantToken) {
+      try {
+        let response: AxiosResponse<ITenant> = await getTenant(
+          this.$store,
+          this.tenantToken
+        );
+        this.tenant = response.data;
+        this.$store.commit("selectedTenant", this.tenant);
+      } catch (err) {
+        handleError(err);
+      }
     }
   }
 
@@ -140,7 +168,7 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
 
   // Called when configuration is to be reverted.
   onRevertConfiguration() {
-    this.refresh();
+    this.refreshConfiguration();
     this.dirty = false;
   }
 

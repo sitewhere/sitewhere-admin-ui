@@ -1,6 +1,14 @@
 import moment from "moment";
 
 /**
+ * Common error handler.
+ * @param err
+ */
+export function handleError(err: Error): void {
+  console.log(err);
+}
+
+/**
  * Format date in YYYY-MM-DD H:mm:ss format. N/A for null.
  * @param date
  */

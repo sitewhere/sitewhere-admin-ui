@@ -41,92 +41,77 @@
   </v-app>
 </template>
 
-<script>
-import Navigation from "./common/Navigation";
-import ErrorBanner from "./common/ErrorBanner";
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
 
+import Navigation from "./common/Navigation.vue";
+import ErrorBanner from "./common/ErrorBanner.vue";
+
+import { handleError } from "./common/Utils";
+import { AxiosResponse } from "axios";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 
-export default {
-  data: () => ({
-    drawer: true,
-    tenantId: null,
-    sections: [
-      {
-        id: "tenants",
-        title: "Manage Tenants",
-        icon: "layer-group",
-        route: "system/tenants",
-        longTitle: "Manage System Tenants",
-        requireAll: ["ADMINISTER_TENANTS"]
-      },
-      {
-        id: "users",
-        title: "Manage Users",
-        icon: "users",
-        route: "system/users",
-        longTitle: "Manage System Users",
-        requireAll: ["ADMINISTER_USERS"]
-      },
-      {
-        id: "global",
-        title: "Global Microservices",
-        icon: "globe",
-        route: "system/microservices",
-        longTitle: "Manage Global microservices",
-        requireAll: ["ADMINISTER_TENANTS"]
-      }
-    ],
-    userActions: [
-      {
-        id: "logout",
-        title: "Log Out",
-        icon: "power-off"
-      }
-    ],
-    right: null
-  }),
+/** Interface for functional section */
+export interface ISection {
+  id: string;
+  title: string;
+  icon: string;
+  route: string;
+  longTitle: string;
+  requireAll: string[];
+}
 
+/** Interface for toolbar action */
+export interface IAction {
+  id: "logout";
+  title: "Log Out";
+  icon: "power-off";
+}
+
+@Component({
   components: {
     Navigation,
     ErrorBanner
-  },
-
-  computed: {
-    // Get loggied in user.
-    user: function() {
-      return this.$store.getters.user;
+  }
+})
+export default class DeviceTypeSelector extends Vue {
+  drawer: boolean = true;
+  sections: ISection[] = [
+    {
+      id: "tenants",
+      title: "Manage Tenants",
+      icon: "layer-group",
+      route: "system/tenants",
+      longTitle: "Manage System Tenants",
+      requireAll: ["ADMINISTER_TENANTS"]
     },
-    // Get currently selected section.
-    section: function() {
-      return this.$store.getters.currentSection;
+    {
+      id: "users",
+      title: "Manage Users",
+      icon: "users",
+      route: "system/users",
+      longTitle: "Manage System Users",
+      requireAll: ["ADMINISTER_USERS"]
     },
-    fullname: function() {
-      var user = this.$store.getters.user;
-      if (user) {
-        var first = this.$store.getters.user.firstName;
-        var last = this.$store.getters.user.lastName;
-        if (last.length > 1) {
-          return first + " " + last;
-        } else {
-          return first;
-        }
-      }
-      return "Not Logged In";
-    },
-
-    // Get global loading indicator.
-    loading: function() {
-      return this.$store.getters.loading;
-    },
-
-    // Get global error indicator.
-    error: function() {
-      return this.$store.getters.error;
+    {
+      id: "global",
+      title: "Global Microservices",
+      icon: "globe",
+      route: "system/microservices",
+      longTitle: "Manage Global microservices",
+      requireAll: ["ADMINISTER_TENANTS"]
     }
-  },
+  ];
+  userActions: IAction[] = [
+    {
+      id: "logout",
+      title: "Log Out",
+      icon: "power-off"
+    }
+  ];
 
-  created: function() {
+  created() {
     // Set up JWT auto-refresh.
     this.refreshJwt();
 
@@ -138,46 +123,80 @@ export default {
       return;
     }
     this.onSectionClicked(this.$data.sections[0]);
-  },
+  }
 
-  methods: {
-    // Called when a section is clicked.
-    onSectionClicked: function(section) {
-      this.$store.commit("currentSection", section);
-      this.$router.push("/" + section.route);
-    },
-    onUserAction: function(action) {
-      if (action.id === "logout") {
-        this.onLogOut();
+  // Get logged in user.
+  get user() {
+    return this.$store.getters.user;
+  }
+
+  // Get currently selected section.
+  get section() {
+    return this.$store.getters.currentSection;
+  }
+
+  // Get user full name.
+  get fullname() {
+    var user = this.$store.getters.user;
+    if (user) {
+      var first = this.$store.getters.user.firstName;
+      var last = this.$store.getters.user.lastName;
+      if (last.length > 1) {
+        return first + " " + last;
+      } else {
+        return first;
       }
-    },
-    // Called when user requests log out.
-    onLogOut: function() {
-      console.log("Logging out!");
-      this.$store.commit("logOut");
-      this.$router.push("/");
-    },
+    }
+    return "Not Logged In";
+  }
 
-    // Set up timer for reloading JWT.
-    refreshJwt: function() {
-      var component = this;
-      getJwt(this.$store)
-        .then(function(response) {
-          console.log("Refreshed JWT.");
-          var jwt = response.headers["x-sitewhere-jwt"];
-          component.$store.commit("jwt", jwt);
-          setTimeout(function() {
-            component.refreshJwt();
-          }, 1000 * 60 * 5);
-        })
-        .catch(function(e) {
-          console.log("Could not update JWT.");
-          console.log(e);
-          component.onLogOut();
-        });
+  // Get global loading indicator.
+  get loading() {
+    return this.$store.getters.loading;
+  }
+
+  // Get global error indicator.
+  get error() {
+    return this.$store.getters.error;
+  }
+
+  // Called when a section is clicked.
+  onSectionClicked(section: ISection) {
+    this.$store.commit("currentSection", section);
+    this.$router.push("/" + section.route);
+  }
+
+  onUserAction(action: IAction) {
+    if (action.id === "logout") {
+      this.onLogOut();
     }
   }
-};
+
+  // Called when user requests log out.
+  onLogOut() {
+    console.log("Logging out!");
+    this.$store.commit("logOut");
+    this.$router.push("/");
+  }
+
+  // Set up timer for reloading JWT.
+  async refreshJwt() {
+    var component = this;
+    try {
+      let response: AxiosResponse<any> = await getJwt(this.$store);
+      console.log("Refreshed JWT.");
+      var jwt = response.headers["x-sitewhere-jwt"];
+      this.$store.commit("jwt", jwt);
+      setTimeout(function() {
+        component.refreshJwt();
+      }, 1000 * 60 * 5);
+    } catch (err) {
+      handleError(err);
+      console.log("Could not update JWT.");
+      component.onLogOut();
+    }
+  }
+}
 </script>
 
 <style scoped>
