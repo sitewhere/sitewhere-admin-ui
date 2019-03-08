@@ -30,32 +30,38 @@
   </navigation-header-panel>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
+import HeaderField from "../common/HeaderField.vue";
+import LinkedHeaderField from "../common/LinkedHeaderField.vue";
+import ClipboardCopyField from "../common/ClipboardCopyField.vue";
+
 import { formatDate } from "../common/Utils";
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import HeaderField from "../common/HeaderField";
-import LinkedHeaderField from "../common/LinkedHeaderField";
-import ClipboardCopyField from "../common/ClipboardCopyField";
+import { IArea } from "sitewhere-rest-api/dist/model/areas-model";
 
-export default {
-  data: () => ({}),
-
-  props: ["area"],
-
+@Component({
   components: {
     NavigationHeaderPanel,
     HeaderField,
     LinkedHeaderField,
     ClipboardCopyField
-  },
-
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "areas/" + this.area.token + "/label/qrcode";
-    }
   }
-};
+})
+export default class AreaDetailHeader extends Vue {
+  @Prop() readonly area!: IArea;
+
+  // Compute QR code URL.
+  get qrCodeUrl() {
+    return "areas/" + this.area.token + "/label/qrcode";
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

@@ -19,9 +19,9 @@ import {
   IDeviceAssignmentSearchResults
 } from "sitewhere-rest-api/dist/model/device-assignments-model";
 import {
-  IDeviceLocation,
-  IDeviceMeasurement,
-  IDeviceAlert
+  IDeviceLocationSearchResults,
+  IDeviceMeasurementSearchResults,
+  IDeviceAlertSearchResults
 } from "sitewhere-rest-api/dist/model/device-events-model";
 
 /**
@@ -148,10 +148,10 @@ export function listLocationsForCustomer(
   store: Store<SiteWhereUiSettings>,
   token: string,
   criteria: IDateRangeSearchCriteria
-): Promise<AxiosResponse<IDeviceLocation[]>> {
+): Promise<AxiosResponse<IDeviceLocationSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceLocation[]
+    IDeviceLocationSearchResults
   > = SiteWhere.API.Customers.listLocationsForCustomer(axios, token, criteria);
   return loaderWrapper(store, api);
 }
@@ -166,10 +166,10 @@ export function listMeasurementsForCustomer(
   store: Store<SiteWhereUiSettings>,
   token: string,
   criteria: IDateRangeSearchCriteria
-): Promise<AxiosResponse<IDeviceMeasurement[]>> {
+): Promise<AxiosResponse<IDeviceMeasurementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceMeasurement[]
+    IDeviceMeasurementSearchResults
   > = SiteWhere.API.Customers.listMeasurementsForCustomer(
     axios,
     token,
@@ -188,10 +188,10 @@ export function listAlertsForCustomer(
   store: Store<SiteWhereUiSettings>,
   token: string,
   criteria: IDateRangeSearchCriteria
-): Promise<AxiosResponse<IDeviceAlert[]>> {
+): Promise<AxiosResponse<IDeviceAlertSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceAlert[]
+    IDeviceAlertSearchResults
   > = SiteWhere.API.Customers.listAlertsForCustomer(axios, token, criteria);
   return loaderWrapper(store, api);
 }

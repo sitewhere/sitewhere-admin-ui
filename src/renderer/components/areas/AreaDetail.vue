@@ -1,7 +1,6 @@
 <template>
   <div>
     <navigation-page
-      v-if="area"
       icon="map"
       :title="area.name"
       loadingMessage="Loading area ..."
@@ -85,7 +84,7 @@ import AreaDeleteDialog from "./AreaDeleteDialog.vue";
 import ZoneCreateDialog from "./ZoneCreateDialog.vue";
 import { routeTo } from "../common/Utils";
 import { getArea } from "../../rest/sitewhere-areas-api";
-import { WithRoute } from "../common/WithRoute";
+import { WithRoute } from "../common/navigation-model";
 import { Route } from "vue-router/types/router";
 import { IArea } from "sitewhere-rest-api/dist/model/areas-model";
 
@@ -108,9 +107,9 @@ import { IArea } from "sitewhere-rest-api/dist/model/areas-model";
   }
 })
 export default class AreaDetail extends Vue implements WithRoute {
-  token?: string = undefined;
-  parentArea?: IArea = undefined;
-  area?: IArea = undefined;
+  token: string | null = null;
+  parentArea: IArea | null = null;
+  area: IArea | null = null;
   active: boolean = false;
   loaded: boolean = false;
 

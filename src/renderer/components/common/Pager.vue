@@ -85,151 +85,143 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  data: () => ({
-    page: 1,
-    pageSize: null,
-    defaultResults: {
-      numResults: 0,
-      results: []
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop, Watch } from "vue-property-decorator";
+
+import { IPaging } from "../common/navigation-model";
+
+@Component
+export default class DeviceTypeSelector extends Vue {
+  @Prop() readonly results!: { numResults: number; results: {}[] };
+  @Prop() readonly pageSizes!: { text: string; value: number }[];
+
+  page: number = 1;
+  pageSize: number | null = null;
+  defaultResults: { numResults: number; results: {}[] } = {
+    numResults: 0,
+    results: []
+  };
+  defaultPageSizes: { text: string; value: number }[] = [
+    {
+      text: "10",
+      value: 10
     },
-    defaultPageSizes: [
-      {
-        text: "10",
-        value: 10
-      },
-      {
-        text: "25",
-        value: 25
-      },
-      {
-        text: "50",
-        value: 50
-      }
-    ]
-  }),
-
-  props: ["results", "pageSizes"],
-
-  created: function() {
-    var pageSize = this.$data.pageSize;
-    if (!pageSize) {
-      var pageSizes = this.pageSizesWithDefaults;
-      this.$data.pageSize = pageSizes[0].value;
+    {
+      text: "25",
+      value: 25
+    },
+    {
+      text: "50",
+      value: 50
     }
-  },
+  ];
 
-  computed: {
-    // Results with defaults fallback.
-    resultsWithDefaults: function() {
-      return this.results || this.$data.defaultResults;
-    },
-
-    // Total record count.
-    total: function() {
-      return this.resultsWithDefaults.numResults;
-    },
-
-    // Description.
-    description: function() {
-      var size = this.$data.pageSize;
-      var total = this.total;
-      var page = this.$data.page;
-      var first = size * (page - 1) + 1;
-      var last = Math.min(total, first + size - 1);
-      return "" + first + "-" + last + " of " + total;
-    },
-
-    // Calculate number of pages.
-    pageCount: function() {
-      var results = this.resultsWithDefaults;
-      var total = results.numResults;
-      var size = this.$data.pageSize;
-      var mod = total % size;
-      var count = (total / size) | 0;
-      count += mod > 0 ? 1 : 0;
-      return count;
-    },
-
-    // Get list of available page sizes with fallback defaults.
-    pageSizesWithDefaults: function() {
-      return this.pageSizes || this.$data.defaultPageSizes;
-    },
-
-    // Indicates if 'first' button should be enabled.
-    previousEnabled: function() {
-      var page = this.$data.page;
-      return page > 1;
-    },
-
-    // Indicates if 'first' button should be enabled.
-    nextEnabled: function() {
-      var page = this.$data.page;
-      var count = this.pageCount;
-      return page < count;
+  created() {
+    if (!this.pageSize) {
+      this.pageSize = this.pageSizesWithDefaults[0].value;
     }
-  },
+    this.onPagingUpdated();
+  }
 
-  watch: {
-    pageSize: function(newSize) {
-      this.$data.page = 1;
+  // Refresh results on page size updated.
+  @Watch("pageSize") onPageSizeUpdated(val: number, oldVal: number) {
+    this.page = 1;
+    this.onPagingUpdated();
+  }
+
+  // Results with defaults fallback.
+  get resultsWithDefaults(): { numResults: number; results: {}[] } {
+    return this.results || this.defaultResults;
+  }
+
+  // Total record count.
+  get total(): number {
+    return this.resultsWithDefaults.numResults;
+  }
+
+  // Description.
+  get description(): string {
+    let size = this.pageSize || 0;
+    let total = this.total;
+    let page = this.page;
+    var first = size * (page - 1) + 1;
+    var last = Math.min(total, first + size - 1);
+    return "" + first + "-" + last + " of " + total;
+  }
+
+  // Calculate number of pages.
+  get pageCount() {
+    var results = this.resultsWithDefaults;
+    var total = results.numResults;
+    var size = this.pageSize || 0;
+    var mod = total % size;
+    var count = (total / size) | 0;
+    count += mod > 0 ? 1 : 0;
+    return count;
+  }
+
+  // Get list of available page sizes with fallback defaults.
+  get pageSizesWithDefaults(): { text: string; value: number }[] {
+    return this.pageSizes || this.defaultPageSizes;
+  }
+
+  // Indicates if 'first' button should be enabled.
+  get previousEnabled(): boolean {
+    return this.page > 1;
+  }
+
+  // Indicates if 'first' button should be enabled.
+  get nextEnabled(): boolean {
+    return this.page < this.pageCount;
+  }
+
+  // Called to move to first page.
+  onFirstPage() {
+    if (this.page !== 1) {
+      this.page = 1;
       this.onPagingUpdated();
-    }
-  },
-
-  methods: {
-    // Called to move to first page.
-    onFirstPage: function() {
-      var page = this.$data.page;
-      if (page !== 1) {
-        this.$data.page = 1;
-        this.onPagingUpdated();
-      }
-    },
-    // Called to move to previous page.
-    onPreviousPage: function() {
-      var page = this.$data.page;
-      if (page > 1) {
-        this.$data.page = --page;
-        this.onPagingUpdated();
-      }
-    },
-    // Called to refresh data.
-    onRefresh: function() {
-      this.onPagingUpdated();
-    },
-    // Called to move to next page.
-    onNextPage: function() {
-      var page = this.$data.page;
-      var count = this.pageCount;
-      if (page < count) {
-        this.$data.page = ++page;
-        this.onPagingUpdated();
-      }
-    },
-    // Called to move to last page.
-    onLastPage: function() {
-      var page = this.$data.page;
-      var count = this.pageCount;
-      if (page < count) {
-        this.$data.page = count;
-        this.onPagingUpdated();
-      }
-    },
-    // Called when paging values are updated.
-    onPagingUpdated: function() {
-      var page = this.$data.page;
-      var pageSize = this.$data.pageSize;
-      var paging = {
-        page: page,
-        pageSize: pageSize,
-        query: "page=" + page + "&pageSize=" + pageSize
-      };
-      this.$emit("pagingUpdated", paging);
     }
   }
-};
+
+  // Called to move to previous page.
+  onPreviousPage() {
+    if (this.page > 1) {
+      this.page--;
+      this.onPagingUpdated();
+    }
+  }
+
+  // Called to refresh data.
+  onRefresh() {
+    this.onPagingUpdated();
+  }
+
+  // Called to move to next page.
+  onNextPage() {
+    if (this.page < this.pageCount) {
+      this.page++;
+      this.onPagingUpdated();
+    }
+  }
+
+  // Called to move to last page.
+  onLastPage() {
+    if (this.page < this.pageCount) {
+      this.page = this.pageCount;
+      this.onPagingUpdated();
+    }
+  }
+
+  // Called when paging values are updated.
+  onPagingUpdated() {
+    var paging: IPaging = {
+      pageNumber: this.page,
+      pageSize: this.pageSize || 0
+    };
+    this.$emit("pagingUpdated", paging);
+  }
+}
 </script>
 
 <style scoped>

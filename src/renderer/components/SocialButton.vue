@@ -7,31 +7,36 @@
   </v-tooltip>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+
 import Electron from "electron";
-import { GoogleAnalytics } from "../libraries/GoogleAnalytics.ts";
+import { GoogleAnalytics } from "../libraries/GoogleAnalytics";
+import { Settings } from "../libraries/Settings";
 
-export default {
-  data: () => ({}),
+@Component
+export default class SocialButton extends Vue {
+  @Prop() readonly settings!: Settings;
+  @Prop(String) readonly svg!: string;
+  @Prop(String) readonly title!: string;
+  @Prop(String) readonly url!: string;
+  @Prop(String) readonly type!: string;
+  @Prop(String) readonly width!: string;
+  @Prop(String) readonly height!: string;
 
-  props: ["settings", "svg", "title", "url", "type", "width", "height"],
+  get viewBox() {
+    return "0 0 " + this.width + " " + this.height;
+  }
 
-  computed: {
-    viewBox: function() {
-      return "0 0 " + this.width + " " + this.height;
-    }
-  },
-
-  methods: {
-    // Open link in external browser.
-    openLink: function() {
-      if (this.url) {
-        Electron.shell.openExternal(this.url);
-        GoogleAnalytics.sendSocialMediaEvent(this.settings, this.type);
-      }
+  // Open link in external browser.
+  openLink() {
+    if (this.url) {
+      Electron.shell.openExternal(this.url);
+      GoogleAnalytics.sendSocialMediaEvent(this.settings, this.type);
     }
   }
-};
+}
 </script>
 
 <style scoped>

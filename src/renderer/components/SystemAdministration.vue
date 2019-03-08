@@ -75,7 +75,7 @@ export interface IAction {
     ErrorBanner
   }
 })
-export default class DeviceTypeSelector extends Vue {
+export default class SystemAdministration extends Vue {
   drawer: boolean = true;
   sections: ISection[] = [
     {

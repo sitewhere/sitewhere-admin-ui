@@ -25,10 +25,10 @@ import {
 
 @Component
 export default class DeviceTypeSelector extends Vue {
+  @Prop(String) readonly value!: string;
+
   deviceTypes: IDeviceType[] = [];
   selectedToken: string | null = null;
-
-  @Prop(String) readonly value!: string;
 
   async created() {
     this.selectedToken = this.value;

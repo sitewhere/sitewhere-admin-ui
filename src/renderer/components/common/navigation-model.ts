@@ -6,3 +6,11 @@ import { Route } from "vue-router";
 export interface WithRoute {
   $route: Route;
 }
+
+/**
+ * Information used to track paging of results.
+ */
+export interface IPaging {
+  pageNumber: number;
+  pageSize: number;
+}

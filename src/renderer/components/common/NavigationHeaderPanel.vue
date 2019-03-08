@@ -16,51 +16,54 @@
   </v-card>
 </template>
 
-<script>
-import AuthenticatedImage from "../common/AuthenticatedImage";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
-export default {
-  data: () => ({}),
+import AuthenticatedImage from "./AuthenticatedImage.vue";
 
-  props: ["height", "imageUrl", "qrCodeUrl", "icon"],
-
-  computed: {
-    // Style for top-level panel.
-    panelStyle: function() {
-      return {
-        "min-height": this.height
-      };
-    },
-    // Compute style of image.
-    imageStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee"
-      };
-    },
-    // Compute style for QR code URL.
-    qrCodeStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.qrCodeUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee"
-      };
-    }
-  },
-
+@Component({
   components: {
     AuthenticatedImage
-  },
+  }
+})
+export default class NavigationHeaderPanel extends Vue {
+  @Prop() readonly height!: string;
+  @Prop() readonly imageUrl!: string;
+  @Prop() readonly qrCodeUrl!: string;
+  @Prop() readonly icon!: string;
 
-  methods: {}
-};
+  // Style for top-level panel.
+  get panelStyle() {
+    return {
+      "min-height": this.height
+    };
+  }
+
+  // Compute style of image.
+  get imageStyle() {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee"
+    };
+  }
+
+  // Compute style for QR code URL.
+  get qrCodeStyle() {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.qrCodeUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee"
+    };
+  }
+}
 </script>
 
 <style scoped>
