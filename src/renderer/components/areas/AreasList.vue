@@ -1,14 +1,14 @@
 <template>
   <navigation-page icon="map" title="Areas" loadingMessage="Loading areas ..." :loaded="loaded">
     <div slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="areas">
+      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="results">
         <v-layout row wrap>
-          <v-flex xs6 v-for="(area) in areas" :key="area.token">
+          <v-flex xs6 v-for="(area) in matches" :key="area.token">
             <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
           </v-flex>
         </v-layout>
       </v-container>
-      <pager :results="results" @pagingUpdated="updatePaging"></pager>
+      <pager :results="results" @pagingUpdated="onPagingUpdated"></pager>
       <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
     </div>
     <div slot="actions">
@@ -18,18 +18,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
 import NavigationPage from "../common/NavigationPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 import Pager from "../common/Pager.vue";
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
 
-import { IPaging } from "../common/navigation-model";
-import { handleError, routeTo } from "../common/Utils";
-import { AxiosResponse } from "axios";
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,
@@ -37,6 +40,14 @@ import {
   IAreaResponseFormat,
   IAreaSearchResults
 } from "sitewhere-rest-api/dist/model/areas-model";
+import { IAreaTypeSearchCriteria } from "sitewhere-rest-api/dist/model/area-types-model";
+
+export class AreaListComponent extends ListComponent<
+  IArea,
+  IAreaSearchCriteria,
+  IAreaResponseFormat,
+  IAreaSearchResults
+> {}
 
 @Component({
   components: {
@@ -47,44 +58,29 @@ import {
     AreaCreateDialog
   }
 })
-export default class AreasList extends Vue {
-  results: IAreaSearchResults | null = null;
-  paging: IPaging | null = null;
-  areas: IArea[] = [];
-  loaded: boolean = false;
-
-  // Update paging values and run query.
-  updatePaging(paging: IPaging) {
-    this.paging = paging;
-    this.refresh();
+export default class AreasList extends Mixins(AreaListComponent) {
+  /** Build search criteria for list */
+  buildSearchCriteria(): IAreaSearchCriteria {
+    let criteria: IAreaSearchCriteria = {};
+    return criteria;
   }
 
-  // Refresh list of areas.
-  async refresh() {
-    let criteria: IAreaSearchCriteria = {};
-    if (this.paging) {
-      criteria.pageNumber = this.paging.pageNumber;
-      criteria.pageSize = this.paging.pageSize;
-    }
-
+  /** Build response format for list */
+  buildResponseFormat(): IAreaResponseFormat {
     let format: IAreaResponseFormat = {};
     format.includeAreaType = true;
     format.includeAssignments = false;
     format.includeZones = false;
+    return format;
+  }
 
-    try {
-      this.loaded = false;
-      let response: AxiosResponse<IAreaSearchResults> = await listAreas(
-        this.$store,
-        criteria,
-        format
-      );
-      this.results = response.data;
-      this.areas = response.data.results;
-    } catch (err) {
-      handleError(err);
-    }
-    this.loaded = true;
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IAreaTypeSearchCriteria,
+    format: IAreaResponseFormat
+  ): AxiosPromise<IAreaSearchResults> {
+    return listAreas(store, criteria, format);
   }
 
   // Called to open an area.

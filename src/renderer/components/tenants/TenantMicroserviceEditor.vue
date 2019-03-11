@@ -42,7 +42,7 @@ import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
 
 import { handleError } from "../common/Utils";
-import { WithRoute } from "../common/navigation-model";
+import { WithRoute } from "../../libraries/navigation-model";
 import { AxiosResponse } from "axios";
 import {
   getConfigurationModel,

@@ -12,8 +12,8 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
 import Electron from "electron";
-import { GoogleAnalytics } from "../libraries/GoogleAnalytics";
-import { Settings } from "../libraries/Settings";
+import { GoogleAnalytics } from "../libraries/google-analytics";
+import { Settings } from "../libraries/user-settings";
 
 @Component
 export default class SocialButton extends Vue {

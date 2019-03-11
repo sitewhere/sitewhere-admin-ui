@@ -89,7 +89,7 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 
-import { IPaging } from "../common/navigation-model";
+import { IPaging } from "../../libraries/navigation-model";
 
 @Component
 export default class DeviceTypeSelector extends Vue {

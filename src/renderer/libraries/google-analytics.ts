@@ -1,6 +1,6 @@
 import UA from "universal-analytics";
 import IsDev from "electron-is-dev";
-import { Settings } from "./Settings";
+import { Settings } from "./user-settings";
 import { remote } from "electron";
 
 /**

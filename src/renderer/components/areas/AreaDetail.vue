@@ -84,7 +84,7 @@ import AreaDeleteDialog from "./AreaDeleteDialog.vue";
 import ZoneCreateDialog from "./ZoneCreateDialog.vue";
 import { routeTo } from "../common/Utils";
 import { getArea } from "../../rest/sitewhere-areas-api";
-import { WithRoute } from "../common/navigation-model";
+import { WithRoute } from "../../libraries/navigation-model";
 import { Route } from "vue-router/types/router";
 import { IArea } from "sitewhere-rest-api/dist/model/areas-model";
 
