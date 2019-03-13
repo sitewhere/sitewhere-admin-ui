@@ -24,7 +24,7 @@ import { routeTo } from "../common/Utils";
 export default {
   data: () => ({}),
 
-  props: ["customerType", "customerTypes"],
+  props: ["customerType"],
 
   methods: {
     // Callen when card is clicked.

@@ -1,97 +1,104 @@
 <template>
-  <navigation-page
+  <list-page
     icon="layer-group"
     title="Manage Tenants"
     loadingMessage="Loading tenant list ..."
     :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
   >
-    <div slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="tenants">
-        <v-layout row wrap>
-          <v-flex xs12 v-for="(tenant) in tenants" :key="tenant.token">
-            <tenant-list-entry
-              :tenant="tenant"
-              @click="onOpenTenant(tenant)"
-              @openTenant="onOpenTenant(tenant)"
-              @configureTenant="onConfigureTenant(tenant)"
-            ></tenant-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="updatePaging"></pager>
+    <v-flex xs12 v-for="(tenant) in matches" :key="tenant.token">
+      <tenant-list-entry
+        :tenant="tenant"
+        @click="onOpenTenant(tenant)"
+        @openTenant="onOpenTenant(tenant)"
+        @configureTenant="onConfigureTenant(tenant)"
+      ></tenant-list-entry>
+    </v-flex>
+    <template slot="dialogs">
       <tenant-create-dialog ref="add" @tenantAdded="refresh"></tenant-create-dialog>
-    </div>
-    <div slot="actions">
+    </template>
+    <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant"></navigation-action-button>
-    </div>
-  </navigation-page>
+    </template>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import TenantListEntry from "./TenantListEntry";
-import TenantCreateDialog from "./TenantCreateDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListPage from "../common/ListPage.vue";
+import TenantListEntry from "./TenantListEntry.vue";
+import TenantCreateDialog from "./TenantCreateDialog.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { AxiosPromise } from "axios";
 import { listTenants } from "../../rest/sitewhere-tenants-api";
+import {
+  ITenant,
+  ITenantSearchCriteria,
+  ITenantResponseFormat,
+  ITenantSearchResults
+} from "sitewhere-rest-api/dist/model/tenants-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    tenants: null,
-    loaded: false
-  }),
+export class TenantListComponent extends ListComponent<
+  ITenant,
+  ITenantSearchCriteria,
+  ITenantResponseFormat,
+  ITenantSearchResults
+> {}
 
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
+    ListPage,
     TenantListEntry,
-    TenantCreateDialog
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of tenants.
-    refresh: function() {
-      this.$data.loaded = false;
-      var user = this.$store.getters.user;
-      var paging = this.$data.paging.query;
-      var component = this;
-      listTenants(this.$store, null, user.username, true, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.tenants = response.data.results;
-          component.loaded = true;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called to open tenant management for tenant.
-    onOpenTenant: function(tenant) {
-      this.$store.commit("selectedTenant", tenant);
-      this.$router.push("/tenants/" + tenant.token + "/areas");
-    },
-
-    // Called to open tenant detail.
-    onConfigureTenant: function(tenant) {
-      this.$router.push("/system/tenants/" + tenant.token);
-    },
-    // Called to open dialog.
-    onAddTenant: function() {
-      this.$refs.add.onOpenDialog();
-    }
+    TenantCreateDialog,
+    NavigationActionButton
   }
-};
+})
+export default class TenantsList extends Mixins(TenantListComponent) {
+  /** Build search criteria for list */
+  buildSearchCriteria(): ITenantSearchCriteria {
+    let criteria: ITenantSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): ITenantResponseFormat {
+    let format: ITenantResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: ITenantSearchCriteria,
+    format: ITenantResponseFormat
+  ): AxiosPromise<ITenantSearchResults> {
+    return listTenants(store, criteria, format);
+  }
+
+  // Called to open tenant management for tenant.
+  onOpenTenant(tenant: ITenant) {
+    this.$store.commit("selectedTenant", tenant);
+    this.$router.push("/tenants/" + tenant.token + "/areas");
+  }
+
+  // Called to open dialog.
+  onAddTenant() {
+    (this.$refs.add as any).onOpenDialog();
+  }
+
+  // Called to open tenant detail.
+  onConfigureTenant(tenant: ITenant) {
+    this.$router.push("/system/tenants/" + tenant.token);
+  }
+}
 </script>
 
 <style scoped>

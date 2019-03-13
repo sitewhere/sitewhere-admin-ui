@@ -1,103 +1,110 @@
 <template>
-  <navigation-page
+  <list-page
     icon="cog"
     title="Customer Types"
     loadingMessage="Loading customer types ..."
     :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
   >
-    <div v-if="customerTypes" slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;">
-        <v-layout row wrap>
-          <v-flex xs6 v-for="(customerType) in customerTypes" :key="customerType.token">
-            <customer-type-list-entry
-              :customerType="customerType"
-              :customerTypes="customerTypes"
-              @customerTypeOpened="onOpenCustomerType"
-              @customerTypeDeleted="refresh"
-            ></customer-type-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="updatePaging"></pager>
+    <v-flex xs6 v-for="(customerType) in matches" :key="customerType.token">
+      <customer-type-list-entry
+        :customerType="customerType"
+        @customerTypeOpened="onOpenCustomerType"
+        @customerTypeDeleted="refresh"
+      ></customer-type-list-entry>
+    </v-flex>
+    <template slot="dialogs">
       <customer-type-create-dialog
         ref="add"
         @customerTypeAdded="onCustomerTypeAdded"
         :customerTypes="customerTypes"
       />
-    </div>
-    <div slot="actions">
+    </template>
+    <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Customer Type" @action="onAddCustomerType"></navigation-action-button>
-    </div>
-  </navigation-page>
+    </template>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import CustomerTypeListEntry from "./CustomerTypeListEntry";
-import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListPage from "../common/ListPage.vue";
+import CustomerTypeListEntry from "./CustomerTypeListEntry.vue";
+import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { AxiosPromise } from "axios";
 import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
+import {
+  ICustomerType,
+  ICustomerTypeSearchCriteria,
+  ICustomerTypeResponseFormat,
+  ICustomerTypeSearchResults
+} from "sitewhere-rest-api/dist/model/customer-types-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    customerTypes: [],
-    loaded: false
-  }),
+export class AreaListComponent extends ListComponent<
+  ICustomerType,
+  ICustomerTypeSearchCriteria,
+  ICustomerTypeResponseFormat,
+  ICustomerTypeSearchResults
+> {}
 
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
+    ListPage,
     CustomerTypeListEntry,
-    CustomerTypeCreateDialog
-  },
+    CustomerTypeCreateDialog,
+    NavigationActionButton
+  }
+})
+export default class AreasList extends Mixins(AreaListComponent) {
+  /** Build search criteria for list */
+  buildSearchCriteria(): ICustomerTypeSearchCriteria {
+    let criteria: ICustomerTypeSearchCriteria = {};
+    return criteria;
+  }
 
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
+  /** Build response format for list */
+  buildResponseFormat(): ICustomerTypeResponseFormat {
+    let format: ICustomerTypeResponseFormat = {};
+    format.includeContainedCustomerTypes = true;
+    return format;
+  }
 
-    // Refresh list of area types.
-    refresh: function() {
-      this.$data.loaded = false;
-      var paging = this.$data.paging.query;
-      var component = this;
-      listCustomerTypes(this.$store, false, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.$data.customerTypes = response.data.results;
-          component.loaded = true;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: ICustomerTypeSearchCriteria,
+    format: ICustomerTypeResponseFormat
+  ): AxiosPromise<ICustomerTypeSearchResults> {
+    return listCustomerTypes(store, criteria, format);
+  }
 
-    // Called when a customer type is clicked.
-    onOpenCustomerType: function(token) {
-      var tenant = this.$store.getters.selectedTenant;
-      if (tenant) {
-        this.$router.push("/tenants/" + tenant.id + "/customertypes/" + token);
-      }
-    },
-
-    // Called to open dialog.
-    onAddCustomerType: function() {
-      this.$refs.add.onOpenDialog();
-    },
-
-    // Called when a new area type is added.
-    onCustomerTypeAdded: function() {
-      this.refresh();
+  // Called when a customer type is clicked.
+  onOpenCustomerType(token: string) {
+    var tenant = this.$store.getters.selectedTenant;
+    if (tenant) {
+      this.$router.push("/tenants/" + tenant.id + "/customertypes/" + token);
     }
   }
-};
+
+  // Called to open dialog.
+  onAddCustomerType() {
+    (this.$refs.add as any).onOpenDialog();
+  }
+
+  // Called when a new area type is added.
+  onCustomerTypeAdded() {
+    this.refresh();
+  }
+}
 </script>
 
 <style scoped>

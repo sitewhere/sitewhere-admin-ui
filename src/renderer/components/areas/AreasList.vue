@@ -1,20 +1,21 @@
 <template>
-  <navigation-page icon="map" title="Areas" loadingMessage="Loading areas ..." :loaded="loaded">
-    <div slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="results">
-        <v-layout row wrap>
-          <v-flex xs6 v-for="(area) in matches" :key="area.token">
-            <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="onPagingUpdated"></pager>
+  <list-page
+    icon="map"
+    title="Areas"
+    loadingMessage="Loading areas ..."
+    :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <v-flex xs6 v-for="(area) in matches" :key="area.token">
+      <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
+    </v-flex>
+    <template slot="dialogs">
       <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
-    </div>
-    <div slot="actions">
+    </template>
+    <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Area" @action="onAddArea"></navigation-action-button>
-    </div>
-  </navigation-page>
+    </template>
+  </list-page>
 </template>
 
 <script lang="ts">
@@ -23,11 +24,11 @@ import { Component, Mixins } from "vue-property-decorator";
 
 // @ts-ignore: Unused import
 import Vue, { VueConstructor } from "vue";
-import NavigationPage from "../common/NavigationPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
-import Pager from "../common/Pager.vue";
+
+import ListPage from "../common/ListPage.vue";
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
@@ -40,7 +41,6 @@ import {
   IAreaResponseFormat,
   IAreaSearchResults
 } from "sitewhere-rest-api/dist/model/areas-model";
-import { IAreaTypeSearchCriteria } from "sitewhere-rest-api/dist/model/area-types-model";
 
 export class AreaListComponent extends ListComponent<
   IArea,
@@ -51,11 +51,10 @@ export class AreaListComponent extends ListComponent<
 
 @Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
+    ListPage,
     AreaListEntry,
-    AreaCreateDialog
+    AreaCreateDialog,
+    NavigationActionButton
   }
 })
 export default class AreasList extends Mixins(AreaListComponent) {
@@ -77,7 +76,7 @@ export default class AreasList extends Mixins(AreaListComponent) {
   /** Perform search */
   performSearch(
     store: Store<SiteWhereUiSettings>,
-    criteria: IAreaTypeSearchCriteria,
+    criteria: IAreaSearchCriteria,
     format: IAreaResponseFormat
   ): AxiosPromise<IAreaSearchResults> {
     return listAreas(store, criteria, format);

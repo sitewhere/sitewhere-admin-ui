@@ -1,96 +1,99 @@
 <template>
-  <navigation-page
+  <list-page
     icon="building"
     title="Customers"
     loadingMessage="Loading customers ..."
     :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
   >
-    <div slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="customers">
-        <v-layout row wrap>
-          <v-flex xs6 v-for="(customer) in customers" :key="customer.token">
-            <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="updatePaging"></pager>
+    <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+      <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
+    </v-flex>
+    <template slot="dialogs">
       <customer-create-dialog ref="add" @customerAdded="onCustomerAdded"/>
-    </div>
-    <div slot="actions">
+    </template>
+    <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Customer" @action="onAddCustomer"></navigation-action-button>
-    </div>
-  </navigation-page>
+    </template>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import CustomerListEntry from "./CustomerListEntry";
-import CustomerCreateDialog from "./CustomerCreateDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListPage from "../common/ListPage.vue";
+import CustomerListEntry from "./CustomerListEntry.vue";
+import CustomerCreateDialog from "./CustomerCreateDialog.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
+import {
+  ICustomer,
+  ICustomerSearchCriteria,
+  ICustomerResponseFormat,
+  ICustomerSearchResults
+} from "sitewhere-rest-api/dist/model/customers-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    customers: null,
-    loaded: false
-  }),
+export class AreaListComponent extends ListComponent<
+  ICustomer,
+  ICustomerSearchCriteria,
+  ICustomerResponseFormat,
+  ICustomerSearchResults
+> {}
 
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
+    ListPage,
     CustomerListEntry,
-    CustomerCreateDialog
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-    // Refresh list of areas.
-    refresh: function() {
-      this.$data.loaded = false;
-      var paging = this.$data.paging.query;
-      var component = this;
-
-      // Search options.
-      let options = {};
-      options.includeCustomerType = true;
-      options.includeAssignments = false;
-
-      listCustomers(this.$store, options, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.customers = response.data.results;
-          component.loaded = true;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Called to open a customer.
-    onOpenCustomer: function(customer) {
-      routeTo(this, "/customers/" + customer.token);
-    },
-
-    // Called to open dialog.
-    onAddCustomer: function() {
-      this.$refs.add.onOpenDialog();
-    },
-
-    // Called when a new customer is added.
-    onCustomerAdded: function() {
-      this.refresh();
-    }
+    CustomerCreateDialog,
+    NavigationActionButton
   }
-};
+})
+export default class AreasList extends Mixins(AreaListComponent) {
+  /** Build search criteria for list */
+  buildSearchCriteria(): ICustomerSearchCriteria {
+    let criteria: ICustomerSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): ICustomerResponseFormat {
+    let format: ICustomerResponseFormat = {};
+    format.includeCustomerType = true;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: ICustomerSearchCriteria,
+    format: ICustomerResponseFormat
+  ): AxiosPromise<ICustomerSearchResults> {
+    return listCustomers(store, criteria, format);
+  }
+  // Called to open a customer.
+  onOpenCustomer(customer: ICustomer) {
+    routeTo(this, "/customers/" + customer.token);
+  }
+
+  // Called to open dialog.
+  onAddCustomer() {
+    (this.$refs.add as any).onOpenDialog();
+  }
+
+  // Called when a new customer is added.
+  onCustomerAdded() {
+    this.refresh();
+  }
+}
 </script>
 
 <style scoped>

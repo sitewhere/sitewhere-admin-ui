@@ -16,17 +16,17 @@
     </v-card>
   </div>
 </template>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
-<script>
-export default {
-  data: () => ({}),
-
-  props: ["icon", "title", "loaded", "loadingMessage"],
-
-  components: {},
-
-  methods: {}
-};
+@Component({})
+export default class NavigationPage extends Vue {
+  @Prop() readonly icon!: string;
+  @Prop() readonly title!: string;
+  @Prop() readonly loadingMessage!: string;
+  @Prop() readonly loaded!: boolean;
+}
 </script>
 
 <style scoped>

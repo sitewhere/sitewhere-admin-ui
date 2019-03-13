@@ -2,7 +2,7 @@
   <v-card class="grey lighten-3 black--text pa-0">
     <slot v-if="results && results.numResults === 0" name="noresults"></slot>
     <v-divider></v-divider>
-    <v-container v-if="results && results.numResults > 0" class="ma-0 pa-0">
+    <v-container class="ma-0 pa-0">
       <v-layout row wrap>
         <v-flex xs2>
           <v-subheader class="ma-0 pt-0 pr-0">Rows per page</v-subheader>
@@ -92,7 +92,7 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import { IPaging } from "../../libraries/navigation-model";
 
 @Component
-export default class DeviceTypeSelector extends Vue {
+export default class Pager extends Vue {
   @Prop() readonly results!: { numResults: number; results: {}[] };
   @Prop() readonly pageSizes!: { text: string; value: number }[];
 
