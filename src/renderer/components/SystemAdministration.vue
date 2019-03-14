@@ -51,16 +51,7 @@ import ErrorBanner from "./common/ErrorBanner.vue";
 import { handleError } from "./common/Utils";
 import { AxiosResponse } from "axios";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
-
-/** Interface for functional section */
-export interface ISection {
-  id: string;
-  title: string;
-  icon: string;
-  route: string;
-  longTitle: string;
-  requireAll: string[];
-}
+import { INavigationSection } from "../libraries/navigation-model";
 
 /** Interface for toolbar action */
 export interface IAction {
@@ -77,7 +68,7 @@ export interface IAction {
 })
 export default class SystemAdministration extends Vue {
   drawer: boolean = true;
-  sections: ISection[] = [
+  sections: INavigationSection[] = [
     {
       id: "tenants",
       title: "Manage Tenants",
@@ -161,7 +152,7 @@ export default class SystemAdministration extends Vue {
   }
 
   // Called when a section is clicked.
-  onSectionClicked(section: ISection) {
+  onSectionClicked(section: INavigationSection) {
     this.$store.commit("currentSection", section);
     this.$router.push("/" + section.route);
   }

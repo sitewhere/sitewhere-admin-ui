@@ -1,16 +1,17 @@
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import { IPaging } from "./navigation-model";
-import { handleError } from "../components/common/Utils";
+import { handleError, formatDate } from "../components/common/Utils";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../store";
 import { AxiosResponse } from "axios";
+import { AxiosPromise } from "axios";
+import { Route } from "vue-router";
 import {
   ISearchCriteria,
   IResponseFormat,
   ISearchResults
 } from "sitewhere-rest-api/dist/model/common-model";
-import { AxiosPromise } from "axios";
 
 // Defines structure of table headers.
 export type ITableHeaders = {
@@ -84,5 +85,78 @@ export class ListComponent<
       handleError(err);
     }
     this.loaded = true;
+  }
+}
+
+/**
+ * Base class for components that display data for a single record
+ * based on SiteWhere REST services.
+ */
+@Component
+export class DetailComponent<T> extends Vue {
+  token: string | null = null;
+  record: T | null = null;
+  loaded: boolean = false;
+
+  // Called on initial create.
+  created() {
+    this.display(this.$route.params.token);
+  }
+
+  // Called when component is reused.
+  beforeRouteUpdate(to: Route, from: Route, next: any) {
+    console.log("Route updated", to);
+    this.display(to.params.token);
+    next();
+  }
+
+  // Display record with the given token.
+  display(token: string) {
+    this.token = token;
+    this.refresh();
+  }
+
+  /** Return promise for loading record */
+  loadRecord(
+    store: Store<SiteWhereUiSettings>,
+    token: string
+  ): AxiosPromise<T> {
+    throw new Error("Implement loadRecord()");
+  }
+
+  // Refresh list contents.
+  async refresh() {
+    if (!this.token) {
+      throw new Error("Token was not provided for detail page.");
+    }
+    try {
+      this.loaded = false;
+      let promise: AxiosPromise<T> = this.loadRecord(this.$store, this.token);
+      let response: AxiosResponse<T> = await promise;
+      this.record = response.data;
+      this.afterRecordLoaded(this.record);
+    } catch (err) {
+      handleError(err);
+    }
+    this.loaded = true;
+  }
+
+  /** Called after record is loaded */
+  afterRecordLoaded(record: T): void {
+    console.log("Loaded record", record);
+  }
+}
+
+/**
+ * Base class for components that display header data for a
+ * SiteWhere entity.
+ */
+@Component
+export class HeaderComponent<T> extends Vue {
+  @Prop() readonly record!: T;
+
+  // Handle date formatting in a standard way.
+  formatDate(date: Date) {
+    return formatDate(date);
   }
 }

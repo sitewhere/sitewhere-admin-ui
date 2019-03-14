@@ -4,6 +4,7 @@
     title="Areas"
     loadingMessage="Loading areas ..."
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(area) in matches" :key="area.token">

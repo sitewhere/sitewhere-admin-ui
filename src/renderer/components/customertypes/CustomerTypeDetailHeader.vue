@@ -25,31 +25,42 @@
   </navigation-header-panel>
 </template>
 
-<script>
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import HeaderField from "../common/HeaderField";
-import ClipboardCopyField from "../common/ClipboardCopyField";
+<script lang="ts">
+import { HeaderComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
-import { formatDate } from "../common/Utils";
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
 
-export default {
-  data: () => ({}),
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
+import HeaderField from "../common/HeaderField.vue";
+import ClipboardCopyField from "../common/ClipboardCopyField.vue";
+import { ICustomerType } from "sitewhere-rest-api/dist/model/customer-types-model";
 
-  props: ["customerType", "customerTypes"],
+export class CustomerTypeHeaderComponent extends HeaderComponent<
+  ICustomerType
+> {}
 
+@Component({
   components: {
     NavigationHeaderPanel,
     HeaderField,
     ClipboardCopyField
-  },
-
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "customertypes/" + this.customerType.token + "/label/qrcode";
-    }
   }
-};
+})
+export default class CustomerTypeDetailHeader extends Mixins(
+  CustomerTypeHeaderComponent
+) {
+  // Reference record as customer type.
+  get customerType(): ICustomerType {
+    return this.record;
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "customertypes/" + this.customerType.token + "/label/qrcode";
+  }
+}
 </script>
 
 <style scoped>

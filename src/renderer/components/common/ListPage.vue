@@ -35,8 +35,9 @@ export default class ListPage extends Vue {
   @Prop() readonly icon!: string;
   @Prop() readonly title!: string;
   @Prop() readonly loadingMessage!: string;
-  @Prop() readonly loaded!: boolean;
   @Prop() readonly pageSizes!: IPageSizes;
+  @Prop() readonly loaded!: boolean;
+  @Prop() readonly results!: {}[];
 
   /** Update paging values and run query */
   onPagingUpdated(paging: IPaging) {
