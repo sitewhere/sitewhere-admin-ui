@@ -45,7 +45,7 @@ import {
   IAreaTypeSearchResults
 } from "sitewhere-rest-api/dist/model/area-types-model";
 
-export class AreaListComponent extends ListComponent<
+export class AreaTypeListComponent extends ListComponent<
   IAreaType,
   IAreaTypeSearchCriteria,
   IAreaTypeResponseFormat,
@@ -60,7 +60,7 @@ export class AreaListComponent extends ListComponent<
     NavigationActionButton
   }
 })
-export default class AreasList extends Mixins(AreaListComponent) {
+export default class AreaTypesList extends Mixins(AreaTypeListComponent) {
   /** Build search criteria for list */
   buildSearchCriteria(): IAreaTypeSearchCriteria {
     let criteria: IAreaTypeSearchCriteria = {};

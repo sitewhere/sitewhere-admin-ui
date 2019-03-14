@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Style from "../common/Style";
+import { styleForAssignmentStatus } from "../common/Style";
 import AssetMiniPanel from "./AssetMiniPanel";
 import DeviceMiniPanel from "../devices/DeviceMiniPanel";
 import AssignmentStatusButton from "./AssignmentStatusButton";
@@ -45,7 +45,7 @@ export default {
 
   computed: {
     styleForStatus: function() {
-      return Style.styleForAssignmentStatus(this.assignment);
+      return styleForAssignmentStatus(this.assignment);
     }
   },
 

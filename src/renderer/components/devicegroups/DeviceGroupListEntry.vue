@@ -5,45 +5,44 @@
       <div class="group-name ellipsis title">{{ group.name }}</div>
       <div class="group-token ellipsis subheading">{{ group.token }}</div>
       <div class="group-description ellipsis">{{ group.description }}</div>
-      <div class="group-roles ellipsis">Roles:
+      <div class="group-roles ellipsis">
+        Roles:
         <strong>{{ rolesView }}</strong>
       </div>
     </v-card-text>
   </v-card>
 </template>
 
-<script>
-export default {
-  data: function() {
-    return {};
-  },
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-  components: {},
+import { IStyle } from "../common/Style";
+import { IDeviceGroup } from "sitewhere-rest-api/dist/model/device-groups-model";
 
-  props: ["group"],
+@Component({})
+export default class DeviceGroupListEntry extends Vue {
+  @Prop() readonly group!: IDeviceGroup;
 
-  computed: {
-    rolesView: function() {
-      return this.group.roles.join(", ");
-    },
-    // Create background image style.
-    backgroundImageStyle: function() {
-      return {
-        "background-image": "url(" + this.group.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%"
-      };
-    }
-  },
-
-  methods: {
-    // Fire event to have parent refresh content.
-    refresh: function() {
-      this.$emit("refresh");
-    }
+  get rolesView(): string {
+    return this.group.roles.join(", ");
   }
-};
+
+  // Create background image style.
+  get backgroundImageStyle(): IStyle {
+    return {
+      "background-image": "url(" + this.group.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%"
+    };
+  }
+
+  // Fire event to have parent refresh content.
+  refresh() {
+    this.$emit("refresh");
+  }
+}
 </script>
 
 <style scoped>

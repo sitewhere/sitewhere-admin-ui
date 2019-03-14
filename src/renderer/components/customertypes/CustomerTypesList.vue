@@ -16,7 +16,7 @@
     <template slot="dialogs">
       <customer-type-create-dialog
         ref="add"
-        @customerTypeAdded="onCustomerTypeAdded"
+        @customerTypeAdded="refresh"
         :customerTypes="customerTypes"
       />
     </template>
@@ -39,6 +39,7 @@ import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
+import { routeTo } from "../common/Utils";
 import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
@@ -49,7 +50,7 @@ import {
   ICustomerTypeSearchResults
 } from "sitewhere-rest-api/dist/model/customer-types-model";
 
-export class AreaListComponent extends ListComponent<
+export class CustomerTypeListComponent extends ListComponent<
   ICustomerType,
   ICustomerTypeSearchCriteria,
   ICustomerTypeResponseFormat,
@@ -64,7 +65,9 @@ export class AreaListComponent extends ListComponent<
     NavigationActionButton
   }
 })
-export default class AreasList extends Mixins(AreaListComponent) {
+export default class CustomerTypesList extends Mixins(
+  CustomerTypeListComponent
+) {
   /** Build search criteria for list */
   buildSearchCriteria(): ICustomerTypeSearchCriteria {
     let criteria: ICustomerTypeSearchCriteria = {};
@@ -88,21 +91,13 @@ export default class AreasList extends Mixins(AreaListComponent) {
   }
 
   // Called when a customer type is clicked.
-  onOpenCustomerType(token: string) {
-    var tenant = this.$store.getters.selectedTenant;
-    if (tenant) {
-      this.$router.push("/tenants/" + tenant.id + "/customertypes/" + token);
-    }
+  onOpenCustomerType(customerType: ICustomerType) {
+    routeTo(this, "/customertypes/" + customerType.token);
   }
 
   // Called to open dialog.
   onAddCustomerType() {
     (this.$refs.add as any).onOpenDialog();
-  }
-
-  // Called when a new area type is added.
-  onCustomerTypeAdded() {
-    this.refresh();
   }
 }
 </script>

@@ -18,35 +18,36 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-  props: ["asset"],
+import { IStyle } from "../common/Style";
+import { IAsset } from "sitewhere-rest-api/dist/model/assets-model";
 
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.asset.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee",
-        height: "60px",
-        width: "60px"
-      };
-    }
-  },
+@Component({})
+export default class AssetListEntry extends Vue {
+  @Prop() readonly asset!: IAsset;
 
-  methods: {
-    // Handle asset clicked.
-    onAssetClicked: function() {
-      this.$emit("assetOpened", this.asset);
-    }
+  // Compute style of logo.
+  get logoStyle(): IStyle {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.asset.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee",
+      height: "60px",
+      width: "60px"
+    };
   }
-};
+
+  // Handle asset clicked.
+  onAssetClicked() {
+    this.$emit("assetOpened", this.asset);
+  }
+}
 </script>
 
 <style scoped>

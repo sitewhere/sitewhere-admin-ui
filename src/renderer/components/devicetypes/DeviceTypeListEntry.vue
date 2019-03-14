@@ -31,12 +31,7 @@ export default {
   methods: {
     // Called when a device type is clicked.
     onOpenDeviceType: function() {
-      var tenant = this.$store.getters.selectedTenant;
-      if (tenant) {
-        this.$router.push(
-          "/tenants/" + tenant.token + "/devicetypes/" + this.deviceType.token
-        );
-      }
+      this.$emit("deviceTypeOpened", this.deviceType);
     }
   }
 };

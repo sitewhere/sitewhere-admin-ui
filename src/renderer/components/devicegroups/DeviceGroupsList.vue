@@ -1,102 +1,94 @@
 <template>
-  <navigation-page
+  <list-page
     icon="cubes"
-    title="Manage Device Groups"
+    title="Device Groups"
     loadingMessage="Loading device groups ..."
     :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
   >
-    <div slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="groups">
-        <v-layout row wrap>
-          <v-flex xs6 v-for="(group) in groups" :key="group.token">
-            <device-group-list-panel :group="group" class="mb-1" @click.native="onOpenGroup(group)"></device-group-list-panel>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" :pageSizes="pageSizes" @pagingUpdated="updatePaging"></pager>
+    <v-flex xs6 v-for="(group) in matches" :key="group.token">
+      <device-group-list-entry :group="group" class="mb-1" @click="onOpenGroup(group)"></device-group-list-entry>
+    </v-flex>
+    <template slot="dialogs">
       <device-group-create-dialog ref="add" @groupAdded="refresh"></device-group-create-dialog>
-    </div>
-    <div slot="actions">
+    </template>
+    <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Device Group" @action="onAddDeviceGroup"></navigation-action-button>
-    </div>
-  </navigation-page>
+    </template>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import DeviceGroupListPanel from "./DeviceGroupListPanel";
-import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListPage from "../common/ListPage.vue";
+import DeviceGroupListEntry from "./DeviceGroupListEntry.vue";
+import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
 import { listDeviceGroups } from "../../rest/sitewhere-device-groups-api";
+import {
+  IDeviceGroup,
+  IDeviceGroupSearchCriteria,
+  IDeviceGroupResponseFormat,
+  IDeviceGroupSearchResults
+} from "sitewhere-rest-api/dist/model/device-groups-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    groups: null,
-    filter: null,
-    pageSizes: [
-      {
-        text: "20",
-        value: 20
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ],
-    loaded: false
-  }),
+export class DeviceGroupListComponent extends ListComponent<
+  IDeviceGroup,
+  IDeviceGroupSearchCriteria,
+  IDeviceGroupResponseFormat,
+  IDeviceGroupSearchResults
+> {}
 
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
-    DeviceGroupListPanel,
-    DeviceGroupCreateDialog
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of sites.
-    refresh: function() {
-      this.$data.loaded = false;
-      let paging = this.$data.paging.query;
-      let component = this;
-      listDeviceGroups(this.$store, null, false, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.groups = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called to open detail page for group.
-    onOpenGroup: function(group) {
-      routeTo(this, "/groups/" + group.token);
-    },
-
-    // Called to open dialog.
-    onAddDeviceGroup: function() {
-      this.$refs.add.onOpenDialog();
-    }
+    ListPage,
+    DeviceGroupListEntry,
+    DeviceGroupCreateDialog,
+    NavigationActionButton
   }
-};
+})
+export default class DeviceGroupsList extends Mixins(DeviceGroupListComponent) {
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceGroupSearchCriteria {
+    let criteria: IDeviceGroupSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceGroupResponseFormat {
+    let format: IDeviceGroupResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IDeviceGroupSearchCriteria,
+    format: IDeviceGroupResponseFormat
+  ): AxiosPromise<IDeviceGroupSearchResults> {
+    return listDeviceGroups(store, criteria, format);
+  }
+
+  // Called to open detail page for group.
+  onOpenGroup(group: IDeviceGroup) {
+    routeTo(this, "/groups/" + group.token);
+  }
+
+  // Called to open dialog.
+  onAddDeviceGroup() {
+    (this.$refs.add as any).onOpenDialog();
+  }
+}
 </script>
 
 <style scoped>

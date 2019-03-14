@@ -1,5 +1,8 @@
 import { Route } from "vue-router";
 
+// Type declaration for page size options.
+export type IPageSizes = { text: string; value: number }[];
+
 /**
  * Annotates components that can have the current route injected.
  */

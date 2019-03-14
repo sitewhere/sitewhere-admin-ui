@@ -1,86 +1,100 @@
 <template>
-  <navigation-page
+  <list-page
     icon="cog"
-    title="Manage Device Types"
+    title="Device Types"
     loadingMessage="Loading device types ..."
     :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
   >
-    <div slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="deviceTypes">
-        <v-layout row wrap>
-          <v-flex xs6 v-for="(deviceType) in deviceTypes" :key="deviceType.token">
-            <device-type-list-entry :deviceType="deviceType"></device-type-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="updatePaging"></pager>
+    <v-flex xs6 v-for="(deviceType) in matches" :key="deviceType.token">
+      <device-type-list-entry :deviceType="deviceType" @deviceTypeOpened="onOpenDeviceType"></device-type-list-entry>
+    </v-flex>
+    <template slot="dialogs">
       <device-type-create-dialog ref="add" @deviceTypeAdded="onDeviceTypeAdded"/>
-    </div>
-    <div slot="actions">
+    </template>
+    <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Device Type" @action="onAddDeviceType"></navigation-action-button>
-    </div>
-  </navigation-page>
+    </template>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import DeviceTypeListEntry from "./DeviceTypeListEntry";
-import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListPage from "../common/ListPage.vue";
+import DeviceTypeListEntry from "./DeviceTypeListEntry.vue";
+import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
 import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
+import {
+  IDeviceType,
+  IDeviceTypeSearchCriteria,
+  IDeviceTypeResponseFormat,
+  IDeviceTypeSearchResults
+} from "sitewhere-rest-api/dist/model/device-types-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    deviceTypes: null,
-    loaded: false
-  }),
+export class DeviceTypeListComponent extends ListComponent<
+  IDeviceType,
+  IDeviceTypeSearchCriteria,
+  IDeviceTypeResponseFormat,
+  IDeviceTypeSearchResults
+> {}
 
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
+    ListPage,
     DeviceTypeListEntry,
-    DeviceTypeCreateDialog
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var paging = this.$data.paging.query;
-      var component = this;
-      listDeviceTypes(this.$store, false, true, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.deviceTypes = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called to open dialog.
-    onAddDeviceType: function() {
-      this.$refs.add.onOpenDialog();
-    },
-
-    // Called when a new device type is added.
-    onDeviceTypeAdded: function() {
-      this.refresh();
-    }
+    DeviceTypeCreateDialog,
+    NavigationActionButton
   }
-};
+})
+export default class DeviceTypesList extends Mixins(DeviceTypeListComponent) {
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceTypeSearchCriteria {
+    let criteria: IDeviceTypeSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceTypeResponseFormat {
+    let format: IDeviceTypeResponseFormat = {};
+    format.includeAsset = true;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IDeviceTypeSearchCriteria,
+    format: IDeviceTypeResponseFormat
+  ): AxiosPromise<IDeviceTypeSearchResults> {
+    return listDeviceTypes(store, criteria, format);
+  }
+
+  // Called to open detail page.
+  onOpenDeviceType(deviceType: IDeviceType) {
+    routeTo(this, "/devicetypes/" + deviceType.token);
+  }
+
+  // Called to open dialog.
+  onAddDeviceType() {
+    (this.$refs.add as any).onOpenDialog();
+  }
+
+  // Called when a new device type is added.
+  onDeviceTypeAdded() {
+    this.refresh();
+  }
+}
 </script>
 
 <style scoped>

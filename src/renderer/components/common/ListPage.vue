@@ -1,12 +1,13 @@
 <template>
   <navigation-page :icon="icon" :title="title" :loadingMessage="loadingMessage" :loaded="loaded">
     <div slot="content">
+      <slot name="filters"/>
       <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="loaded">
         <v-layout row wrap>
           <slot/>
         </v-layout>
       </v-container>
-      <pager :results="results" @pagingUpdated="onPagingUpdated"></pager>
+      <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes"></pager>
       <slot name="dialogs"></slot>
     </div>
     <div slot="actions">
@@ -22,7 +23,7 @@ import { Component, Prop } from "vue-property-decorator";
 import NavigationPage from "../common/NavigationPage.vue";
 import Pager from "../common/Pager.vue";
 
-import { IPaging } from "../../libraries/navigation-model";
+import { IPaging, IPageSizes } from "../../libraries/navigation-model";
 
 @Component({
   components: {
@@ -35,6 +36,7 @@ export default class ListPage extends Vue {
   @Prop() readonly title!: string;
   @Prop() readonly loadingMessage!: string;
   @Prop() readonly loaded!: boolean;
+  @Prop() readonly pageSizes!: IPageSizes;
 
   /** Update paging values and run query */
   onPagingUpdated(paging: IPaging) {

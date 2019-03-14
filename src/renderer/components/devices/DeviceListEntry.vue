@@ -8,9 +8,9 @@
       <div
         v-if="hasAssignedAsset"
         class="device-asset"
-        :style="backgroundImageStyle(device.assignment.assetImageUrl)"
+        :style="backgroundImageStyle(assignment.assetImageUrl)"
       ></div>
-      <div v-else-if="!device.assignment" class="device-assign-button">
+      <div v-else-if="!assignment" class="device-assign-button">
         <v-tooltip top>
           <v-btn dark icon class="blue ml-0" @click.stop="onAssignDevice" slot="activator">
             <font-awesome-icon icon="tag" size="lg"/>
@@ -22,58 +22,57 @@
   </v-card>
 </template>
 
-<script>
-import Style from "../common/Style";
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-import { formatDate } from "../common/Utils";
+import { IStyle, styleForAssignmentStatus } from "../common/Style";
+import { IDevice } from "sitewhere-rest-api/dist/model/devices-model";
+import { IDeviceAssignment } from "sitewhere-rest-api/dist/model/device-assignments-model";
 
-export default {
-  data: function() {
-    return {};
-  },
+@Component({})
+export default class DeviceListEntry extends Vue {
+  @Prop() readonly device!: IDevice;
 
-  components: {},
-
-  props: ["device"],
-
-  computed: {
-    styleForStatus: function() {
-      return Style.styleForAssignmentStatus(this.device.assignment);
-    },
-    hasAssignedAsset: function() {
-      return this.device.assignment && this.device.assignment.assetId;
-    }
-  },
-
-  methods: {
-    styleForDevice: function() {
-      let style = {};
-      style["background-color"] = this.device.assignment ? "#fff" : "#f0f0ff";
-      style["border"] =
-        "1px solid " + (this.device.assignment ? "#fff" : "#dde");
-      return style;
-    },
-    // Create background image style.
-    backgroundImageStyle: function(image) {
-      return {
-        "background-image": "url(" + image + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%"
-      };
-    },
-
-    // Called when a device is clicked.
-    onOpenDevice: function() {
-      this.$emit("deviceOpened", this.device);
-    },
-
-    // Open device assignment dialog.
-    onAssignDevice: function() {
-      this.$emit("assignDevice", this.device);
-    }
+  get assignment(): IDeviceAssignment {
+    return (this.device as any).assignment;
   }
-};
+
+  get styleForStatus(): IStyle {
+    return styleForAssignmentStatus(this.assignment);
+  }
+
+  get hasAssignedAsset() {
+    return this.assignment && this.assignment.assetId;
+  }
+
+  styleForDevice() {
+    let style: IStyle = {};
+    style["background-color"] = this.assignment ? "#fff" : "#f0f0ff";
+    style["border"] = "1px solid " + (this.assignment ? "#fff" : "#dde");
+    return style;
+  }
+
+  // Create background image style.
+  backgroundImageStyle(image: string): IStyle {
+    return {
+      "background-image": "url(" + image + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%"
+    };
+  }
+
+  // Called when a device is clicked.
+  onOpenDevice() {
+    this.$emit("deviceOpened", this.device);
+  }
+
+  // Open device assignment dialog.
+  onAssignDevice() {
+    this.$emit("assignDevice", this.device);
+  }
+}
 </script>
 
 <style scoped>

@@ -12,6 +12,14 @@ import {
 } from "sitewhere-rest-api/dist/model/common-model";
 import { AxiosPromise } from "axios";
 
+// Defines structure of table headers.
+export type ITableHeaders = {
+  align?: string;
+  sortable?: boolean;
+  text?: string;
+  value?: string;
+}[];
+
 /**
  * Base class for components that display lists based on
  * SiteWhere REST services.

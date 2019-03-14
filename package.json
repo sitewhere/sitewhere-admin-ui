@@ -83,7 +83,7 @@
     "moment": "^2.21.0",
     "mqtt": "^2.16.0",
     "resolve-url-loader": "^2.2.1",
-    "sitewhere-rest-api": "0.0.4",
+    "sitewhere-rest-api": "0.0.5",
     "sockjs-client": "^1.1.4",
     "source-map-support": "^0.5.8",
     "sticky-js": "^1.2.0",

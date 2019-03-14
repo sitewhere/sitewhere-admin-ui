@@ -1,176 +1,173 @@
 <template>
-  <div>
-    <navigation-page
-      icon="microchip"
-      title="Manage Devices"
-      loadingMessage="Loading devices ..."
-      :loaded="loaded"
-    >
-      <div slot="content">
-        <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
-        <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="devices">
-          <v-layout row wrap>
-            <v-flex xs6 v-for="(device) in devices" :key="device.token">
-              <device-list-panel
-                :device="device"
-                @assignDevice="onAssignDevice"
-                @deviceOpened="onOpenDevice"
-              ></device-list-panel>
-            </v-flex>
-          </v-layout>
-        </v-container>
-        <pager :results="results" :pageSizes="pageSizes" @pagingUpdated="updatePaging"></pager>
-        <device-create-dialog ref="add" @deviceAdded="onDeviceAdded"/>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="plus" tooltip="Add Device" @action="onAddDevice"></navigation-action-button>
-        <navigation-action-button
-          v-if="filter.deviceType"
-          icon="bolt"
-          tooltip="Execute Batch Command"
-          @action="onBatchCommandInvocation"
-        ></navigation-action-button>
-        <navigation-action-button
-          icon="filter"
-          tooltip="Filter Device List"
-          @action="onShowFilterCriteria"
-        ></navigation-action-button>
-      </div>
-    </navigation-page>
-    <assignment-create-dialog ref="assign" @assignmentCreated="onAssignmentCreated"></assignment-create-dialog>
-    <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
-  </div>
+  <list-page
+    icon="microchip"
+    title="Manage Devices"
+    loadingMessage="Loading devices ..."
+    :loaded="loaded"
+    :pageSizes="pageSizes"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <v-flex xs6 v-for="(device) in matches" :key="device.token">
+      <device-list-entry
+        :device="device"
+        @assignDevice="onAssignDevice"
+        @deviceOpened="onOpenDevice"
+      ></device-list-entry>
+    </v-flex>
+    <template slot="filters">
+      <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
+    </template>
+    <template slot="dialogs">
+      <device-create-dialog ref="add" @deviceAdded="onDeviceAdded"/>
+      <assignment-create-dialog ref="assign" @assignmentCreated="onAssignmentCreated"></assignment-create-dialog>
+      <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
+    </template>
+    <template slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add Device" @action="onAddDevice"></navigation-action-button>
+      <navigation-action-button
+        v-if="filter.deviceType"
+        icon="bolt"
+        tooltip="Execute Batch Command"
+        @action="onBatchCommandInvocation"
+      ></navigation-action-button>
+      <navigation-action-button
+        icon="filter"
+        tooltip="Filter Device List"
+        @action="onShowFilterCriteria"
+      ></navigation-action-button>
+    </template>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import DeviceListPanel from "./DeviceListPanel";
-import DeviceListFilterBar from "./DeviceListFilterBar";
-import DeviceCreateDialog from "./DeviceCreateDialog";
-import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog";
-import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListPage from "../common/ListPage.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+import DeviceListEntry from "./DeviceListEntry.vue";
+import DeviceListFilterBar from "./DeviceListFilterBar.vue";
+import DeviceCreateDialog from "./DeviceCreateDialog.vue";
+import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog.vue";
+import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { IPageSizes } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
 import { listDevices } from "../../rest/sitewhere-devices-api";
+import {
+  IDevice,
+  IDeviceSearchCriteria,
+  IDeviceResponseFormat,
+  IDeviceSearchResults
+} from "sitewhere-rest-api/dist/model/devices-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    devices: null,
-    filter: {},
-    pageSizes: [
-      {
-        text: "20",
-        value: 20
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ],
-    dateField: new Date(),
-    loaded: false
-  }),
+export class DeviceListComponent extends ListComponent<
+  IDevice,
+  IDeviceSearchCriteria,
+  IDeviceResponseFormat,
+  IDeviceSearchResults
+> {}
 
+@Component({
   components: {
-    NavigationPage,
+    ListPage,
     NavigationActionButton,
-    Pager,
-    DeviceListPanel,
+    DeviceListEntry,
     DeviceListFilterBar,
     DeviceCreateDialog,
     AssignmentCreateDialog,
     BatchCommandCreateDialog
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of sites.
-    refresh: function() {
-      this.$data.loaded = false;
-      let paging = this.$data.paging.query;
-      let filter = this.$data.filter;
-      let component = this;
-
-      let options = {};
-      options.area = filter.area;
-      options.deviceType = filter.deviceType;
-      options.includeDeviceType = true;
-      options.includeAssignment = true;
-      options.includeDeleted = false;
-      options.excludeAssigned = false;
-
-      listDevices(this.$store, options, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.devices = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called to show filter criteria dialog.
-    onShowFilterCriteria: function() {
-      this.$refs["filters"].showFilterCriteriaDialog();
-    },
-
-    // Called when filter criteria are updated.
-    onFilterUpdated: function(filter) {
-      this.$data.filter = filter;
-      this.refresh();
-    },
-
-    // Open device assignment dialog.
-    onAssignDevice: function(device) {
-      let assignDialog = this.$refs["assign"];
-      assignDialog.deviceToken = device.token;
-      assignDialog.onOpenDialog();
-    },
-
-    // Called after new assignment is created.
-    onAssignmentCreated: function() {
-      this.refresh();
-    },
-
-    // Called when a new device is added.
-    onDeviceAdded: function() {
-      this.refresh();
-    },
-
-    onDateUpdated: function(value) {
-      console.log("date emitted " + value);
-    },
-
-    // Called to open detail page for device.
-    onOpenDevice: function(device) {
-      routeTo(this, "/devices/" + device.token);
-    },
-
-    // Called to open dialog.
-    onAddDevice: function() {
-      this.$refs.add.onOpenDialog();
-    },
-
-    // Called to invoke a batch command.
-    onBatchCommandInvocation: function() {
-      this.$refs["batch"].onOpenDialog();
-    }
   }
-};
+})
+export default class DevicesList extends Mixins(DeviceListComponent) {
+  filter: {} = {};
+  pageSizes: IPageSizes = [
+    {
+      text: "20",
+      value: 20
+    },
+    {
+      text: "50",
+      value: 50
+    },
+    {
+      text: "100",
+      value: 100
+    }
+  ];
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceSearchCriteria {
+    let criteria: IDeviceSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceResponseFormat {
+    let format: IDeviceResponseFormat = {};
+    format.includeDeviceType = true;
+    format.includeAssignment = true;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IDeviceSearchCriteria,
+    format: IDeviceResponseFormat
+  ): AxiosPromise<IDeviceSearchResults> {
+    return listDevices(store, criteria, format);
+  }
+
+  // Called to show filter criteria dialog.
+  onShowFilterCriteria() {
+    (this.$refs.filters as any).showFilterCriteriaDialog();
+  }
+
+  // Called when filter criteria are updated.
+  onFilterUpdated(filter: any) {
+    this.$data.filter = filter;
+    this.refresh();
+  }
+
+  // Open device assignment dialog.
+  onAssignDevice(device: IDevice) {
+    // let assignDialog = this.$refs["assign"];
+    // assignDialog.deviceToken = device.token;
+    // assignDialog.onOpenDialog();
+  }
+
+  // Called after new assignment is created.
+  onAssignmentCreated() {
+    this.refresh();
+  }
+
+  // Called when a new device is added.
+  onDeviceAdded() {
+    this.refresh();
+  }
+
+  // Called to open detail page for device.
+  onOpenDevice(device: IDevice) {
+    routeTo(this, "/devices/" + device.token);
+  }
+
+  // Called to open dialog.
+  onAddDevice() {
+    (this.$refs.add as any).onOpenDialog();
+  }
+
+  // Called to invoke a batch command.
+  onBatchCommandInvocation() {
+    (this.$refs.batch as any).onOpenDialog();
+  }
+}
 </script>
 
 <style scoped>

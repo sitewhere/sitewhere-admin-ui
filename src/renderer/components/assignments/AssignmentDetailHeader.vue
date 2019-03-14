@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Style from "../common/Style";
+import { styleForAssignmentStatus } from "../common/Style";
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
 import HeaderField from "../common/HeaderField";
 import LinkedHeaderField from "../common/LinkedHeaderField";
@@ -66,7 +66,7 @@ export default {
   computed: {
     // Compute card style based on assignment status.
     assignmentStyle: function() {
-      let style = Style.styleForAssignmentStatus(this.assignment);
+      let style = styleForAssignmentStatus(this.assignment);
       style["position"] = "absolute";
       style["left"] = 0;
       style["right"] = 0;

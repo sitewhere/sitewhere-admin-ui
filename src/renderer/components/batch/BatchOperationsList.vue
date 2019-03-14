@@ -63,115 +63,130 @@
   </div>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
+<script lang="ts">
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
 
-import { formatDate, routeTo } from "../common/Utils";
+import Pager from "../common/Pager.vue";
+import NavigationPage from "../common/NavigationPage.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
+
+import { formatDate, routeTo, handleError } from "../common/Utils";
+import { IPageSizes, IPaging } from "../../libraries/navigation-model";
+import { ITableHeaders } from "../../libraries/component-model";
 import { listBatchOperations } from "../../rest/sitewhere-batch-operations-api";
+import {
+  IBatchOperation,
+  IBatchOperationSearchResults,
+  IBatchOperationSearchCriteria,
+  IBatchOperationResponseFormat
+} from "sitewhere-rest-api/dist/model/batch-operations-model";
+import { AxiosResponse } from "axios";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    operations: null,
-    headers: [
-      {
-        align: "left",
-        sortable: false,
-        text: "Operation",
-        value: "operation"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Status",
-        value: "status"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Created",
-        value: "created"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Processing Started",
-        value: "started"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Processing Finished",
-        value: "finished"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "",
-        value: "open"
-      }
-    ],
-    pageSizes: [
-      {
-        text: "25",
-        value: 25
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ],
-    loaded: false
-  }),
-
+@Component({
   components: {
     NavigationPage,
     Pager,
     NoResultsPanel
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list.
-    refresh: function() {
-      this.$data.loaded = false;
-      var component = this;
-      var paging = this.$data.paging.query;
-      listBatchOperations(this.$store, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.operations = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    },
-
-    // Open detail page for batch operation.
-    openBatchOperation: function(token) {
-      routeTo(this, "/batch/" + token);
-    }
   }
-};
+})
+export default class BatchOperationsList extends Vue {
+  results: IBatchOperationSearchResults | null = null;
+  paging: IPaging | null = null;
+  operations: IBatchOperation[] = [];
+  headers: ITableHeaders = [
+    {
+      align: "left",
+      sortable: false,
+      text: "Operation",
+      value: "operation"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Status",
+      value: "status"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Created",
+      value: "created"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Processing Started",
+      value: "started"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Processing Finished",
+      value: "finished"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "",
+      value: "open"
+    }
+  ];
+  pageSizes: IPageSizes = [
+    {
+      text: "25",
+      value: 25
+    },
+    {
+      text: "50",
+      value: 50
+    },
+    {
+      text: "100",
+      value: 100
+    }
+  ];
+  loaded: boolean = false;
+
+  // Update paging values and run query.
+  updatePaging(paging: IPaging) {
+    this.$data.paging = paging;
+    this.refresh();
+  }
+
+  // Refresh list.
+  async refresh() {
+    this.$data.loaded = false;
+    var criteria: IBatchOperationSearchCriteria = {};
+    var format: IBatchOperationResponseFormat = {};
+    try {
+      let response: AxiosResponse<
+        IBatchOperationSearchResults
+      > = await listBatchOperations(this.$store, criteria, format);
+      this.results = response.data;
+      this.operations = response.data.results;
+    } catch (err) {
+      handleError(err);
+    }
+    this.loaded = true;
+  }
+
+  // Called when page number is updated.
+  onPageUpdated(pageNumber: number) {
+    this.$data.pager.page = pageNumber;
+    this.refresh();
+  }
+
+  // Open detail page for batch operation.
+  openBatchOperation(token: string) {
+    routeTo(this, "/batch/" + token);
+  }
+
+  // Format a date.
+  formatDate(date: Date) {
+    formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

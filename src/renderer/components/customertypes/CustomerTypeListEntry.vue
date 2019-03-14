@@ -29,7 +29,7 @@ export default {
   methods: {
     // Callen when card is clicked.
     onCustomerTypeClicked: function() {
-      routeTo(this, "/customertypes/" + this.customerType.token);
+      routeTo(this, "/customertypes/" + this.customerType);
     }
   }
 };

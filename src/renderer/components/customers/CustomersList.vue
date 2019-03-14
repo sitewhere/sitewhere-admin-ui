@@ -42,7 +42,7 @@ import {
   ICustomerSearchResults
 } from "sitewhere-rest-api/dist/model/customers-model";
 
-export class AreaListComponent extends ListComponent<
+export class CustomerListComponent extends ListComponent<
   ICustomer,
   ICustomerSearchCriteria,
   ICustomerResponseFormat,
@@ -57,7 +57,7 @@ export class AreaListComponent extends ListComponent<
     NavigationActionButton
   }
 })
-export default class AreasList extends Mixins(AreaListComponent) {
+export default class CustomersList extends Mixins(CustomerListComponent) {
   /** Build search criteria for list */
   buildSearchCriteria(): ICustomerSearchCriteria {
     let criteria: ICustomerSearchCriteria = {};

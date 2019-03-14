@@ -89,12 +89,12 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 
-import { IPaging } from "../../libraries/navigation-model";
+import { IPaging, IPageSizes } from "../../libraries/navigation-model";
 
 @Component
 export default class Pager extends Vue {
   @Prop() readonly results!: { numResults: number; results: {}[] };
-  @Prop() readonly pageSizes!: { text: string; value: number }[];
+  @Prop() readonly pageSizes!: IPageSizes;
 
   page: number = 1;
   pageSize: number | null = null;
@@ -102,7 +102,7 @@ export default class Pager extends Vue {
     numResults: 0,
     results: []
   };
-  defaultPageSizes: { text: string; value: number }[] = [
+  defaultPageSizes: IPageSizes = [
     {
       text: "10",
       value: 10

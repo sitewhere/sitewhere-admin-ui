@@ -18,37 +18,36 @@
   </v-card>
 </template>
 
-<script>
-import { routeTo } from "../common/Utils";
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-export default {
-  data: () => ({}),
+import { IStyle } from "../common/Style";
+import { IAssetType } from "sitewhere-rest-api/dist/model/asset-types-model";
 
-  props: ["assetType"],
+@Component({})
+export default class AssetTypeListEntry extends Vue {
+  @Prop() readonly assetType!: IAssetType;
 
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.assetType.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee",
-        height: "120px",
-        width: "100px"
-      };
-    }
-  },
-
-  methods: {
-    // Callen when card is clicked.
-    onAssetTypeClicked: function() {
-      routeTo(this, "/assettypes/" + this.assetType.token);
-    }
+  // Compute style of logo.
+  get logoStyle(): IStyle {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.assetType.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee",
+      height: "120px",
+      width: "100px"
+    };
   }
-};
+
+  // Callen when card is clicked.
+  onAssetTypeClicked() {
+    this.$emit("assetTypeOpened", this.assetType);
+  }
+}
 </script>
 
 <style scoped>

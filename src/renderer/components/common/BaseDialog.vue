@@ -25,40 +25,38 @@
   </v-dialog>
 </template>
 
-<script>
-import ErrorBanner from "../common/ErrorBanner";
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-export default {
-  data: () => ({}),
+import ErrorBanner from "../common/ErrorBanner.vue";
 
+@Component({
   components: {
     ErrorBanner
-  },
-
-  props: [
-    "title",
-    "width",
-    "visible",
-    "createLabel",
-    "cancelLabel",
-    "error",
-    "hideButtons",
-    "hideCreate",
-    "invalid"
-  ],
-
-  methods: {
-    // Called when create button is clicked.
-    onCancelClicked: function(e) {
-      this.$emit("cancelClicked", e);
-    },
-
-    // Called when create button is clicked.
-    onCreateClicked: function(e) {
-      this.$emit("createClicked", e);
-    }
   }
-};
+})
+export default class BaseDialog extends Vue {
+  @Prop() readonly title!: string;
+  @Prop() readonly width!: number;
+  @Prop() readonly visible: boolean = false;
+  @Prop() readonly createLabel!: string;
+  @Prop() readonly cancelLabel!: string;
+  @Prop() readonly error!: string;
+  @Prop() readonly hideButtons: boolean = false;
+  @Prop() readonly hideCreate: boolean = false;
+  @Prop() readonly invalid: boolean = false;
+
+  // Called when create button is clicked.
+  onCancelClicked(e: any) {
+    this.$emit("cancelClicked", e);
+  }
+
+  // Called when create button is clicked.
+  onCreateClicked(e: any) {
+    this.$emit("createClicked", e);
+  }
+}
 </script>
 
 <style scoped>
