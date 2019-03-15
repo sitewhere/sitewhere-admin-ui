@@ -45,15 +45,18 @@ export function createCustomer(
  * Get customer by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getCustomer(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: ICustomerResponseFormat
 ): Promise<AxiosResponse<ICustomer>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<ICustomer> = SiteWhere.API.Customers.getCustomer(
     axios,
-    token
+    token,
+    format
   );
   return loaderWrapper(store, api);
 }

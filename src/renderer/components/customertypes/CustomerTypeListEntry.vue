@@ -18,21 +18,21 @@
   </v-card>
 </template>
 
-<script>
-import { routeTo } from "../common/Utils";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
-export default {
-  data: () => ({}),
+import { ICustomerType } from "sitewhere-rest-api/dist/model/customer-types-model";
 
-  props: ["customerType"],
+@Component
+export default class DeviceTypeSelector extends Vue {
+  @Prop() readonly customerType!: ICustomerType;
 
-  methods: {
-    // Callen when card is clicked.
-    onCustomerTypeClicked: function() {
-      routeTo(this, "/customertypes/" + this.customerType);
-    }
+  // Handle customer type clicked.
+  onCustomerTypeClicked() {
+    this.$emit("openCustomerType", this.customerType);
   }
-};
+}
 </script>
 
 <style scoped>

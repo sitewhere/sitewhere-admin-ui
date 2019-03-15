@@ -1,11 +1,6 @@
 <template>
-  <navigation-header-panel
-    v-if="customer"
-    :imageUrl="customer.imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="200px"
-  >
-    <span slot="content">
+  <navigation-header-panel :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="200px">
+    <template slot="content" v-if="customer">
       <header-field label="Token">
         <clipboard-copy-field :field="customer.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
@@ -26,7 +21,7 @@
       <header-field label="Updated">
         <span>{{ formatDate(customer.updatedDate) }}</span>
       </header-field>
-    </span>
+    </template>
   </navigation-header-panel>
 </template>
 
@@ -59,6 +54,11 @@ export default class CustomerDetailHeader extends Mixins(
   // Reference record as customer.
   get customer(): ICustomer {
     return this.record;
+  }
+
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.customer ? this.customer.imageUrl : "";
   }
 
   // Get URL for QR code.

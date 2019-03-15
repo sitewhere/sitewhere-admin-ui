@@ -1,11 +1,6 @@
 <template>
-  <navigation-header-panel
-    v-if="customerType"
-    :icon="customerType.icon"
-    :qrCodeUrl="qrCodeUrl"
-    height="200px"
-  >
-    <span slot="content">
+  <navigation-header-panel :icon="icon" :qrCodeUrl="qrCodeUrl" height="200px">
+    <template slot="content" v-if="customerType">
       <header-field label="Token">
         <clipboard-copy-field :field="customerType.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
@@ -21,7 +16,7 @@
       <header-field label="Updated">
         <span>{{ formatDate(customerType.updatedDate) }}</span>
       </header-field>
-    </span>
+    </template>
   </navigation-header-panel>
 </template>
 
@@ -54,6 +49,10 @@ export default class CustomerTypeDetailHeader extends Mixins(
   // Reference record as customer type.
   get customerType(): ICustomerType {
     return this.record;
+  }
+
+  get icon(): string {
+    return this.customerType ? this.customerType.icon : "";
   }
 
   // Get URL for QR code.

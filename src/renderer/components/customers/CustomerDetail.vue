@@ -1,7 +1,7 @@
 <template>
   <detail-page
     icon="building"
-    :title="customer.name"
+    :title="title"
     loadingMessage="Loading customer ..."
     :loaded="loaded"
     :record="customer"
@@ -93,7 +93,10 @@ import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { INavigationSection } from "../../libraries/navigation-model";
 import { getCustomer } from "../../rest/sitewhere-customers-api";
-import { ICustomer } from "sitewhere-rest-api/dist/model/customers-model";
+import {
+  ICustomer,
+  ICustomerResponseFormat
+} from "sitewhere-rest-api/dist/model/customers-model";
 
 export class CustomerDetailComponent extends DetailComponent<ICustomer> {}
 
@@ -120,12 +123,20 @@ export default class CustomerDetail extends Mixins(CustomerDetailComponent) {
     return this.record;
   }
 
+  get title(): string {
+    return this.customer ? this.customer.name : "";
+  }
+
   /** Load record */
   loadRecord(
     store: Store<SiteWhereUiSettings>,
     token: string
   ): AxiosPromise<ICustomer> {
-    return getCustomer(store, token);
+    let format: ICustomerResponseFormat = {
+      includeCustomerType: true,
+      includeParentCustomer: true
+    };
+    return getCustomer(store, token, format);
   }
 
   // Called after data is loaded.

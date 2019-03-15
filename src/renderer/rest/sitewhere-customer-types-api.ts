@@ -34,12 +34,13 @@ export function createCustomerType(
  */
 export function getCustomerType(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: ICustomerTypeResponseFormat
 ): Promise<AxiosResponse<ICustomerType>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     ICustomerType
-  > = SiteWhere.API.CustomerTypes.getCustomerType(axios, token);
+  > = SiteWhere.API.CustomerTypes.getCustomerType(axios, token, format);
   return loaderWrapper(store, api);
 }
 

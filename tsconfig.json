@@ -12,20 +12,11 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
     "baseUrl": ".",
     "types": ["node"],
     "paths": {
       "@/*": ["src/*"]
     },
     "lib": ["es2018", "dom"]
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": ["node_modules"]
+  }
 }

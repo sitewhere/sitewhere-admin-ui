@@ -9,7 +9,7 @@
     <v-flex xs6 v-for="(customerType) in matches" :key="customerType.token">
       <customer-type-list-entry
         :customerType="customerType"
-        @customerTypeOpened="onOpenCustomerType"
+        @openCustomerType="onOpenCustomerType"
         @customerTypeDeleted="refresh"
       ></customer-type-list-entry>
     </v-flex>

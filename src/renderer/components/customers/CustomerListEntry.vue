@@ -18,35 +18,35 @@
   </v-card>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
-  props: ["customer"],
+import { ICustomer } from "sitewhere-rest-api/dist/model/customers-model";
 
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.customer.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee",
-        height: "120px",
-        width: "100px"
-      };
-    }
-  },
+@Component
+export default class DeviceTypeSelector extends Vue {
+  @Prop() readonly customer!: ICustomer;
 
-  methods: {
-    // Handle customer clicked.
-    onCustomerClicked: function() {
-      this.$emit("openCustomer", this.customer);
-    }
+  // Compute style of logo.
+  get logoStyle() {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.customer.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee",
+      height: "120px",
+      width: "100px"
+    };
   }
-};
+
+  // Handle customer clicked.
+  onCustomerClicked() {
+    this.$emit("openCustomer", this.customer);
+  }
+}
 </script>
 
 <style scoped>
