@@ -21,16 +21,7 @@
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="areas" id="areas">
-              <v-container fluid grid-list-md v-if="areas">
-                <v-layout row wrap>
-                  <v-flex xs6 v-for="(area) in areas" :key="area.token">
-                    <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-              <pager :results="results" @pagingUpdated="updatePaging">
-                <no-results-panel slot="noresults" text="No Areas of This Type Found"></no-results-panel>
-              </pager>
+              <div>Areas go here</div>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>

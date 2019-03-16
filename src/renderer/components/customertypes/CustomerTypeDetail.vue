@@ -19,18 +19,7 @@
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
-        <v-tabs-content key="instances" id="instances">
-          <v-container fluid grid-list-md v-if="customers">
-            <v-layout row wrap>
-              <v-flex xs6 v-for="(customer) in customers" :key="customer.token">
-                <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
-              </v-flex>
-            </v-layout>
-          </v-container>
-          <pager :results="results" @pagingUpdated="updatePaging">
-            <no-results-panel slot="noresults" text="No Customers of This Type Found"></no-results-panel>
-          </pager>
-        </v-tabs-content>
+        <customer-type-customers key="instances" id="instances" :customerTypeToken="token"/>
       </v-tabs-items>
     </v-tabs>
     <template slot="dialogs">
@@ -64,6 +53,7 @@ import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader.vue";
+import CustomerTypeCustomers from "./CustomerTypeCustomers.vue";
 import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog.vue";
 import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog.vue";
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
@@ -89,6 +79,7 @@ export class CustomerTypeDetailComponent extends DetailComponent<
     NavigationActionButton,
     NoResultsPanel,
     CustomerTypeDetailHeader,
+    CustomerTypeCustomers,
     CustomerListEntry,
     CustomerTypeDeleteDialog,
     CustomerTypeUpdateDialog
