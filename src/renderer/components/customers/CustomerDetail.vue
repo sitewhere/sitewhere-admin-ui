@@ -19,16 +19,16 @@
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
-        <customer-contained-customers
+        <customer-subcustomers
           key="customers"
           id="customers"
           ref="customers"
-          :customer="customer"
-        ></customer-contained-customers>
+          :customerToken="token"
+        />
         <customer-assignments key="assignments" id="assignments" :customerToken="token"/>
         <customer-location-events key="locations" id="locations" :customerToken="token"/>
-        <customer-measurement-events key="measurements" id="measurements" :customer="customer"/>
-        <customer-alert-events key="alerts" id="alerts" :customer="customer"></customer-alert-events>
+        <customer-measurement-events key="measurements" id="measurements" :customerToken="token"/>
+        <customer-alert-events key="alerts" id="alerts" :customerToken="token"/>
       </v-tabs-items>
     </v-tabs>
     <template slot="dialogs">
@@ -73,7 +73,7 @@ import Vue, { VueConstructor } from "vue";
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 import CustomerDetailHeader from "./CustomerDetailHeader.vue";
-import CustomerContainedCustomers from "./CustomerContainedCustomers.vue";
+import CustomerSubcustomers from "./CustomerSubcustomers.vue";
 import CustomerAssignments from "./CustomerAssignments.vue";
 import CustomerLocationEvents from "./CustomerLocationEvents.vue";
 import CustomerMeasurementEvents from "./CustomerMeasurementEvents.vue";
@@ -100,7 +100,7 @@ export class CustomerDetailComponent extends DetailComponent<ICustomer> {}
     DetailPage,
     NavigationActionButton,
     CustomerDetailHeader,
-    CustomerContainedCustomers,
+    CustomerSubcustomers,
     CustomerAssignments,
     CustomerLocationEvents,
     CustomerMeasurementEvents,

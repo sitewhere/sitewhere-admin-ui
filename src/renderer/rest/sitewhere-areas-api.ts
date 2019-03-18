@@ -21,7 +21,10 @@ import {
 import {
   IDeviceLocationSearchResults,
   IDeviceMeasurementSearchResults,
-  IDeviceAlertSearchResults
+  IDeviceAlertSearchResults,
+  IDeviceLocationResponseFormat,
+  IDeviceMeasurementResponseFormat,
+  IDeviceAlertResponseFormat
 } from "sitewhere-rest-api/dist/model/device-events-model";
 
 /**
@@ -42,13 +45,19 @@ export function createArea(
  * Get an area by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getArea(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IAreaResponseFormat
 ): Promise<AxiosResponse<IArea>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IArea> = SiteWhere.API.Areas.getArea(axios, token);
+  let api: AxiosPromise<IArea> = SiteWhere.API.Areas.getArea(
+    axios,
+    token,
+    format
+  );
   return loaderWrapper(store, api);
 }
 
@@ -132,20 +141,22 @@ export function listAssignmentsForArea(
 }
 
 /**
- * List device location for area based on criteria.
+ * List device locations for area based on criteria.
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listLocationsForArea(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria?: IDateRangeSearchCriteria,
+  format?: IDeviceLocationResponseFormat
 ): Promise<AxiosResponse<IDeviceLocationSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceLocationSearchResults
-  > = SiteWhere.API.Areas.listLocationsForArea(axios, token, criteria);
+  > = SiteWhere.API.Areas.listLocationsForArea(axios, token, criteria, format);
   return loaderWrapper(store, api);
 }
 
@@ -154,16 +165,23 @@ export function listLocationsForArea(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listMeasurementsForArea(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria?: IDateRangeSearchCriteria,
+  format?: IDeviceMeasurementResponseFormat
 ): Promise<AxiosResponse<IDeviceMeasurementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceMeasurementSearchResults
-  > = SiteWhere.API.Areas.listMeasurementsForArea(axios, token, criteria);
+  > = SiteWhere.API.Areas.listMeasurementsForArea(
+    axios,
+    token,
+    criteria,
+    format
+  );
   return loaderWrapper(store, api);
 }
 
@@ -172,15 +190,17 @@ export function listMeasurementsForArea(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listAlertsForArea(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria: IDateRangeSearchCriteria,
+  format?: IDeviceAlertResponseFormat
 ): Promise<AxiosResponse<IDeviceAlertSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceAlertSearchResults
-  > = SiteWhere.API.Areas.listAlertsForArea(axios, token, criteria);
+  > = SiteWhere.API.Areas.listAlertsForArea(axios, token, criteria, format);
   return loaderWrapper(store, api);
 }

@@ -32,7 +32,7 @@ import {
   ICustomerSearchResults
 } from "sitewhere-rest-api/dist/model/customers-model";
 
-export class CustomerContainedCustomersListComponent extends ListComponent<
+export class CustomerSubcustomersListComponent extends ListComponent<
   ICustomer,
   ICustomerSearchCriteria,
   ICustomerResponseFormat,
@@ -46,8 +46,8 @@ export class CustomerContainedCustomersListComponent extends ListComponent<
     CustomerCreateDialog
   }
 })
-export default class CustomerTypeCustomers extends Mixins(
-  CustomerContainedCustomersListComponent
+export default class CustomerSubcustomers extends Mixins(
+  CustomerSubcustomersListComponent
 ) {
   @Prop() readonly key!: string;
   @Prop() readonly id!: string;
@@ -56,6 +56,7 @@ export default class CustomerTypeCustomers extends Mixins(
   /** Build search criteria for list */
   buildSearchCriteria(): ICustomerSearchCriteria {
     let criteria: ICustomerSearchCriteria = {};
+    criteria.rootOnly = false;
     criteria.parentCustomerToken = this.customerToken;
     return criteria;
   }

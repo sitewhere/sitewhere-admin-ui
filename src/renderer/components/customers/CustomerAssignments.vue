@@ -1,7 +1,7 @@
 <template>
   <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <v-flex xs6 v-for="(assignment) in matches" :key="assignment.token">
-      <assignment-list-panel
+    <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+      <assignment-list-entry
         :assignment="assignment"
         @assignmentOpened="onOpenAssignment(assignment)"
         @refresh="refresh"
@@ -18,7 +18,7 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListTab from "../common/ListTab.vue";
-import AssignmentListPanel from "../assignments/AssignmentListPanel.vue";
+import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
@@ -43,7 +43,7 @@ export class CustomerAssignmentsListComponent extends ListComponent<
 @Component({
   components: {
     ListTab,
-    AssignmentListPanel,
+    AssignmentListEntry,
     NavigationActionButton
   }
 })

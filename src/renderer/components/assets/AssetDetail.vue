@@ -23,13 +23,13 @@
             <v-tabs-content key="assignments" id="assignments">
               <v-layout row wrap v-if="assignments">
                 <v-flex xs12>
-                  <assignment-list-panel
+                  <assignment-list-entry
                     :assignment="assignment"
                     v-for="(assignment) in assignments"
                     :key="assignment.token"
                     @assignmentOpened="onOpenAssignment"
                     class="ma-2"
-                  ></assignment-list-panel>
+                  />
                 </v-flex>
               </v-layout>
               <pager :results="results" @pagingUpdated="updatePaging">
@@ -55,7 +55,7 @@ import NavigationActionButton from "../common/NavigationActionButton";
 import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
 import AssetDetailHeader from "./AssetDetailHeader";
-import AssignmentListPanel from "../assignments/AssignmentListPanel";
+import AssignmentListEntry from "../assignments/AssignmentListEntry";
 import AssetDeleteDialog from "./AssetDeleteDialog";
 import AssetUpdateDialog from "./AssetUpdateDialog";
 
@@ -80,7 +80,7 @@ export default {
     Pager,
     NoResultsPanel,
     AssetDetailHeader,
-    AssignmentListPanel,
+    AssignmentListEntry,
     AssetDeleteDialog,
     AssetUpdateDialog
   },

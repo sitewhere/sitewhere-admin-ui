@@ -22,55 +22,49 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+
 import { styleForAssignmentStatus } from "../common/Style";
-import AssetMiniPanel from "./AssetMiniPanel";
-import DeviceMiniPanel from "../devices/DeviceMiniPanel";
-import AssignmentStatusButton from "./AssignmentStatusButton";
+import AssetMiniPanel from "./AssetMiniPanel.vue";
+import DeviceMiniPanel from "../devices/DeviceMiniPanel.vue";
+import AssignmentStatusButton from "./AssignmentStatusButton.vue";
+
+import Vue from "vue";
 
 import { formatDate } from "../common/Utils";
+import { IDeviceAssignment } from "sitewhere-rest-api/dist/model/device-assignments-model";
 
-export default {
-  data: function() {
-    return {};
-  },
-
+@Component({
   components: {
     AssetMiniPanel,
     DeviceMiniPanel,
     AssignmentStatusButton
-  },
-
-  props: ["assignment", "headerMode"],
-
-  computed: {
-    styleForStatus: function() {
-      return styleForAssignmentStatus(this.assignment);
-    }
-  },
-
-  methods: {
-    ignore: function() {},
-
-    // Create background image style.
-    backgroundImageStyle: function(image) {
-      return {
-        "background-image": "url(" + image + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%"
-      };
-    },
-    // Fire event to have parent refresh content.
-    refresh: function() {
-      this.$emit("refresh");
-    },
-    // Called when assignment is clicked.
-    onOpenAssignment: function() {
-      this.$emit("assignmentOpened", this.assignment);
-    }
   }
-};
+})
+export default class AssignmentListEntry extends Vue {
+  @Prop() readonly assignment!: IDeviceAssignment;
+  @Prop() readonly headerMode!: boolean;
+
+  get styleForStatus() {
+    return styleForAssignmentStatus(this.assignment);
+  }
+
+  // Fire event to have parent refresh content.
+  refresh() {
+    this.$emit("refresh");
+  }
+
+  // Called when assignment is clicked.
+  onOpenAssignment() {
+    this.$emit("assignmentOpened", this.assignment);
+  }
+
+  /** Make function available to template */
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

@@ -1,11 +1,6 @@
 <template>
-  <navigation-header-panel
-    v-if="area"
-    :imageUrl="area.imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="200px"
-  >
-    <span slot="content">
+  <navigation-header-panel :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="200px">
+    <span slot="content" v-if="area">
       <header-field label="Token">
         <clipboard-copy-field :field="area.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
@@ -31,8 +26,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { HeaderComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
+
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
 
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import HeaderField from "../common/HeaderField.vue";
@@ -42,6 +40,8 @@ import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import { formatDate } from "../common/Utils";
 import { IArea } from "sitewhere-rest-api/dist/model/areas-model";
 
+export class AreaHeaderComponent extends HeaderComponent<IArea> {}
+
 @Component({
   components: {
     NavigationHeaderPanel,
@@ -50,12 +50,20 @@ import { IArea } from "sitewhere-rest-api/dist/model/areas-model";
     ClipboardCopyField
   }
 })
-export default class AreaDetailHeader extends Vue {
-  @Prop() readonly area!: IArea;
+export default class AreaDetailHeader extends Mixins(AreaHeaderComponent) {
+  // Reference record as area.
+  get area(): IArea {
+    return this.record;
+  }
 
-  // Compute QR code URL.
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.area ? this.area.imageUrl : "";
+  }
+
+  // Get URL for QR code.
   get qrCodeUrl() {
-    return "areas/" + this.area.token + "/label/qrcode";
+    return "customers/" + this.area.token + "/label/qrcode";
   }
 
   formatDate(date: Date) {

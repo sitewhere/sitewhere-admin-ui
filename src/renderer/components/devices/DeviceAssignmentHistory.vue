@@ -3,14 +3,14 @@
     <v-layout row wrap v-if="assignments">
       <v-flex xs12>
         <no-results-panel v-if="assignments.length === 0" text="No Assignments Found for Device"></no-results-panel>
-        <assignment-list-panel
+        <assignment-list-entry
           :assignment="assignment"
           v-for="(assignment) in assignments"
           :key="assignment.token"
           @assignmentOpened="onOpenAssignment(assignment.token)"
           @refresh="refresh"
           class="ma-2"
-        ></assignment-list-panel>
+        />
       </v-flex>
     </v-layout>
     <pager :results="results" @pagingUpdated="updatePaging"></pager>
@@ -20,7 +20,7 @@
 <script>
 import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
-import AssignmentListPanel from "../assignments/AssignmentListPanel";
+import AssignmentListEntry from "../assignments/AssignmentListEntry";
 
 import { routeTo } from "../common/Utils";
 import { listDeviceAssignmentHistory } from "../../rest/sitewhere-devices-api";
@@ -37,7 +37,7 @@ export default {
   components: {
     Pager,
     NoResultsPanel,
-    AssignmentListPanel
+    AssignmentListEntry
   },
 
   methods: {

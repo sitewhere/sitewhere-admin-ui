@@ -1,144 +1,87 @@
 <template>
-  <div>
-    <v-data-table
-      v-if="alerts && alerts.length > 0"
-      class="elevation-2 pa-0"
-      :headers="headers"
-      :items="alerts"
-      :hide-actions="true"
-      no-data-text="No Alerts Found for Area"
-      :total-items="0"
-    >
-      <template slot="items" slot-scope="props">
-        <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
-        <td width="20%" :title="props.item.type">{{ props.item.type }}</td>
-        <td width="30%" :title="props.item.message">{{ props.item.message }}</td>
-        <td
-          width="10%"
-          style="white-space: nowrap"
-          :title="formatDate(props.item.eventDate)"
-        >{{ formatDate(props.item.eventDate) }}</td>
-        <td
-          width="10%"
-          style="white-space: nowrap"
-          :title="formatDate(props.item.receivedDate)"
-        >{{ formatDate(props.item.receivedDate) }}</td>
-      </template>
-    </v-data-table>
-    <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging">
-      <no-results-panel slot="noresults" text="No Alerts Found"></no-results-panel>
-    </pager>
-  </div>
+  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
+    <alert-events-table :matches="matches" no-data-text="No Alerts Found for Area"/>
+  </list-tab>
 </template>
 
-<script>
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListTab from "../common/ListTab.vue";
+import AlertEventsTable from "../common/AlertEventsTable.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { AxiosPromise } from "axios";
 import { listAlertsForArea } from "../../rest/sitewhere-areas-api";
+import {
+  IDeviceAlert,
+  IDeviceAlertResponseFormat,
+  IDeviceAlertSearchResults
+} from "sitewhere-rest-api/dist/model/device-events-model";
+import { IDateRangeSearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
+import { IPageSizes } from "../../libraries/navigation-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    alerts: null,
-    headers: [
-      {
-        align: "left",
-        sortable: false,
-        text: "Asset",
-        value: "asset"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Type",
-        value: "type"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Message",
-        value: "message"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Event Date",
-        value: "event"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Received Date",
-        value: "received"
-      }
-    ],
-    pageSizes: [
-      {
-        text: "25",
-        value: 25
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ]
-  }),
+export class CustomerMeasurementsListComponent extends ListComponent<
+  IDeviceAlert,
+  IDateRangeSearchCriteria,
+  IDeviceAlertResponseFormat,
+  IDeviceAlertSearchResults
+> {}
 
-  props: ["area"],
-
+@Component({
   components: {
-    Pager,
-    NoResultsPanel
-  },
-
-  watch: {
-    // Refresh component if area is updated.
-    area: function(value) {
-      this.refresh();
-    }
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of assignments.
-    refresh: function() {
-      var component = this;
-      var areaToken = this.area.token;
-      var query = this.$data.paging.query;
-      listAlertsForArea(this.$store, areaToken, query)
-        .then(function(response) {
-          component.results = response.data;
-          component.alerts = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    },
-
-    // Format date.
-    formatDate: function(date) {
-      if (!date) {
-        return "N/A";
-      }
-      return this.$moment(date).format("YYYY-MM-DD H:mm:ss");
-    }
+    ListTab,
+    AlertEventsTable
   }
-};
+})
+export default class CustomerMeasurementEvents extends Mixins(
+  CustomerMeasurementsListComponent
+) {
+  @Prop() readonly key!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly areaToken!: string;
+
+  pageSizes: IPageSizes = [
+    {
+      text: "25",
+      value: 25
+    },
+    {
+      text: "50",
+      value: 50
+    },
+    {
+      text: "100",
+      value: 100
+    }
+  ];
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDateRangeSearchCriteria {
+    let criteria: IDateRangeSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceAlertResponseFormat {
+    let format: IDeviceAlertResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IDateRangeSearchCriteria,
+    format: IDeviceAlertResponseFormat
+  ): AxiosPromise<IDeviceAlertSearchResults> {
+    return listAlertsForArea(store, this.areaToken, criteria, format);
+  }
+}
 </script>
 
 <style scoped>

@@ -1,92 +1,90 @@
 <template>
-  <div>
-    <v-layout row wrap v-if="assignments">
-      <v-flex xs12>
-        <assignment-list-panel
-          :assignment="assignment"
-          v-for="(assignment) in assignments"
-          :key="assignment.token"
-          @assignmentOpened="onOpenAssignment(assignment.token)"
-          @refresh="refresh"
-          class="ma-2"
-        ></assignment-list-panel>
-      </v-flex>
-    </v-layout>
-    <pager :results="results" @pagingUpdated="updatePaging">
-      <no-results-panel slot="noresults" text="No Assignments Found"></no-results-panel>
-    </pager>
-  </div>
+  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
+    <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+      <assignment-list-entry
+        :assignment="assignment"
+        @assignmentOpened="onOpenAssignment(assignment)"
+        @refresh="refresh"
+      />
+    </v-flex>
+  </list-tab>
 </template>
 
-<script>
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import AssignmentListPanel from "../assignments/AssignmentListPanel";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListTab from "../common/ListTab.vue";
+import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
-import { listAssignmentsForArea } from "../../rest/sitewhere-areas-api";
+import { AxiosPromise } from "axios";
+import { listDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
+import {
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+} from "sitewhere-rest-api/dist/model/device-assignments-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    assignments: null
-  }),
+export class AreaAssignmentsListComponent extends ListComponent<
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+> {}
 
-  props: ["area"],
-
+@Component({
   components: {
-    Pager,
-    NoResultsPanel,
-    AssignmentListPanel
-  },
-
-  watch: {
-    // Refresh component if area is updated.
-    area: function(value) {
-      this.refresh();
-    }
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of assignments.
-    refresh: function() {
-      var component = this;
-      var areaToken = this.area.token;
-      var paging = this.$data.paging.query;
-
-      let options = {};
-      options.includeDevice = true;
-      options.includeCustomer = true;
-      options.includeArea = true;
-      options.includeAsset = true;
-
-      listAssignmentsForArea(this.$store, areaToken, options, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.assignments = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    },
-
-    // Called to open detail page for assignment.
-    onOpenAssignment: function(token) {
-      routeTo(this, "/assignments/" + token);
-    }
+    ListTab,
+    AssignmentListEntry,
+    NavigationActionButton
   }
-};
+})
+export default class CustomerTypeCustomers extends Mixins(
+  AreaAssignmentsListComponent
+) {
+  @Prop() readonly key!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly areaToken!: string;
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
+    let criteria: IDeviceAssignmentSearchCriteria = {};
+    criteria.areaToken = this.areaToken;
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceAssignmentResponseFormat {
+    let format: IDeviceAssignmentResponseFormat = {};
+    format.includeDevice = true;
+    format.includeCustomer = true;
+    format.includeArea = true;
+    format.includeAsset = true;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IDeviceAssignmentSearchCriteria,
+    format: IDeviceAssignmentResponseFormat
+  ): AxiosPromise<IDeviceAssignmentSearchResults> {
+    return listDeviceAssignments(store, criteria, format);
+  }
+
+  /** Open device assignment detail page */
+  onOpenAssignment(assignment: IDeviceAssignment) {
+    routeTo(this, "/assignments/" + assignment.token);
+  }
+}
 </script>
 
 <style scoped>

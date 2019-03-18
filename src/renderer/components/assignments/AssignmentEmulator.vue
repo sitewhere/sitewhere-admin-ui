@@ -1,7 +1,7 @@
 <template>
   <div v-if="assignment">
     <v-app>
-      <assignment-list-panel :assignment="assignment" headerMode="false"></assignment-list-panel>
+      <assignment-list-entry :assignment="assignment" headerMode="false"/>
       <v-card>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
@@ -110,7 +110,7 @@
 
 <script>
 import MQTT from "mqtt";
-import AssignmentListPanel from "./AssignmentListPanel";
+import AssignmentListEntry from "./AssignmentListEntry";
 import AssignmentEmulatorMap from "./AssignmentEmulatorMap";
 import LocationCreateDialog from "./LocationCreateDialog";
 import MeasurementsCreateDialog from "./MeasurementsCreateDialog";
@@ -135,7 +135,7 @@ export default {
   }),
 
   components: {
-    AssignmentListPanel,
+    AssignmentListEntry,
     AssignmentEmulatorMap,
     LocationCreateDialog,
     MeasurementsCreateDialog,
