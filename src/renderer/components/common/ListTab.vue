@@ -15,6 +15,7 @@
     <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes">
       <slot name="no-results"/>
     </pager>
+    <slot name="dialogs"></slot>
   </v-tabs-content>
 </template>
 

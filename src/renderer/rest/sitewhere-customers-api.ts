@@ -21,7 +21,10 @@ import {
 import {
   IDeviceLocationSearchResults,
   IDeviceMeasurementSearchResults,
-  IDeviceAlertSearchResults
+  IDeviceAlertSearchResults,
+  IDeviceLocationResponseFormat,
+  IDeviceMeasurementResponseFormat,
+  IDeviceAlertResponseFormat
 } from "sitewhere-rest-api/dist/model/device-events-model";
 
 /**
@@ -146,16 +149,23 @@ export function listAssignmentsForCustomer(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listLocationsForCustomer(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria?: IDateRangeSearchCriteria,
+  format?: IDeviceLocationResponseFormat
 ): Promise<AxiosResponse<IDeviceLocationSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceLocationSearchResults
-  > = SiteWhere.API.Customers.listLocationsForCustomer(axios, token, criteria);
+  > = SiteWhere.API.Customers.listLocationsForCustomer(
+    axios,
+    token,
+    criteria,
+    format
+  );
   return loaderWrapper(store, api);
 }
 
@@ -164,11 +174,13 @@ export function listLocationsForCustomer(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listMeasurementsForCustomer(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria?: IDateRangeSearchCriteria,
+  format?: IDeviceMeasurementResponseFormat
 ): Promise<AxiosResponse<IDeviceMeasurementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
@@ -176,7 +188,8 @@ export function listMeasurementsForCustomer(
   > = SiteWhere.API.Customers.listMeasurementsForCustomer(
     axios,
     token,
-    criteria
+    criteria,
+    format
   );
   return loaderWrapper(store, api);
 }
@@ -186,15 +199,22 @@ export function listMeasurementsForCustomer(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listAlertsForCustomer(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria?: IDateRangeSearchCriteria,
+  format?: IDeviceAlertResponseFormat
 ): Promise<AxiosResponse<IDeviceAlertSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceAlertSearchResults
-  > = SiteWhere.API.Customers.listAlertsForCustomer(axios, token, criteria);
+  > = SiteWhere.API.Customers.listAlertsForCustomer(
+    axios,
+    token,
+    criteria,
+    format
+  );
   return loaderWrapper(store, api);
 }

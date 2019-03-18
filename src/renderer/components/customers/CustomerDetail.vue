@@ -19,21 +19,16 @@
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
-        <v-tabs-content key="customers" id="customers">
-          <customer-contained-customers ref="customers" :customer="customer"></customer-contained-customers>
-        </v-tabs-content>
-        <v-tabs-content key="assignments" id="assignments">
-          <customer-assignments :customer="customer"></customer-assignments>
-        </v-tabs-content>
-        <v-tabs-content key="locations" id="locations">
-          <customer-location-events :customer="customer"></customer-location-events>
-        </v-tabs-content>
-        <v-tabs-content key="measurements" id="measurements">
-          <customer-measurement-events :customer="customer"></customer-measurement-events>
-        </v-tabs-content>
-        <v-tabs-content key="alerts" id="alerts">
-          <customer-alert-events :customer="customer"></customer-alert-events>
-        </v-tabs-content>
+        <customer-contained-customers
+          key="customers"
+          id="customers"
+          ref="customers"
+          :customer="customer"
+        ></customer-contained-customers>
+        <customer-assignments key="assignments" id="assignments" :customerToken="token"/>
+        <customer-location-events key="locations" id="locations" :customerToken="token"/>
+        <customer-measurement-events key="measurements" id="measurements" :customer="customer"/>
+        <customer-alert-events key="alerts" id="alerts" :customer="customer"></customer-alert-events>
       </v-tabs-items>
     </v-tabs>
     <template slot="dialogs">
@@ -51,7 +46,7 @@
       <customer-delete-dialog ref="delete" :token="token" @customerDeleted="onCustomerDeleted"/>
     </template>
     <template slot="actions">
-      <v-tooltip left v-if="customer.parentCustomer">
+      <v-tooltip left v-if="parentCustomer">
         <v-btn icon slot="activator" @click="onUpOneLevel">
           <font-awesome-icon icon="arrow-circle-up" size="lg"/>
         </v-btn>
@@ -125,6 +120,10 @@ export default class CustomerDetail extends Mixins(CustomerDetailComponent) {
 
   get title(): string {
     return this.customer ? this.customer.name : "";
+  }
+
+  get token(): string | null {
+    return this.customer ? this.customer.token : null;
   }
 
   /** Load record */

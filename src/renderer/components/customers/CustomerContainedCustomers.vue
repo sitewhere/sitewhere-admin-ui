@@ -1,91 +1,87 @@
 <template>
-  <div>
-    <v-container fluid grid-list-md v-if="customers">
-      <v-layout row wrap>
-        <v-flex xs6 v-for="(customer) in customers" :key="customer.token">
-          <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
-        </v-flex>
-      </v-layout>
-    </v-container>
-    <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer"/>
-    <pager :results="results" @pagingUpdated="updatePaging">
-      <no-results-panel slot="noresults" text="No Contained Customers Found"></no-results-panel>
-    </pager>
-  </div>
+  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
+    <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+      <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
+    </v-flex>
+    <template slot="dialogs">
+      <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer"/>
+    </template>
+  </list-tab>
 </template>
 
-<script>
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import CustomerListEntry from "./CustomerListEntry";
-import CustomerCreateDialog from "./CustomerCreateDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListTab from "../common/ListTab.vue";
+import CustomerListEntry from "./CustomerListEntry.vue";
+import CustomerCreateDialog from "./CustomerCreateDialog.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
+import {
+  ICustomer,
+  ICustomerSearchCriteria,
+  ICustomerResponseFormat,
+  ICustomerSearchResults
+} from "sitewhere-rest-api/dist/model/customers-model";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    customers: null
-  }),
+export class CustomerContainedCustomersListComponent extends ListComponent<
+  ICustomer,
+  ICustomerSearchCriteria,
+  ICustomerResponseFormat,
+  ICustomerSearchResults
+> {}
 
-  props: ["customer"],
-
+@Component({
   components: {
-    Pager,
-    NoResultsPanel,
+    ListTab,
     CustomerListEntry,
     CustomerCreateDialog
-  },
-
-  watch: {
-    // Refresh component if customer is updated.
-    customer: function(value) {
-      this.refresh();
-    }
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of assignments.
-    refresh: function() {
-      var component = this;
-      var customerToken = this.customer.token;
-      var paging = this.$data.paging.query;
-
-      // Search options.
-      let options = {};
-      options.rootOnly = false;
-      options.parentCustomerToken = customerToken;
-      options.includeCustomerType = true;
-      options.includeAssignments = false;
-
-      listCustomers(this.$store, options, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.customers = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    },
-
-    // Called to open a customer.
-    onOpenCustomer: function(customer) {
-      routeTo(this, "/customers/" + customer.token);
-    }
   }
-};
+})
+export default class CustomerTypeCustomers extends Mixins(
+  CustomerContainedCustomersListComponent
+) {
+  @Prop() readonly key!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly customerToken!: string;
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): ICustomerSearchCriteria {
+    let criteria: ICustomerSearchCriteria = {};
+    criteria.parentCustomerToken = this.customerToken;
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): ICustomerResponseFormat {
+    let format: ICustomerResponseFormat = {};
+    format.includeCustomerType = true;
+    format.includeParentCustomer = false;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: ICustomerSearchCriteria,
+    format: ICustomerResponseFormat
+  ): AxiosPromise<ICustomerSearchResults> {
+    return listCustomers(store, criteria, format);
+  }
+
+  /** Open device assignment detail page */
+  onOpenCustomer(customer: ICustomer) {
+    routeTo(this, "/customers/" + customer.token);
+  }
+}
 </script>
 
 <style scoped>
