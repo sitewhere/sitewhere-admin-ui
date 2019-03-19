@@ -19,13 +19,13 @@ import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { formatDate } from "../common/Utils";
 import { listMeasurementsForArea } from "../../rest/sitewhere-areas-api";
+import { IPageSizes } from "../../libraries/navigation-model";
 import {
   IDeviceMeasurement,
   IDeviceMeasurementResponseFormat,
-  IDeviceMeasurementSearchResults
-} from "sitewhere-rest-api/dist/model/device-events-model";
-import { IDateRangeSearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
-import { IPageSizes } from "../../libraries/navigation-model";
+  IDeviceMeasurementSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
 export class AreaMeasurementsListComponent extends ListComponent<
   IDeviceMeasurement,

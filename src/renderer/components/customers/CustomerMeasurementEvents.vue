@@ -16,15 +16,15 @@ import MeasurementEventsTable from "../common/MeasurementEventsTable.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { IPageSizes } from "../../libraries/navigation-model";
 import { AxiosPromise } from "axios";
 import { listMeasurementsForCustomer } from "../../rest/sitewhere-customers-api";
 import {
   IDeviceMeasurement,
   IDeviceMeasurementResponseFormat,
-  IDeviceMeasurementSearchResults
-} from "sitewhere-rest-api/dist/model/device-events-model";
-import { IDateRangeSearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
-import { IPageSizes } from "../../libraries/navigation-model";
+  IDeviceMeasurementSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
 export class CustomerMeasurementsListComponent extends ListComponent<
   IDeviceMeasurement,

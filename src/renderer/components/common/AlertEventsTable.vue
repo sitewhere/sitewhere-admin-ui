@@ -25,7 +25,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import { formatDate } from "../common/Utils";
-import { IDeviceAlert } from "sitewhere-rest-api/dist/model/device-events-model";
+import { IDeviceAlert } from "sitewhere-rest-api";
 
 @Component({})
 export default class AlertEventsTable extends Vue {

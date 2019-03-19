@@ -8,24 +8,18 @@ import {
   IArea,
   IAreaSearchCriteria,
   IAreaResponseFormat,
-  IAreaSearchResults
-} from "sitewhere-rest-api/dist/model/areas-model";
-import {
+  IAreaSearchResults,
   ISearchCriteria,
-  IDateRangeSearchCriteria
-} from "sitewhere-rest-api/dist/model/common-model";
-import {
+  IDateRangeSearchCriteria,
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
-} from "sitewhere-rest-api/dist/model/device-assignments-model";
-import {
+  IDeviceAssignmentSearchResults,
   IDeviceLocationSearchResults,
   IDeviceMeasurementSearchResults,
   IDeviceAlertSearchResults,
   IDeviceLocationResponseFormat,
   IDeviceMeasurementResponseFormat,
   IDeviceAlertResponseFormat
-} from "sitewhere-rest-api/dist/model/device-events-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new area.

@@ -21,7 +21,7 @@ import {
   IDeviceTypeResponseFormat,
   IDeviceTypeSearchCriteria,
   IDeviceTypeSearchResults
-} from "sitewhere-rest-api/dist/model/device-types-model";
+} from "sitewhere-rest-api";
 
 @Component
 export default class DeviceTypeSelector extends Vue {

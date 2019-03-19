@@ -9,7 +9,7 @@ import {
   IAssetTypeSearchCriteria,
   IAssetTypeResponseFormat,
   IAssetTypeSearchResults
-} from "sitewhere-rest-api/dist/model/asset-types-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new asset type.

@@ -40,7 +40,7 @@ import {
   IDeviceTypeSearchCriteria,
   IDeviceTypeResponseFormat,
   IDeviceTypeSearchResults
-} from "sitewhere-rest-api/dist/model/device-types-model";
+} from "sitewhere-rest-api";
 
 export class DeviceTypeListComponent extends ListComponent<
   IDeviceType,

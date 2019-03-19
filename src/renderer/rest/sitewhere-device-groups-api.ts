@@ -13,7 +13,7 @@ import {
   IDeviceGroupElement,
   IDeviceGroupSearchResults,
   IDeviceGroupElementSearchResults
-} from "sitewhere-rest-api/dist/model/device-groups-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new device group.

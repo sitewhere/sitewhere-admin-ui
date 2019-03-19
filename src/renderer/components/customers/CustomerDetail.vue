@@ -88,10 +88,7 @@ import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { INavigationSection } from "../../libraries/navigation-model";
 import { getCustomer } from "../../rest/sitewhere-customers-api";
-import {
-  ICustomer,
-  ICustomerResponseFormat
-} from "sitewhere-rest-api/dist/model/customers-model";
+import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
 
 export class CustomerDetailComponent extends DetailComponent<ICustomer> {}
 

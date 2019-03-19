@@ -51,9 +51,9 @@ import {
 } from "../../rest/sitewhere-instance-api";
 import {
   IConfigurationModel,
-  IElementContent
-} from "sitewhere-rest-api/dist/model/configuration-model";
-import { ITenant } from "sitewhere-rest-api/dist/model/tenants-model";
+  IElementContent,
+  ITenant
+} from "sitewhere-rest-api";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
 
 @Component({

@@ -9,7 +9,7 @@ import {
   IDeviceTypeSearchCriteria,
   IDeviceTypeResponseFormat,
   IDeviceTypeSearchResults
-} from "sitewhere-rest-api/dist/model/device-types-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new device type.

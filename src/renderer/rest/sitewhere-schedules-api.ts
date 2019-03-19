@@ -9,7 +9,7 @@ import {
   IScheduleSearchCriteria,
   IScheduleResponseFormat,
   IScheduleSearchResults
-} from "sitewhere-rest-api/dist/model/schedules-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new schedule.

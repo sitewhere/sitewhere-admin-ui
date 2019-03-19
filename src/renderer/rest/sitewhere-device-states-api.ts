@@ -7,7 +7,7 @@ import {
   IDeviceStateSearchCriteria,
   IDeviceStateResponseFormat,
   IDeviceStateSearchResults
-} from "sitewhere-rest-api/dist/model/device-states-model";
+} from "sitewhere-rest-api";
 
 /**
  * Search device states.

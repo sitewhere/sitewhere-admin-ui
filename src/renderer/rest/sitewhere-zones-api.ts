@@ -9,7 +9,7 @@ import {
   IZoneSearchCriteria,
   IZoneResponseFormat,
   IZoneSearchResults
-} from "sitewhere-rest-api/dist/model/zones-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new zone.

@@ -30,7 +30,7 @@ import {
   ICustomerSearchCriteria,
   ICustomerResponseFormat,
   ICustomerSearchResults
-} from "sitewhere-rest-api/dist/model/customers-model";
+} from "sitewhere-rest-api";
 
 export class CustomerSubcustomersListComponent extends ListComponent<
   ICustomer,

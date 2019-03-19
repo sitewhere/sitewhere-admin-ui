@@ -11,7 +11,7 @@ import {
   ISearchCriteria,
   IResponseFormat,
   ISearchResults
-} from "sitewhere-rest-api/dist/model/common-model";
+} from "sitewhere-rest-api";
 
 // Defines structure of table headers.
 export type ITableHeaders = {

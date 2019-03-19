@@ -10,7 +10,7 @@ import {
   IUserResponseFormat,
   IGrantedAuthorityHierarchyNode,
   IUserSearchResults
-} from "sitewhere-rest-api/dist/model/users-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new system user.

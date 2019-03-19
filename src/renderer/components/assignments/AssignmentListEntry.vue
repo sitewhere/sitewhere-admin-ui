@@ -33,7 +33,7 @@ import AssignmentStatusButton from "./AssignmentStatusButton.vue";
 import Vue from "vue";
 
 import { formatDate } from "../common/Utils";
-import { IDeviceAssignment } from "sitewhere-rest-api/dist/model/device-assignments-model";
+import { IDeviceAssignment } from "sitewhere-rest-api";
 
 @Component({
   components: {

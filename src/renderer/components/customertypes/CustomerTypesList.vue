@@ -48,7 +48,7 @@ import {
   ICustomerTypeSearchCriteria,
   ICustomerTypeResponseFormat,
   ICustomerTypeSearchResults
-} from "sitewhere-rest-api/dist/model/customer-types-model";
+} from "sitewhere-rest-api";
 
 export class CustomerTypeListComponent extends ListComponent<
   ICustomerType,

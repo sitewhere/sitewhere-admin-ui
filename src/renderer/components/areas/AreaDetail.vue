@@ -81,10 +81,7 @@ import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { INavigationSection } from "../../libraries/navigation-model";
 import { getArea } from "../../rest/sitewhere-areas-api";
-import {
-  IArea,
-  IAreaResponseFormat
-} from "sitewhere-rest-api/dist/model/areas-model";
+import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
 
 export class AreaDetailComponent extends DetailComponent<IArea> {}
 

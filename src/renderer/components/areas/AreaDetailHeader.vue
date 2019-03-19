@@ -38,7 +38,7 @@ import LinkedHeaderField from "../common/LinkedHeaderField.vue";
 import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 
 import { formatDate } from "../common/Utils";
-import { IArea } from "sitewhere-rest-api/dist/model/areas-model";
+import { IArea } from "sitewhere-rest-api";
 
 export class AreaHeaderComponent extends HeaderComponent<IArea> {}
 

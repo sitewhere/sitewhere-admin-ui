@@ -44,7 +44,7 @@ import {
   IAssetTypeSearchCriteria,
   IAssetTypeResponseFormat,
   IAssetTypeSearchResults
-} from "sitewhere-rest-api/dist/model/asset-types-model";
+} from "sitewhere-rest-api";
 
 export class AreaListComponent extends ListComponent<
   IAssetType,

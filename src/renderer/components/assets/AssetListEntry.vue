@@ -23,7 +23,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import { IStyle } from "../common/Style";
-import { IAsset } from "sitewhere-rest-api/dist/model/assets-model";
+import { IAsset } from "sitewhere-rest-api";
 
 @Component({})
 export default class AssetListEntry extends Vue {

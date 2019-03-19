@@ -2,14 +2,14 @@ import * as SiteWhere from "sitewhere-rest-api";
 import { AxiosInstance, AxiosPromise, AxiosResponse } from "axios";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../store";
+import { createCoreApiCall, loaderWrapper } from "./sitewhere-api-wrapper";
 import {
   IScriptTemplate,
   IScriptMetadata,
   IScriptCreateRequest,
   IScriptVersion,
   IScriptCloneRequest
-} from "sitewhere-rest-api/dist/model/scripting-model";
-import { createCoreApiCall, loaderWrapper } from "./sitewhere-api-wrapper";
+} from "sitewhere-rest-api";
 
 /**
  * List script templates for a given microservice.

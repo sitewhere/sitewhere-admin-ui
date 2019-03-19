@@ -11,7 +11,7 @@ import {
   ITenantTemplate,
   IDatasetTemplate,
   ITenantSearchResults
-} from "sitewhere-rest-api/dist/model/tenants-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new system tenant.

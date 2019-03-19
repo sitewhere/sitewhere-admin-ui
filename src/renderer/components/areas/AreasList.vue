@@ -41,7 +41,7 @@ import {
   IAreaSearchCriteria,
   IAreaResponseFormat,
   IAreaSearchResults
-} from "sitewhere-rest-api/dist/model/areas-model";
+} from "sitewhere-rest-api";
 
 export class AreaListComponent extends ListComponent<
   IArea,

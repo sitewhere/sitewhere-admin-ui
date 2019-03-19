@@ -65,7 +65,7 @@ import {
   IDeviceSearchCriteria,
   IDeviceResponseFormat,
   IDeviceSearchResults
-} from "sitewhere-rest-api/dist/model/devices-model";
+} from "sitewhere-rest-api";
 
 export class DeviceListComponent extends ListComponent<
   IDevice,

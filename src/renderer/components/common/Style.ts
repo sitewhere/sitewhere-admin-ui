@@ -1,4 +1,4 @@
-import { IDeviceAssignment } from "sitewhere-rest-api/dist/model/device-assignments-model";
+import { IDeviceAssignment } from "sitewhere-rest-api";
 
 // Common style declaration.
 export type IStyle = { [id: string]: any };

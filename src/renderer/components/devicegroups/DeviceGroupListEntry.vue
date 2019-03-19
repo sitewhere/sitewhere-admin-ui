@@ -18,7 +18,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import { IStyle } from "../common/Style";
-import { IDeviceGroup } from "sitewhere-rest-api/dist/model/device-groups-model";
+import { IDeviceGroup } from "sitewhere-rest-api";
 
 @Component({})
 export default class DeviceGroupListEntry extends Vue {

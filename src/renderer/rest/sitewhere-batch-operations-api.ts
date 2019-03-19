@@ -11,9 +11,9 @@ import {
   IBatchCommandInvocationRequest,
   IBatchCommandForCriteriaRequest,
   IBatchOperationSearchResults,
-  IBatchElementSearchResults
-} from "sitewhere-rest-api/dist/model/batch-operations-model";
-import { ISearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
+  IBatchElementSearchResults,
+  ISearchCriteria
+} from "sitewhere-rest-api";
 
 /**
  * Get batch operation by token.

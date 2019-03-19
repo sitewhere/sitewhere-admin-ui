@@ -9,7 +9,7 @@ import {
   IDeviceCommandSearchCriteria,
   IDeviceCommandResponseFormat,
   IDeviceCommandSearchResults
-} from "sitewhere-rest-api/dist/model/device-commands-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create new device command.

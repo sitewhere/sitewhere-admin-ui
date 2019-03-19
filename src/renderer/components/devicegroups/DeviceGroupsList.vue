@@ -40,7 +40,7 @@ import {
   IDeviceGroupSearchCriteria,
   IDeviceGroupResponseFormat,
   IDeviceGroupSearchResults
-} from "sitewhere-rest-api/dist/model/device-groups-model";
+} from "sitewhere-rest-api";
 
 export class DeviceGroupListComponent extends ListComponent<
   IDeviceGroup,

@@ -8,9 +8,7 @@ import {
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
-} from "sitewhere-rest-api/dist/model/device-assignments-model";
-import {
+  IDeviceAssignmentSearchResults,
   IDeviceMeasurementCreateRequest,
   IDeviceMeasurement,
   IChartSeries,
@@ -24,9 +22,9 @@ import {
   IDeviceLocationSearchResults,
   IDeviceAlertSearchResults,
   IDeviceCommandInvocationSearchResults,
-  IDeviceCommandResponseSearchResults
-} from "sitewhere-rest-api/dist/model/device-events-model";
-import { IDateRangeSearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
+  IDeviceCommandResponseSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
 /**
  * Create a device assignment.

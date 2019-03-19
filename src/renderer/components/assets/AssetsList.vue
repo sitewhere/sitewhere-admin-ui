@@ -42,7 +42,7 @@ import {
   IAssetSearchCriteria,
   IAssetResponseFormat,
   IAssetSearchResults
-} from "sitewhere-rest-api/dist/model/assets-model";
+} from "sitewhere-rest-api";
 
 export class AssetListComponent extends ListComponent<
   IAsset,

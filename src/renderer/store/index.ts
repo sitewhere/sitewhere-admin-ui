@@ -1,8 +1,7 @@
 import Vue from "vue";
 import Vuex, { StoreOptions } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import { IUser } from "sitewhere-rest-api/dist/model/users-model";
-import { ITenant } from "sitewhere-rest-api/dist/model/tenants-model";
+import { IUser, ITenant } from "sitewhere-rest-api";
 import { INavigationSection } from "../libraries/navigation-model";
 
 Vue.use(Vuex);

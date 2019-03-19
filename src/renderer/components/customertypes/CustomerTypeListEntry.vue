@@ -22,7 +22,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import { ICustomerType } from "sitewhere-rest-api/dist/model/customer-types-model";
+import { ICustomerType } from "sitewhere-rest-api";
 
 @Component
 export default class DeviceTypeSelector extends Vue {

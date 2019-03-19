@@ -49,7 +49,7 @@ import ZoneDeleteDialog from "./ZoneDeleteDialog.vue";
 import Vue from "vue";
 
 import { formatDate } from "../common/Utils";
-import { IZone } from "sitewhere-rest-api/dist/model/zones-model";
+import { IZone } from "sitewhere-rest-api";
 
 @Component({
   components: {

@@ -16,15 +16,15 @@ import LocationEventsTable from "../common/LocationEventsTable.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { IPageSizes } from "../../libraries/navigation-model";
 import { AxiosPromise } from "axios";
 import { listLocationsForCustomer } from "../../rest/sitewhere-customers-api";
 import {
   IDeviceLocation,
   IDeviceLocationResponseFormat,
-  IDeviceLocationSearchResults
-} from "sitewhere-rest-api/dist/model/device-events-model";
-import { IDateRangeSearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
-import { IPageSizes } from "../../libraries/navigation-model";
+  IDeviceLocationSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
 export class CustomerLocationsListComponent extends ListComponent<
   IDeviceLocation,

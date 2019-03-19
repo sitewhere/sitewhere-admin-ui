@@ -27,8 +27,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import { IStyle, styleForAssignmentStatus } from "../common/Style";
-import { IDevice } from "sitewhere-rest-api/dist/model/devices-model";
-import { IDeviceAssignment } from "sitewhere-rest-api/dist/model/device-assignments-model";
+import { IDevice, IDeviceAssignment } from "sitewhere-rest-api";
 
 @Component({})
 export default class DeviceListEntry extends Vue {

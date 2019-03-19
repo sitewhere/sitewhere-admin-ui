@@ -44,7 +44,7 @@ import {
   ITenantSearchCriteria,
   ITenantResponseFormat,
   ITenantSearchResults
-} from "sitewhere-rest-api/dist/model/tenants-model";
+} from "sitewhere-rest-api";
 
 export class TenantListComponent extends ListComponent<
   ITenant,

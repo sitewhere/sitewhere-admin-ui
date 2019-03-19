@@ -36,7 +36,7 @@ import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import HeaderField from "../common/HeaderField.vue";
 import LinkedHeaderField from "../common/LinkedHeaderField.vue";
 import ClipboardCopyField from "../common/ClipboardCopyField.vue";
-import { ICustomer } from "sitewhere-rest-api/dist/model/customers-model";
+import { ICustomer } from "sitewhere-rest-api";
 
 export class CustomerHeaderComponent extends HeaderComponent<ICustomer> {}
 

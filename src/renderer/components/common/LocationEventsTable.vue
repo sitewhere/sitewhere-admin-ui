@@ -27,7 +27,7 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import { formatDate, fourDecimalPlaces } from "../common/Utils";
-import { IDeviceLocation } from "sitewhere-rest-api/dist/model/device-events-model";
+import { IDeviceLocation } from "sitewhere-rest-api";
 
 @Component({})
 export default class LocationEventsTable extends Vue {

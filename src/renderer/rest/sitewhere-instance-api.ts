@@ -2,15 +2,13 @@ import * as SiteWhere from "sitewhere-rest-api";
 import { AxiosInstance, AxiosPromise, AxiosResponse } from "axios";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../store";
-import {
-  IInstanceTopologySummary,
-  ITenantEngineState
-} from "sitewhere-rest-api/dist/model/instance-model";
 import { createCoreApiCall, loaderWrapper } from "./sitewhere-api-wrapper";
 import {
+  IInstanceTopologySummary,
+  ITenantEngineState,
   IConfigurationModel,
   IElementContent
-} from "sitewhere-rest-api/dist/model/configuration-model";
+} from "sitewhere-rest-api";
 
 /**
  * Get instance topology information.

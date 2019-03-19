@@ -8,13 +8,11 @@ import {
   IDevice,
   IDeviceSearchCriteria,
   IDeviceResponseFormat,
-  IDeviceSearchResults
-} from "sitewhere-rest-api/dist/model/devices-model";
-import { ISearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
-import {
+  IDeviceSearchResults,
+  ISearchCriteria,
   IDeviceAssignmentResponseFormat,
   IDeviceAssignmentSearchResults
-} from "sitewhere-rest-api/dist/model/device-assignments-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a device.

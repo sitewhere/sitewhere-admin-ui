@@ -9,7 +9,7 @@ import {
   IAreaTypeSearchCriteria,
   IAreaTypeResponseFormat,
   IAreaTypeSearchResults
-} from "sitewhere-rest-api/dist/model/area-types-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new area type.

@@ -18,13 +18,13 @@ import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listAlertsForArea } from "../../rest/sitewhere-areas-api";
+import { IPageSizes } from "../../libraries/navigation-model";
 import {
   IDeviceAlert,
   IDeviceAlertResponseFormat,
-  IDeviceAlertSearchResults
-} from "sitewhere-rest-api/dist/model/device-events-model";
-import { IDateRangeSearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
-import { IPageSizes } from "../../libraries/navigation-model";
+  IDeviceAlertSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
 export class CustomerMeasurementsListComponent extends ListComponent<
   IDeviceAlert,

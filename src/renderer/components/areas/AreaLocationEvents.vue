@@ -18,13 +18,13 @@ import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listLocationsForArea } from "../../rest/sitewhere-areas-api";
+import { IPageSizes } from "../../libraries/navigation-model";
 import {
   IDeviceLocation,
   IDeviceLocationResponseFormat,
-  IDeviceLocationSearchResults
-} from "sitewhere-rest-api/dist/model/device-events-model";
-import { IDateRangeSearchCriteria } from "sitewhere-rest-api/dist/model/common-model";
-import { IPageSizes } from "../../libraries/navigation-model";
+  IDeviceLocationSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
 export class AreaLocationsListComponent extends ListComponent<
   IDeviceLocation,

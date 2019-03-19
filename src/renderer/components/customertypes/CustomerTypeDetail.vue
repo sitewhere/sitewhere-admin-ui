@@ -67,7 +67,7 @@ import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
 import {
   ICustomerType,
   ICustomerTypeResponseFormat
-} from "sitewhere-rest-api/dist/model/customer-types-model";
+} from "sitewhere-rest-api";
 
 export class CustomerTypeDetailComponent extends DetailComponent<
   ICustomerType

@@ -46,9 +46,7 @@
         </div>
       </div>
       <v-container>
-        <div
-          style="width: 550px; margin-left: auto; margin-right: auto; position: relative; padding-top: 220px; padding-left: 50px;"
-        >
+        <div class="login-wrapper">
           <div class="sitewhere-logo"></div>
           <error-banner :error="error"></error-banner>
           <v-card-text class="ma-0 pa-1">
@@ -83,7 +81,7 @@
           </v-card-text>
           <v-card-actions class="pr-2">
             <v-spacer></v-spacer>
-            <v-btn type="submit" primary dark @click.native="onLogin" :loading="loggingIn">Login</v-btn>
+            <v-btn type="submit" color="primary" dark @click="onLogin" :loading="loggingIn">Login</v-btn>
           </v-card-actions>
           <v-dialog v-model="noserver" max-width="300">
             <v-card>
@@ -95,7 +93,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn primary flat @click.native="noserver = false">OK</v-btn>
+                <v-btn color="primary" flat @click="noserver = false">OK</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -120,7 +118,7 @@ import { Settings } from "../libraries/user-settings";
 import { GoogleAnalytics } from "../libraries/google-analytics";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { getUser } from "../rest/sitewhere-users-api";
-import { IUser } from "sitewhere-rest-api/dist/model/users-model";
+import { IUser } from "sitewhere-rest-api";
 
 // Discord logo and tooltip.
 const discordSvgContent: string =
@@ -285,9 +283,17 @@ export default class Login extends Vue {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.login-wrapper {
+  width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  padding-top: 300px;
+  padding-left: 50px;
+}
 .sitewhere-logo {
   position: absolute;
-  top: 0;
+  top: 80px;
   left: 50px;
   right: 0;
   height: 165px;

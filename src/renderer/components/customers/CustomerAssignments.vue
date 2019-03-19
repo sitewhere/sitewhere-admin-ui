@@ -31,7 +31,7 @@ import {
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
   IDeviceAssignmentSearchResults
-} from "sitewhere-rest-api/dist/model/device-assignments-model";
+} from "sitewhere-rest-api";
 
 export class CustomerAssignmentsListComponent extends ListComponent<
   IDeviceAssignment,

@@ -73,6 +73,7 @@ import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { formatDate, routeTo, handleError } from "../common/Utils";
 import { IPageSizes, IPaging } from "../../libraries/navigation-model";
+import { AxiosResponse } from "axios";
 import { ITableHeaders } from "../../libraries/component-model";
 import { listBatchOperations } from "../../rest/sitewhere-batch-operations-api";
 import {
@@ -80,8 +81,7 @@ import {
   IBatchOperationSearchResults,
   IBatchOperationSearchCriteria,
   IBatchOperationResponseFormat
-} from "sitewhere-rest-api/dist/model/batch-operations-model";
-import { AxiosResponse } from "axios";
+} from "sitewhere-rest-api";
 
 @Component({
   components: {

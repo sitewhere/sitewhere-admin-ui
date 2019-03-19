@@ -9,7 +9,7 @@ import {
   IDeviceStatusSearchCriteria,
   IDeviceStatusResponseFormat,
   IDeviceStatusSearchResults
-} from "sitewhere-rest-api/dist/model/device-statuses-model";
+} from "sitewhere-rest-api";
 
 /**
  * Create a new device status.

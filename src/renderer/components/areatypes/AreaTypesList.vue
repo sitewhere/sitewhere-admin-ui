@@ -43,7 +43,7 @@ import {
   IAreaTypeSearchCriteria,
   IAreaTypeResponseFormat,
   IAreaTypeSearchResults
-} from "sitewhere-rest-api/dist/model/area-types-model";
+} from "sitewhere-rest-api";
 
 export class AreaTypeListComponent extends ListComponent<
   IAreaType,

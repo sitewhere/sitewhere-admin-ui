@@ -2,38 +2,36 @@
   <img v-if="!hidden">
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+
 import { imageAuthGet } from "../../rest/sitewhere-api-wrapper";
 
-export default {
-  data: () => ({
-    hidden: false
-  }),
+@Component({})
+export default class AuthenticatedImage extends Vue {
+  @Prop() readonly url!: string;
 
-  components: {},
+  hidden: boolean = false;
 
-  props: ["url"],
-
-  created: function() {
+  created() {
     var component = this;
-    _imageAuthGet(this.$store, this.url)
+    imageAuthGet(this.$store, this.url)
       .then(function(response) {
-        var reader = new window.FileReader();
+        var reader: FileReader = new FileReader();
         reader.readAsDataURL(response.data);
         reader.onload = function() {
           var imageDataUrl = reader.result;
           let image = component.$el;
-          image.setAttribute("src", imageDataUrl);
-          component.$data.hidden = false;
+          image.setAttribute("src", imageDataUrl as string);
+          component.hidden = false;
         };
       })
       .catch(function(e) {
-        component.$data.hidden = true;
+        component.hidden = true;
       });
-  },
-
-  methods: {}
-};
+  }
+}
 </script>
 
 <style scoped>
