@@ -57,25 +57,32 @@
           <v-card-text>
             <v-layout row wrap>
               <v-flex xs12 class="mb-2">
-                <v-text-field hide-details label="Username" v-model="username"></v-text-field>
+                <v-text-field hide-details box label="Username" placeholder=" " v-model="username"></v-text-field>
                 <div class="verror">
                   <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
                 </div>
               </v-flex>
               <v-flex xs12 class="mb-4">
-                <v-text-field hide-details label="Password" v-model="password" type="password"></v-text-field>
+                <v-text-field
+                  hide-details
+                  box
+                  label="Password"
+                  placeholder=" "
+                  v-model="password"
+                  type="password"
+                ></v-text-field>
                 <div class="verror">
                   <span v-if="$v.password.$invalid && $v.$dirty">Password is required.</span>
                 </div>
               </v-flex>
               <v-flex xs3 class="pr-3">
-                <v-select required :items="protocols" v-model="protocol" label="Protocol"></v-select>
+                <v-select required box :items="protocols" v-model="protocol" label="Protocol"></v-select>
               </v-flex>
               <v-flex xs5 class="pr-3">
-                <v-text-field hide-details label="Server" v-model="server"></v-text-field>
+                <v-text-field hide-details box label="Server" v-model="server"></v-text-field>
               </v-flex>
               <v-flex xs4>
-                <v-text-field hide-details label="Port" type="number" v-model="port"></v-text-field>
+                <v-text-field hide-details box label="Port" type="number" v-model="port"></v-text-field>
               </v-flex>
             </v-layout>
           </v-card-text>
@@ -99,6 +106,22 @@
           </v-dialog>
         </div>
       </v-container>
+      <div style="-webkit-app-region: drag" class="draggable-area"></div>
+      <v-system-bar color="transparent" class="title-bar">
+        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="minWindow">
+          <v-icon>menu</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="minWindow">
+          <v-icon>remove</v-icon>
+        </v-btn>
+        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="maxWindow">
+          <v-icon>check_box_outline_blank</v-icon>
+        </v-btn>
+        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="closeWindow">
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-system-bar>
     </main>
   </v-app>
 </template>
@@ -110,6 +133,7 @@ import { Component } from "vue-property-decorator";
 import ErrorBanner from "./common/ErrorBanner.vue";
 import SocialButton from "./SocialButton.vue";
 
+import Electron from "electron";
 import { handleError } from "./common/Utils";
 import { AxiosResponse } from "axios";
 import { validationMixin } from "vuelidate";
@@ -243,6 +267,18 @@ export default class Login extends Vue {
     this.$store.commit("settings", settings);
     GoogleAnalytics.sendStartupEvent(settings);
   }
+
+  minWindow() {
+    Electron.remote.getCurrentWindow().minimize();
+  }
+
+  maxWindow() {
+    Electron.remote.getCurrentWindow().maximize();
+  }
+
+  closeWindow() {
+    Electron.remote.getCurrentWindow().close();
+  }
 }
 </script>
 
@@ -253,6 +289,22 @@ export default class Login extends Vue {
   right: 0;
   bottom: 0;
   left: 0;
+}
+.draggable-area {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100px;
+}
+.title-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+.title-bar-button {
+  -webkit-app-region: no-drag;
 }
 .social {
   position: absolute;
