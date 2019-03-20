@@ -1,31 +1,27 @@
 <template>
-  <v-list v-if="sections" dense class="pt-0">
-    <v-list-group v-for="navsect in sections" :value="navsect.active" :key="navsect.id">
-      <v-list-tile
-        v-if="isAuthForSection(navsect)"
-        @click.native="onSectionClicked(navsect)"
-        slot="item"
-      >
-        <v-list-tile-action>
-          <font-awesome-icon :icon="navsect.icon" size="lg"/>
-        </v-list-tile-action>
+  <v-list v-if="sections" dense>
+    <v-list-group
+      v-for="section in sections"
+      :key="section.id"
+      v-model="section.active"
+      :prepend-icon="section.icon"
+      no-action
+    >
+      <template v-slot:activator>
+        <v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>{{ section.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </template>
+
+      <v-list-tile v-for="subsection in section.subsections" :key="subsection.id">
         <v-list-tile-content>
-          <v-list-tile-title>{{ navsect.title }}</v-list-tile-title>
+          <v-list-tile-title>{{ subsection.title }}</v-list-tile-title>
         </v-list-tile-content>
-        <v-list-tile-action v-if="navsect.subsections">
-          <v-icon dark>keyboard_arrow_down</v-icon>
-        </v-list-tile-action>
-      </v-list-tile>
-      <v-list-tile
-        @click="onSectionClicked(navsub)"
-        v-for="navsub in navsect.subsections"
-        :key="navsub.id"
-      >
-        <v-list-tile-content>
-          <v-list-tile-title>{{ navsub.title }}</v-list-tile-title>
-        </v-list-tile-content>
+
         <v-list-tile-action>
-          <font-awesome-icon :icon="navsub.icon" size="lg"/>
+          <v-icon>{{ subsection.icon }}</v-icon>
         </v-list-tile-action>
       </v-list-tile>
     </v-list-group>

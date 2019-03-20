@@ -43,9 +43,9 @@ export default class BaseDialog extends Vue {
   @Prop() readonly createLabel!: string;
   @Prop() readonly cancelLabel!: string;
   @Prop() readonly error!: string;
-  @Prop() readonly hideButtons: boolean = false;
-  @Prop() readonly hideCreate: boolean = false;
-  @Prop() readonly invalid: boolean = false;
+  @Prop() readonly hideButtons!: boolean;
+  @Prop() readonly hideCreate!: boolean;
+  @Prop() readonly invalid!: boolean;
 
   // Called when create button is clicked.
   onCancelClicked(e: any) {

@@ -3,15 +3,6 @@
     <error-banner :error="error"></error-banner>
     <v-progress-linear v-if="loading" class="call-progress pa-0 ma-0"></v-progress-linear>
     <v-navigation-drawer dark fixed mini-variant.sync="false" v-model="drawer" app>
-      <v-list>
-        <v-list-tile tag="div">
-          <img
-            src="https://s3.amazonaws.com/sitewhere-demo/sitewhere-white.png"
-            style="height: 40px;"
-          >
-        </v-list-tile>
-      </v-list>
-      <v-divider></v-divider>
       <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
     </v-navigation-drawer>
     <v-toolbar fixed class="grey darken-3" dark app>
@@ -35,9 +26,6 @@
     <v-content>
       <router-view></router-view>
     </v-content>
-    <!--
-    <v-footer fixed dark class="pa-1">Copyright 2017 <strong>SiteWhere LLC</strong></v-footer>
-    -->
   </v-app>
 </template>
 
@@ -72,7 +60,7 @@ export default class SystemAdministration extends Vue {
     {
       id: "tenants",
       title: "Manage Tenants",
-      icon: "layer-group",
+      icon: "layers",
       route: "system/tenants",
       longTitle: "Manage System Tenants",
       requireAll: ["ADMINISTER_TENANTS"]
@@ -80,7 +68,7 @@ export default class SystemAdministration extends Vue {
     {
       id: "users",
       title: "Manage Users",
-      icon: "users",
+      icon: "people",
       route: "system/users",
       longTitle: "Manage System Users",
       requireAll: ["ADMINISTER_USERS"]
@@ -88,7 +76,7 @@ export default class SystemAdministration extends Vue {
     {
       id: "global",
       title: "Global Microservices",
-      icon: "globe",
+      icon: "language",
       route: "system/microservices",
       longTitle: "Manage Global microservices",
       requireAll: ["ADMINISTER_TENANTS"]

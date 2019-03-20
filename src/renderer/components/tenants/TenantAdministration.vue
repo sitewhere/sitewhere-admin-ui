@@ -52,21 +52,21 @@ export default {
       {
         id: "customersGroup",
         title: "Customer Management",
-        icon: "building",
+        icon: "account_balance",
         route: "customers",
         longTitle: "Manage Customers",
         subsections: [
           {
             id: "customertypes",
             title: "Customer Types",
-            icon: "cog",
+            icon: "settings",
             route: "customertypes",
             longTitle: "Manage Customer Types"
           },
           {
             id: "customers",
             title: "Customers",
-            icon: "building",
+            icon: "account_balance",
             route: "customers",
             longTitle: "Manage Customers"
           }
@@ -75,21 +75,21 @@ export default {
       {
         id: "areasGroup",
         title: "Area Management",
-        icon: "map",
+        icon: "collections",
         route: "areas",
         longTitle: "Manage Areas",
         subsections: [
           {
             id: "areatypes",
             title: "Area Types",
-            icon: "cog",
+            icon: "settings",
             route: "areatypes",
             longTitle: "Manage Area Types"
           },
           {
             id: "areas",
             title: "Areas",
-            icon: "map",
+            icon: "collections",
             route: "areas",
             longTitle: "Manage Areas"
           }
@@ -98,28 +98,28 @@ export default {
       {
         id: "deviceGroup",
         title: "Device Management",
-        icon: "microchip",
+        icon: "developer_board",
         route: "devices",
         longTitle: "Manage Devices",
         subsections: [
           {
             id: "devicetypes",
             title: "Device Types",
-            icon: "cog",
+            icon: "settings",
             route: "devicetypes",
             longTitle: "Manage Device Types"
           },
           {
             id: "devices",
             title: "Devices",
-            icon: "microchip",
+            icon: "developer_board",
             route: "devices",
             longTitle: "Manage Devices"
           },
           {
             id: "groups",
             title: "Device Groups",
-            icon: "cubes",
+            icon: "apps",
             route: "groups",
             longTitle: "Manage Device Groups"
           }
@@ -128,21 +128,21 @@ export default {
       {
         id: "assetGroup",
         title: "Asset Management",
-        icon: "car",
+        icon: "link",
         route: "assets",
         longTitle: "Manage Assets",
         subsections: [
           {
             id: "assettypes",
             title: "Asset Types",
-            icon: "cog",
+            icon: "settings",
             route: "assettypes",
             longTitle: "Manage Asset Types"
           },
           {
             id: "assets",
             title: "Assets",
-            icon: "car",
+            icon: "link",
             route: "assets",
             longTitle: "Manage Assets"
           }
@@ -151,14 +151,14 @@ export default {
       {
         id: "batch",
         title: "Batch Operations",
-        icon: "list-alt",
+        icon: "view_module",
         route: "batch",
         longTitle: "Manage Batch Operations"
       },
       {
         id: "schedules",
         title: "Schedules",
-        icon: "calendar",
+        icon: "access_alarm",
         route: "schedules",
         longTitle: "Manage Schedules"
       }
