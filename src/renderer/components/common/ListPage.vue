@@ -2,7 +2,7 @@
   <navigation-page :icon="icon" :title="title" :loadingMessage="loadingMessage" :loaded="loaded">
     <div slot="content">
       <slot name="filters"/>
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="loaded">
+      <v-container fluid grid-list-md style="background-color: #eee;" class="pa-2" v-if="loaded">
         <v-layout row wrap>
           <slot/>
         </v-layout>

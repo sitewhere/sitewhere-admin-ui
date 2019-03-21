@@ -1,15 +1,9 @@
 <template>
   <v-app v-if="user">
-    <error-banner :error="error"></error-banner>
-    <v-progress-linear v-if="loading" class="call-progress pa-0 ma-0"></v-progress-linear>
-    <v-navigation-drawer dark fixed mini-variant.sync="false" v-model="drawer" app>
+    <in-app-system-bar style="-webkit-app-region: drag"/>
+    <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
+      <v-toolbar class="elevation-1" style="height: 47px;" dense></v-toolbar>
       <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
-    </v-navigation-drawer>
-    <v-toolbar fixed class="grey darken-3" dark app>
-      <v-toolbar-side-icon class="grey--text" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <font-awesome-icon :icon="section.icon" size="lg"/>
-      <v-toolbar-title class="subheading">{{ section.longTitle }}</v-toolbar-title>
-      <v-spacer></v-spacer>
       <v-menu bottom right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
           <font-awesome-icon icon="user" class="mr-2"/>
@@ -22,7 +16,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-    </v-toolbar>
+    </v-navigation-drawer>
     <v-content>
       <router-view></router-view>
     </v-content>
@@ -33,8 +27,8 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 
+import InAppSystemBar from "./common/InAppSystemBar.vue";
 import Navigation from "./common/Navigation.vue";
-import ErrorBanner from "./common/ErrorBanner.vue";
 
 import { handleError } from "./common/Utils";
 import { AxiosResponse } from "axios";
@@ -50,8 +44,8 @@ export interface IAction {
 
 @Component({
   components: {
-    Navigation,
-    ErrorBanner
+    InAppSystemBar,
+    Navigation
   }
 })
 export default class SystemAdministration extends Vue {
@@ -179,9 +173,4 @@ export default class SystemAdministration extends Vue {
 </script>
 
 <style scoped>
-.call-progress {
-  position: fixed;
-  height: 100px;
-  z-index: 1000;
-}
 </style>

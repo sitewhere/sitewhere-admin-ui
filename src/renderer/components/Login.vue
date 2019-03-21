@@ -216,7 +216,16 @@ export default class Login extends Vue {
     }
 
     let token = btoa(this.username + ":" + this.password);
+
+    // Save updates to server settings.
+    this.$store.commit("protocol", this.protocol);
+    this.$store.commit("server", this.server);
+    this.$store.commit("port", this.port);
+
+    // Save Authorization token.
     this.$store.commit("authToken", token);
+
+    // Clear existing tenant selection.
     this.$store.commit("selectedTenant", null);
 
     // Get JWT from server.

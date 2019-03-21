@@ -1,23 +1,9 @@
 <template>
   <v-app v-if="user">
-    <error-banner :error="error"></error-banner>
-    <v-navigation-drawer fixed dark mini-variant.sync="false" v-model="drawer" app>
-      <v-list>
-        <v-list-tile tag="div">
-          <img
-            src="https://s3.amazonaws.com/sitewhere-demo/sitewhere-white.png"
-            style="height: 40px;"
-          >
-        </v-list-tile>
-      </v-list>
-      <v-divider></v-divider>
+    <in-app-system-bar style="-webkit-app-region: drag"/>
+    <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
+      <v-toolbar class="elevation-1" style="height: 47px;" dense></v-toolbar>
       <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
-    </v-navigation-drawer>
-    <v-toolbar fixed class="grey darken-3" dark app>
-      <v-toolbar-side-icon class="grey--text" @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <font-awesome-icon :icon="section.icon" size="lg"/>
-      <v-toolbar-title class="subheading">{{ section.longTitle }}</v-toolbar-title>
-      <v-spacer></v-spacer>
       <v-menu bottom right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
           <font-awesome-icon icon="user" class="mr-2"/>
@@ -30,7 +16,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-    </v-toolbar>
+    </v-navigation-drawer>
     <v-content>
       <router-view></router-view>
     </v-content>
@@ -38,8 +24,8 @@
 </template>
 
 <script>
+import InAppSystemBar from "../common/InAppSystemBar.vue";
 import Navigation from "../common/Navigation";
-import ErrorBanner from "../common/ErrorBanner";
 
 import { getJwt } from "../../rest/sitewhere-api-wrapper";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
@@ -179,8 +165,8 @@ export default {
   }),
 
   components: {
-    Navigation,
-    ErrorBanner
+    InAppSystemBar,
+    Navigation
   },
 
   computed: {

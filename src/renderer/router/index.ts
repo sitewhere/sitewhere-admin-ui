@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Router, { RouteConfig } from "vue-router";
 
+import Login from "@/components/Login.vue";
+import SystemAdministration from "@/components/SystemAdministration.vue";
 import TenantsList from "@/components/tenants/TenantsList.vue";
 import TenantDetail from "@/components/tenants/TenantDetail.vue";
 import TenantMicroserviceEditor from "@/components/tenants/TenantMicroserviceEditor.vue";
@@ -39,13 +41,11 @@ Vue.use(Router);
 const routes = <Array<RouteConfig>>[
   {
     path: "/",
-    component: () =>
-      import(/* webpackChunkName: "login" */ "@/components/Login.vue")
+    component: Login
   },
   {
     path: "/system",
-    component: () =>
-      import(/* webpackChunkName: "sysadmin" */ "@/components/SystemAdministration.vue"),
+    component: SystemAdministration,
     children: [
       {
         path: "tenants",
