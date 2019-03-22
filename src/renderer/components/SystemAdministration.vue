@@ -26,7 +26,7 @@
         </v-layout>
       </v-container>
     </v-content>
-    <in-app-footer style="border-top: 1px solid #ddd;"/>
+    <in-app-footer/>
   </v-app>
 </template>
 

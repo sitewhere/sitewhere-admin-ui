@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pager grey lighten-3 black--text pa-0">
+  <div class="pager">
     <slot v-if="results && results.numResults === 0" name="noresults"></slot>
     <v-container class="ma-0 pa-0">
       <v-layout row wrap>
@@ -81,7 +81,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -225,7 +225,8 @@ export default class Pager extends Vue {
 
 <style scoped>
 .pager {
+  color: #333;
+  background-color: #eee;
   border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
 }
 </style>
