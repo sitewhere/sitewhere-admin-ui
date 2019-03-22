@@ -1,18 +1,26 @@
 <template>
   <navigation-page :icon="icon" :title="title" :loadingMessage="loadingMessage" :loaded="loaded">
-    <div slot="content">
-      <slot name="filters"/>
-      <v-container fluid grid-list-md style="background-color: #eee;" class="pa-2" v-if="loaded">
-        <v-layout row wrap>
-          <slot/>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes"></pager>
-      <slot name="dialogs"></slot>
-    </div>
-    <div slot="actions">
+    <template slot="content">
+      <div class="flex-rows">
+        <div class="list-filters">
+          <slot name="filters"/>
+        </div>
+        <div class="list-content">
+          <v-container fluid grid-list-md style class="pa-2" v-if="loaded">
+            <v-layout row wrap>
+              <slot/>
+            </v-layout>
+          </v-container>
+        </div>
+      </div>
+    </template>
+    <template slot="footer">
+      <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes"/>
+    </template>
+    <template slot="actions">
       <slot name="actions"></slot>
-    </div>
+    </template>
+    <slot name="dialogs"></slot>
   </navigation-page>
 </template>
 
@@ -47,4 +55,17 @@ export default class ListPage extends Vue {
 </script>
 
 <style scoped>
+.flex-rows {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.list-filters {
+  flex: 0;
+  background-color: #f00;
+}
+.list-content {
+  flex: 1;
+  background-color: #eee;
+}
 </style>

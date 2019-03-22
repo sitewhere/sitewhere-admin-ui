@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover>
+  <v-card style="border: 1px solid #ddd;" flat hover>
     <v-card-text class="tenant" @click.stop="onOpenTenant" :style="tenantPanelStyle(tenant)">
       <div v-if="tenant.imageUrl" class="tenant-logo" :style="tenantLogoStyle(tenant)"></div>
       <div v-else class="tenant-logo">

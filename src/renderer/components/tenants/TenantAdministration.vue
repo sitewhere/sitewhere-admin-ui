@@ -4,7 +4,7 @@
     <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
       <v-toolbar class="elevation-1" style="height: 47px;" dense></v-toolbar>
       <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
-      <v-menu bottom right offset-y>
+      <v-menu class="current-user-block" top right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
           <font-awesome-icon icon="user" class="mr-2"/>
           {{ fullname }}
@@ -18,13 +18,21 @@
       </v-menu>
     </v-navigation-drawer>
     <v-content>
-      <router-view></router-view>
+      <v-container class="pa-0" fluid fill-height>
+        <v-layout>
+          <v-flex fill-height>
+            <router-view></router-view>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-content>
+    <in-app-footer style="border-top: 1px solid #ddd;"/>
   </v-app>
 </template>
 
 <script>
 import InAppSystemBar from "../common/InAppSystemBar.vue";
+import InAppFooter from "../common/InAppFooter.vue";
 import Navigation from "../common/Navigation";
 
 import { getJwt } from "../../rest/sitewhere-api-wrapper";
@@ -35,6 +43,36 @@ export default {
     drawer: true,
     tenantToken: null,
     sections: [
+      {
+        id: "deviceGroup",
+        title: "Device Management",
+        icon: "developer_board",
+        route: "devices",
+        longTitle: "Manage Devices",
+        subsections: [
+          {
+            id: "devicetypes",
+            title: "Device Types",
+            icon: "settings",
+            route: "devicetypes",
+            longTitle: "Manage Device Types"
+          },
+          {
+            id: "devices",
+            title: "Devices",
+            icon: "developer_board",
+            route: "devices",
+            longTitle: "Manage Devices"
+          },
+          {
+            id: "groups",
+            title: "Device Groups",
+            icon: "apps",
+            route: "groups",
+            longTitle: "Manage Device Groups"
+          }
+        ]
+      },
       {
         id: "customersGroup",
         title: "Customer Management",
@@ -78,36 +116,6 @@ export default {
             icon: "collections",
             route: "areas",
             longTitle: "Manage Areas"
-          }
-        ]
-      },
-      {
-        id: "deviceGroup",
-        title: "Device Management",
-        icon: "developer_board",
-        route: "devices",
-        longTitle: "Manage Devices",
-        subsections: [
-          {
-            id: "devicetypes",
-            title: "Device Types",
-            icon: "settings",
-            route: "devicetypes",
-            longTitle: "Manage Device Types"
-          },
-          {
-            id: "devices",
-            title: "Devices",
-            icon: "developer_board",
-            route: "devices",
-            longTitle: "Manage Devices"
-          },
-          {
-            id: "groups",
-            title: "Device Groups",
-            icon: "apps",
-            route: "groups",
-            longTitle: "Manage Device Groups"
           }
         ]
       },
@@ -166,6 +174,7 @@ export default {
 
   components: {
     InAppSystemBar,
+    InAppFooter,
     Navigation
   },
 
@@ -300,9 +309,8 @@ export default {
 </script>
 
 <style scoped>
-.call-progress {
-  position: fixed;
-  height: 100px;
-  z-index: 1000;
+.current-user-block {
+  position: absolute;
+  bottom: 40px;
 }
 </style>

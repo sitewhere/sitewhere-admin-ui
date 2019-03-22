@@ -24,6 +24,10 @@ main.v-content {
   padding-top: 0 !important;
 }
 
+main.v-content div.v-content__wrap {
+  height: calc(100vh - 60px);
+}
+
 .ellipsis {
   white-space: nowrap;
   overflow: hidden;

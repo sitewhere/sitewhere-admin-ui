@@ -48,7 +48,7 @@ export default class DeviceListEntry extends Vue {
   styleForDevice() {
     let style: IStyle = {};
     style["background-color"] = this.assignment ? "#fff" : "#f0f0ff";
-    style["border"] = "1px solid " + (this.assignment ? "#fff" : "#dde");
+    style["border"] = "1px solid " + (this.assignment ? "#ddd" : "#dde");
     return style;
   }
 
