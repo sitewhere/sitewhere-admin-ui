@@ -119,10 +119,6 @@ export default class CustomerDetail extends Mixins(CustomerDetailComponent) {
     return this.customer ? this.customer.name : "";
   }
 
-  get token(): string | null {
-    return this.customer ? this.customer.token : null;
-  }
-
   /** Load record */
   loadRecord(
     store: Store<SiteWhereUiSettings>,

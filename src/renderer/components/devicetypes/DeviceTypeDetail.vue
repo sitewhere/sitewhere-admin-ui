@@ -1,98 +1,100 @@
 <template>
-  <div>
-    <navigation-page
-      v-if="deviceType"
-      icon="cog"
-      :title="deviceType.name"
-      loadingMessage="Loading device type ..."
-      :loaded="loaded"
-    >
-      <div slot="content">
-        <device-type-detail-header
-          :deviceType="deviceType"
-          @deviceTypeDeleted="onDeleted"
-          @deviceTypeUpdated="onUpdated"
-          class="mb-3"
-        ></device-type-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-            <v-tabs-item key="commands" href="#commands">Commands</v-tabs-item>
-            <v-tabs-item key="statuses" href="#statuses">Device Statuses</v-tabs-item>
-            <v-tabs-item key="code" href="#code">Code Generation</v-tabs-item>
-            <v-tabs-item
-              v-if="deviceType.containerPolicy === 'Composite'"
-              key="composition"
-              href="#composition"
-            >Composition</v-tabs-item>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="commands" id="commands">
-              <device-type-commands ref="commands" :deviceType="deviceType"></device-type-commands>
-            </v-tabs-content>
-            <v-tabs-content key="statuses" id="statuses">
-              <device-type-statuses ref="statuses" :deviceType="deviceType"></device-type-statuses>
-            </v-tabs-content>
-            <v-tabs-content key="code" id="code">
-              <device-type-codegen :deviceType="deviceType"></device-type-codegen>
-            </v-tabs-content>
-            <v-tabs-content
-              v-if="deviceType.containerPolicy === 'Composite'"
-              key="composition"
-              id="composition"
-            >
-              <device-type-composition :deviceType="deviceType"></device-type-composition>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-        <command-create-dialog
-          v-if="active === 'commands'"
-          :deviceType="deviceType"
-          @commandAdded="onCommandAdded"
-        />
-        <device-status-create-dialog
-          v-if="active === 'statuses'"
-          :deviceType="deviceType"
-          @statusAdded="onStatusAdded"
-        ></device-status-create-dialog>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Device Type" @action="onEdit"></navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Device Type" @action="onDelete"></navigation-action-button>
-      </div>
-    </navigation-page>
-    <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated"></device-type-update-dialog>
-    <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted"></device-type-delete-dialog>
-  </div>
+  <detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading device type ..."
+    :loaded="loaded"
+    :record="deviceType"
+  >
+    <template slot="header">
+      <device-type-detail-header
+        :deviceType="deviceType"
+        @deviceTypeDeleted="onDeleted"
+        @deviceTypeUpdated="onUpdated"
+      />
+    </template>
+    <v-tabs v-model="active">
+      <v-tab key="commands" href="#commands">Commands</v-tab>
+      <v-tab key="statuses" href="#statuses">Device Statuses</v-tab>
+      <v-tab key="code" href="#code">Code Generation</v-tab>
+      <v-tab
+        v-if="containerPolicy === 'Composite'"
+        key="composition"
+        href="#composition"
+      >Composition</v-tab>
+    </v-tabs>
+    <v-tabs-items>
+      <v-tab-item key="commands" id="commands">
+        <device-type-commands ref="commands" :deviceType="deviceType"></device-type-commands>
+      </v-tab-item>
+      <v-tab-item key="statuses" id="statuses">
+        <device-type-statuses ref="statuses" :deviceType="deviceType"></device-type-statuses>
+      </v-tab-item>
+      <v-tab-item key="code" id="code">
+        <device-type-codegen :deviceType="deviceType"></device-type-codegen>
+      </v-tab-item>
+      <v-tab-item v-if="containerPolicy === 'Composite'" key="composition" id="composition">
+        <device-type-composition :deviceType="deviceType"></device-type-composition>
+      </v-tab-item>
+    </v-tabs-items>
+    <template slot="actions">
+      <navigation-action-button icon="edit" tooltip="Edit Device Type" @action="onEdit"/>
+      <navigation-action-button icon="times" tooltip="Delete Device Type" @action="onDelete"/>
+    </template>
+    <template slot="dialogs">
+      <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated"></device-type-update-dialog>
+      <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted"></device-type-delete-dialog>
+      <command-create-dialog
+        v-if="active === 'commands'"
+        :deviceType="deviceType"
+        @commandAdded="onCommandAdded"
+      />
+      <device-status-create-dialog
+        v-if="active === 'statuses'"
+        :deviceType="deviceType"
+        @statusAdded="onStatusAdded"
+      />
+    </template>
+  </detail-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import DeviceTypeDetailHeader from "./DeviceTypeDetailHeader";
-import DeviceTypeCommands from "./DeviceTypeCommands";
-import DeviceTypeStatuses from "./DeviceTypeStatuses";
-import DeviceTypeCodegen from "./DeviceTypeCodegen";
-import DeviceTypeComposition from "./DeviceTypeComposition";
-import DeviceTypeDeleteDialog from "./DeviceTypeDeleteDialog";
-import DeviceTypeUpdateDialog from "./DeviceTypeUpdateDialog";
-import CommandCreateDialog from "../commands/CommandCreateDialog";
-import DeviceStatusCreateDialog from "../statuses/DeviceStatusCreateDialog";
+<script lang="ts">
+import { DetailComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import DetailPage from "../common/DetailPage.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+import DeviceTypeDetailHeader from "./DeviceTypeDetailHeader.vue";
+import DeviceTypeCommands from "./DeviceTypeCommands.vue";
+import DeviceTypeStatuses from "./DeviceTypeStatuses.vue";
+import DeviceTypeCodegen from "./DeviceTypeCodegen.vue";
+import DeviceTypeComposition from "./DeviceTypeComposition.vue";
+import DeviceTypeDeleteDialog from "./DeviceTypeDeleteDialog.vue";
+import DeviceTypeUpdateDialog from "./DeviceTypeUpdateDialog.vue";
+import CommandCreateDialog from "../commands/CommandCreateDialog.vue";
+import DeviceStatusCreateDialog from "../statuses/DeviceStatusCreateDialog.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { INavigationSection } from "../../libraries/navigation-model";
 import { getDeviceType } from "../../rest/sitewhere-device-types-api";
+import {
+  IDeviceType,
+  IDeviceTypeResponseFormat,
+  DeviceContainerPolicy
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    token: null,
-    deviceType: null,
-    protobuf: null,
-    active: null,
-    loaded: false
-  }),
+export class DeviceTypeDetailComponent extends DetailComponent<IDeviceType> {}
 
+@Component({
   components: {
-    NavigationPage,
+    DetailPage,
     NavigationActionButton,
     DeviceTypeDetailHeader,
     DeviceTypeCommands,
@@ -103,78 +105,85 @@ export default {
     DeviceTypeUpdateDialog,
     CommandCreateDialog,
     DeviceStatusCreateDialog
-  },
-
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
-
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
-
-  methods: {
-    // Display entity with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Called to refresh device type data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
-
-      // Load device type information.
-      getDeviceType(this.$store, token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Called after data is loaded.
-    onLoaded: function(deviceType) {
-      this.$data.deviceType = deviceType;
-      var section = {
-        id: "devicetypes",
-        title: "Device Types",
-        icon: "map",
-        route: "/admin/devicetypes/" + deviceType.token,
-        longTitle: "Manage Device Type: " + deviceType.name
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Called to open area edit dialog.
-    onEdit: function() {
-      this.$refs["edit"].onOpenDialog();
-    },
-    // Called after update.
-    onUpdated: function() {
-      this.refresh();
-    },
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called after delete.
-    onDeleted: function() {
-      routeTo(this, "/devicetypes");
-    },
-    // Called after a command is added.
-    onCommandAdded: function() {
-      this.$refs["commands"].refresh();
-    },
-    // Called after a status is added.
-    onStatusAdded: function() {
-      this.$refs["statuses"].refresh();
-    }
   }
-};
+})
+export default class DeviceTypeDetail extends Mixins(
+  DeviceTypeDetailComponent
+) {
+  active: string | null = null;
+
+  get deviceType(): IDeviceType | null {
+    return this.record;
+  }
+
+  get icon(): string {
+    return NavigationIcon.Device;
+  }
+
+  get title(): string {
+    return this.deviceType
+      ? `Manage device type ${this.deviceType.token}`
+      : "Manage device type";
+  }
+
+  get containerPolicy(): DeviceContainerPolicy {
+    return this.deviceType
+      ? this.deviceType.containerPolicy
+      : DeviceContainerPolicy.Standalone;
+  }
+
+  /** Load record */
+  loadRecord(
+    store: Store<SiteWhereUiSettings>,
+    token: string
+  ): AxiosPromise<IDeviceType> {
+    let format: IDeviceTypeResponseFormat = {
+      includeAsset: true
+    };
+    return getDeviceType(store, token, format);
+  }
+
+  // Called after data is loaded.
+  afterRecordLoaded(deviceType: IDeviceType) {
+    var section: INavigationSection = {
+      id: "devicetypes",
+      title: "Device Types",
+      icon: "map",
+      route: "/admin/devicetypes/" + deviceType.token,
+      longTitle: "Manage Device Type: " + deviceType.name
+    };
+    this.$store.commit("currentSection", section);
+  }
+
+  // Called to open area edit dialog.
+  onEdit() {
+    (this.$refs["edit"] as any).onOpenDialog();
+  }
+
+  // Called after update.
+  onUpdated() {
+    this.refresh();
+  }
+
+  onDelete() {
+    (this.$refs["delete"] as any).showDeleteDialog();
+  }
+
+  // Called after delete.
+  onDeleted() {
+    routeTo(this, "/devicetypes");
+  }
+
+  // Called after a command is added.
+  onCommandAdded() {
+    (this.$refs["commands"] as any).refresh();
+  }
+
+  // Called after a status is added.
+  onStatusAdded() {
+    (this.$refs["statuses"] as any).refresh();
+  }
+}
 </script>
 
 <style scoped>

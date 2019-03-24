@@ -1,5 +1,5 @@
 <template>
-  <v-card :style="panelStyle" class="white pa-2 header-panel">
+  <v-card flat :style="panelStyle" class="white mt-2 mb-3 pr-3 pl-3 header-panel">
     <v-card-text>
       <span v-if="imageUrl" class="header-image" :style="imageStyle"></span>
       <span v-if="icon" class="header-icon">
@@ -47,8 +47,7 @@ export default class NavigationHeaderPanel extends Vue {
       "background-image": "url(" + this.imageUrl + ")",
       "background-size": "contain",
       "background-repeat": "no-repeat",
-      "background-position": "50% 50%",
-      border: "1px solid #eee"
+      "background-position": "50% 50%"
     };
   }
 
@@ -59,8 +58,7 @@ export default class NavigationHeaderPanel extends Vue {
       "background-image": "url(" + this.qrCodeUrl + ")",
       "background-size": "contain",
       "background-repeat": "no-repeat",
-      "background-position": "50% 50%",
-      border: "1px solid #eee"
+      "background-position": "50% 50%"
     };
   }
 }
@@ -75,7 +73,7 @@ export default class NavigationHeaderPanel extends Vue {
 .header-image {
   position: absolute;
   top: 10px;
-  left: 7px;
+  left: 20px;
   bottom: 7px;
   width: 180px;
 }
@@ -83,7 +81,7 @@ export default class NavigationHeaderPanel extends Vue {
 .header-icon {
   position: absolute;
   top: 10px;
-  left: 7px;
+  left: 20px;
   bottom: 7px;
   width: 180px;
   padding: 45px;
@@ -93,7 +91,7 @@ export default class NavigationHeaderPanel extends Vue {
 .header-qrcode {
   position: absolute;
   top: 10px;
-  right: 7px;
+  right: 20px;
   bottom: 7px;
   width: 180px;
   height: 180px;

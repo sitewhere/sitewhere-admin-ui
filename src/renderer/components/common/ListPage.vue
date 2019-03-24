@@ -62,7 +62,6 @@ export default class ListPage extends Vue {
 }
 .list-filters {
   flex: 0;
-  background-color: #f00;
 }
 .list-content {
   flex: 1;

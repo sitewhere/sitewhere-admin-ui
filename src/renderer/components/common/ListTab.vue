@@ -1,22 +1,26 @@
 <template>
-  <v-tabs-content :key="key" :id="id">
-    <slot name="filters"/>
-    <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="loaded">
-      <v-layout row wrap>
-        <slot/>
-      </v-layout>
-    </v-container>
-    <v-card v-else>
-      <v-card-text>
-        <span class="title">{{ loadingMessage || 'Loading ...' }}</span>
-        <v-progress-circular :indeterminate="true"/>
-      </v-card-text>
-    </v-card>
-    <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes">
-      <slot name="no-results"/>
-    </pager>
+  <v-tab-item :key="tabkey" :id="id">
+    <div class="flex-rows">
+      <div class="list-filters">
+        <slot name="filters"/>
+      </div>
+      <div class="list-content">
+        <slot v-if="loaded"/>
+        <v-card v-else>
+          <v-card-text>
+            <span class="title">{{ loadingMessage || 'Loading ...' }}</span>
+            <v-progress-circular :indeterminate="true"/>
+          </v-card-text>
+        </v-card>
+      </div>
+      <div class="list-footer">
+        <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes">
+          <slot name="no-results"/>
+        </pager>
+      </div>
+    </div>
     <slot name="dialogs"></slot>
-  </v-tabs-content>
+  </v-tab-item>
 </template>
 
 <script lang="ts">
@@ -32,10 +36,11 @@ import { IPaging, IPageSizes } from "../../libraries/navigation-model";
     Pager
   }
 })
-export default class ListPage extends Vue {
-  @Prop() readonly key!: string;
+export default class ListTab extends Vue {
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly pageSizes!: IPageSizes;
+  @Prop() readonly loadingMessage!: string;
   @Prop() readonly loaded!: boolean;
   @Prop() readonly results!: {}[];
 
@@ -47,4 +52,19 @@ export default class ListPage extends Vue {
 </script>
 
 <style scoped>
+.flex-rows {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.list-filters {
+  flex: 0;
+}
+.list-content {
+  flex: 1;
+  background-color: #eee;
+}
+.list-footer {
+  flex: 0;
+}
 </style>

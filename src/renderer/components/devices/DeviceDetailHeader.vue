@@ -67,6 +67,12 @@ export default {
     qrCodeUrl: function() {
       return "devices/" + this.device.token + "/label/qrcode";
     }
+  },
+
+  methods: {
+    formatDate: function(date) {
+      formatDate(date);
+    }
   }
 };
 </script>

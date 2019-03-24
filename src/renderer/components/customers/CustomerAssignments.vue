@@ -19,7 +19,6 @@ import Vue, { VueConstructor } from "vue";
 
 import ListTab from "../common/ListTab.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
@@ -43,8 +42,7 @@ export class CustomerAssignmentsListComponent extends ListComponent<
 @Component({
   components: {
     ListTab,
-    AssignmentListEntry,
-    NavigationActionButton
+    AssignmentListEntry
   }
 })
 export default class CustomerTypeCustomers extends Mixins(

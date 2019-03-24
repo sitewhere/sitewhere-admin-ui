@@ -1,8 +1,8 @@
 <template>
   <v-card class="flex-rows" flat fill-height>
-    <v-toolbar class="elevation-1 toolbar" dense>
-      <font-awesome-icon :icon="icon" size="lg"/>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
+    <v-toolbar class="elevation-1 toolbar title" dense>
+      <v-icon>{{ icon }}</v-icon>
+      <v-toolbar-title class="ml-2">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <slot name="actions"/>
     </v-toolbar>
@@ -48,7 +48,6 @@ export default class NavigationPage extends Vue {
 }
 .header {
   flex: 0;
-  background-color: #0f0;
   z-index: 1;
 }
 .content {

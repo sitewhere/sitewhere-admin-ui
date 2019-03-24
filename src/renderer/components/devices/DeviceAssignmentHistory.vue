@@ -1,85 +1,103 @@
 <template>
-  <div>
-    <v-layout row wrap v-if="assignments">
-      <v-flex xs12>
-        <no-results-panel v-if="assignments.length === 0" text="No Assignments Found for Device"></no-results-panel>
-        <assignment-list-entry
-          :assignment="assignment"
-          v-for="(assignment) in assignments"
-          :key="assignment.token"
-          @assignmentOpened="onOpenAssignment(assignment.token)"
-          @refresh="refresh"
-          class="ma-2"
-        />
-      </v-flex>
-    </v-layout>
-    <pager :results="results" @pagingUpdated="updatePaging"></pager>
-  </div>
+  <list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading device assigments..."
+  >
+    <v-container fluid grid-list-md fill-height>
+      <v-layout row wrap>
+        <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+          <assignment-list-entry
+            :assignment="assignment"
+            @assignmentOpened="onOpenAssignment(assignment)"
+            @refresh="refresh"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </list-tab>
 </template>
 
-<script>
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import AssignmentListEntry from "../assignments/AssignmentListEntry";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListTab from "../common/ListTab.vue";
+import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
 import { listDeviceAssignmentHistory } from "../../rest/sitewhere-devices-api";
+import {
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    assignments: null
-  }),
+export class DeviceAssignmentsListComponent extends ListComponent<
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+> {}
 
-  props: ["device"],
-
+@Component({
   components: {
-    Pager,
-    NoResultsPanel,
+    ListTab,
     AssignmentListEntry
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of assignments.
-    refresh: function() {
-      var component = this;
-      var token = this.device.token;
-      var paging = this.$data.paging.query;
-
-      // Set search options.
-      let options = {};
-      options.includeDevice = true;
-      options.includeCustomer = true;
-      options.includeArea = true;
-      options.includeAsset = true;
-
-      listDeviceAssignmentHistory(this.$store, token, options, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.assignments = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    },
-
-    // Called to open detail page for assignment.
-    onOpenAssignment: function(token) {
-      routeTo(this, "/assignments/" + token);
-    }
   }
-};
+})
+export default class DeviceAssignmentHistory extends Mixins(
+  DeviceAssignmentsListComponent
+) {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly deviceToken!: string;
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
+    let criteria: IDeviceAssignmentSearchCriteria = {};
+    criteria.deviceToken = this.deviceToken;
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceAssignmentResponseFormat {
+    let format: IDeviceAssignmentResponseFormat = {};
+    format.includeDevice = true;
+    format.includeCustomer = true;
+    format.includeArea = true;
+    format.includeAsset = true;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IDeviceAssignmentSearchCriteria,
+    format: IDeviceAssignmentResponseFormat
+  ): AxiosPromise<IDeviceAssignmentSearchResults> {
+    return listDeviceAssignmentHistory(
+      store,
+      this.deviceToken,
+      criteria,
+      format
+    );
+  }
+
+  /** Open device assignment detail page */
+  onOpenAssignment(assignment: IDeviceAssignment) {
+    routeTo(this, "/assignments/" + assignment.token);
+  }
+}
 </script>
 
 <style scoped>

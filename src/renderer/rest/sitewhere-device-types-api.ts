@@ -31,15 +31,18 @@ export function createDeviceType(
  * Get device type by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getDeviceType(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IDeviceTypeResponseFormat
 ): Promise<AxiosResponse<IDeviceType>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<IDeviceType> = SiteWhere.API.DeviceTypes.getDeviceType(
     axios,
-    token
+    token,
+    format
   );
   return loaderWrapper(store, api);
 }

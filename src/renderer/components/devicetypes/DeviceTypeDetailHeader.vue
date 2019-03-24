@@ -53,6 +53,10 @@ export default {
     // Compute QR code URL.
     qrCodeUrl: function() {
       return "devicetypes/" + this.deviceType.token + "/label/qrcode";
+    },
+
+    formatDate: function(date) {
+      return formatDate(date);
     }
   }
 };

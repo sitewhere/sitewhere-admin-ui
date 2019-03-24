@@ -34,6 +34,7 @@
 import InAppSystemBar from "../common/InAppSystemBar.vue";
 import InAppFooter from "../common/InAppFooter.vue";
 import Navigation from "../common/Navigation";
+import { NavigationIcon } from "../../libraries/constants";
 
 import { getJwt } from "../../rest/sitewhere-api-wrapper";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
@@ -46,28 +47,28 @@ export default {
       {
         id: "deviceGroup",
         title: "Device Management",
-        icon: "developer_board",
+        icon: NavigationIcon.Device,
         route: "devices",
         longTitle: "Manage Devices",
         subsections: [
           {
             id: "devicetypes",
             title: "Device Types",
-            icon: "settings",
+            icon: NavigationIcon.DeviceType,
             route: "devicetypes",
             longTitle: "Manage Device Types"
           },
           {
             id: "devices",
             title: "Devices",
-            icon: "developer_board",
+            icon: NavigationIcon.Device,
             route: "devices",
             longTitle: "Manage Devices"
           },
           {
             id: "groups",
             title: "Device Groups",
-            icon: "apps",
+            icon: NavigationIcon.DeviceGroup,
             route: "groups",
             longTitle: "Manage Device Groups"
           }
@@ -76,21 +77,21 @@ export default {
       {
         id: "customersGroup",
         title: "Customer Management",
-        icon: "account_balance",
+        icon: NavigationIcon.Customer,
         route: "customers",
         longTitle: "Manage Customers",
         subsections: [
           {
             id: "customertypes",
             title: "Customer Types",
-            icon: "settings",
+            icon: NavigationIcon.CustomerType,
             route: "customertypes",
             longTitle: "Manage Customer Types"
           },
           {
             id: "customers",
             title: "Customers",
-            icon: "account_balance",
+            icon: NavigationIcon.Customer,
             route: "customers",
             longTitle: "Manage Customers"
           }
@@ -99,21 +100,21 @@ export default {
       {
         id: "areasGroup",
         title: "Area Management",
-        icon: "collections",
+        icon: NavigationIcon.Area,
         route: "areas",
         longTitle: "Manage Areas",
         subsections: [
           {
             id: "areatypes",
             title: "Area Types",
-            icon: "settings",
+            icon: NavigationIcon.AreaType,
             route: "areatypes",
             longTitle: "Manage Area Types"
           },
           {
             id: "areas",
             title: "Areas",
-            icon: "collections",
+            icon: NavigationIcon.Area,
             route: "areas",
             longTitle: "Manage Areas"
           }
@@ -122,21 +123,21 @@ export default {
       {
         id: "assetGroup",
         title: "Asset Management",
-        icon: "link",
+        icon: NavigationIcon.Asset,
         route: "assets",
         longTitle: "Manage Assets",
         subsections: [
           {
             id: "assettypes",
             title: "Asset Types",
-            icon: "settings",
+            icon: NavigationIcon.AssetType,
             route: "assettypes",
             longTitle: "Manage Asset Types"
           },
           {
             id: "assets",
             title: "Assets",
-            icon: "link",
+            icon: NavigationIcon.Asset,
             route: "assets",
             longTitle: "Manage Assets"
           }
@@ -145,14 +146,14 @@ export default {
       {
         id: "batch",
         title: "Batch Operations",
-        icon: "view_module",
+        icon: NavigationIcon.BatchOperation,
         route: "batch",
         longTitle: "Manage Batch Operations"
       },
       {
         id: "schedules",
         title: "Schedules",
-        icon: "access_alarm",
+        icon: NavigationIcon.Schedule,
         route: "schedules",
         longTitle: "Manage Schedules"
       }

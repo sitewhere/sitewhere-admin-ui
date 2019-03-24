@@ -1,6 +1,6 @@
 <template>
   <list-page
-    icon="microchip"
+    icon="developer_board"
     title="Manage Devices"
     loadingMessage="Loading devices ..."
     :loaded="loaded"

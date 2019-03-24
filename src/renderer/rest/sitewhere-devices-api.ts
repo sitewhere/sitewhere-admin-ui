@@ -38,12 +38,14 @@ export function createDevice(
  */
 export function getDevice(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IDeviceResponseFormat
 ): Promise<AxiosResponse<IDevice>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<IDevice> = SiteWhere.API.Devices.getDevice(
     axios,
-    token
+    token,
+    format
   );
   return loaderWrapper(store, api);
 }

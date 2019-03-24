@@ -1,13 +1,15 @@
 <template>
   <navigation-page :icon="icon" :title="title" :loadingMessage="loadingMessage" :loaded="loaded">
-    <div v-if="record" slot="content">
+    <template slot="header">
       <slot name="header"></slot>
+    </template>
+    <template v-if="record" slot="content">
       <slot/>
-      <slot name="dialogs"></slot>
-    </div>
-    <div slot="actions">
+    </template>
+    <template slot="actions">
       <slot name="actions"></slot>
-    </div>
+    </template>
+    <slot name="dialogs"></slot>
   </navigation-page>
 </template>
 

@@ -1,135 +1,125 @@
 <template>
-  <div>
-    <navigation-page
-      v-if="device"
-      icon="microchip"
-      title="Manage Device"
-      loadingMessage="Loading device ..."
-      :loaded="loaded"
-    >
-      <div slot="content">
-        <device-detail-header :device="device" @deviceDeleted="onDeviceDeleted"></device-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-            <v-tabs-item key="assignments" href="#assignments">Assignment History</v-tabs-item>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="assignments" id="assignments">
-              <device-assignment-history :device="device"></device-assignment-history>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"></navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"></navigation-action-button>
-      </div>
-    </navigation-page>
-    <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"></device-update-dialog>
-    <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"></device-delete-dialog>
-  </div>
+  <detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading device ..."
+    :loaded="loaded"
+    :record="device"
+  >
+    <template slot="header">
+      <device-detail-header :device="device" @deviceDeleted="onDeviceDeleted"></device-detail-header>
+    </template>
+    <v-tabs v-model="active">
+      <v-tab key="assignments" href="#assignments">Assignment History</v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="active">
+      <device-assignment-history tabkey="assignments" id="assignments" :deviceToken="token"/>
+    </v-tabs-items>
+    <template slot="actions">
+      <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"></navigation-action-button>
+      <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"></navigation-action-button>
+    </template>
+    <template slot="dialogs">
+      <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"></device-update-dialog>
+      <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"></device-delete-dialog>
+    </template>
+  </detail-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import DeviceDetailHeader from "./DeviceDetailHeader";
-import DeviceAssignmentHistory from "./DeviceAssignmentHistory";
-import DeviceUpdateDialog from "./DeviceUpdateDialog";
-import DeviceDeleteDialog from "./DeviceDeleteDialog";
+<script lang="ts">
+import { DetailComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import DetailPage from "../common/DetailPage.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+import DeviceDetailHeader from "./DeviceDetailHeader.vue";
+import DeviceAssignmentHistory from "./DeviceAssignmentHistory.vue";
+import DeviceUpdateDialog from "./DeviceUpdateDialog.vue";
+import DeviceDeleteDialog from "./DeviceDeleteDialog.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { INavigationSection } from "../../libraries/navigation-model";
 import { getDevice } from "../../rest/sitewhere-devices-api";
+import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    token: null,
-    device: null,
-    active: null,
-    fab: null,
-    loaded: false
-  }),
+export class DeviceDetailComponent extends DetailComponent<IDevice> {}
 
+@Component({
   components: {
-    NavigationPage,
+    DetailPage,
     NavigationActionButton,
     DeviceDetailHeader,
     DeviceAssignmentHistory,
     DeviceUpdateDialog,
     DeviceDeleteDialog
-  },
-
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
-
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
-
-  methods: {
-    // Display entity with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Called to refresh data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
-
-      // Set search options.
-      let options = {};
-      options.includeDeviceType = true;
-      options.includeAssignment = true;
-      options.includeAsset = true;
-      options.includeNested = true;
-
-      // Load information.
-      getDevice(this.$store, token, options)
-        .then(function(response) {
-          component.loaded = true;
-          component.onDeviceLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Called after data is loaded.
-    onDeviceLoaded: function(device) {
-      this.$data.device = device;
-      var section = {
-        id: "devices",
-        title: "Devices",
-        icon: "microchip",
-        route: "/admin/devices/" + device.token,
-        longTitle: "Manage Device: " + device.token
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Open dialog to edit device.
-    onEdit: function() {
-      this.$refs["edit"].onOpenDialog();
-    },
-    // Called after update.
-    onDeviceUpdated: function() {
-      this.refresh();
-    },
-    // Open dialog to delete device.
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called after device is deleted.
-    onDeviceDeleted: function() {
-      routeTo(this, "/devices");
-    }
   }
-};
+})
+export default class DeviceDetail extends Mixins(DeviceDetailComponent) {
+  active: string | null = null;
+
+  get device(): IDevice | null {
+    return this.record;
+  }
+
+  get icon(): string {
+    return NavigationIcon.Device;
+  }
+
+  get title(): string {
+    return this.device ? `Manage device ${this.device.token}` : "Manage device";
+  }
+
+  /** Load record */
+  loadRecord(
+    store: Store<SiteWhereUiSettings>,
+    token: string
+  ): AxiosPromise<IDevice> {
+    let format: IDeviceResponseFormat = {
+      includeDeviceType: true,
+      includeAssignment: true
+    };
+    return getDevice(store, token, format);
+  }
+
+  // Called after data is loaded.
+  afterRecordLoaded(device: IDevice) {
+    var section: INavigationSection = {
+      id: "devices",
+      title: "Devices",
+      icon: "microchip",
+      route: "/admin/devices/" + device.token,
+      longTitle: "Manage Device: " + device.token
+    };
+    this.$store.commit("currentSection", section);
+  }
+
+  // Open dialog to edit device.
+  onEdit() {
+    (this.$refs["edit"] as any).onOpenDialog();
+  }
+
+  // Called after update.
+  onDeviceUpdated() {
+    this.refresh();
+  }
+
+  // Open dialog to delete device.
+  onDelete() {
+    (this.$refs["delete"] as any).showDeleteDialog();
+  }
+
+  // Called after device is deleted.
+  onDeviceDeleted() {
+    routeTo(this, "/devices");
+  }
+}
 </script>
 
 <style scoped>
