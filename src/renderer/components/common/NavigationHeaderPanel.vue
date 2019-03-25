@@ -73,7 +73,7 @@ export default class NavigationHeaderPanel extends Vue {
 .header-image {
   position: absolute;
   top: 10px;
-  left: 20px;
+  left: 50px;
   bottom: 7px;
   width: 180px;
 }
@@ -81,7 +81,7 @@ export default class NavigationHeaderPanel extends Vue {
 .header-icon {
   position: absolute;
   top: 10px;
-  left: 20px;
+  left: 50px;
   bottom: 7px;
   width: 180px;
   padding: 45px;
@@ -91,7 +91,7 @@ export default class NavigationHeaderPanel extends Vue {
 .header-qrcode {
   position: absolute;
   top: 10px;
-  right: 20px;
+  right: 50px;
   bottom: 7px;
   width: 180px;
   height: 180px;
@@ -100,8 +100,8 @@ export default class NavigationHeaderPanel extends Vue {
 .header-content {
   position: absolute;
   top: 20px;
-  left: 200px;
-  right: 200px;
+  left: 250px;
+  right: 250px;
 }
 
 .options-menu {

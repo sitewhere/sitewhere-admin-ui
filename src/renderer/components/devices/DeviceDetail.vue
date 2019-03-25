@@ -9,12 +9,12 @@
     <template slot="header">
       <device-detail-header :device="device" @deviceDeleted="onDeviceDeleted"></device-detail-header>
     </template>
-    <v-tabs v-model="active">
+    <template slot="tabs">
       <v-tab key="assignments" href="#assignments">Assignment History</v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="active">
+    </template>
+    <template slot="tab-items">
       <device-assignment-history tabkey="assignments" id="assignments" :deviceToken="token"/>
-    </v-tabs-items>
+    </template>
     <template slot="actions">
       <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"></navigation-action-button>
       <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"></navigation-action-button>
@@ -62,8 +62,6 @@ export class DeviceDetailComponent extends DetailComponent<IDevice> {}
   }
 })
 export default class DeviceDetail extends Mixins(DeviceDetailComponent) {
-  active: string | null = null;
-
   get device(): IDevice | null {
     return this.record;
   }

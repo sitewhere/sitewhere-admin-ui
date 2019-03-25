@@ -6,7 +6,7 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading device assigments..."
   >
-    <v-container fluid grid-list-md fill-height>
+    <v-container class="pa-2" fluid grid-list-md fill-height>
       <v-layout row wrap>
         <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
           <assignment-list-entry

@@ -1,15 +1,22 @@
 <template>
   <navigation-page :icon="icon" :title="title" :loadingMessage="loadingMessage" :loaded="loaded">
     <template slot="header">
-      <slot name="header"></slot>
+      <slot name="header"/>
     </template>
     <template v-if="record" slot="content">
-      <slot/>
+      <div class="flex-rows">
+        <v-tabs class="tabs-row" v-model="active">
+          <slot name="tabs"/>
+        </v-tabs>
+        <v-tabs-items class="tab-items-row" v-model="active">
+          <slot name="tab-items"/>
+        </v-tabs-items>
+      </div>
     </template>
     <template slot="actions">
-      <slot name="actions"></slot>
+      <slot name="actions"/>
     </template>
-    <slot name="dialogs"></slot>
+    <slot name="dialogs"/>
   </navigation-page>
 </template>
 
@@ -30,8 +37,25 @@ export default class DetailPage extends Vue {
   @Prop() readonly loadingMessage!: string;
   @Prop() readonly loaded!: boolean;
   @Prop() readonly record!: {};
+
+  active: string | null = null;
 }
 </script>
 
 <style scoped>
+.flex-rows {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.tabs-row {
+  flex: 0;
+}
+.tab-items-row {
+  flex: 1;
+}
+.tab-items-row >>> .v-window__container,
+.tab-items-row >>> .v-window-item {
+  height: 100%;
+}
 </style>
