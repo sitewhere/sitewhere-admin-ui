@@ -3,6 +3,7 @@
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading device assigments..."
   >

@@ -13,14 +13,6 @@ import {
   ISearchResults
 } from "sitewhere-rest-api";
 
-// Defines structure of table headers.
-export type ITableHeaders = {
-  align?: string;
-  sortable?: boolean;
-  text?: string;
-  value?: string;
-}[];
-
 /**
  * Base class for components that display lists based on
  * SiteWhere REST services.

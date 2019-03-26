@@ -30,12 +30,13 @@
         ref="commands"
         :deviceType="deviceType"
       />
-      <v-tab-item key="statuses" id="statuses">
-        <device-type-statuses ref="statuses" :deviceType="deviceType"></device-type-statuses>
-      </v-tab-item>
-      <v-tab-item key="code" id="code">
-        <device-type-codegen :deviceType="deviceType"></device-type-codegen>
-      </v-tab-item>
+      <device-type-statuses
+        tabkey="statuses"
+        id="statuses"
+        ref="statuses"
+        :deviceType="deviceType"
+      />
+      <device-type-codegen tabkey="code" id="code" :deviceType="deviceType"/>
       <v-tab-item v-if="containerPolicy === 'Composite'" key="composition" id="composition">
         <device-type-composition :deviceType="deviceType"></device-type-composition>
       </v-tab-item>

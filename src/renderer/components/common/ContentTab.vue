@@ -1,10 +1,10 @@
 <template>
   <v-tab-item :key="tabkey" :id="id">
     <div class="flex-rows">
-      <div class="list-filters">
-        <slot name="filters"/>
+      <div class="tab-header">
+        <slot name="header"/>
       </div>
-      <div class="list-content">
+      <div class="tab-content">
         <slot v-if="loaded"/>
         <v-card v-else>
           <v-card-text>
@@ -13,8 +13,8 @@
           </v-card-text>
         </v-card>
       </div>
-      <div class="list-footer">
-        <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes"/>
+      <div class="tab-footer">
+        <slot name="footer"/>
       </div>
     </div>
     <slot name="dialogs"></slot>
@@ -25,27 +25,12 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import Pager from "../common/Pager.vue";
-
-import { IPaging, IPageSizes } from "../../libraries/navigation-model";
-
-@Component({
-  components: {
-    Pager
-  }
-})
-export default class ListTab extends Vue {
+@Component({})
+export default class ContentTab extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
-  @Prop() readonly pageSizes!: IPageSizes;
   @Prop() readonly loadingMessage!: string;
   @Prop() readonly loaded!: boolean;
-  @Prop() readonly results!: { numResults: number; results: {}[] };
-
-  /** Update paging values and run query */
-  onPagingUpdated(paging: IPaging) {
-    this.$emit("pagingUpdated", paging);
-  }
 }
 </script>
 
@@ -55,14 +40,14 @@ export default class ListTab extends Vue {
   flex-direction: column;
   height: 100%;
 }
-.list-filters {
+.tab-header {
   flex: 0;
 }
-.list-content {
+.tab-content {
   flex: 1;
   background-color: #eee;
 }
-.list-footer {
+.tab-footer {
   flex: 0;
 }
 </style>

@@ -29,3 +29,11 @@ export interface INavigationSection {
   longTitle: string;
   requireAll?: string[];
 }
+
+// Defines structure of table headers.
+export type ITableHeaders = {
+  align?: string;
+  sortable?: boolean;
+  text?: string;
+  value?: string;
+}[];

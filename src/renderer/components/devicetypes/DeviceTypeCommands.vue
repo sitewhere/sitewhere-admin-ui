@@ -4,7 +4,8 @@
     :id="id"
     :loaded="loaded"
     @pagingUpdated="onPagingUpdated"
-    loadingMessage="Loading device assigments..."
+    loadingMessage="Loading device commands..."
+    :results="results"
   >
     <v-container class="pa-2" fluid grid-list-md fill-height>
       <v-layout row wrap>

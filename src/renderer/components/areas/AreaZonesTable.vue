@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { ITableHeaders } from "../../libraries/component-model";
+import { ITableHeaders } from "../../libraries/navigation-model";
 import { Component, Prop } from "vue-property-decorator";
 
 import ActionsBlock from "../common/ActionsBlock.vue";

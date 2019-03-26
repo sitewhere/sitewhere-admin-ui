@@ -17,10 +17,7 @@
       <v-tab key="elements" href="#elements">Group Elements</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="elements" id="elements">
-        <device-group-element-list-panel ref="list" :token="token"></device-group-element-list-panel>
-        <floating-action-button label="Add Group Element" icon="plus" @action="onAddElement"></floating-action-button>
-      </v-tab-item>
+      <device-group-elements tabkey="elements" id="elements" ref="list" :deviceGroup="deviceGroup"/>
     </template>
     <template slot="actions">
       <navigation-action-button icon="edit" tooltip="Edit Device Group" @action="onEdit"/>
@@ -47,11 +44,10 @@ import Vue, { VueConstructor } from "vue";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
-import FloatingActionButton from "../common/FloatingActionButton.vue";
 import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader.vue";
 import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog.vue";
 import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog.vue";
-import DeviceGroupElementListPanel from "./DeviceGroupElementListPanel.vue";
+import DeviceGroupElements from "./DeviceGroupElements.vue";
 import DeviceGroupElementCreateDialog from "./DeviceGroupElementCreateDialog.vue";
 
 import { Store } from "vuex";
@@ -69,11 +65,10 @@ export class DeviceGroupDetailComponent extends DetailComponent<IDeviceGroup> {}
   components: {
     DetailPage,
     NavigationActionButton,
-    FloatingActionButton,
     DeviceGroupDetailHeader,
     DeviceGroupUpdateDialog,
     DeviceGroupDeleteDialog,
-    DeviceGroupElementListPanel,
+    DeviceGroupElements,
     DeviceGroupElementCreateDialog
   }
 })
