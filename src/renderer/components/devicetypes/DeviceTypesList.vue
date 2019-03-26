@@ -1,19 +1,19 @@
 <template>
   <list-page
-    icon="cog"
+    :icon="icon"
     title="Device Types"
     loadingMessage="Loading device types ..."
     :loaded="loaded"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(deviceType) in matches" :key="deviceType.token">
-      <device-type-list-entry :deviceType="deviceType" @deviceTypeOpened="onOpenDeviceType"></device-type-list-entry>
+      <device-type-list-entry :deviceType="deviceType" @deviceTypeOpened="onOpenDeviceType"/>
     </v-flex>
     <template slot="dialogs">
       <device-type-create-dialog ref="add" @deviceTypeAdded="onDeviceTypeAdded"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Device Type" @action="onAddDeviceType"></navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Device Type" @action="onAddDeviceType"/>
     </template>
   </list-page>
 </template>
@@ -32,6 +32,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
@@ -58,6 +59,11 @@ export class DeviceTypeListComponent extends ListComponent<
   }
 })
 export default class DeviceTypesList extends Mixins(DeviceTypeListComponent) {
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceType;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceTypeSearchCriteria {
     let criteria: IDeviceTypeSearchCriteria = {};

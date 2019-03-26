@@ -1,40 +1,45 @@
 <template>
-  <v-card flat hover class="white pa-2">
+  <list-entry class="pa-2">
     <v-card-text class="deviceType" @click="onOpenDeviceType">
       <div class="type-logo" :style="logoStyle"></div>
       <div class="type-name">{{deviceType.name}}</div>
       <div class="type-desc">{{deviceType.description}}</div>
     </v-card-text>
-  </v-card>
+  </list-entry>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-  props: ["deviceType"],
+import ListEntry from "../common/ListEntry.vue";
+import { IDeviceType } from "sitewhere-rest-api";
 
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.deviceType.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee"
-      };
-    }
-  },
-
-  methods: {
-    // Called when a device type is clicked.
-    onOpenDeviceType: function() {
-      this.$emit("deviceTypeOpened", this.deviceType);
-    }
+@Component({
+  components: {
+    ListEntry
   }
-};
+})
+export default class DeviceTypeListEntry extends Vue {
+  @Prop() readonly deviceType!: IDeviceType;
+
+  // Compute style of logo.
+  get logoStyle() {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.deviceType.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee"
+    };
+  }
+
+  // Called when a device type is clicked.
+  onOpenDeviceType() {
+    this.$emit("deviceTypeOpened", this.deviceType);
+  }
+}
 </script>
 
 <style scoped>

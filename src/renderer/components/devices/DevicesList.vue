@@ -1,6 +1,6 @@
 <template>
   <list-page
-    icon="developer_board"
+    :icon="icon"
     title="Manage Devices"
     loadingMessage="Loading devices ..."
     :loaded="loaded"
@@ -56,6 +56,7 @@ import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { IPageSizes } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -101,6 +102,11 @@ export default class DevicesList extends Mixins(DeviceListComponent) {
       value: 100
     }
   ];
+
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Device;
+  }
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceSearchCriteria {

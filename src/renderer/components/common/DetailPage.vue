@@ -53,6 +53,7 @@ export default class DetailPage extends Vue {
 }
 .tab-items-row {
   flex: 1;
+  overflow-y: auto;
 }
 .tab-items-row >>> .v-window__container,
 .tab-items-row >>> .v-window-item {

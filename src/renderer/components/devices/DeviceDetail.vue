@@ -7,7 +7,7 @@
     :record="device"
   >
     <template slot="header">
-      <device-detail-header :device="device" @deviceDeleted="onDeviceDeleted"></device-detail-header>
+      <device-detail-header :record="device" @deviceDeleted="onDeviceDeleted"></device-detail-header>
     </template>
     <template slot="tabs">
       <v-tab key="assignments" href="#assignments">Assignment History</v-tab>
@@ -66,7 +66,8 @@ export default class DeviceDetail extends Mixins(DeviceDetailComponent) {
     return this.record;
   }
 
-  get icon(): string {
+  /** Icon for page */
+  get icon(): NavigationIcon {
     return NavigationIcon.Device;
   }
 

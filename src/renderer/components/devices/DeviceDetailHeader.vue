@@ -1,10 +1,5 @@
 <template>
-  <navigation-header-panel
-    v-if="device"
-    :imageUrl="device.deviceType.imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="190px"
-  >
+  <navigation-header-panel v-if="device" :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="190px">
     <span slot="content">
       <header-field label="Token">
         <clipboard-copy-field :field="device.token" message="Token copied to clipboard"></clipboard-copy-field>
@@ -42,39 +37,51 @@
   </navigation-header-panel>
 </template>
 
-<script>
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import ClipboardCopyField from "../common/ClipboardCopyField";
-import HeaderField from "../common/HeaderField";
-import LinkedHeaderField from "../common/LinkedHeaderField";
+<script lang="ts">
+import { HeaderComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
-import { formatDate } from "../common/Utils";
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
 
-export default {
-  data: () => ({}),
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
+import ClipboardCopyField from "../common/ClipboardCopyField.vue";
+import HeaderField from "../common/HeaderField.vue";
+import LinkedHeaderField from "../common/LinkedHeaderField.vue";
+import { IDevice, IDeviceType } from "sitewhere-rest-api";
 
-  props: ["device"],
+export class DeviceHeaderComponent extends HeaderComponent<IDevice> {}
 
+@Component({
   components: {
     NavigationHeaderPanel,
-    ClipboardCopyField,
     HeaderField,
-    LinkedHeaderField
-  },
-
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "devices/" + this.device.token + "/label/qrcode";
-    }
-  },
-
-  methods: {
-    formatDate: function(date) {
-      formatDate(date);
-    }
+    LinkedHeaderField,
+    ClipboardCopyField
   }
-};
+})
+export default class DeviceDetailHeader extends Mixins(DeviceHeaderComponent) {
+  // Reference record as device.
+  get device(): IDevice {
+    return this.record;
+  }
+
+  // Get device type.
+  get deviceType(): IDeviceType {
+    return this.device ? (this.device as any).deviceType : "";
+  }
+
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.deviceType ? this.deviceType.imageUrl : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "devices/" + this.device.token + "/label/qrcode";
+  }
+}
 </script>
 
 <style scoped>
+</style>

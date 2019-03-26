@@ -8,12 +8,12 @@
   >
     <template slot="header">
       <device-type-detail-header
-        :deviceType="deviceType"
+        :record="deviceType"
         @deviceTypeDeleted="onDeleted"
         @deviceTypeUpdated="onUpdated"
       />
     </template>
-    <v-tabs v-model="active">
+    <template slot="tabs">
       <v-tab key="commands" href="#commands">Commands</v-tab>
       <v-tab key="statuses" href="#statuses">Device Statuses</v-tab>
       <v-tab key="code" href="#code">Code Generation</v-tab>
@@ -22,11 +22,14 @@
         key="composition"
         href="#composition"
       >Composition</v-tab>
-    </v-tabs>
-    <v-tabs-items>
-      <v-tab-item key="commands" id="commands">
-        <device-type-commands ref="commands" :deviceType="deviceType"></device-type-commands>
-      </v-tab-item>
+    </template>
+    <template slot="tab-items">
+      <device-type-commands
+        tabkey="commands"
+        id="commands"
+        ref="commands"
+        :deviceType="deviceType"
+      />
       <v-tab-item key="statuses" id="statuses">
         <device-type-statuses ref="statuses" :deviceType="deviceType"></device-type-statuses>
       </v-tab-item>
@@ -36,7 +39,7 @@
       <v-tab-item v-if="containerPolicy === 'Composite'" key="composition" id="composition">
         <device-type-composition :deviceType="deviceType"></device-type-composition>
       </v-tab-item>
-    </v-tabs-items>
+    </template>
     <template slot="actions">
       <navigation-action-button icon="edit" tooltip="Edit Device Type" @action="onEdit"/>
       <navigation-action-button icon="times" tooltip="Delete Device Type" @action="onDelete"/>
@@ -116,8 +119,9 @@ export default class DeviceTypeDetail extends Mixins(
     return this.record;
   }
 
-  get icon(): string {
-    return NavigationIcon.Device;
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceType;
   }
 
   get title(): string {

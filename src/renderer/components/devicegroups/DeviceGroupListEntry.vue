@@ -1,46 +1,51 @@
 <template>
-  <v-card flat hover>
-    <v-card-text class="group">
+  <list-entry class="pa-2">
+    <v-card-text class="group" @click="onOpenDeviceGroup">
       <div class="group-image" :style="backgroundImageStyle"></div>
-      <div class="group-name ellipsis title">{{ group.name }}</div>
-      <div class="group-token ellipsis subheading">{{ group.token }}</div>
-      <div class="group-description ellipsis">{{ group.description }}</div>
+      <div class="group-name ellipsis title">{{ deviceGroup.name }}</div>
+      <div class="group-token ellipsis subheading">{{ deviceGroup.token }}</div>
+      <div class="group-description ellipsis">{{ deviceGroup.description }}</div>
       <div class="group-roles ellipsis">
         Roles:
         <strong>{{ rolesView }}</strong>
       </div>
     </v-card-text>
-  </v-card>
+  </list-entry>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
+import ListEntry from "../common/ListEntry.vue";
 import { IStyle } from "../common/Style";
 import { IDeviceGroup } from "sitewhere-rest-api";
 
-@Component({})
+@Component({
+  components: {
+    ListEntry
+  }
+})
 export default class DeviceGroupListEntry extends Vue {
-  @Prop() readonly group!: IDeviceGroup;
+  @Prop() readonly deviceGroup!: IDeviceGroup;
 
   get rolesView(): string {
-    return this.group.roles.join(", ");
+    return this.deviceGroup.roles.join(", ");
   }
 
   // Create background image style.
   get backgroundImageStyle(): IStyle {
     return {
-      "background-image": "url(" + this.group.imageUrl + ")",
+      "background-image": "url(" + this.deviceGroup.imageUrl + ")",
       "background-size": "contain",
       "background-repeat": "no-repeat",
       "background-position": "50% 50%"
     };
   }
 
-  // Fire event to have parent refresh content.
-  refresh() {
-    this.$emit("refresh");
+  // Called when a device group is clicked.
+  onOpenDeviceGroup() {
+    this.$emit("deviceGroupOpened", this.deviceGroup);
   }
 }
 </script>
@@ -58,30 +63,31 @@ export default class DeviceGroupListEntry extends Vue {
   bottom: 5px;
   width: 90px;
   background-color: #fff;
+  padding-right: 10px;
   border-right: 1px solid #eee;
 }
 .group-name {
   position: absolute;
   top: 8px;
-  left: 110px;
+  left: 120px;
   right: 10px;
 }
 .group-token {
   position: absolute;
   top: 35px;
-  left: 110px;
+  left: 120px;
   right: 10px;
 }
 .group-description {
   position: absolute;
   top: 63px;
-  left: 110px;
+  left: 120px;
   right: 10px;
 }
 .group-roles {
   position: absolute;
   top: 90px;
-  left: 110px;
+  left: 120px;
   right: 10px;
 }
 .ellipsis {

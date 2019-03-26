@@ -35,15 +35,17 @@ export function createDeviceGroup(
  * Get device group by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getDeviceGroup(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IDeviceGroupResponseFormat
 ): Promise<AxiosResponse<IDeviceGroup>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceGroup
-  > = SiteWhere.API.DeviceGroups.getDeviceGroup(axios, token);
+  > = SiteWhere.API.DeviceGroups.getDeviceGroup(axios, token, format);
   return loaderWrapper(store, api);
 }
 

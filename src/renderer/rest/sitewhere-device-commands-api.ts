@@ -8,7 +8,8 @@ import {
   IDeviceCommand,
   IDeviceCommandSearchCriteria,
   IDeviceCommandResponseFormat,
-  IDeviceCommandSearchResults
+  IDeviceCommandSearchResults,
+  IDeviceCommandNamespaceSearchResults
 } from "sitewhere-rest-api";
 
 /**
@@ -89,10 +90,10 @@ export function listDeviceCommandsByNamespace(
   store: Store<SiteWhereUiSettings>,
   criteria: IDeviceCommandSearchCriteria,
   format: IDeviceCommandResponseFormat
-): Promise<AxiosResponse<IDeviceCommandSearchResults>> {
+): Promise<AxiosResponse<IDeviceCommandNamespaceSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IDeviceCommandSearchResults
+    IDeviceCommandNamespaceSearchResults
   > = SiteWhere.API.DeviceCommands.listDeviceCommandsForNamespace(
     axios,
     criteria,

@@ -1,73 +1,94 @@
 <template>
-  <div>
-    <v-layout row wrap v-if="namespaces">
-      <v-flex xs12>
-        <no-results-panel
-          v-if="namespaces.length === 0"
-          text="No Commands Found for Device Specification"
-        ></no-results-panel>
-        <div v-if="namespaces.length > 0">
-          <namespace-panel
+  <list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading device assigments..."
+  >
+    <v-container class="pa-2" fluid grid-list-md fill-height>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <command-namespace-list-entry
             :namespace="namespace"
             :deviceType="deviceType"
-            @commandDeleted="onCommandDeleted"
-            @commandUpdated="onCommandUpdated"
-            v-for="namespace in namespaces"
+            @commandDeleted="refresh"
+            @commandUpdated="refresh"
+            v-for="namespace in matches"
             :key="namespace.value"
-          ></namespace-panel>
-        </div>
-      </v-flex>
-    </v-layout>
-  </div>
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </list-tab>
 </template>
 
-<script>
-import NoResultsPanel from "../common/NoResultsPanel";
-import NamespacePanel from "../commands/NamespacePanel";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListTab from "../common/ListTab.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
+import CommandNamespaceListEntry from "../commands/CommandNamespaceListEntry.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { AxiosPromise } from "axios";
 import { listDeviceCommandsByNamespace } from "../../rest/sitewhere-device-commands-api";
+import {
+  IDeviceType,
+  IDeviceCommandNamespace,
+  IDeviceCommandSearchCriteria,
+  IDeviceCommandResponseFormat,
+  IDeviceCommandNamespaceSearchResults
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    namespaces: null
-  }),
+export class DeviceTypeCommandsListComponent extends ListComponent<
+  IDeviceCommandNamespace,
+  IDeviceCommandSearchCriteria,
+  IDeviceCommandResponseFormat,
+  IDeviceCommandNamespaceSearchResults
+> {}
 
-  props: ["deviceType"],
-
+@Component({
   components: {
+    ListTab,
     NoResultsPanel,
-    NamespacePanel
-  },
-
-  created: function() {
-    this.refresh();
-  },
-
-  methods: {
-    // Refresh list of assignments.
-    refresh: function() {
-      var component = this;
-      let options = {
-        deviceTypeToken: this.deviceType.token
-      };
-      listDeviceCommandsByNamespace(this.$store, options)
-        .then(function(response) {
-          component.namespaces = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after a command has been deleted.
-    onCommandDeleted: function() {
-      this.refresh();
-    },
-
-    // Called after a command has been updated.
-    onCommandUpdated: function() {
-      this.refresh();
-    }
+    CommandNamespaceListEntry
   }
-};
+})
+export default class DeviceTypeCommands extends Mixins(
+  DeviceTypeCommandsListComponent
+) {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly deviceType!: IDeviceType;
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceCommandSearchCriteria {
+    let criteria: IDeviceCommandSearchCriteria = {};
+    criteria.deviceTypeToken = this.deviceType.token;
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceCommandResponseFormat {
+    let format: IDeviceCommandResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IDeviceCommandSearchCriteria,
+    format: IDeviceCommandResponseFormat
+  ): AxiosPromise<IDeviceCommandNamespaceSearchResults> {
+    return listDeviceCommandsByNamespace(store, criteria, format);
+  }
+}
 </script>
 
 <style scoped>

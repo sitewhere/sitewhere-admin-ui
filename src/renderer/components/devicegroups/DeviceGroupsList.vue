@@ -1,19 +1,19 @@
 <template>
   <list-page
-    icon="cubes"
+    :icon="icon"
     title="Device Groups"
     loadingMessage="Loading device groups ..."
     :loaded="loaded"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(group) in matches" :key="group.token">
-      <device-group-list-entry :group="group" class="mb-1" @click="onOpenGroup(group)"></device-group-list-entry>
+      <device-group-list-entry :deviceGroup="group" class="mb-1" @deviceGroupOpened="onOpenGroup"/>
     </v-flex>
     <template slot="dialogs">
-      <device-group-create-dialog ref="add" @groupAdded="refresh"></device-group-create-dialog>
+      <device-group-create-dialog ref="add" @groupAdded="refresh"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Device Group" @action="onAddDeviceGroup"></navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Device Group" @action="onAddDeviceGroup"/>
     </template>
   </list-page>
 </template>
@@ -32,6 +32,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDeviceGroups } from "../../rest/sitewhere-device-groups-api";
@@ -58,6 +59,11 @@ export class DeviceGroupListComponent extends ListComponent<
   }
 })
 export default class DeviceGroupsList extends Mixins(DeviceGroupListComponent) {
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceGroup;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceGroupSearchCriteria {
     let criteria: IDeviceGroupSearchCriteria = {};
