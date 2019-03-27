@@ -1,8 +1,18 @@
 <template>
-  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-      <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
-    </v-flex>
+  <list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <v-container class="pa-2" fluid grid-list-md fill-height>
+      <v-layout row wrap>
+        <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+          <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"/>
+        </v-flex>
+      </v-layout>
+    </v-container>
     <template slot="dialogs">
       <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer"/>
     </template>
@@ -49,15 +59,15 @@ export class CustomerSubcustomersListComponent extends ListComponent<
 export default class CustomerSubcustomers extends Mixins(
   CustomerSubcustomersListComponent
 ) {
-  @Prop() readonly key!: string;
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
-  @Prop() readonly customerToken!: string;
+  @Prop() readonly customer!: ICustomer;
 
   /** Build search criteria for list */
   buildSearchCriteria(): ICustomerSearchCriteria {
     let criteria: ICustomerSearchCriteria = {};
     criteria.rootOnly = false;
-    criteria.parentCustomerToken = this.customerToken;
+    criteria.parentCustomerToken = this.customer.token;
     return criteria;
   }
 

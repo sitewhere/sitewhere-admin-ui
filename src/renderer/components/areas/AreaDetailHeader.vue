@@ -1,6 +1,6 @@
 <template>
-  <navigation-header-panel :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="200px">
-    <span slot="content" v-if="area">
+  <navigation-header-panel v-if="area" :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="200px">
+    <span slot="content">
       <header-field label="Token">
         <clipboard-copy-field :field="area.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
@@ -56,6 +56,11 @@ export default class AreaDetailHeader extends Mixins(AreaHeaderComponent) {
     return this.record;
   }
 
+  // Token.
+  get token(): string {
+    return this.area ? this.area.token : "";
+  }
+
   // Get URL for image.
   get imageUrl(): string {
     return this.area ? this.area.imageUrl : "";
@@ -63,7 +68,7 @@ export default class AreaDetailHeader extends Mixins(AreaHeaderComponent) {
 
   // Get URL for QR code.
   get qrCodeUrl() {
-    return "customers/" + this.area.token + "/label/qrcode";
+    return "areas/" + this.token + "/label/qrcode";
   }
 
   formatDate(date: Date) {

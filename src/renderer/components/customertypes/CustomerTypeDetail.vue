@@ -1,6 +1,6 @@
 <template>
   <detail-page
-    icon="cog"
+    :icon="icon"
     :title="title"
     loadingMessage="Loading customer type ..."
     :loaded="loaded"
@@ -13,20 +13,16 @@
         @customerTypeUpdated="onCustomerTypeUpdated"
       />
     </template>
-    <v-tabs v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-item key="instances" href="#instances">Customers of Type</v-tabs-item>
-        <v-tabs-slider></v-tabs-slider>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <customer-type-customers key="instances" id="instances" :customerTypeToken="token"/>
-      </v-tabs-items>
-    </v-tabs>
+    <template slot="tabs">
+      <v-tab key="instances" href="#instances">Customers of Type</v-tab>
+    </template>
+    <template slot="tab-items">
+      <customer-type-customers key="instances" id="instances" :customerTypeToken="token"/>
+    </template>
     <template slot="dialogs">
       <customer-type-update-dialog
         ref="edit"
         :token="token"
-        :customerTypes="customerTypes"
         @customerTypeUpdated="onCustomerTypeUpdated"
       />
       <customer-type-delete-dialog
@@ -62,12 +58,10 @@ import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
 import { INavigationSection } from "../../libraries/navigation-model";
 import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
-import {
-  ICustomerType,
-  ICustomerTypeResponseFormat
-} from "sitewhere-rest-api";
+import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
 
 export class CustomerTypeDetailComponent extends DetailComponent<
   ICustomerType
@@ -92,6 +86,11 @@ export default class CustomerTypeDetail extends Mixins(
 
   get customerType(): ICustomerType | null {
     return this.record;
+  }
+
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.CustomerType;
   }
 
   get title(): string {

@@ -1,6 +1,6 @@
 <template>
   <detail-page
-    icon="map"
+    :icon="icon"
     :title="title"
     loadingMessage="Loading area ..."
     :loaded="loaded"
@@ -9,25 +9,22 @@
     <template slot="header">
       <area-detail-header :record="area"/>
     </template>
-    <v-tabs v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-item key="areas" href="#areas">Subareas</v-tabs-item>
-        <v-tabs-item key="assignments" href="#assignments">Assigned Devices</v-tabs-item>
-        <v-tabs-item key="locations" href="#locations">Locations</v-tabs-item>
-        <v-tabs-item key="measurements" href="#measurements">Measurements</v-tabs-item>
-        <v-tabs-item key="alerts" href="#alerts">Alerts</v-tabs-item>
-        <v-tabs-item key="zones" href="#zones">Zones</v-tabs-item>
-        <v-tabs-slider></v-tabs-slider>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <area-subareas key="areas" id="areas" ref="subareas" :areaToken="token"/>
-        <area-assignments key="assignments" id="assignments" :areaToken="token"/>
-        <area-location-events key="locations" id="locations" :areaToken="token"/>
-        <area-measurement-events key="measurements" id="measurements" :areaToken="token"/>
-        <area-alert-events key="alerts" id="alerts" :areaToken="token"/>
-        <area-zones ref="zones" key="zones" id="zones" :areaToken="token"/>
-      </v-tabs-items>
-    </v-tabs>
+    <template slot="tabs">
+      <v-tab key="areas" href="#areas">Subareas</v-tab>
+      <v-tab key="assignments" href="#assignments">Assigned Devices</v-tab>
+      <v-tab key="locations" href="#locations">Locations</v-tab>
+      <v-tab key="measurements" href="#measurements">Measurements</v-tab>
+      <v-tab key="alerts" href="#alerts">Alerts</v-tab>
+      <v-tab key="zones" href="#zones">Zones</v-tab>
+    </template>
+    <template slot="tab-items">
+      <area-subareas tabkey="areas" id="areas" ref="subareas" :areaToken="token"/>
+      <area-assignments tabkey="assignments" id="assignments" :areaToken="token"/>
+      <area-location-events tabkey="locations" id="locations" :areaToken="token"/>
+      <area-measurement-events tabkey="measurements" id="measurements" :areaToken="token"/>
+      <area-alert-events tabkey="alerts" id="alerts" :areaToken="token"/>
+      <area-zones ref="zones" tabkey="zones" id="zones" :areaToken="token"/>
+    </template>
     <template slot="dialogs">
       <area-create-dialog ref="areaCreate" :parentArea="area" @areaAdded="onSubareaAdded"/>
       <area-update-dialog
@@ -79,6 +76,7 @@ import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
 import { INavigationSection } from "../../libraries/navigation-model";
 import { getArea } from "../../rest/sitewhere-areas-api";
 import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
@@ -110,10 +108,17 @@ export default class AreaDetail extends Mixins(AreaDetailComponent) {
     return this.record;
   }
 
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Customer;
+  }
+
+  /** Get page title */
   get title(): string {
     return this.area ? this.area.name : "";
   }
 
+  /** Token */
   get token(): string | null {
     return this.area ? this.area.token : null;
   }

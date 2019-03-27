@@ -1,6 +1,6 @@
 <template>
-  <navigation-header-panel :icon="icon" :qrCodeUrl="qrCodeUrl" height="200px">
-    <template slot="content" v-if="customerType">
+  <navigation-header-panel v-if="customerType" :icon="icon" :qrCodeUrl="qrCodeUrl" height="200px">
+    <template slot="content">
       <header-field label="Token">
         <clipboard-copy-field :field="customerType.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
@@ -51,13 +51,18 @@ export default class CustomerTypeDetailHeader extends Mixins(
     return this.record;
   }
 
+  // Token.
+  get token(): string {
+    return this.customerType ? this.customerType.token : "";
+  }
+
   get icon(): string {
     return this.customerType ? this.customerType.icon : "";
   }
 
   // Get URL for QR code.
   get qrCodeUrl() {
-    return "customertypes/" + this.customerType.token + "/label/qrcode";
+    return "customertypes/" + this.token + "/label/qrcode";
   }
 }
 </script>

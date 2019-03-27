@@ -3,7 +3,7 @@
     <v-card-text>
       <span v-if="imageUrl" class="header-image" :style="imageStyle"></span>
       <span v-if="icon" class="header-icon">
-        <font-awesome-icon class="grey--text" :icon="icon" size="6x"/>
+        <font-awesome-icon class="grey--text" :icon="icon" size="7x"/>
       </span>
       <span class="header-content">
         <slot name="content"></slot>
@@ -85,7 +85,6 @@ export default class NavigationHeaderPanel extends Vue {
   bottom: 7px;
   width: 180px;
   padding: 45px;
-  border: 1px solid #eee;
 }
 
 .header-qrcode {

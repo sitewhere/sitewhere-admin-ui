@@ -1,12 +1,22 @@
 <template>
-  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
-      <assignment-list-entry
-        :assignment="assignment"
-        @assignmentOpened="onOpenAssignment(assignment)"
-        @refresh="refresh"
-      />
-    </v-flex>
+  <list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <v-container class="pa-2" fluid grid-list-md fill-height>
+      <v-layout row wrap>
+        <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+          <assignment-list-entry
+            :assignment="assignment"
+            @assignmentOpened="onOpenAssignment(assignment)"
+            @refresh="refresh"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
   </list-tab>
 </template>
 
@@ -19,7 +29,6 @@ import Vue, { VueConstructor } from "vue";
 
 import ListTab from "../common/ListTab.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
@@ -43,14 +52,13 @@ export class AreaAssignmentsListComponent extends ListComponent<
 @Component({
   components: {
     ListTab,
-    AssignmentListEntry,
-    NavigationActionButton
+    AssignmentListEntry
   }
 })
-export default class CustomerTypeCustomers extends Mixins(
+export default class AreaAssignments extends Mixins(
   AreaAssignmentsListComponent
 ) {
-  @Prop() readonly key!: string;
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly areaToken!: string;
 

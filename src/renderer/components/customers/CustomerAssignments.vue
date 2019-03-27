@@ -1,12 +1,22 @@
 <template>
-  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
-      <assignment-list-entry
-        :assignment="assignment"
-        @assignmentOpened="onOpenAssignment(assignment)"
-        @refresh="refresh"
-      />
-    </v-flex>
+  <list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <v-container class="pa-2" fluid grid-list-md fill-height>
+      <v-layout row wrap>
+        <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+          <assignment-list-entry
+            :assignment="assignment"
+            @assignmentOpened="onOpenAssignment(assignment)"
+            @refresh="refresh"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
   </list-tab>
 </template>
 
@@ -48,7 +58,7 @@ export class CustomerAssignmentsListComponent extends ListComponent<
 export default class CustomerTypeCustomers extends Mixins(
   CustomerAssignmentsListComponent
 ) {
-  @Prop() readonly key!: string;
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly customerToken!: string;
 

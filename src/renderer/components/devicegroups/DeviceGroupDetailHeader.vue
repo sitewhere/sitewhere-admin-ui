@@ -1,67 +1,81 @@
 <template>
   <navigation-header-panel
-    v-if="group"
-    :imageUrl="group.imageUrl"
+    v-if="deviceGroup"
+    :imageUrl="imageUrl"
     :qrCodeUrl="qrCodeUrl"
     height="200px"
   >
     <span slot="content">
       <header-field label="Token">
-        <clipboard-copy-field :field="group.token" message="Token copied to clipboard"></clipboard-copy-field>
+        <clipboard-copy-field :field="deviceGroup.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
       <header-field label="Name">
-        <span>{{ group.name }}</span>
+        <span>{{ deviceGroup.name }}</span>
       </header-field>
       <header-field label="Description">
-        <span>{{ group.description }}</span>
+        <span>{{ deviceGroup.description }}</span>
       </header-field>
       <header-field label="Image URL">
-        <span>{{ group.imageUrl }}</span>
+        <span>{{ deviceGroup.imageUrl }}</span>
       </header-field>
       <header-field label="Roles">
-        <span>{{ rolesView }}</span>
+        <span>{{ rolesList }}</span>
       </header-field>
     </span>
   </navigation-header-panel>
 </template>
 
-<script>
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import ClipboardCopyField from "../common/ClipboardCopyField";
-import HeaderField from "../common/HeaderField";
+<script lang="ts">
+import { HeaderComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
-import { formatDate } from "../common/Utils";
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
 
-export default {
-  data: function() {
-    return {};
-  },
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
+import ClipboardCopyField from "../common/ClipboardCopyField.vue";
+import HeaderField from "../common/HeaderField.vue";
+import { IDeviceGroup } from "sitewhere-rest-api";
 
+export class DeviceGroupHeaderComponent extends HeaderComponent<IDeviceGroup> {}
+
+@Component({
   components: {
     NavigationHeaderPanel,
-    ClipboardCopyField,
-    HeaderField
-  },
-
-  props: ["group"],
-
-  computed: {
-    rolesView: function() {
-      return this.group.roles.join(", ");
-    },
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "devicegroups/" + this.group.token + "/label/qrcode";
-    }
-  },
-
-  methods: {
-    // Format date.
-    formatDate: function(date) {
-      return formatDate(date);
-    }
+    HeaderField,
+    ClipboardCopyField
   }
-};
+})
+export default class DeviceDetailHeader extends Mixins(
+  DeviceGroupHeaderComponent
+) {
+  // Reference record as device group.
+  get deviceGroup(): IDeviceGroup {
+    return this.record;
+  }
+
+  // Get token.
+  get token(): string {
+    return this.deviceGroup ? this.deviceGroup.token : "";
+  }
+
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.deviceGroup ? this.deviceGroup.imageUrl : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl(): string {
+    return this.deviceGroup
+      ? "devicegroups/" + this.token + "/label/qrcode"
+      : "";
+  }
+
+  // Get list of roles for group.
+  get rolesList(): string {
+    return this.deviceGroup ? this.deviceGroup.roles.join(", ") : "";
+  }
+}
 </script>
 
 <style scoped>

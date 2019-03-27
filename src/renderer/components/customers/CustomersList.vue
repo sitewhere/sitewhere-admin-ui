@@ -1,9 +1,10 @@
 <template>
   <list-page
-    icon="building"
+    :icon="icon"
     title="Customers"
     loadingMessage="Loading customers ..."
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
@@ -32,6 +33,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
@@ -58,6 +60,11 @@ export class CustomerListComponent extends ListComponent<
   }
 })
 export default class CustomersList extends Mixins(CustomerListComponent) {
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Customer;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): ICustomerSearchCriteria {
     let criteria: ICustomerSearchCriteria = {};

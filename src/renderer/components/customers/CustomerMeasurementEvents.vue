@@ -1,7 +1,30 @@
 <template>
-  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <measurement-events-table :matches="matches" no-data-text="No Measurements Found for Customer"/>
-  </list-tab>
+  <data-table-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :headers="headers"
+    :results="results"
+    :pageSizes="pageSizes"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading customer measurements ..."
+  >
+    <template slot="items" slot-scope="props">
+      <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
+      <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
+      <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.eventDate)"
+      >{{ formatDate(props.item.eventDate) }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.receivedDate)"
+      >{{ formatDate(props.item.receivedDate) }}</td>
+    </template>
+  </data-table-tab>
 </template>
 
 <script lang="ts">
@@ -11,12 +34,13 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 // @ts-ignore: Unused import
 import Vue, { VueConstructor } from "vue";
 
-import ListTab from "../common/ListTab.vue";
-import MeasurementEventsTable from "../common/MeasurementEventsTable.vue";
+import DataTableTab from "../common/DataTableTab.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
-import { IPageSizes } from "../../libraries/navigation-model";
+import { formatDate } from "../common/Utils";
+import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
+import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";
 import { AxiosPromise } from "axios";
 import { listMeasurementsForCustomer } from "../../rest/sitewhere-customers-api";
 import {
@@ -35,8 +59,7 @@ export class CustomerMeasurementsListComponent extends ListComponent<
 
 @Component({
   components: {
-    ListTab,
-    MeasurementEventsTable
+    DataTableTab
   }
 })
 export default class CustomerMeasurementEvents extends Mixins(
@@ -46,20 +69,8 @@ export default class CustomerMeasurementEvents extends Mixins(
   @Prop() readonly id!: string;
   @Prop() readonly customerToken!: string;
 
-  pageSizes: IPageSizes = [
-    {
-      text: "25",
-      value: 25
-    },
-    {
-      text: "50",
-      value: 50
-    },
-    {
-      text: "100",
-      value: 100
-    }
-  ];
+  pageSizes: IPageSizes = EventPageSizes;
+  headers: ITableHeaders = MeasurementHeaders;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDateRangeSearchCriteria {
@@ -85,6 +96,11 @@ export default class CustomerMeasurementEvents extends Mixins(
       criteria,
       format
     );
+  }
+
+  /** Make function available to template */
+  formatDate(date: Date) {
+    return formatDate(date);
   }
 }
 </script>

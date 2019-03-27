@@ -4,6 +4,7 @@
     title="Device Types"
     loadingMessage="Loading device types ..."
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(deviceType) in matches" :key="deviceType.token">

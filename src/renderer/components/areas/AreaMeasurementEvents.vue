@@ -1,7 +1,30 @@
 <template>
-  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <measurement-events-table :matches="matches" no-data-text="No Measurements Found for Area"/>
-  </list-tab>
+  <data-table-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :headers="headers"
+    :results="results"
+    :pageSizes="pageSizes"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading area measurements ..."
+  >
+    <template slot="items" slot-scope="props">
+      <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
+      <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
+      <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.eventDate)"
+      >{{ formatDate(props.item.eventDate) }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.receivedDate)"
+      >{{ formatDate(props.item.receivedDate) }}</td>
+    </template>
+  </data-table-tab>
 </template>
 
 <script lang="ts">
@@ -11,15 +34,15 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 // @ts-ignore: Unused import
 import Vue, { VueConstructor } from "vue";
 
-import ListTab from "../common/ListTab.vue";
-import MeasurementEventsTable from "../common/MeasurementEventsTable.vue";
+import DataTableTab from "../common/DataTableTab.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { formatDate } from "../common/Utils";
+import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
+import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";
 import { listMeasurementsForArea } from "../../rest/sitewhere-areas-api";
-import { IPageSizes } from "../../libraries/navigation-model";
 import {
   IDeviceMeasurement,
   IDeviceMeasurementResponseFormat,
@@ -36,31 +59,18 @@ export class AreaMeasurementsListComponent extends ListComponent<
 
 @Component({
   components: {
-    ListTab,
-    MeasurementEventsTable
+    DataTableTab
   }
 })
 export default class AreaMeasurementEvents extends Mixins(
   AreaMeasurementsListComponent
 ) {
-  @Prop() readonly key!: string;
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly areaToken!: string;
 
-  pageSizes: IPageSizes = [
-    {
-      text: "25",
-      value: 25
-    },
-    {
-      text: "50",
-      value: 50
-    },
-    {
-      text: "100",
-      value: 100
-    }
-  ];
+  pageSizes: IPageSizes = EventPageSizes;
+  headers: ITableHeaders = MeasurementHeaders;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDateRangeSearchCriteria {

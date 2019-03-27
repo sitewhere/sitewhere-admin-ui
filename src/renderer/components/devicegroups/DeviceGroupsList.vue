@@ -4,6 +4,7 @@
     title="Device Groups"
     loadingMessage="Loading device groups ..."
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(group) in matches" :key="group.token">

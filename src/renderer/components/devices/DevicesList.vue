@@ -4,6 +4,7 @@
     title="Manage Devices"
     loadingMessage="Loading devices ..."
     :loaded="loaded"
+    :results="results"
     :pageSizes="pageSizes"
     @pagingUpdated="onPagingUpdated"
   >

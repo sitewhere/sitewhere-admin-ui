@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover color="white">
+  <list-entry>
     <v-container @click="onAreaClicked">
       <v-layout row>
         <v-flex xs3>
@@ -15,38 +15,43 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-card>
+  </list-entry>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
-  props: ["area"],
+import { IArea } from "sitewhere-rest-api";
+import ListEntry from "../common/ListEntry.vue";
 
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.area.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee",
-        height: "120px",
-        width: "100px"
-      };
-    }
-  },
-
-  methods: {
-    // Handle area clicked.
-    onAreaClicked: function() {
-      this.$emit("openArea", this.area);
-    }
+@Component({
+  components: {
+    ListEntry
   }
-};
+})
+export default class DeviceTypeSelector extends Vue {
+  @Prop() readonly area!: IArea;
+
+  // Compute style of logo.
+  get logoStyle() {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.area.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee",
+      height: "120px",
+      width: "100px"
+    };
+  }
+
+  // Handle area clicked.
+  onAreaClicked() {
+    this.$emit("openArea", this.area);
+  }
+}
 </script>
 
 <style scoped>

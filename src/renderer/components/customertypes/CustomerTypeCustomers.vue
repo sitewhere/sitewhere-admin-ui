@@ -1,8 +1,19 @@
 <template>
-  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-      <customer-list-entry :customer="customer"></customer-list-entry>
-    </v-flex>
+  <list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading customers ..."
+  >
+    <v-container class="pa-2" fluid grid-list-md fill-height>
+      <v-layout row wrap>
+        <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+          <customer-list-entry :customer="customer"></customer-list-entry>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </list-tab>
 </template>
 
@@ -45,7 +56,7 @@ export class CustomerTypeCustomersListComponent extends ListComponent<
 export default class CustomerTypeCustomers extends Mixins(
   CustomerTypeCustomersListComponent
 ) {
-  @Prop() readonly key!: string;
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly customerTypeToken!: string;
 

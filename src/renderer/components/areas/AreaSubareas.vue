@@ -1,10 +1,20 @@
 <template>
-  <list-tab :key="key" :id="id" :loaded="loaded" @pagingUpdated="onPagingUpdated">
-    <v-flex xs6 v-for="(area) in matches" :key="area.token">
-      <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
-    </v-flex>
+  <list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <v-container class="pa-2" fluid grid-list-md fill-height>
+      <v-layout row wrap>
+        <v-flex xs6 v-for="(area) in matches" :key="area.token">
+          <area-list-entry :area="area" @openArea="onOpenArea"/>
+        </v-flex>
+      </v-layout>
+    </v-container>
     <template slot="dialogs">
-      <area-create-dialog @areaAdded="refresh" :parentArea="area"/>
+      <area-create-dialog @areaAdded="refresh"/>
     </template>
   </list-tab>
 </template>
@@ -47,7 +57,7 @@ export class AreaSubareasListComponent extends ListComponent<
   }
 })
 export default class AreaSubareas extends Mixins(AreaSubareasListComponent) {
-  @Prop() readonly key!: string;
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly areaToken!: string;
 
@@ -78,7 +88,7 @@ export default class AreaSubareas extends Mixins(AreaSubareasListComponent) {
 
   // Called to open an area.
   onOpenArea(area: IArea) {
-    routeTo(this, "/areas/" + area.token);
+    routeTo(this, "/areas/" + this.areaToken);
   }
 }
 </script>

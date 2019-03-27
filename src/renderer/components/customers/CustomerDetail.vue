@@ -1,6 +1,6 @@
 <template>
   <detail-page
-    icon="building"
+    :icon="icon"
     :title="title"
     loadingMessage="Loading customer ..."
     :loaded="loaded"
@@ -9,28 +9,25 @@
     <template slot="header">
       <customer-detail-header :record="customer"/>
     </template>
-    <v-tabs v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-item key="customers" href="#customers">Subcustomers</v-tabs-item>
-        <v-tabs-item key="assignments" href="#assignments">Assigned Devices</v-tabs-item>
-        <v-tabs-item key="locations" href="#locations">Locations</v-tabs-item>
-        <v-tabs-item key="measurements" href="#measurements">Measurements</v-tabs-item>
-        <v-tabs-item key="alerts" href="#alerts">Alerts</v-tabs-item>
-        <v-tabs-slider></v-tabs-slider>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <customer-subcustomers
-          key="customers"
-          id="customers"
-          ref="customers"
-          :customerToken="token"
-        />
-        <customer-assignments key="assignments" id="assignments" :customerToken="token"/>
-        <customer-location-events key="locations" id="locations" :customerToken="token"/>
-        <customer-measurement-events key="measurements" id="measurements" :customerToken="token"/>
-        <customer-alert-events key="alerts" id="alerts" :customerToken="token"/>
-      </v-tabs-items>
-    </v-tabs>
+    <template slot="tabs">
+      <v-tab key="customers" href="#customers">Subcustomers</v-tab>
+      <v-tab key="assignments" href="#assignments">Assigned Devices</v-tab>
+      <v-tab key="locations" href="#locations">Locations</v-tab>
+      <v-tab key="measurements" href="#measurements">Measurements</v-tab>
+      <v-tab key="alerts" href="#alerts">Alerts</v-tab>
+    </template>
+    <template slot="tab-items">
+      <customer-subcustomers
+        tabkey="customers"
+        id="customers"
+        ref="customers"
+        :customer="customer"
+      />
+      <customer-assignments tabkey="assignments" id="assignments" :customerToken="token"/>
+      <customer-location-events tabkey="locations" id="locations" :customerToken="token"/>
+      <customer-measurement-events tabkey="measurements" id="measurements" :customerToken="token"/>
+      <customer-alert-events tabkey="alerts" id="alerts" :customerToken="token"/>
+    </template>
     <template slot="dialogs">
       <customer-create-dialog
         ref="create"
@@ -86,6 +83,7 @@ import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
 import { INavigationSection } from "../../libraries/navigation-model";
 import { getCustomer } from "../../rest/sitewhere-customers-api";
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
@@ -111,10 +109,17 @@ export default class CustomerDetail extends Mixins(CustomerDetailComponent) {
   active: string | null = null;
   parentCustomer: ICustomer | null = null;
 
+  /** Get record as customer */
   get customer(): ICustomer | null {
     return this.record;
   }
 
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Customer;
+  }
+
+  /** Get page title */
   get title(): string {
     return this.customer ? this.customer.name : "";
   }

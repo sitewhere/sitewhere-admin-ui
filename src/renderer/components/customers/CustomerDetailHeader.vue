@@ -1,6 +1,11 @@
 <template>
-  <navigation-header-panel :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="200px">
-    <template slot="content" v-if="customer">
+  <navigation-header-panel
+    v-if="customer"
+    :imageUrl="imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="200px"
+  >
+    <template slot="content">
       <header-field label="Token">
         <clipboard-copy-field :field="customer.token" message="Token copied to clipboard"></clipboard-copy-field>
       </header-field>
@@ -56,6 +61,11 @@ export default class CustomerDetailHeader extends Mixins(
     return this.record;
   }
 
+  // Token.
+  get token(): string {
+    return this.customer ? this.customer.token : "";
+  }
+
   // Get URL for image.
   get imageUrl(): string {
     return this.customer ? this.customer.imageUrl : "";
@@ -63,7 +73,7 @@ export default class CustomerDetailHeader extends Mixins(
 
   // Get URL for QR code.
   get qrCodeUrl() {
-    return "customers/" + this.customer.token + "/label/qrcode";
+    return "customers/" + this.token + "/label/qrcode";
   }
 }
 </script>

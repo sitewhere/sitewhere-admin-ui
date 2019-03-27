@@ -1,9 +1,10 @@
 <template>
   <list-page
-    icon="cog"
+    :icon="icon"
     title="Customer Types"
     loadingMessage="Loading customer types ..."
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(customerType) in matches" :key="customerType.token">
@@ -14,11 +15,7 @@
       ></customer-type-list-entry>
     </v-flex>
     <template slot="dialogs">
-      <customer-type-create-dialog
-        ref="add"
-        @customerTypeAdded="refresh"
-        :customerTypes="customerTypes"
-      />
+      <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches"/>
     </template>
     <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Customer Type" @action="onAddCustomerType"></navigation-action-button>
@@ -41,6 +38,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 import { Store } from "vuex";
 import { routeTo } from "../common/Utils";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { AxiosPromise } from "axios";
 import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
 import {
@@ -68,6 +66,11 @@ export class CustomerTypeListComponent extends ListComponent<
 export default class CustomerTypesList extends Mixins(
   CustomerTypeListComponent
 ) {
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.CustomerType;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): ICustomerTypeSearchCriteria {
     let criteria: ICustomerTypeSearchCriteria = {};
