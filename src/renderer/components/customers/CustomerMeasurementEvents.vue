@@ -65,7 +65,7 @@ export class CustomerMeasurementsListComponent extends ListComponent<
 export default class CustomerMeasurementEvents extends Mixins(
   CustomerMeasurementsListComponent
 ) {
-  @Prop() readonly key!: string;
+  @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly customerToken!: string;
 

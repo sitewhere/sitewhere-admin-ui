@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover>
+  <list-entry>
     <v-container fluid @click="onAssetClicked">
       <v-layout row>
         <v-flex xs2>
@@ -15,7 +15,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-card>
+  </list-entry>
 </template>
 
 <script lang="ts">
@@ -24,8 +24,13 @@ import Vue from "vue";
 
 import { IStyle } from "../common/Style";
 import { IAsset } from "sitewhere-rest-api";
+import ListEntry from "../common/ListEntry.vue";
 
-@Component({})
+@Component({
+  components: {
+    ListEntry
+  }
+})
 export default class AssetListEntry extends Vue {
   @Prop() readonly asset!: IAsset;
 

@@ -8,7 +8,7 @@
     loadingMessage="Loading device assigments..."
   >
     <v-container class="pa-2" fluid grid-list-md fill-height>
-      <v-layout row wrap>
+      <v-layout align-content-start row wrap>
         <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
           <assignment-list-entry
             :assignment="assignment"

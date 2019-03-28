@@ -5,15 +5,13 @@
     :loaded="loaded"
     :results="results"
     @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading areas ..."
   >
     <list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
-        <area-list-entry :area="area" @openArea="onOpenArea"/>
+        <area-list-entry :area="area"></area-list-entry>
       </v-flex>
     </list-layout>
-    <template slot="dialogs">
-      <area-create-dialog @areaAdded="refresh"/>
-    </template>
   </list-tab>
 </template>
 
@@ -26,12 +24,10 @@ import Vue, { VueConstructor } from "vue";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
-import AreaListEntry from "./AreaListEntry.vue";
-import AreaCreateDialog from "./AreaCreateDialog.vue";
+import AreaListEntry from "../areas/AreaListEntry.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
-import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
@@ -41,7 +37,7 @@ import {
   IAreaSearchResults
 } from "sitewhere-rest-api";
 
-export class AreaSubareasListComponent extends ListComponent<
+export class AreaTypeAreasListComponent extends ListComponent<
   IArea,
   IAreaSearchCriteria,
   IAreaResponseFormat,
@@ -52,28 +48,24 @@ export class AreaSubareasListComponent extends ListComponent<
   components: {
     ListTab,
     ListLayout,
-    AreaListEntry,
-    AreaCreateDialog
+    AreaListEntry
   }
 })
-export default class AreaSubareas extends Mixins(AreaSubareasListComponent) {
+export default class AreaTypeAreas extends Mixins(AreaTypeAreasListComponent) {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
-  @Prop() readonly areaToken!: string;
+  @Prop() readonly areaTypeToken!: string;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IAreaSearchCriteria {
     let criteria: IAreaSearchCriteria = {};
-    criteria.rootOnly = false;
-    criteria.parentAreaToken = this.areaToken;
+    criteria.areaTypeToken = this.areaTypeToken;
     return criteria;
   }
 
   /** Build response format for list */
   buildResponseFormat(): IAreaResponseFormat {
     let format: IAreaResponseFormat = {};
-    format.includeAreaType = true;
-    format.includeAssignments = false;
     return format;
   }
 
@@ -84,11 +76,6 @@ export default class AreaSubareas extends Mixins(AreaSubareasListComponent) {
     format: IAreaResponseFormat
   ): AxiosPromise<IAreaSearchResults> {
     return listAreas(store, criteria, format);
-  }
-
-  // Called to open an area.
-  onOpenArea(area: IArea) {
-    routeTo(this, "/areas/" + this.areaToken);
   }
 }
 </script>

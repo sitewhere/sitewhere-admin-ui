@@ -1,182 +1,130 @@
 <template>
-  <div>
-    <navigation-page
-      v-if="areaType"
-      icon="cog"
-      :title="areaType.name"
-      loadingMessage="Loading area type ..."
-      :loaded="loaded"
-    >
-      <div v-if="areaType" slot="content">
-        <area-type-detail-header
-          :areaType="areaType"
-          :areaTypes="areaTypes"
-          @areaTypeDeleted="onAreaTypeDeleted"
-          @areaTypeUpdated="onAreaTypeUpdated"
-        ></area-type-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-item key="areas" href="#areas">Areas of Type</v-tabs-item>
-            <v-tabs-slider></v-tabs-slider>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="areas" id="areas">
-              <div>Areas go here</div>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Area Type" @action="onEdit"></navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Area Type" @action="onDelete"></navigation-action-button>
-      </div>
-    </navigation-page>
-    <area-type-update-dialog
-      ref="edit"
-      :token="token"
-      :areaTypes="areaTypes"
-      @areaTypeUpdated="onAreaTypeUpdated"
-    ></area-type-update-dialog>
-    <area-type-delete-dialog ref="delete" :token="token" @areaTypeDeleted="onAreaTypeDeleted"></area-type-delete-dialog>
-  </div>
+  <detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading area type ..."
+    :loaded="loaded"
+    :record="areaType"
+  >
+    <template slot="header">
+      <area-type-detail-header
+        :record="areaType"
+        @areaTypeDeleted="onAreaTypeDeleted"
+        @areaTypeUpdated="onAreaTypeUpdated"
+      />
+    </template>
+    <template slot="tabs">
+      <v-tab key="areas" href="#areas">Areas of Type</v-tab>
+    </template>
+    <template slot="tab-items">
+      <area-type-areas tabkey="areas" id="areas" ref="areas" :areaTypeToken="token"/>
+    </template>
+    <template slot="dialogs">
+      <area-type-update-dialog ref="edit" :token="token" @areaTypeUpdated="onAreaTypeUpdated"/>
+      <area-type-delete-dialog ref="delete" :token="token" @areaTypeDeleted="onAreaTypeDeleted"/>
+    </template>
+    <template slot="actions">
+      <navigation-action-button icon="edit" tooltip="Edit Area Type" @action="onEdit"/>
+      <navigation-action-button icon="times" tooltip="Delete Area Type" @action="onDelete"/>
+    </template>
+  </detail-page>
 </template>
 
-<script>
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import AreaTypeDetailHeader from "./AreaTypeDetailHeader";
-import AreaTypeDeleteDialog from "./AreaTypeDeleteDialog";
-import AreaTypeUpdateDialog from "./AreaTypeUpdateDialog";
-import AreaListEntry from "../areas/AreaListEntry";
+<script lang="ts">
+import { DetailComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import DetailPage from "../common/DetailPage.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+import AreaTypeDetailHeader from "./AreaTypeDetailHeader.vue";
+import AreaTypeAreas from "./AreaTypeAreas.vue";
+import AreaTypeDeleteDialog from "./AreaTypeDeleteDialog.vue";
+import AreaTypeUpdateDialog from "./AreaTypeUpdateDialog.vue";
+import AreaListEntry from "../areas/AreaListEntry.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
-import {
-  getAreaType,
-  listAreaTypes
-} from "../../rest/sitewhere-area-types-api";
-import { listAreas } from "../../rest/sitewhere-areas-api";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { INavigationSection } from "../../libraries/navigation-model";
+import { getAreaType } from "../../rest/sitewhere-area-types-api";
+import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    token: null,
-    areaType: null,
-    areaTypes: [],
-    results: null,
-    areas: [],
-    paging: null,
-    active: null,
-    loaded: false
-  }),
+export class AreaTypeDetailComponent extends DetailComponent<IAreaType> {}
 
+@Component({
   components: {
-    Pager,
-    NoResultsPanel,
-    NavigationPage,
+    DetailPage,
     NavigationActionButton,
     AreaTypeDetailHeader,
+    AreaTypeAreas,
     AreaListEntry,
     AreaTypeDeleteDialog,
     AreaTypeUpdateDialog
-  },
-
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
-
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refreshAreas();
-    },
-    // Display area with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Called to refresh area data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
-
-      // Load area information.
-      getAreaType(this.$store, token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onDataLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-      listAreaTypes(this.$store, false, "page=1&pageSize=0")
-        .then(function(response) {
-          component.$data.areaTypes = response.data.results;
-        })
-        .catch(function(e) {});
-
-      this.refreshAreas();
-    },
-    refreshAreas: function() {
-      var component = this;
-
-      // Search options.
-      let options = {};
-      options.rootOnly = false;
-      options.areaTypeToken = this.$data.token;
-      options.includeAreaType = false;
-      options.includeAssignments = false;
-      options.includeZones = false;
-
-      listAreas(this.$store, options, this.$data.paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.areas = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-    // Called after data is loaded.
-    onDataLoaded: function(areaType) {
-      this.$data.areaType = areaType;
-      var section = {
-        id: "areatypes",
-        title: "Area Types",
-        icon: "cog",
-        route: "/admin/areatypes/" + areaType.token,
-        longTitle: "Manage Area Type: " + areaType.name
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Called to open area type edit dialog.
-    onEdit: function() {
-      this.$refs["edit"].onOpenDialog();
-    },
-    // Called when area type is updated.
-    onAreaTypeUpdated: function() {
-      this.refresh();
-    },
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called when area type is deleted.
-    onAreaTypeDeleted: function() {
-      routeTo(this, "/areatypes");
-    },
-    // Called to open an area.
-    onOpenArea: function(area) {
-      routeTo(this, "/areas/" + area.token);
-    }
   }
-};
+})
+export default class AreaTypeDetail extends Mixins(AreaTypeDetailComponent) {
+  /** Record as area type */
+  get areaType(): IAreaType | null {
+    return this.record;
+  }
+
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.AreaType;
+  }
+
+  /** Get page title */
+  get title(): string {
+    return this.areaType ? this.areaType.name : "";
+  }
+
+  /** Load record */
+  loadRecord(
+    store: Store<SiteWhereUiSettings>,
+    token: string
+  ): AxiosPromise<IAreaType> {
+    let format: IAreaTypeResponseFormat = {
+      includeContainedAreaTypes: false
+    };
+    return getAreaType(store, token, format);
+  }
+
+  // Called after data is loaded.
+  afterRecordLoaded(areaType: IAreaType) {
+    var section: INavigationSection = {
+      id: "areatypes",
+      title: "Area Types",
+      icon: NavigationIcon.AreaType,
+      route: "/admin/areatypes/" + areaType.token,
+      longTitle: "Manage Area Type: " + areaType.name
+    };
+    this.$store.commit("currentSection", section);
+  }
+
+  // Called to open area type edit dialog.
+  onEdit() {
+    (this.$refs["edit"] as any).onOpenDialog();
+  }
+
+  // Called when area type is updated.
+  onAreaTypeUpdated() {
+    this.refresh();
+  }
+
+  onDelete() {
+    (this.$refs["delete"] as any).showDeleteDialog();
+  }
+
+  // Called when area type is deleted.
+  onAreaTypeDeleted() {
+    routeTo(this, "/areatypes");
+  }
+}
 </script>
 
 <style scoped>

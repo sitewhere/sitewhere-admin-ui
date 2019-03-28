@@ -1,9 +1,10 @@
 <template>
   <list-page
-    icon="car"
+    :icon="icon"
     title="Assets"
     loadingMessage="Loading assets ..."
     :loaded="loaded"
+    :results="results"
     :pageSizes="pageSizes"
     @pagingUpdated="onPagingUpdated"
   >
@@ -34,6 +35,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 import { Store } from "vuex";
 import { IPageSizes } from "../../libraries/navigation-model";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAssets } from "../../rest/sitewhere-assets-api";
@@ -74,6 +76,11 @@ export default class AssetsList extends Mixins(AssetListComponent) {
       value: 100
     }
   ];
+
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Asset;
+  }
 
   /** Build search criteria for list */
   buildSearchCriteria(): IAssetSearchCriteria {

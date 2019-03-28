@@ -25,38 +25,53 @@
   </navigation-header-panel>
 </template>
 
-<script>
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import HeaderField from "../common/HeaderField";
-import ClipboardCopyField from "../common/ClipboardCopyField";
+<script lang="ts">
+import { HeaderComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
+
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
+import HeaderField from "../common/HeaderField.vue";
+import LinkedHeaderField from "../common/LinkedHeaderField.vue";
+import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 
 import { formatDate } from "../common/Utils";
+import { IAreaType } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({}),
+export class AreaTypeHeaderComponent extends HeaderComponent<IAreaType> {}
 
-  props: ["areaType", "areaTypes"],
-
+@Component({
   components: {
     NavigationHeaderPanel,
     HeaderField,
+    LinkedHeaderField,
     ClipboardCopyField
-  },
-
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "areatypes/" + this.areaType.token + "/label/qrcode";
-    }
-  },
-
-  methods: {
-    // Format date.
-    formatDate: function(date) {
-      return formatDate(date);
-    }
   }
-};
+})
+export default class AreaTypeDetailHeader extends Mixins(
+  AreaTypeHeaderComponent
+) {
+  // Reference record as area type.
+  get areaType(): IAreaType {
+    return this.record;
+  }
+
+  // Token.
+  get token(): string {
+    return this.areaType ? this.areaType.token : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "areatypes/" + this.token + "/label/qrcode";
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

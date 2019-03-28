@@ -30,7 +30,7 @@ import ListEntry from "../common/ListEntry.vue";
     ListEntry
   }
 })
-export default class DeviceTypeSelector extends Vue {
+export default class AreaListEntry extends Vue {
   @Prop() readonly area!: IArea;
 
   // Compute style of logo.

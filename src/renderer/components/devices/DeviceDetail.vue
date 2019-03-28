@@ -92,7 +92,7 @@ export default class DeviceDetail extends Mixins(DeviceDetailComponent) {
     var section: INavigationSection = {
       id: "devices",
       title: "Devices",
-      icon: "microchip",
+      icon: NavigationIcon.Device,
       route: "/admin/devices/" + device.token,
       longTitle: "Manage Device: " + device.token
     };

@@ -1,10 +1,5 @@
 <template>
-  <navigation-header-panel
-    v-if="asset"
-    :imageUrl="asset.imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="190px"
-  >
+  <navigation-header-panel v-if="asset" :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="200px">
     <span slot="content">
       <header-field label="Token">
         <clipboard-copy-field :field="asset.token" message="Token copied to clipboard"></clipboard-copy-field>
@@ -30,68 +25,57 @@
   </navigation-header-panel>
 </template>
 
-<script>
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import HeaderField from "../common/HeaderField";
-import LinkedHeaderField from "../common/LinkedHeaderField";
-import ClipboardCopyField from "../common/ClipboardCopyField";
+<script lang="ts">
+import { HeaderComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
+
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
+import HeaderField from "../common/HeaderField.vue";
+import LinkedHeaderField from "../common/LinkedHeaderField.vue";
+import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 
 import { formatDate } from "../common/Utils";
+import { IAsset } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({}),
+export class AssetHeaderComponent extends HeaderComponent<IAsset> {}
 
-  props: ["asset"],
-
+@Component({
   components: {
     NavigationHeaderPanel,
     HeaderField,
     LinkedHeaderField,
     ClipboardCopyField
-  },
-
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "assets/" + this.asset.token + "/label/qrcode";
-    }
   }
-};
+})
+export default class AssetDetailHeader extends Mixins(AssetHeaderComponent) {
+  // Reference record as area.
+  get asset(): IAsset {
+    return this.record;
+  }
+
+  // Token.
+  get token(): string {
+    return this.asset ? this.asset.token : "";
+  }
+
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.asset ? this.asset.imageUrl : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "assets/" + this.token + "/label/qrcode";
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
 </script>
 
 <style scoped>
-.asset {
-  min-height: 200px;
-  min-width: 920px;
-  overflow-y: hidden;
-}
-
-.asset-logo {
-  position: absolute;
-  top: 10px;
-  left: 7px;
-  bottom: 7px;
-  width: 180px;
-}
-
-.asset-qrcode {
-  position: absolute;
-  top: 10px;
-  right: 7px;
-  bottom: 7px;
-  width: 180px;
-}
-
-.asset-headers {
-  position: absolute;
-  top: 20px;
-  left: 200px;
-  right: 200px;
-}
-
-.options-menu {
-  position: absolute;
-  top: 10px;
-  right: 190px;
-}
 </style>

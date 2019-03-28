@@ -101,26 +101,21 @@ export class AreaDetailComponent extends DetailComponent<IArea> {}
   }
 })
 export default class AreaDetail extends Mixins(AreaDetailComponent) {
-  active: string | null = null;
   parentArea: IArea | null = null;
 
+  /** Record as area */
   get area(): IArea | null {
     return this.record;
   }
 
   /** Icon for page */
   get icon(): NavigationIcon {
-    return NavigationIcon.Customer;
+    return NavigationIcon.Area;
   }
 
   /** Get page title */
   get title(): string {
     return this.area ? this.area.name : "";
-  }
-
-  /** Token */
-  get token(): string | null {
-    return this.area ? this.area.token : null;
   }
 
   /** Load record */
@@ -140,7 +135,7 @@ export default class AreaDetail extends Mixins(AreaDetailComponent) {
     var section: INavigationSection = {
       id: "areas",
       title: "Areas",
-      icon: "map",
+      icon: NavigationIcon.Area,
       route: "/admin/areas/" + area.token,
       longTitle: "Manage Area: " + area.name
     };

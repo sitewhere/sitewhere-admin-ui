@@ -25,66 +25,54 @@
   </navigation-header-panel>
 </template>
 
-<script>
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import HeaderField from "../common/HeaderField";
-import ClipboardCopyField from "../common/ClipboardCopyField";
+<script lang="ts">
+import { HeaderComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
+
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
+import HeaderField from "../common/HeaderField.vue";
+import LinkedHeaderField from "../common/LinkedHeaderField.vue";
+import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 
 import { formatDate } from "../common/Utils";
+import { IAssetType } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({}),
+export class AssetTypeHeaderComponent extends HeaderComponent<IAssetType> {}
 
-  props: ["assetType"],
-
+@Component({
   components: {
     NavigationHeaderPanel,
     HeaderField,
+    LinkedHeaderField,
     ClipboardCopyField
-  },
-
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "assettypes/" + this.assetType.token + "/label/qrcode";
-    }
   }
-};
+})
+export default class AreaTypeDetailHeader extends Mixins(
+  AssetTypeHeaderComponent
+) {
+  // Reference record as asset type.
+  get assetType(): IAssetType {
+    return this.record;
+  }
+
+  // Token.
+  get token(): string {
+    return this.assetType ? this.assetType.token : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "assettypes/" + this.token + "/label/qrcode";
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
 </script>
 
 <style scoped>
-.assettype {
-  min-height: 180px;
-  min-width: 920px;
-  overflow-y: hidden;
-}
-
-.assettype-logo {
-  position: absolute;
-  top: 10px;
-  left: 7px;
-  bottom: 7px;
-  width: 180px;
-}
-
-.assettype-qrcode {
-  position: absolute;
-  top: 10px;
-  right: 7px;
-  bottom: 7px;
-  width: 180px;
-}
-
-.assettype-headers {
-  position: absolute;
-  top: 20px;
-  left: 200px;
-  right: 200px;
-}
-
-.options-menu {
-  position: absolute;
-  top: 10px;
-  right: 190px;
-}
 </style>

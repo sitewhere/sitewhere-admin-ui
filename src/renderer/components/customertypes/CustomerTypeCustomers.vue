@@ -7,13 +7,11 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading customers ..."
   >
-    <v-container class="pa-2" fluid grid-list-md fill-height>
-      <v-layout row wrap>
-        <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-          <customer-list-entry :customer="customer"></customer-list-entry>
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <list-layout>
+      <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+        <customer-list-entry :customer="customer"></customer-list-entry>
+      </v-flex>
+    </list-layout>
   </list-tab>
 </template>
 
@@ -25,8 +23,8 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListTab from "../common/ListTab.vue";
+import ListLayout from "../common/ListLayout.vue";
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
@@ -49,8 +47,8 @@ export class CustomerTypeCustomersListComponent extends ListComponent<
 @Component({
   components: {
     ListTab,
-    CustomerListEntry,
-    NavigationActionButton
+    ListLayout,
+    CustomerListEntry
   }
 })
 export default class CustomerTypeCustomers extends Mixins(

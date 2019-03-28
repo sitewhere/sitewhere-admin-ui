@@ -41,7 +41,7 @@ import {
   IDeviceAssignmentSearchResults
 } from "sitewhere-rest-api";
 
-export class CustomerAssignmentsListComponent extends ListComponent<
+export class AreaAssignmentsListComponent extends ListComponent<
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
@@ -55,17 +55,17 @@ export class CustomerAssignmentsListComponent extends ListComponent<
     AssignmentListEntry
   }
 })
-export default class CustomerTypeCustomers extends Mixins(
-  CustomerAssignmentsListComponent
+export default class AreaAssignments extends Mixins(
+  AreaAssignmentsListComponent
 ) {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
-  @Prop() readonly customerToken!: string;
+  @Prop() readonly assetToken!: string;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
     let criteria: IDeviceAssignmentSearchCriteria = {};
-    criteria.customerToken = this.customerToken;
+    criteria.assetToken = this.assetToken;
     return criteria;
   }
 

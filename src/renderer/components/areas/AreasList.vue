@@ -1,6 +1,6 @@
 <template>
   <list-page
-    icon="map"
+    :icon="icon"
     title="Areas"
     loadingMessage="Loading areas ..."
     :loaded="loaded"
@@ -33,6 +33,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
@@ -59,6 +60,11 @@ export class AreaListComponent extends ListComponent<
   }
 })
 export default class AreasList extends Mixins(AreaListComponent) {
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Area;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): IAreaSearchCriteria {
     let criteria: IAreaSearchCriteria = {};

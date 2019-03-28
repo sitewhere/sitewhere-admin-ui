@@ -4,17 +4,14 @@
     title="Area Types"
     loadingMessage="Loading area types ..."
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(areaType) in matches" :key="areaType.token">
-      <area-type-list-entry
-        :areaType="areaType"
-        @areaTypeOpened="onOpenAreaType"
-        @areaTypeDeleted="refresh"
-      ></area-type-list-entry>
+      <area-type-list-entry :areaType="areaType" @openAreaType="onOpenAreaType"></area-type-list-entry>
     </v-flex>
     <template slot="dialogs">
-      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded" :areaTypes="areaTypes"/>
+      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded" :areaTypes="matches"/>
     </template>
     <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Area Type" @action="onAddAreaType"></navigation-action-button>
@@ -84,10 +81,12 @@ export default class AreaTypesList extends Mixins(AreaTypeListComponent) {
   }
 
   // Called when an area type is clicked.
-  onOpenAreaType(token: string) {
+  onOpenAreaType(areaType: IAreaType) {
     var tenant = this.$store.getters.selectedTenant;
     if (tenant) {
-      this.$router.push("/tenants/" + tenant.id + "/areatypes/" + token);
+      this.$router.push(
+        "/tenants/" + tenant.id + "/areatypes/" + areaType.token
+      );
     }
   }
 

@@ -32,13 +32,19 @@ export function createAsset(
  * Get asset by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getAsset(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IAssetResponseFormat
 ): Promise<AxiosResponse<IAsset>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IAsset> = SiteWhere.API.Assets.getAsset(axios, token);
+  let api: AxiosPromise<IAsset> = SiteWhere.API.Assets.getAsset(
+    axios,
+    token,
+    format
+  );
   return loaderWrapper(store, api);
 }
 

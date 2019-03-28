@@ -1,9 +1,10 @@
 <template>
   <list-page
-    icon="cog"
+    :icon="icon"
     title="Asset Types"
     loadingMessage="Loading asset types ..."
     :loaded="loaded"
+    :results="results"
     @pagingUpdated="onPagingUpdated"
   >
     <v-flex xs6 v-for="(assetType) in matches" :key="assetType.token">
@@ -36,6 +37,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAssetTypes } from "../../rest/sitewhere-asset-types-api";
@@ -62,6 +64,11 @@ export class AreaListComponent extends ListComponent<
   }
 })
 export default class AreasList extends Mixins(AreaListComponent) {
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.AssetType;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): IAssetTypeSearchCriteria {
     let criteria: IAssetTypeSearchCriteria = {};

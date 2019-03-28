@@ -32,15 +32,18 @@ export function createAreaType(
  * Get an area type by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getAreaType(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IAreaTypeResponseFormat
 ): Promise<AxiosResponse<IAreaType>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<IAreaType> = SiteWhere.API.AreaTypes.getAreaType(
     axios,
-    token
+    token,
+    format
   );
   return loaderWrapper(store, api);
 }

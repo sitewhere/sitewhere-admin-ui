@@ -6,13 +6,11 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-container class="pa-2" fluid grid-list-md fill-height>
-      <v-layout row wrap>
-        <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-          <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"/>
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <list-layout>
+      <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+        <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"/>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer"/>
     </template>
@@ -27,6 +25,7 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListTab from "../common/ListTab.vue";
+import ListLayout from "../common/ListLayout.vue";
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 
@@ -52,6 +51,7 @@ export class CustomerSubcustomersListComponent extends ListComponent<
 @Component({
   components: {
     ListTab,
+    ListLayout,
     CustomerListEntry,
     CustomerCreateDialog
   }

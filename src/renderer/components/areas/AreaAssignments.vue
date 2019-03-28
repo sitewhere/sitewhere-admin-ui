@@ -6,17 +6,15 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-container class="pa-2" fluid grid-list-md fill-height>
-      <v-layout row wrap>
-        <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
-          <assignment-list-entry
-            :assignment="assignment"
-            @assignmentOpened="onOpenAssignment(assignment)"
-            @refresh="refresh"
-          />
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <list-layout>
+      <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+        <assignment-list-entry
+          :assignment="assignment"
+          @assignmentOpened="onOpenAssignment(assignment)"
+          @refresh="refresh"
+        />
+      </v-flex>
+    </list-layout>
   </list-tab>
 </template>
 
@@ -28,6 +26,7 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListTab from "../common/ListTab.vue";
+import ListLayout from "../common/ListLayout.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
 import { Store } from "vuex";
@@ -52,6 +51,7 @@ export class AreaAssignmentsListComponent extends ListComponent<
 @Component({
   components: {
     ListTab,
+    ListLayout,
     AssignmentListEntry
   }
 })
