@@ -7,9 +7,11 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(deviceType) in matches" :key="deviceType.token">
-      <device-type-list-entry :deviceType="deviceType" @deviceTypeOpened="onOpenDeviceType"/>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(deviceType) in matches" :key="deviceType.token">
+        <device-type-list-entry :deviceType="deviceType" @deviceTypeOpened="onOpenDeviceType"/>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <device-type-create-dialog ref="add" @deviceTypeAdded="onDeviceTypeAdded"/>
     </template>
@@ -27,6 +29,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import DeviceTypeListEntry from "./DeviceTypeListEntry.vue";
 import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -54,6 +57,7 @@ export class DeviceTypeListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     DeviceTypeListEntry,
     DeviceTypeCreateDialog,
     NavigationActionButton

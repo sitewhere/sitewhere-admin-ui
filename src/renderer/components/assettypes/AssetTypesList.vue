@@ -7,13 +7,15 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(assetType) in matches" :key="assetType.token">
-      <asset-type-list-entry
-        :assetType="assetType"
-        @assetTypeOpened="onOpenAssetType"
-        @assetTypeDeleted="refresh"
-      ></asset-type-list-entry>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(assetType) in matches" :key="assetType.token">
+        <asset-type-list-entry
+          :assetType="assetType"
+          @assetTypeOpened="onOpenAssetType"
+          @assetTypeDeleted="refresh"
+        ></asset-type-list-entry>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <asset-type-create-dialog ref="add" @assetTypeAdded="refresh"/>
     </template>
@@ -31,6 +33,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -58,6 +61,7 @@ export class AreaListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     AssetTypeListEntry,
     AssetTypeCreateDialog,
     NavigationActionButton

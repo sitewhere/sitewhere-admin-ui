@@ -6,17 +6,12 @@
       </div>
       <div class="list-content">
         <slot v-if="loaded"/>
-        <v-card v-else>
-          <v-card-text>
-            <span class="title">{{ loadingMessage || 'Loading ...' }}</span>
-            <v-progress-circular :indeterminate="true"/>
-          </v-card-text>
-        </v-card>
       </div>
       <div class="list-footer">
         <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes"/>
       </div>
     </div>
+    <loading-overlay v-if="!loaded" :loadingMessage="loadingMessage"/>
     <slot name="dialogs"></slot>
   </v-tab-item>
 </template>
@@ -25,13 +20,15 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import Pager from "../common/Pager.vue";
+import Pager from "./Pager.vue";
+import LoadingOverlay from "./LoadingOverlay.vue";
 
 import { IPaging, IPageSizes } from "../../libraries/navigation-model";
 
 @Component({
   components: {
-    Pager
+    Pager,
+    LoadingOverlay
   }
 })
 export default class ListTab extends Vue {

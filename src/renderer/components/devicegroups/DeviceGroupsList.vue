@@ -7,9 +7,15 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(group) in matches" :key="group.token">
-      <device-group-list-entry :deviceGroup="group" class="mb-1" @deviceGroupOpened="onOpenGroup"/>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(group) in matches" :key="group.token">
+        <device-group-list-entry
+          :deviceGroup="group"
+          class="mb-1"
+          @deviceGroupOpened="onOpenGroup"
+        />
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <device-group-create-dialog ref="add" @groupAdded="refresh"/>
     </template>
@@ -27,6 +33,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import DeviceGroupListEntry from "./DeviceGroupListEntry.vue";
 import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -54,6 +61,7 @@ export class DeviceGroupListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     DeviceGroupListEntry,
     DeviceGroupCreateDialog,
     NavigationActionButton

@@ -7,9 +7,11 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(area) in matches" :key="area.token">
-      <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(area) in matches" :key="area.token">
+        <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
     </template>
@@ -27,6 +29,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -54,6 +57,7 @@ export class AreaListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     AreaListEntry,
     AreaCreateDialog,
     NavigationActionButton

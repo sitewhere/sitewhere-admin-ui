@@ -7,13 +7,15 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(customerType) in matches" :key="customerType.token">
-      <customer-type-list-entry
-        :customerType="customerType"
-        @openCustomerType="onOpenCustomerType"
-        @customerTypeDeleted="refresh"
-      ></customer-type-list-entry>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(customerType) in matches" :key="customerType.token">
+        <customer-type-list-entry
+          :customerType="customerType"
+          @openCustomerType="onOpenCustomerType"
+          @customerTypeDeleted="refresh"
+        ></customer-type-list-entry>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches"/>
     </template>
@@ -31,6 +33,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import CustomerTypeListEntry from "./CustomerTypeListEntry.vue";
 import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -58,6 +61,7 @@ export class CustomerTypeListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     CustomerTypeListEntry,
     CustomerTypeCreateDialog,
     NavigationActionButton

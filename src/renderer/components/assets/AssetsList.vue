@@ -8,9 +8,11 @@
     :pageSizes="pageSizes"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(asset) in matches" :key="asset.token">
-      <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(asset) in matches" :key="asset.token">
+        <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <asset-create-dialog ref="add" @assetAdded="refresh"/>
     </template>
@@ -28,6 +30,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import AssetListEntry from "./AssetListEntry.vue";
 import AssetCreateDialog from "./AssetCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -56,6 +59,7 @@ export class AssetListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     AssetListEntry,
     AssetCreateDialog,
     NavigationActionButton

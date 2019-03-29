@@ -8,13 +8,15 @@
     :pageSizes="pageSizes"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(device) in matches" :key="device.token">
-      <device-list-entry
-        :device="device"
-        @assignDevice="onAssignDevice"
-        @deviceOpened="onOpenDevice"
-      ></device-list-entry>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(device) in matches" :key="device.token">
+        <device-list-entry
+          :device="device"
+          @assignDevice="onAssignDevice"
+          @deviceOpened="onOpenDevice"
+        ></device-list-entry>
+      </v-flex>
+    </list-layout>
     <template slot="filters">
       <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
     </template>
@@ -48,6 +50,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 import DeviceListEntry from "./DeviceListEntry.vue";
 import DeviceListFilterBar from "./DeviceListFilterBar.vue";
@@ -79,6 +82,7 @@ export class DeviceListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     NavigationActionButton,
     DeviceListEntry,
     DeviceListFilterBar,

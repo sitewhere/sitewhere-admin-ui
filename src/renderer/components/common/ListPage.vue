@@ -6,11 +6,7 @@
           <slot name="filters"/>
         </div>
         <div class="list-content">
-          <v-container fluid grid-list-md style class="pa-2" v-if="loaded">
-            <v-layout row wrap>
-              <slot/>
-            </v-layout>
-          </v-container>
+          <slot/>
         </div>
       </div>
     </template>

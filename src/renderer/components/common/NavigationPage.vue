@@ -10,24 +10,25 @@
       <slot name="header"/>
     </div>
     <div class="content">
-      <slot name="content"/>
-      <v-card v-if="!loaded">
-        <v-card-text>
-          <span class="title">{{ loadingMessage || 'Loading ...' }}</span>
-          <v-progress-circular :indeterminate="true"/>
-        </v-card-text>
-      </v-card>
+      <slot v-if="loaded" name="content"/>
     </div>
     <div class="footer">
       <slot name="footer"/>
     </div>
+    <loading-overlay v-if="!loaded" :loadingMessage="loadingMessage"/>
   </v-card>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-@Component({})
+import LoadingOverlay from "./LoadingOverlay.vue";
+
+@Component({
+  components: {
+    LoadingOverlay
+  }
+})
 export default class NavigationPage extends Vue {
   @Prop() readonly icon!: string;
   @Prop() readonly title!: string;

@@ -7,9 +7,11 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-      <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
-    </v-flex>
+    <list-layout>
+      <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+        <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
       <customer-create-dialog ref="add" @customerAdded="onCustomerAdded"/>
     </template>
@@ -27,6 +29,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -54,6 +57,7 @@ export class CustomerListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     CustomerListEntry,
     CustomerCreateDialog,
     NavigationActionButton

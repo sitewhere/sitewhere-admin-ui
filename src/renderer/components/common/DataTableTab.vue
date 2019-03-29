@@ -12,6 +12,7 @@
               :items="matches"
               :hide-actions="true"
               :no-data-text="noDataText"
+              :style="tableStyle"
             >
               <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
                 <slot :name="slot" v-bind="scope"/>
@@ -24,6 +25,7 @@
         <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes"/>
       </div>
     </div>
+    <loading-overlay v-if="!loaded" :loadingMessage="loadingMessage"/>
     <slot name="dialogs"></slot>
   </v-tab-item>
 </template>
@@ -32,7 +34,8 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import Pager from "../common/Pager.vue";
+import Pager from "./Pager.vue";
+import LoadingOverlay from "./LoadingOverlay.vue";
 
 import {
   IPaging,
@@ -42,7 +45,8 @@ import {
 
 @Component({
   components: {
-    Pager
+    Pager,
+    LoadingOverlay
   }
 })
 export default class DataTableTab extends Vue {
@@ -58,6 +62,11 @@ export default class DataTableTab extends Vue {
   /** Get current matches */
   get matches(): {}[] {
     return this.results ? this.results.results : [];
+  }
+
+  /** Dims results when loading */
+  get tableStyle(): {} {
+    return { opacity: this.loaded ? 1.0 : 0.3 };
   }
 
   /** Update paging values and run query */
