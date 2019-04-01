@@ -13,6 +13,9 @@ import {
   ISearchResults
 } from "sitewhere-rest-api";
 
+// @ts-ignore: Unused import
+import { Validation } from "vuelidate";
+
 /**
  * Base class for components that display lists based on
  * SiteWhere REST services.
@@ -150,5 +153,76 @@ export class HeaderComponent<T> extends Vue {
   // Handle date formatting in a standard way.
   formatDate(date: Date) {
     return formatDate(date);
+  }
+}
+
+/**
+ * Base class for dialog components.
+ */
+@Component
+export class DialogComponent extends Vue {
+  @Prop() readonly title!: string;
+  @Prop() readonly width!: number;
+  @Prop() readonly createLabel!: string;
+  @Prop() readonly cancelLabel!: string;
+
+  dialogVisible: boolean = false;
+  error: string | null = null;
+
+  /** Reset dialog content */
+  reset(): void {
+    throw new Error("Reset not implemented in dialog.");
+  }
+
+  /** Called to open the dialog */
+  openDialog() {
+    this.dialogVisible = true;
+  }
+
+  /** Called to open the dialog */
+  closeDialog() {
+    this.dialogVisible = false;
+  }
+
+  /** Called to show an error message */
+  showError(error: string) {
+    this.error = error;
+  }
+
+  /** Action invoked when create is clicked */
+  onCreateClicked(e: any) {}
+
+  /** Action invoked when cancel is clicked */
+  onCancelClicked(e: any) {
+    this.closeDialog();
+  }
+}
+
+/**
+ * Base class for dialog sections.
+ */
+@Component
+export class DialogSection extends Vue {
+  /** Called on component create */
+  created(): void {
+    this.reset();
+  }
+
+  /** Reset section content */
+  reset(): void {
+    throw new Error("Reset not implemented in dialog section.");
+  }
+
+  /** Validate fields in the dialog section */
+  validate(): boolean {
+    return true;
+  }
+
+  /** Load form data from an object */
+  load(input: {}): void {}
+
+  /** Save form data to an object */
+  save(): {} {
+    return {};
   }
 }

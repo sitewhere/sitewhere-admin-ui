@@ -1,186 +1,189 @@
 <template>
-  <navigation-page
-    icon="users"
-    title="Manage Users"
-    loadingMessage="Loading user list ..."
+  <list-page
+    :icon="icon"
+    title="Users"
+    loadingMessage="Loading users ..."
     :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
   >
-    <div slot="content">
-      <v-layout row wrap v-if="users">
-        <v-flex xs12>
-          <no-results-panel v-if="users.length === 0" text="No Users Found"></no-results-panel>
-          <v-data-table
-            v-if="users.length > 0"
-            class="elevation-2 pa-0"
-            :headers="headers"
-            :items="users"
-            :hide-actions="true"
-            no-data-text="No Users Found"
-          >
-            <template slot="items" slot-scope="props">
-              <td width="5%" :title="props.item.username">{{ props.item.username }}</td>
-              <td width="5%" :title="props.item.firstName">{{ props.item.firstName }}</td>
-              <td width="10%" :title="props.item.lastName">{{ props.item.lastName }}</td>
-              <td width="5%" :title="props.item.status">{{ props.item.status }}</td>
-              <td
-                width="15%"
-                :title="formatDate(props.item.createdDate)"
-              >{{ formatDate(props.item.createdDate) }}</td>
-              <td
-                width="15%"
-                :title="formatDate(props.item.updatedDate)"
-              >{{ formatDate(props.item.updatedDate) }}</td>
-              <td width="12%" class="action-buttons">
-                <actions-block @edited="refresh" @deleted="refresh">
-                  <user-update-dialog slot="edit" :username="props.item.username"></user-update-dialog>
-                  <user-delete-dialog slot="delete" :username="props.item.username"></user-delete-dialog>
-                </actions-block>
-              </td>
-            </template>
-          </v-data-table>
-        </v-flex>
-      </v-layout>
-      <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging"></pager>
-      <user-create-dialog ref="add" @userAdded="refresh"></user-create-dialog>
-    </div>
-    <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add User" @action="onAddUser"></navigation-action-button>
-    </div>
-  </navigation-page>
+    <v-flex xs12>
+      <v-data-table
+        :headers="headers"
+        :items="matches"
+        :hide-actions="true"
+        no-data-text="No Users Found"
+      >
+        <template slot="items" slot-scope="props">
+          <td width="5%" :title="props.item.username">{{ props.item.username }}</td>
+          <td width="5%" :title="props.item.firstName">{{ props.item.firstName }}</td>
+          <td width="10%" :title="props.item.lastName">{{ props.item.lastName }}</td>
+          <td width="5%" :title="props.item.status">{{ props.item.status }}</td>
+          <td
+            width="15%"
+            :title="formatDate(props.item.createdDate)"
+          >{{ formatDate(props.item.createdDate) }}</td>
+          <td
+            width="15%"
+            :title="formatDate(props.item.updatedDate)"
+          >{{ formatDate(props.item.updatedDate) }}</td>
+          <td width="12%" class="action-buttons">
+            <actions-block @edited="refresh" @deleted="refresh">
+              <user-update-dialog slot="edit" :username="props.item.username"/>
+              <user-delete-dialog slot="delete" :username="props.item.username"/>
+            </actions-block>
+          </td>
+        </template>
+        <template slot="actions">
+          <navigation-action-button icon="plus" tooltip="Add User" @action="onAddUser"/>
+        </template>
+        <template slot="dialogs">
+          <user-create-dialog ref="add" @userAdded="refresh"/>
+        </template>
+      </v-data-table>
+    </v-flex>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import ActionsBlock from "../common/ActionsBlock";
-import UserCreateDialog from "./UserCreateDialog";
-import UserUpdateDialog from "./UserUpdateDialog";
-import UserDeleteDialog from "./UserDeleteDialog";
+<script lang="ts">
+import { ListComponent } from "../../libraries/component-model";
+import { Component, Mixins } from "vue-property-decorator";
 
+// @ts-ignore: Unused import
+import Vue, { VueConstructor } from "vue";
+
+import ListPage from "../common/ListPage.vue";
+import ActionsBlock from "../common/ActionsBlock.vue";
+import UserCreateDialog from "./UserCreateDialog.vue";
+import UserUpdateDialog from "./UserUpdateDialog.vue";
+import UserDeleteDialog from "./UserDeleteDialog.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
 import { formatDate } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import { listUsers } from "../../rest/sitewhere-users-api";
+import {
+  IUser,
+  IUserSearchCriteria,
+  IUserResponseFormat,
+  IUserSearchResults
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    users: null,
-    headers: [
-      {
-        align: "left",
-        sortable: false,
-        text: "User Name",
-        value: "username"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "First Name",
-        value: "firstname"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Last Name",
-        value: "lastname"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Status",
-        value: "status"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Created",
-        value: "created"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Updated",
-        value: "updated"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Actions",
-        value: "actions"
-      }
-    ],
-    pageSizes: [
-      {
-        text: "25",
-        value: 25
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ],
-    loaded: false
-  }),
+export class UsersListComponent extends ListComponent<
+  IUser,
+  IUserSearchCriteria,
+  IUserResponseFormat,
+  IUserSearchResults
+> {}
 
+@Component({
   components: {
-    Pager,
-    NavigationPage,
-    NavigationActionButton,
-    NoResultsPanel,
+    ListPage,
     ActionsBlock,
     UserCreateDialog,
     UserUpdateDialog,
     UserDeleteDialog
-  },
-
-  computed: {
-    // Accessor for utility functions.
-    utils: function() {
-      return Utils;
-    }
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list.
-    refresh: function() {
-      this.$data.loaded = false;
-      var component = this;
-      var paging = this.$data.paging.query;
-      listUsers(this.$store, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.users = response.data.results;
-          component.loaded = true;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    },
-
-    // Called to open dialog.
-    onAddUser: function() {
-      this.$refs.add.onOpenDialog();
-    }
   }
-};
+})
+export default class UsersList extends Mixins(UsersListComponent) {
+  headers: ITableHeaders = [
+    {
+      align: "left",
+      sortable: false,
+      text: "User Name",
+      value: "username"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "First Name",
+      value: "firstname"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Last Name",
+      value: "lastname"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Status",
+      value: "status"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Created",
+      value: "created"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Updated",
+      value: "updated"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Actions",
+      value: "actions"
+    }
+  ];
+  pageSizes: IPageSizes = [
+    {
+      text: "25",
+      value: 25
+    },
+    {
+      text: "50",
+      value: 50
+    },
+    {
+      text: "100",
+      value: 100
+    }
+  ];
+
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.User;
+  }
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IUserSearchCriteria {
+    let criteria: IUserSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IUserResponseFormat {
+    let format: IUserResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    store: Store<SiteWhereUiSettings>,
+    criteria: IUserSearchCriteria,
+    format: IUserResponseFormat
+  ): AxiosPromise<IUserSearchResults> {
+    return listUsers(store, criteria, format);
+  }
+
+  // Called to open dialog.
+  onAddUser() {
+    (this.$refs.add as any).onOpenDialog();
+  }
+
+  // Format a date.
+  formatDate(date: Date) {
+    formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

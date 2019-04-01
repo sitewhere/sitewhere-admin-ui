@@ -2,7 +2,9 @@
   <v-app v-if="user">
     <in-app-system-bar style="-webkit-app-region: drag"/>
     <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
-      <v-toolbar class="elevation-1" style="height: 47px;" dense></v-toolbar>
+      <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
+        <div class="sitewhere-logo"/>
+      </v-toolbar>
       <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
       <v-menu class="current-user-block" top right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
@@ -41,14 +43,8 @@ import Navigation from "./common/Navigation.vue";
 import { handleError } from "./common/Utils";
 import { AxiosResponse } from "axios";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
-import { INavigationSection } from "../libraries/navigation-model";
-
-/** Interface for toolbar action */
-export interface IAction {
-  id: "logout";
-  title: "Log Out";
-  icon: "power-off";
-}
+import { IAction, INavigationSection } from "../libraries/navigation-model";
+import { NavigationIcon } from "../libraries/constants";
 
 @Component({
   components: {
@@ -63,7 +59,7 @@ export default class SystemAdministration extends Vue {
     {
       id: "tenants",
       title: "Manage Tenants",
-      icon: "layers",
+      icon: NavigationIcon.Tenant,
       route: "system/tenants",
       longTitle: "Manage System Tenants",
       requireAll: ["ADMINISTER_TENANTS"]
@@ -71,7 +67,7 @@ export default class SystemAdministration extends Vue {
     {
       id: "users",
       title: "Manage Users",
-      icon: "people",
+      icon: NavigationIcon.User,
       route: "system/users",
       longTitle: "Manage System Users",
       requireAll: ["ADMINISTER_USERS"]
@@ -79,7 +75,7 @@ export default class SystemAdministration extends Vue {
     {
       id: "global",
       title: "Global Microservices",
-      icon: "language",
+      icon: NavigationIcon.Global,
       route: "system/microservices",
       longTitle: "Manage Global microservices",
       requireAll: ["ADMINISTER_TENANTS"]
@@ -156,7 +152,6 @@ export default class SystemAdministration extends Vue {
 
   // Called when user requests log out.
   onLogOut() {
-    console.log("Logging out!");
     this.$store.commit("logOut");
     this.$router.push("/");
   }
@@ -185,5 +180,15 @@ export default class SystemAdministration extends Vue {
 .current-user-block {
   position: absolute;
   bottom: 40px;
+}
+.sitewhere-logo {
+  position: absolute;
+  top: 5px;
+  left: 17px;
+  right: 5px;
+  bottom: 5px;
+  background-image: url("../assets/sitewhere-small.png");
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 </style>

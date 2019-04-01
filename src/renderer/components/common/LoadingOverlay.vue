@@ -1,5 +1,5 @@
 <template>
-  <div class="overlay" v-if="!loaded">
+  <div class="overlay">
     <v-container fill-height>
       <v-layout align-center justify-center column fill-height>
         <v-flex xs5/>

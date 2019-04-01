@@ -1,9 +1,11 @@
 <template>
-  <v-app v-if="user">
+  <v-app v-if="tenant">
     <in-app-system-bar style="-webkit-app-region: drag"/>
     <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
-      <v-toolbar class="elevation-1" style="height: 47px;" dense></v-toolbar>
-      <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
+      <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
+        <div class="tenant-logo" :style="tenantLogoStyle"/>
+      </v-toolbar>
+      <navigation :sections="sections" @sectionSelected="onSectionClicked"/>
       <v-menu class="current-user-block" top right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
           <font-awesome-icon icon="user" class="mr-2"/>
@@ -30,190 +32,162 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+
 import InAppSystemBar from "../common/InAppSystemBar.vue";
 import InAppFooter from "../common/InAppFooter.vue";
-import Navigation from "../common/Navigation";
-import { NavigationIcon } from "../../libraries/constants";
+import Navigation from "../common/Navigation.vue";
 
+import { handleError } from "../common/Utils";
+import { AxiosResponse } from "axios";
 import { getJwt } from "../../rest/sitewhere-api-wrapper";
+import { IAction, INavigationSection } from "../../libraries/navigation-model";
+import { NavigationIcon } from "../../libraries/constants";
+import { ITenant } from "sitewhere-rest-api";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
 
-export default {
-  data: () => ({
-    drawer: true,
-    tenantToken: null,
-    sections: [
-      {
-        id: "deviceGroup",
-        title: "Device Management",
-        icon: NavigationIcon.Device,
-        route: "devices",
-        longTitle: "Manage Devices",
-        subsections: [
-          {
-            id: "devicetypes",
-            title: "Device Types",
-            icon: NavigationIcon.DeviceType,
-            route: "devicetypes",
-            longTitle: "Manage Device Types"
-          },
-          {
-            id: "devices",
-            title: "Devices",
-            icon: NavigationIcon.Device,
-            route: "devices",
-            longTitle: "Manage Devices"
-          },
-          {
-            id: "groups",
-            title: "Device Groups",
-            icon: NavigationIcon.DeviceGroup,
-            route: "groups",
-            longTitle: "Manage Device Groups"
-          }
-        ]
-      },
-      {
-        id: "customersGroup",
-        title: "Customer Management",
-        icon: NavigationIcon.Customer,
-        route: "customers",
-        longTitle: "Manage Customers",
-        subsections: [
-          {
-            id: "customertypes",
-            title: "Customer Types",
-            icon: NavigationIcon.CustomerType,
-            route: "customertypes",
-            longTitle: "Manage Customer Types"
-          },
-          {
-            id: "customers",
-            title: "Customers",
-            icon: NavigationIcon.Customer,
-            route: "customers",
-            longTitle: "Manage Customers"
-          }
-        ]
-      },
-      {
-        id: "areasGroup",
-        title: "Area Management",
-        icon: NavigationIcon.Area,
-        route: "areas",
-        longTitle: "Manage Areas",
-        subsections: [
-          {
-            id: "areatypes",
-            title: "Area Types",
-            icon: NavigationIcon.AreaType,
-            route: "areatypes",
-            longTitle: "Manage Area Types"
-          },
-          {
-            id: "areas",
-            title: "Areas",
-            icon: NavigationIcon.Area,
-            route: "areas",
-            longTitle: "Manage Areas"
-          }
-        ]
-      },
-      {
-        id: "assetGroup",
-        title: "Asset Management",
-        icon: NavigationIcon.Asset,
-        route: "assets",
-        longTitle: "Manage Assets",
-        subsections: [
-          {
-            id: "assettypes",
-            title: "Asset Types",
-            icon: NavigationIcon.AssetType,
-            route: "assettypes",
-            longTitle: "Manage Asset Types"
-          },
-          {
-            id: "assets",
-            title: "Assets",
-            icon: NavigationIcon.Asset,
-            route: "assets",
-            longTitle: "Manage Assets"
-          }
-        ]
-      },
-      {
-        id: "batch",
-        title: "Batch Operations",
-        icon: NavigationIcon.BatchOperation,
-        route: "batch",
-        longTitle: "Manage Batch Operations"
-      },
-      {
-        id: "schedules",
-        title: "Schedules",
-        icon: NavigationIcon.Schedule,
-        route: "schedules",
-        longTitle: "Manage Schedules"
-      }
-    ],
-    userActions: [
-      {
-        id: "sysadmin",
-        title: "System Administration",
-        icon: "cog"
-      },
-      {
-        id: "logout",
-        title: "Log Out",
-        icon: "power-off"
-      }
-    ],
-    right: null
-  }),
-
+@Component({
   components: {
     InAppSystemBar,
     InAppFooter,
     Navigation
-  },
-
-  computed: {
-    // Get loggied in user.
-    user: function() {
-      return this.$store.getters.user;
-    },
-    // Get currently selected section.
-    section: function() {
-      return this.$store.getters.currentSection;
-    },
-    fullname: function() {
-      var user = this.$store.getters.user;
-      if (user) {
-        var first = this.$store.getters.user.firstName;
-        var last = this.$store.getters.user.lastName;
-        if (last.length > 1) {
-          return first + " " + last;
-        } else {
-          return first;
+  }
+})
+export default class TenantAdministration extends Vue {
+  tenant!: ITenant;
+  tenantToken!: string;
+  drawer: boolean = true;
+  sections: INavigationSection[] = [
+    {
+      id: "deviceGroup",
+      title: "Device Management",
+      icon: NavigationIcon.Device,
+      route: "devices",
+      longTitle: "Manage Devices",
+      subsections: [
+        {
+          id: "devicetypes",
+          title: "Device Types",
+          icon: NavigationIcon.DeviceType,
+          route: "devicetypes",
+          longTitle: "Manage Device Types"
+        },
+        {
+          id: "devices",
+          title: "Devices",
+          icon: NavigationIcon.Device,
+          route: "devices",
+          longTitle: "Manage Devices"
+        },
+        {
+          id: "groups",
+          title: "Device Groups",
+          icon: NavigationIcon.DeviceGroup,
+          route: "groups",
+          longTitle: "Manage Device Groups"
         }
-      }
-      return "Not Logged In";
+      ]
     },
-
-    // Get global loading indicator.
-    loading: function() {
-      return this.$store.getters.loading;
+    {
+      id: "customersGroup",
+      title: "Customer Management",
+      icon: NavigationIcon.Customer,
+      route: "customers",
+      longTitle: "Manage Customers",
+      subsections: [
+        {
+          id: "customertypes",
+          title: "Customer Types",
+          icon: NavigationIcon.CustomerType,
+          route: "customertypes",
+          longTitle: "Manage Customer Types"
+        },
+        {
+          id: "customers",
+          title: "Customers",
+          icon: NavigationIcon.Customer,
+          route: "customers",
+          longTitle: "Manage Customers"
+        }
+      ]
     },
-
-    // Get global error indicator.
-    error: function() {
-      return this.$store.getters.error;
+    {
+      id: "areasGroup",
+      title: "Area Management",
+      icon: NavigationIcon.Area,
+      route: "areas",
+      longTitle: "Manage Areas",
+      subsections: [
+        {
+          id: "areatypes",
+          title: "Area Types",
+          icon: NavigationIcon.AreaType,
+          route: "areatypes",
+          longTitle: "Manage Area Types"
+        },
+        {
+          id: "areas",
+          title: "Areas",
+          icon: NavigationIcon.Area,
+          route: "areas",
+          longTitle: "Manage Areas"
+        }
+      ]
+    },
+    {
+      id: "assetGroup",
+      title: "Asset Management",
+      icon: NavigationIcon.Asset,
+      route: "assets",
+      longTitle: "Manage Assets",
+      subsections: [
+        {
+          id: "assettypes",
+          title: "Asset Types",
+          icon: NavigationIcon.AssetType,
+          route: "assettypes",
+          longTitle: "Manage Asset Types"
+        },
+        {
+          id: "assets",
+          title: "Assets",
+          icon: NavigationIcon.Asset,
+          route: "assets",
+          longTitle: "Manage Assets"
+        }
+      ]
+    },
+    {
+      id: "batch",
+      title: "Batch Operations",
+      icon: NavigationIcon.BatchOperation,
+      route: "batch",
+      longTitle: "Manage Batch Operations"
+    },
+    {
+      id: "schedules",
+      title: "Schedules",
+      icon: NavigationIcon.Schedule,
+      route: "schedules",
+      longTitle: "Manage Schedules"
     }
-  },
+  ];
+  userActions: IAction[] = [
+    {
+      id: "sysadmin",
+      title: "System Administration",
+      icon: "cog"
+    },
+    {
+      id: "logout",
+      title: "Log Out",
+      icon: "power-off"
+    }
+  ];
 
-  created: function() {
+  created() {
     // Set up JWT auto-refresh.
     this.refreshJwt();
 
@@ -226,92 +200,145 @@ export default {
 
     // Verify that a tenant token was specified in the route.
     var tenantToken = this.$route.params.tenantToken;
+    console.log("Tenant token", tenantToken);
     if (!tenantToken) {
       this.onLogOut();
       return;
     }
-    this.$data.tenantToken = tenantToken;
+    this.tenantToken = tenantToken;
 
     // Load tenant if tenant id changed or not already loaded.
     var tenant = this.$store.getters.selectedTenant;
-    if (!tenant || tenant.token !== tenantToken) {
-      this.onLoadTenant(tenantToken);
+    if (!tenant || tenant.token !== this.tenantToken) {
+      this.loadTenant();
     } else {
-      // Select first section from list.
+      this.tenant = tenant;
+      console.log(tenant);
       this.onSectionClicked(this.$data.sections[0]);
-    }
-  },
-
-  methods: {
-    // Load tenant based on tenant id.
-    onLoadTenant: function(tenantToken) {
-      var component = this;
-
-      // Make api call to load tenant.
-      getTenant(this.$store, tenantToken)
-        .then(function(response) {
-          component.onTenantLoaded(response.data);
-        })
-        .catch(function(e) {
-          console.log(
-            "Unable to load tenant " + tenantToken + ". Logging out!"
-          );
-          component.onLogOut();
-        });
-    },
-    // Called after tenant is loaded.
-    onTenantLoaded: function(tenant) {
-      this.$store.commit("selectedTenant", tenant);
-
-      // Select first section from list.
-      this.onSectionClicked(this.$data.sections[0]);
-    },
-    // Called when a section is clicked.
-    onSectionClicked: function(section) {
-      this.$store.commit("currentSection", section);
-      this.$router.push(
-        "/tenants/" + this.$data.tenantToken + "/" + section.route
-      );
-    },
-    onUserAction: function(action) {
-      if (action.id === "logout") {
-        this.onLogOut();
-      } else if (action.id === "sysadmin") {
-        this.$router.push("/system");
-      }
-    },
-    // Called when user requests log out.
-    onLogOut: function() {
-      console.log("Logging out!");
-      this.$store.commit("logOut");
-      this.$router.push("/");
-    },
-
-    // Set up timer for reloading JWT.
-    refreshJwt: function() {
-      var component = this;
-      getJwt(this.$store)
-        .then(function(response) {
-          console.log("Refreshed JWT.");
-          var jwt = response.headers["x-sitewhere-jwt"];
-          component.$store.commit("jwt", jwt);
-          setTimeout(function() {
-            component.refreshJwt();
-          }, 1000 * 60 * 5);
-        })
-        .catch(function(e) {
-          console.log("Could not update JWT.");
-          console.log(e);
-          component.onLogOut();
-        });
     }
   }
-};
+
+  /** Set tenant logo in style */
+  get tenantLogoStyle(): {} {
+    return {
+      backgroundImage: this.tenant ? "url(" + this.tenant.imageUrl + ")" : ""
+    };
+  }
+
+  /** Get logged in user */
+  get user() {
+    return this.$store.getters.user;
+  }
+
+  /** Get currently selected section */
+  get section() {
+    return this.$store.getters.currentSection;
+  }
+
+  /** Get user full name */
+  get fullname() {
+    var user = this.$store.getters.user;
+    if (user) {
+      var first = this.$store.getters.user.firstName;
+      var last = this.$store.getters.user.lastName;
+      if (last.length > 1) {
+        return first + " " + last;
+      } else {
+        return first;
+      }
+    }
+    return "Not Logged In";
+  }
+
+  // Get global loading indicator.
+  get loading() {
+    return this.$store.getters.loading;
+  }
+
+  // Get global error indicator.
+  get error() {
+    return this.$store.getters.error;
+  }
+
+  // Called when a section is clicked.
+  onSectionClicked(section: INavigationSection) {
+    this.$store.commit("currentSection", section);
+    this.$router.push("/tenants/" + this.tenantToken + "/" + section.route);
+  }
+
+  // Called when user requests log out.
+  onLogOut() {
+    this.$store.commit("logOut");
+    this.$router.push("/");
+  }
+
+  /** Load tenant based on tenant id */
+  async loadTenant() {
+    try {
+      let response: AxiosResponse<ITenant> = await getTenant(
+        this.$store,
+        this.tenantToken
+      );
+      this.onTenantLoaded(response.data);
+    } catch (err) {
+      console.log(
+        "Unable to load tenant " + this.tenantToken + ". Logging out!"
+      );
+      this.onLogOut();
+    }
+  }
+
+  /** Called after tenant is loaded */
+  onTenantLoaded(tenant: ITenant) {
+    this.tenant = tenant;
+    console.log(this.tenant);
+    this.$store.commit("selectedTenant", tenant);
+
+    // Select first section from list.
+    this.onSectionClicked(this.$data.sections[0]);
+  }
+
+  /** Handle user action */
+  onUserAction(action: IAction) {
+    if (action.id === "logout") {
+      this.onLogOut();
+    } else if (action.id === "sysadmin") {
+      this.$router.push("/system");
+    }
+  }
+
+  // Set up timer for reloading JWT.
+  async refreshJwt() {
+    var component = this;
+    try {
+      let response: AxiosResponse<any> = await getJwt(this.$store);
+      console.log("Refreshed JWT.");
+      var jwt = response.headers["x-sitewhere-jwt"];
+      this.$store.commit("jwt", jwt);
+      setTimeout(function() {
+        component.refreshJwt();
+      }, 1000 * 60 * 5);
+    } catch (err) {
+      handleError(err);
+      console.log("Could not update JWT.");
+      component.onLogOut();
+    }
+  }
+}
 </script>
 
 <style scoped>
 .current-user-block {
   position: absolute;
   bottom: 40px;
+}
+.tenant-logo {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 </style>

@@ -1,24 +1,26 @@
 <template>
   <list-page
-    icon="layer-group"
+    :icon="icon"
     title="Manage Tenants"
     loadingMessage="Loading tenant list ..."
     :loaded="loaded"
     @pagingUpdated="onPagingUpdated"
   >
-    <v-flex xs12 v-for="(tenant) in matches" :key="tenant.token">
-      <tenant-list-entry
-        :tenant="tenant"
-        @click="onOpenTenant(tenant)"
-        @openTenant="onOpenTenant(tenant)"
-        @configureTenant="onConfigureTenant(tenant)"
-      ></tenant-list-entry>
-    </v-flex>
+    <list-layout>
+      <v-flex xs12 v-for="(tenant) in matches" :key="tenant.token">
+        <tenant-list-entry
+          :tenant="tenant"
+          @click="onOpenTenant(tenant)"
+          @openTenant="onOpenTenant(tenant)"
+          @configureTenant="onConfigureTenant(tenant)"
+        ></tenant-list-entry>
+      </v-flex>
+    </list-layout>
     <template slot="dialogs">
-      <tenant-create-dialog ref="add" @tenantAdded="refresh"></tenant-create-dialog>
+      <tenant-create-dialog ref="add" @tenantAdded="refresh"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant"></navigation-action-button>
+      <navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant"/>
     </template>
   </list-page>
 </template>
@@ -31,6 +33,7 @@ import { Component, Mixins } from "vue-property-decorator";
 import Vue, { VueConstructor } from "vue";
 
 import ListPage from "../common/ListPage.vue";
+import ListLayout from "../common/ListLayout.vue";
 import TenantListEntry from "./TenantListEntry.vue";
 import TenantCreateDialog from "./TenantCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -38,6 +41,8 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
+import { Refs } from "../../libraries/navigation-model";
+import { NavigationIcon } from "../../libraries/constants";
 import { listTenants } from "../../rest/sitewhere-tenants-api";
 import {
   ITenant,
@@ -56,12 +61,22 @@ export class TenantListComponent extends ListComponent<
 @Component({
   components: {
     ListPage,
+    ListLayout,
     TenantListEntry,
     TenantCreateDialog,
     NavigationActionButton
   }
 })
 export default class TenantsList extends Mixins(TenantListComponent) {
+  $refs!: Refs<{
+    add: any;
+  }>;
+
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Tenant;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): ITenantSearchCriteria {
     let criteria: ITenantSearchCriteria = {};
@@ -91,7 +106,8 @@ export default class TenantsList extends Mixins(TenantListComponent) {
 
   // Called to open dialog.
   onAddTenant() {
-    (this.$refs.add as any).onOpenDialog();
+    console.log(this);
+    this.$refs.add.onOpenDialog();
   }
 
   // Called to open tenant detail.

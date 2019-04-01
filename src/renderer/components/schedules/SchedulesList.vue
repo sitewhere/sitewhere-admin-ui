@@ -50,7 +50,7 @@ import ScheduleDeleteDialog from "./ScheduleDeleteDialog.vue";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { formatDate, routeTo } from "../common/Utils";
+import { formatDate } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import { listSchedules } from "../../rest/sitewhere-schedules-api";

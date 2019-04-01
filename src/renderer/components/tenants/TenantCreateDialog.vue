@@ -1,22 +1,16 @@
 <template>
-  <div>
-    <tenant-dialog
-      ref="dialog"
-      title="Create Tenant"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-    ></tenant-dialog>
-    <!-- <floating-action-button label="Add Tenant" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>-->
-  </div>
+  <tenant-dialog
+    ref="dialog"
+    title="Create Tenant"
+    width="600"
+    resetOnOpen="true"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
 <script>
-import FloatingActionButton from "../common/FloatingActionButton";
 import TenantDialog from "./TenantDialog";
 
 import { createTenant } from "../../rest/sitewhere-tenants-api";
@@ -25,7 +19,6 @@ export default {
   data: () => ({}),
 
   components: {
-    FloatingActionButton,
     TenantDialog
   },
 

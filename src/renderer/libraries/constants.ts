@@ -4,6 +4,9 @@ import { ITableHeaders, IPageSizes } from "./navigation-model";
  * Enumeration of navigation icons.
  */
 export enum NavigationIcon {
+  Tenant = "layers",
+  User = "people",
+  Global = "language",
   Device = "developer_board",
   DeviceType = "settings",
   DeviceGroup = "apps",

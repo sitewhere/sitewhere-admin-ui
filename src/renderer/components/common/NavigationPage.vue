@@ -16,8 +16,10 @@
       <slot name="footer"/>
     </div>
     <loading-overlay v-if="!loaded" :loadingMessage="loadingMessage"/>
+    <slot name="dialogs"/>
   </v-card>
 </template>
+
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";

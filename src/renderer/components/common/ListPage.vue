@@ -14,9 +14,11 @@
       <pager :results="results" @pagingUpdated="onPagingUpdated" :pageSizes="pageSizes"/>
     </template>
     <template slot="actions">
-      <slot name="actions"></slot>
+      <slot name="actions"/>
     </template>
-    <slot name="dialogs"></slot>
+    <template slot="dialogs">
+      <slot name="dialogs"/>
+    </template>
   </navigation-page>
 </template>
 

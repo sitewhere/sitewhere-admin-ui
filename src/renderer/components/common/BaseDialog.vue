@@ -6,9 +6,12 @@
       </v-toolbar>
       <error-banner :error="error"></error-banner>
       <v-card-text class="pa-0">
-        <slot>
-          <div>Your content goes here!</div>
-        </slot>
+        <v-tabs v-model="active">
+          <slot name="tabs"/>
+        </v-tabs>
+        <v-tabs-items v-model="active">
+          <slot name="tab-items"/>
+        </v-tabs-items>
       </v-card-text>
       <v-card-actions v-if="!hideButtons">
         <v-spacer></v-spacer>
@@ -30,13 +33,14 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import ErrorBanner from "../common/ErrorBanner.vue";
+import { ITabbedComponent } from "../../libraries/navigation-model";
 
 @Component({
   components: {
     ErrorBanner
   }
 })
-export default class BaseDialog extends Vue {
+export default class BaseDialog extends Vue implements ITabbedComponent {
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly visible: boolean = false;
@@ -47,12 +51,19 @@ export default class BaseDialog extends Vue {
   @Prop() readonly hideCreate!: boolean;
   @Prop() readonly invalid!: boolean;
 
-  // Called when create button is clicked.
+  active: string | null = null;
+
+  /** Set the active tab */
+  setActiveTab(tab: string): void {
+    this.active = tab;
+  }
+
+  /** Handle cancel clicked */
   onCancelClicked(e: any) {
     this.$emit("cancelClicked", e);
   }
 
-  // Called when create button is clicked.
+  /** Handle create clicked */
   onCreateClicked(e: any) {
     this.$emit("createClicked", e);
   }

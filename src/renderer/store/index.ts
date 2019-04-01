@@ -110,6 +110,7 @@ const store: StoreOptions<SiteWhereUiSettings> = {
       state.user = undefined;
       state.authToken = undefined;
       state.authTenants = undefined;
+      state.selectedTenant = undefined;
       state.currentSection = undefined;
       state.error = undefined;
     }

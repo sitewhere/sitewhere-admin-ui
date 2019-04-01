@@ -2,11 +2,10 @@
   <v-card>
     <v-card-text>
       <v-data-table
-        class="elevation-0"
         :headers="headers"
         :items="metadata"
-        :rows-per-page-items="pagesize"
-        :no-data-text="noDataText"
+        :rows-per-page-items="pageSizes"
+        :no-data-text="noDataMessage"
       >
         <template slot="items" slot-scope="props">
           <td
@@ -59,117 +58,134 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import { DialogSection } from "../../libraries/component-model";
+import { Component, Prop } from "vue-property-decorator";
+
 import { arrayToMetadata, metadataToArray } from "../common/Utils";
+import { ITableHeaders } from "../../libraries/navigation-model";
 
-export default {
-  data: () => ({
-    pagesize: [5],
-    newItemName: "",
-    newItemValue: "",
-    noDataText: "No metadata has been assigned",
-    error: null
-  }),
-
-  props: ["metadata", "readOnly", "noDataMessage"],
-
-  created: function() {
-    this.$data.newItemName = "";
-    this.$data.newItemValue = "";
-    this.$data.error = null;
-
-    if (this.noDataMessage) {
-      this.$data.noDataText = this.noDataMessage;
+@Component({})
+export default class MetadataPanel extends DialogSection {
+  @Prop({ default: false }) readonly readOnly!: boolean;
+  @Prop({ default: "No metadata has been assigned" })
+  readonly noDataMessage!: string;
+  @Prop({
+    default: () => {
+      return [5];
     }
-  },
+  })
+  readonly pageSizes!: number[];
 
-  computed: {
-    headers: function() {
-      if (!this.readOnly) {
-        return [
-          {
-            align: "left",
-            sortable: false,
-            text: "Name",
-            value: "name"
-          },
-          {
-            align: "left",
-            sortable: false,
-            text: "Value",
-            value: "value"
-          },
-          {
-            align: "left",
-            sortable: false,
-            text: "Delete",
-            value: "value"
-          }
-        ];
-      } else {
-        return [
-          {
-            align: "left",
-            sortable: false,
-            text: "Name",
-            value: "name"
-          },
-          {
-            align: "left",
-            sortable: false,
-            text: "Value",
-            value: "value"
-          }
-        ];
-      }
-    }
-  },
+  metadata: { name: string; value: string }[] = [];
+  newItemName: string = "";
+  newItemValue: string = "";
+  error: string | null = null;
 
-  methods: {
-    // Converts associative format to flat.
-    buildFlatMetadata: function(input) {
-      return metadataToArray(input);
-    },
+  /** Reset section content */
+  reset(): void {
+    this.metadata = [];
+    this.error = null;
+  }
 
-    // Converts flat format into associative.
-    buildAssociativeMetadata: function(input) {
-      return arrayToMetadata(input);
-    },
+  /** Perform validation */
+  validate(): boolean {
+    return true;
+  }
 
-    // Let owner know an item was deleted.
-    onDeleteItem: function(name) {
-      this.$emit("itemDeleted", name);
-    },
-
-    // Let owner know an item was added.
-    onAddItem: function() {
-      var item = {};
-      item["name"] = this.$data.newItemName;
-      item["value"] = this.$data.newItemValue;
-      var error = null;
-
-      // Check for empty.
-      if (item.name.length === 0) {
-        error = "Name must not be empty.";
-      }
-
-      // Check for bad characters.
-      var regex = /^[\w-]+$/;
-      if (!error && !regex.test(item.name)) {
-        error = "Name contains invalid characters.";
-      }
-
-      if (!error) {
-        this.$emit("itemAdded", item);
-        this.$data.newItemName = "";
-        this.$data.newItemValue = "";
-        this.$data.error = null;
-      } else {
-        this.$data.error = error;
-      }
+  /** Load form data from an object */
+  load(input: {}): void {
+    let initial = (input as any).metadata;
+    if (initial) {
+      this.metadata = metadataToArray(initial);
     }
   }
-};
+
+  /** Save form data to an object */
+  save(): {} {
+    let updated: {} = arrayToMetadata(this.metadata);
+    return {
+      metadata: updated
+    };
+  }
+
+  /** Delete an item */
+  onDeleteItem(deleteName: string): void {
+    let updated: { name: string; value: string }[] = [];
+    this.metadata.forEach(item => {
+      if (item.name !== deleteName) {
+        updated.push(item);
+      }
+    });
+    this.metadata = updated;
+  }
+
+  // Let owner know an item was added.
+  onAddItem() {
+    var item: { name: string; value: string } = {
+      name: this.newItemName,
+      value: this.newItemValue
+    };
+
+    // Check for empty.
+    if (item.name.length === 0) {
+      this.error = "Name must not be empty.";
+    }
+
+    // Check for bad characters.
+    var regex = /^[\w-]+$/;
+    if (!this.error && !regex.test(item.name)) {
+      this.error = "Name contains invalid characters.";
+    }
+
+    if (!this.error) {
+      this.metadata.push(item);
+      this.newItemName = "";
+      this.newItemValue = "";
+      this.error = null;
+    }
+  }
+
+  get headers(): ITableHeaders {
+    if (!this.readOnly) {
+      return [
+        {
+          align: "left",
+          sortable: false,
+          text: "Name",
+          value: "name"
+        },
+        {
+          align: "left",
+          sortable: false,
+          text: "Value",
+          value: "value"
+        },
+        {
+          align: "left",
+          sortable: false,
+          text: "Delete",
+          value: "value"
+        }
+      ];
+    } else {
+      return [
+        {
+          align: "left",
+          sortable: false,
+          text: "Name",
+          value: "name"
+        },
+        {
+          align: "left",
+          sortable: false,
+          text: "Value",
+          value: "value"
+        }
+      ];
+    }
+  }
+}
 </script>
 
 <style scoped>
