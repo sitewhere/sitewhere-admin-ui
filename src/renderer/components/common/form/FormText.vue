@@ -4,6 +4,7 @@
       :required="required"
       :title="title"
       :label="label"
+      :type="type"
       placeholder=" "
       v-model="wrapped"
       hide-details
@@ -26,6 +27,7 @@ export default class FormText extends Vue {
   @Prop() readonly icon!: string;
   @Prop() readonly required!: boolean;
   @Prop() readonly value!: string;
+  @Prop() readonly type!: string;
 
   get wrapped(): string {
     return this.value;

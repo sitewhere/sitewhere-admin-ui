@@ -49,4 +49,6 @@ div.CodeMirror {
 .verror {
   color: #900;
   height: 12px;
+  margin-top: 5px;
+  margin-left: 33px;
 }

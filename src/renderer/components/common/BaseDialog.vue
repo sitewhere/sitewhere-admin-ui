@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" persistent :width="width" :lazy="true">
+  <v-dialog v-model="visible" persistent :width="width">
     <v-card>
       <v-toolbar dense flat card dark class="mb-0" color="primary">
         <v-toolbar-title>{{title}}</v-toolbar-title>

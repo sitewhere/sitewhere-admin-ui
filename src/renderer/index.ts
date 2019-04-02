@@ -13,7 +13,6 @@ import VueMoment from "vue-moment";
 import VueClipboards from "vue-clipboards";
 import VueHighlightJS from "vue-highlightjs";
 import VueFlatPickr from "vue-flatpickr-component";
-import Tree from "element-ui";
 
 Vue.use(Vuetify, {
   theme: {
@@ -29,7 +28,6 @@ Vue.use(VueMoment);
 Vue.use(VueClipboards);
 Vue.use(VueHighlightJS);
 Vue.use(VueFlatPickr);
-Vue.use(Tree);
 
 // Fontawesome.
 library.add(fas);

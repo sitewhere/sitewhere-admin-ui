@@ -160,7 +160,7 @@ export class HeaderComponent<T> extends Vue {
  * Base class for dialog components.
  */
 @Component
-export class DialogComponent extends Vue {
+export class DialogComponent<T> extends Vue {
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;
@@ -172,6 +172,11 @@ export class DialogComponent extends Vue {
   /** Reset dialog content */
   reset(): void {
     throw new Error("Reset not implemented in dialog.");
+  }
+
+  /** Load dialog from model */
+  load(model: T): void {
+    throw new Error("Load not implemented in dialog.");
   }
 
   /** Called to open the dialog */
@@ -201,9 +206,9 @@ export class DialogComponent extends Vue {
 /**
  * Base class for create dialogs.
  */
-export class CreateDialogComponent<T> extends Vue {
+export class CreateDialogComponent<T, R> extends Vue {
   /** Get wrapped dialog */
-  getDialog(): DialogComponent {
+  getDialog(): DialogComponent<T> {
     throw new Error("Create dialog must implement getDialog().");
   }
 
@@ -214,7 +219,7 @@ export class CreateDialogComponent<T> extends Vue {
   }
 
   /** Implemented in subclasses to save payload */
-  save(payload: T): AxiosPromise<T> {
+  save(payload: R): AxiosPromise<T> {
     throw new Error("Create dialog must implement save().");
   }
 
@@ -222,8 +227,58 @@ export class CreateDialogComponent<T> extends Vue {
   afterSave(payload: T): void {}
 
   /** Handle payload commit */
-  async commit(payload: T) {
+  async commit(payload: R) {
     console.log("Create", payload);
+    console.trace();
+    try {
+      let response: AxiosResponse<T> = await this.save(payload);
+      let created: T = response.data;
+      this.afterSave(created);
+      this.getDialog().closeDialog();
+    } catch (err) {
+      handleError(err);
+    }
+  }
+}
+
+/**
+ * Base class for edit dialogs.
+ */
+export class EditDialogComponent<T, R> extends Vue {
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<T> {
+    throw new Error("Edit dialog must implement getDialog().");
+  }
+
+  /** Open wrapped dialog */
+  async open() {
+    this.getDialog().reset();
+    try {
+      let response: AxiosResponse<T> = await this.load();
+      this.getDialog().openDialog();
+      this.getDialog().load(response.data);
+    } catch (err) {
+      handleError(err);
+    }
+  }
+
+  /** Implemented in subclasses to save payload */
+  load(): AxiosPromise<T> {
+    throw new Error("Edit dialog must implement load().");
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: R): AxiosPromise<T> {
+    throw new Error("Edit dialog must implement save().");
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: T): void {}
+
+  /** Handle payload commit */
+  async commit(payload: R) {
+    console.log("Edit", payload);
+    console.trace();
     try {
       let response: AxiosResponse<T> = await this.save(payload);
       let created: T = response.data;

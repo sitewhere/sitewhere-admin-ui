@@ -71,8 +71,8 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 
   // References.
   $refs!: Refs<{
-    edit: DialogComponent;
-    delete: DialogComponent;
+    edit: TenantUpdateDialog;
+    delete: DialogComponent<ITenant>;
   }>;
 
   get tenant(): ITenant | null {
@@ -134,7 +134,7 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 
   // Called to edit tenant.
   onEdit() {
-    (this.$refs["edit"] as any).onOpenDialog();
+    this.$refs.edit.open();
   }
 
   // Called after tenant is edited.

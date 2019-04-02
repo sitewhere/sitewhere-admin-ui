@@ -16,7 +16,9 @@
     <template slot="actions">
       <slot name="actions"/>
     </template>
-    <slot name="dialogs"/>
+    <template slot="dialogs">
+      <slot name="dialogs"/>
+    </template>
   </navigation-page>
 </template>
 

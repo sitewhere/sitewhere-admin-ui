@@ -101,7 +101,6 @@ export default class TenantsList extends ListComponent<
 
   // Called to open dialog.
   onAddTenant() {
-    console.log(this.$refs);
     this.$refs.add.open();
   }
 

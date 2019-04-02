@@ -1,69 +1,74 @@
 <template>
-  <span>
-    <user-dialog
-      ref="dialog"
-      title="Edit User"
-      width="700"
-      createLabel="Update"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-    ></user-dialog>
-  </span>
+  <user-dialog
+    ref="dialog"
+    title="Create User"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import UserDialog from "./UserDialog";
+<script lang="ts">
+import {
+  EditDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component, Prop } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import UserDialog from "./UserDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  IUser,
+  IUserCreateRequest,
+  IUserResponseFormat
+} from "sitewhere-rest-api";
 import { getUser, updateUser } from "../../rest/sitewhere-users-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     UserDialog
-  },
-
-  props: ["username"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-      getUser(this.$store, this.username)
-        .then(function(response) {
-          component.onLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateUser(this.$store, this.username, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("edited");
-    }
   }
-};
+})
+export default class TenantUpdateDialog extends EditDialogComponent<
+  IUser,
+  IUserCreateRequest
+> {
+  @Prop() readonly userToken!: string;
+
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IUser>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IUser> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  load(): AxiosPromise<IUser> {
+    let format: IUserResponseFormat = {};
+    return getUser(this.$store, this.userToken, format);
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IUserCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Save payload */
+  save(payload: IUserCreateRequest): AxiosPromise<IUser> {
+    return updateUser(this.$store, this.userToken, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IUser): void {
+    this.$emit("userUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>

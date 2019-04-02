@@ -1,69 +1,74 @@
 <template>
-  <div>
-    <tenant-dialog
-      ref="dialog"
-      title="Edit Tenant"
-      width="700"
-      createLabel="Update"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-    ></tenant-dialog>
-  </div>
+  <tenant-dialog
+    ref="dialog"
+    title="Edit Tenant"
+    width="700"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import TenantDialog from "./TenantDialog";
+<script lang="ts">
+import {
+  EditDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component, Prop } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import TenantDialog from "./TenantDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  ITenant,
+  ITenantCreateRequest,
+  ITenantResponseFormat
+} from "sitewhere-rest-api";
 import { getTenant, updateTenant } from "../../rest/sitewhere-tenants-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     TenantDialog
-  },
-
-  props: ["tenantToken"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-      getTenant(this.$store, this.tenantToken)
-        .then(function(response) {
-          component.onLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateTenant(this.$store, this.tenantToken, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("tenantUpdated");
-    }
   }
-};
+})
+export default class TenantUpdateDialog extends EditDialogComponent<
+  ITenant,
+  ITenantCreateRequest
+> {
+  @Prop() readonly tenantToken!: string;
+
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<ITenant>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<ITenant> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  load(): AxiosPromise<ITenant> {
+    let format: ITenantResponseFormat = {};
+    return getTenant(this.$store, this.tenantToken, format);
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: ITenant): void {
+    this.commit(payload);
+  }
+
+  /** Save payload */
+  save(payload: ITenantCreateRequest): AxiosPromise<ITenant> {
+    return updateTenant(this.$store, this.tenantToken, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ITenant): void {
+    this.$emit("tenantUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>

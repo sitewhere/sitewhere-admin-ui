@@ -30,13 +30,19 @@ export function createUser(
  * Get an existing system user by username.
  * @param store
  * @param username
+ * @param format
  */
 export function getUser(
   store: Store<SiteWhereUiSettings>,
-  username: string
+  username: string,
+  format: IUserResponseFormat
 ): Promise<AxiosResponse<IUser>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  var api: AxiosPromise<IUser> = SiteWhere.API.Users.getUser(axios, username);
+  var api: AxiosPromise<IUser> = SiteWhere.API.Users.getUser(
+    axios,
+    username,
+    format
+  );
   return loaderWrapper(store, api);
 }
 

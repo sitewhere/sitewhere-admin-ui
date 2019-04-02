@@ -3,10 +3,9 @@
     ref="dialog"
     title="Create Tenant"
     width="600"
-    resetOnOpen="true"
     createLabel="Create"
     cancelLabel="Cancel"
-    @payload="commit"
+    @payload="onCommit"
   />
 </template>
 
@@ -21,7 +20,7 @@ import { Refs } from "../../libraries/navigation-model";
 import TenantDialog from "./TenantDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { ITenant } from "sitewhere-rest-api";
+import { ITenant, ITenantCreateRequest } from "sitewhere-rest-api";
 import { createTenant } from "../../rest/sitewhere-tenants-api";
 
 @Component({
@@ -29,19 +28,27 @@ import { createTenant } from "../../rest/sitewhere-tenants-api";
     TenantDialog
   }
 })
-export default class TenantCreateDialog extends CreateDialogComponent<ITenant> {
+export default class TenantCreateDialog extends CreateDialogComponent<
+  ITenant,
+  ITenantCreateRequest
+> {
   // References.
   $refs!: Refs<{
-    dialog: DialogComponent;
+    dialog: DialogComponent<ITenant>;
   }>;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent {
+  getDialog(): DialogComponent<ITenant> {
     return this.$refs.dialog;
   }
 
+  /** Called on payload commit */
+  onCommit(payload: ITenantCreateRequest): void {
+    this.commit(payload);
+  }
+
   /** Implemented in subclasses to save payload */
-  save(payload: ITenant): AxiosPromise<ITenant> {
+  save(payload: ITenantCreateRequest): AxiosPromise<ITenant> {
     return createTenant(this.$store, payload);
   }
 

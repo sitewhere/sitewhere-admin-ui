@@ -40,6 +40,7 @@ import BaseDialog from "../common/BaseDialog.vue";
 import TenantDetailFields from "./TenantDetailFields.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";
 import MetadataPanel from "../common/MetadataPanel.vue";
+import { ITenant } from "sitewhere-rest-api";
 
 @Component({
   components: {
@@ -49,9 +50,7 @@ import MetadataPanel from "../common/MetadataPanel.vue";
     MetadataPanel
   }
 })
-export default class TenantDialog extends DialogComponent {
-  metadata: any = null;
-
+export default class TenantDialog extends DialogComponent<ITenant> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
@@ -69,7 +68,6 @@ export default class TenantDialog extends DialogComponent {
       this.$refs.branding.save(),
       this.$refs.metadata.save()
     );
-    console.log("Payload", payload);
     return payload;
   }
 
@@ -88,7 +86,7 @@ export default class TenantDialog extends DialogComponent {
   }
 
   // Load dialog from a given payload.
-  load(payload: any) {
+  load(payload: ITenant) {
     this.reset();
     if (this.$refs.details) {
       this.$refs.details.load(payload);
@@ -114,6 +112,7 @@ export default class TenantDialog extends DialogComponent {
     }
 
     var payload = this.generatePayload();
+    console.log("Before payload emit:", this);
     this.$emit("payload", payload);
   }
 }

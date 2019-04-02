@@ -135,7 +135,7 @@ import { Settings } from "../libraries/user-settings";
 import { GoogleAnalytics } from "../libraries/google-analytics";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { getUser } from "../rest/sitewhere-users-api";
-import { IUser } from "sitewhere-rest-api";
+import { IUser, IUserResponseFormat } from "sitewhere-rest-api";
 
 // Discord logo and tooltip.
 const discordSvgContent: string =
@@ -249,9 +249,11 @@ export default class Login extends Vue {
   async onJwtAcquired(jwt: string) {
     try {
       this.loggingIn = true;
+      let format: IUserResponseFormat = {};
       let response: AxiosResponse<IUser> = await getUser(
         this.$store,
-        this.username
+        this.username,
+        format
       );
       this.$store.commit("user", response.data);
       this.$router.push("/system");

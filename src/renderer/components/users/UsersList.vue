@@ -34,14 +34,14 @@
             </actions-block>
           </td>
         </template>
-        <template slot="actions">
-          <navigation-action-button icon="plus" tooltip="Add User" @action="onAddUser"/>
-        </template>
-        <template slot="dialogs">
-          <user-create-dialog ref="add" @userAdded="refresh"/>
-        </template>
       </v-data-table>
     </v-flex>
+    <template slot="actions">
+      <navigation-action-button icon="plus" tooltip="Add User" @action="onAddUser"/>
+    </template>
+    <template slot="dialogs">
+      <user-create-dialog ref="add" @userAdded="refresh"/>
+    </template>
   </list-page>
 </template>
 
@@ -50,6 +50,7 @@ import { ListComponent } from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
 import UserCreateDialog from "./UserCreateDialog.vue";
 import UserUpdateDialog from "./UserUpdateDialog.vue";
@@ -60,7 +61,11 @@ import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate } from "../common/Utils";
 import { AxiosPromise } from "axios";
-import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
+import {
+  IPageSizes,
+  ITableHeaders,
+  Refs
+} from "../../libraries/navigation-model";
 import { listUsers } from "../../rest/sitewhere-users-api";
 import {
   IUser,
@@ -72,6 +77,7 @@ import {
 @Component({
   components: {
     ListPage,
+    NavigationActionButton,
     ActionsBlock,
     UserCreateDialog,
     UserUpdateDialog,
@@ -84,6 +90,10 @@ export default class UsersList extends ListComponent<
   IUserResponseFormat,
   IUserSearchResults
 > {
+  $refs!: Refs<{
+    add: UserCreateDialog;
+  }>;
+
   headers: ITableHeaders = [
     {
       align: "left",
@@ -171,7 +181,7 @@ export default class UsersList extends ListComponent<
 
   // Called to open dialog.
   onAddUser() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 
   // Format a date.
