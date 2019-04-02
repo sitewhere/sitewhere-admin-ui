@@ -52,11 +52,11 @@ const routes = <Array<RouteConfig>>[
         component: TenantsList
       },
       {
-        path: "tenants/:tenantToken",
+        path: "tenants/:token",
         component: TenantDetail
       },
       {
-        path: "tenants/:tenantToken/:identifier",
+        path: "tenants/:token/:identifier",
         component: TenantMicroserviceEditor
       },
       {

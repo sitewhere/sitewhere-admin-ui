@@ -31,9 +31,6 @@ import IconSelector from "../common/IconSelector.vue";
 import ColorInputField from "../common/ColorInputField.vue";
 
 import { url } from "vuelidate/lib/validators";
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
-import { AxiosPromise } from "axios";
 
 @Component({
   components: {

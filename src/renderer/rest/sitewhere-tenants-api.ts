@@ -33,16 +33,19 @@ export function createTenant(
 /**
  * Get system tenant by token.
  * @param store
- * @param tenantId
+ * @param token
+ * @param format
  */
 export function getTenant(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: ITenantResponseFormat
 ): Promise<AxiosResponse<ITenant>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<ITenant> = SiteWhere.API.Tenants.getTenant(
     axios,
-    token
+    token,
+    format
   );
   return loaderWrapper(store, api);
 }

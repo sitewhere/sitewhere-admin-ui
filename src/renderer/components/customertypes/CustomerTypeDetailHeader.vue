@@ -22,19 +22,12 @@
 
 <script lang="ts">
 import { HeaderComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import HeaderField from "../common/HeaderField.vue";
 import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import { ICustomerType } from "sitewhere-rest-api";
-
-export class CustomerTypeHeaderComponent extends HeaderComponent<
-  ICustomerType
-> {}
 
 @Component({
   components: {
@@ -43,9 +36,9 @@ export class CustomerTypeHeaderComponent extends HeaderComponent<
     ClipboardCopyField
   }
 })
-export default class CustomerTypeDetailHeader extends Mixins(
-  CustomerTypeHeaderComponent
-) {
+export default class CustomerTypeDetailHeader extends HeaderComponent<
+  ICustomerType
+> {
   // Reference record as customer type.
   get customerType(): ICustomerType {
     return this.record;

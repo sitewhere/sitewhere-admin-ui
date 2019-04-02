@@ -42,10 +42,8 @@
 import { Component, Prop } from "vue-property-decorator";
 import { IDeviceType } from "sitewhere-rest-api";
 
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
-
 import ContentTab from "../common/ContentTab.vue";
+import Vue from "vue";
 
 @Component({
   components: {

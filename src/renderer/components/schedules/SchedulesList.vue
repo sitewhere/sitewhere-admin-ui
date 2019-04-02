@@ -36,10 +36,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
@@ -61,13 +58,6 @@ import {
   IScheduleSearchResults
 } from "sitewhere-rest-api";
 
-export class SchedulesListComponent extends ListComponent<
-  ISchedule,
-  IScheduleSearchCriteria,
-  IScheduleResponseFormat,
-  IScheduleSearchResults
-> {}
-
 @Component({
   components: {
     ListPage,
@@ -77,7 +67,12 @@ export class SchedulesListComponent extends ListComponent<
     ScheduleDeleteDialog
   }
 })
-export default class SchedulesList extends Mixins(SchedulesListComponent) {
+export default class SchedulesList extends ListComponent<
+  ISchedule,
+  IScheduleSearchCriteria,
+  IScheduleResponseFormat,
+  IScheduleSearchResults
+> {
   headers: ITableHeaders = [
     {
       align: "left",

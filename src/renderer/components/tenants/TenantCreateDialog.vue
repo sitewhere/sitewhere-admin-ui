@@ -6,52 +6,50 @@
     resetOnOpen="true"
     createLabel="Create"
     cancelLabel="Cancel"
-    @payload="onCommit"
+    @payload="commit"
   />
 </template>
 
-<script>
-import TenantDialog from "./TenantDialog";
+<script lang="ts">
+import {
+  CreateDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import TenantDialog from "./TenantDialog.vue";
+
+import { AxiosPromise } from "axios";
+import { ITenant } from "sitewhere-rest-api";
 import { createTenant } from "../../rest/sitewhere-tenants-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     TenantDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      console.log(payload);
-      var component = this;
-      createTenant(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("tenantAdded");
-    }
   }
-};
+})
+export default class TenantCreateDialog extends CreateDialogComponent<ITenant> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent {
+    return this.$refs.dialog;
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: ITenant): AxiosPromise<ITenant> {
+    return createTenant(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ITenant): void {
+    this.$emit("tenantAdded", payload);
+  }
+}
 </script>
 
 <style scoped>

@@ -17,10 +17,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -37,13 +34,6 @@ import {
   IAreaSearchResults
 } from "sitewhere-rest-api";
 
-export class AreaTypeAreasListComponent extends ListComponent<
-  IArea,
-  IAreaSearchCriteria,
-  IAreaResponseFormat,
-  IAreaSearchResults
-> {}
-
 @Component({
   components: {
     ListTab,
@@ -51,7 +41,12 @@ export class AreaTypeAreasListComponent extends ListComponent<
     AreaListEntry
   }
 })
-export default class AreaTypeAreas extends Mixins(AreaTypeAreasListComponent) {
+export default class AreaTypeAreas extends ListComponent<
+  IArea,
+  IAreaSearchCriteria,
+  IAreaResponseFormat,
+  IAreaSearchResults
+> {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly areaTypeToken!: string;

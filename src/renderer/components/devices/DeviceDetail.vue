@@ -7,7 +7,7 @@
     :record="device"
   >
     <template slot="header">
-      <device-detail-header :record="device" @deviceDeleted="onDeviceDeleted"></device-detail-header>
+      <device-detail-header :record="device" @deviceDeleted="onDeviceDeleted"/>
     </template>
     <template slot="tabs">
       <v-tab key="assignments" href="#assignments">Assignment History</v-tab>
@@ -16,22 +16,19 @@
       <device-assignment-history tabkey="assignments" id="assignments" :deviceToken="token"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"></navigation-action-button>
-      <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"></navigation-action-button>
+      <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"/>
+      <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"/>
     </template>
     <template slot="dialogs">
-      <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"></device-update-dialog>
-      <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"></device-delete-dialog>
+      <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
+      <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"/>
     </template>
   </detail-page>
 </template>
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -49,8 +46,6 @@ import { INavigationSection } from "../../libraries/navigation-model";
 import { getDevice } from "../../rest/sitewhere-devices-api";
 import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
 
-export class DeviceDetailComponent extends DetailComponent<IDevice> {}
-
 @Component({
   components: {
     DetailPage,
@@ -61,7 +56,7 @@ export class DeviceDetailComponent extends DetailComponent<IDevice> {}
     DeviceDeleteDialog
   }
 })
-export default class DeviceDetail extends Mixins(DeviceDetailComponent) {
+export default class DeviceDetail extends DetailComponent<IDevice> {
   get device(): IDevice | null {
     return this.record;
   }

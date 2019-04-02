@@ -17,10 +17,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -37,13 +34,6 @@ import {
   ICustomerSearchResults
 } from "sitewhere-rest-api";
 
-export class CustomerTypeCustomersListComponent extends ListComponent<
-  ICustomer,
-  ICustomerSearchCriteria,
-  ICustomerResponseFormat,
-  ICustomerSearchResults
-> {}
-
 @Component({
   components: {
     ListTab,
@@ -51,9 +41,12 @@ export class CustomerTypeCustomersListComponent extends ListComponent<
     CustomerListEntry
   }
 })
-export default class CustomerTypeCustomers extends Mixins(
-  CustomerTypeCustomersListComponent
-) {
+export default class CustomerTypeCustomers extends ListComponent<
+  ICustomer,
+  ICustomerSearchCriteria,
+  ICustomerResponseFormat,
+  ICustomerSearchResults
+> {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly customerTypeToken!: string;

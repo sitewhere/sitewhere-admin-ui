@@ -39,18 +39,13 @@
 
 <script lang="ts">
 import { HeaderComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import HeaderField from "../common/HeaderField.vue";
 import LinkedHeaderField from "../common/LinkedHeaderField.vue";
 import { IDevice, IDeviceType } from "sitewhere-rest-api";
-
-export class DeviceHeaderComponent extends HeaderComponent<IDevice> {}
 
 @Component({
   components: {
@@ -60,7 +55,7 @@ export class DeviceHeaderComponent extends HeaderComponent<IDevice> {}
     ClipboardCopyField
   }
 })
-export default class DeviceDetailHeader extends Mixins(DeviceHeaderComponent) {
+export default class DeviceDetailHeader extends HeaderComponent<IDevice> {
   // Reference record as device.
   get device(): IDevice {
     return this.record;

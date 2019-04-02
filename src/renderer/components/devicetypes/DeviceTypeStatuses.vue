@@ -32,10 +32,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
 import ListTab from "../common/ListTab.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
@@ -53,13 +50,6 @@ import {
   IDeviceStatusSearchResults
 } from "sitewhere-rest-api";
 
-export class DeviceTypeStatusesListComponent extends ListComponent<
-  IDeviceStatus,
-  IDeviceStatusSearchCriteria,
-  IDeviceStatusResponseFormat,
-  IDeviceStatusSearchResults
-> {}
-
 @Component({
   components: {
     ListTab,
@@ -67,9 +57,12 @@ export class DeviceTypeStatusesListComponent extends ListComponent<
     DeviceStatusListEntry
   }
 })
-export default class DeviceTypeStatuses extends Mixins(
-  DeviceTypeStatusesListComponent
-) {
+export default class DeviceTypeStatuses extends ListComponent<
+  IDeviceStatus,
+  IDeviceStatusSearchCriteria,
+  IDeviceStatusResponseFormat,
+  IDeviceStatusSearchResults
+> {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly deviceType!: IDeviceType;

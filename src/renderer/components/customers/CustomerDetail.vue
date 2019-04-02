@@ -62,10 +62,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -88,8 +85,6 @@ import { INavigationSection } from "../../libraries/navigation-model";
 import { getCustomer } from "../../rest/sitewhere-customers-api";
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
 
-export class CustomerDetailComponent extends DetailComponent<ICustomer> {}
-
 @Component({
   components: {
     DetailPage,
@@ -105,7 +100,7 @@ export class CustomerDetailComponent extends DetailComponent<ICustomer> {}
     CustomerUpdateDialog
   }
 })
-export default class CustomerDetail extends Mixins(CustomerDetailComponent) {
+export default class CustomerDetail extends DetailComponent<ICustomer> {
   active: string | null = null;
   parentCustomer: ICustomer | null = null;
 

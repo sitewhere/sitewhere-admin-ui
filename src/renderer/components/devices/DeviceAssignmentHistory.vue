@@ -23,10 +23,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
 import ListTab from "../common/ListTab.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
@@ -43,22 +40,18 @@ import {
   IDeviceAssignmentSearchResults
 } from "sitewhere-rest-api";
 
-export class DeviceAssignmentsListComponent extends ListComponent<
-  IDeviceAssignment,
-  IDeviceAssignmentSearchCriteria,
-  IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
-> {}
-
 @Component({
   components: {
     ListTab,
     AssignmentListEntry
   }
 })
-export default class DeviceAssignmentHistory extends Mixins(
-  DeviceAssignmentsListComponent
-) {
+export default class DeviceAssignmentHistory extends ListComponent<
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+> {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly deviceToken!: string;

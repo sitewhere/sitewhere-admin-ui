@@ -52,7 +52,8 @@ import {
 import {
   IConfigurationModel,
   IElementContent,
-  ITenant
+  ITenant,
+  ITenantResponseFormat
 } from "sitewhere-rest-api";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
 
@@ -130,9 +131,11 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
   async refreshTenant() {
     if (this.identifier && this.tenantToken) {
       try {
+        let format: ITenantResponseFormat = {};
         let response: AxiosResponse<ITenant> = await getTenant(
           this.$store,
-          this.tenantToken
+          this.tenantToken,
+          format
         );
         this.tenant = response.data;
         this.$store.commit("selectedTenant", this.tenant);

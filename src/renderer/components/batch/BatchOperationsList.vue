@@ -54,10 +54,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
 
@@ -75,21 +72,17 @@ import {
   IBatchOperationSearchResults
 } from "sitewhere-rest-api";
 
-export class BatchOperationsListComponent extends ListComponent<
-  IBatchOperation,
-  IBatchOperationSearchCriteria,
-  IBatchOperationResponseFormat,
-  IBatchOperationSearchResults
-> {}
-
 @Component({
   components: {
     ListPage
   }
 })
-export default class BatchOperationsList extends Mixins(
-  BatchOperationsListComponent
-) {
+export default class BatchOperationsList extends ListComponent<
+  IBatchOperation,
+  IBatchOperationSearchCriteria,
+  IBatchOperationResponseFormat,
+  IBatchOperationSearchResults
+> {
   headers: ITableHeaders = [
     {
       align: "left",

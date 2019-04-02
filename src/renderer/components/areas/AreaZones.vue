@@ -44,10 +44,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
 import DataTableTab from "../common/DataTableTab.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
@@ -67,13 +64,6 @@ import {
   IZoneSearchResults
 } from "sitewhere-rest-api";
 
-export class AreaZonesListComponent extends ListComponent<
-  IZone,
-  IZoneSearchCriteria,
-  IZoneResponseFormat,
-  IZoneSearchResults
-> {}
-
 @Component({
   components: {
     DataTableTab,
@@ -82,7 +72,12 @@ export class AreaZonesListComponent extends ListComponent<
     ZoneDeleteDialog
   }
 })
-export default class AreaZones extends Mixins(AreaZonesListComponent) {
+export default class AreaZones extends ListComponent<
+  IZone,
+  IZoneSearchCriteria,
+  IZoneResponseFormat,
+  IZoneSearchResults
+> {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly areaToken!: string;

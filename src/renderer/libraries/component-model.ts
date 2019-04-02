@@ -199,6 +199,43 @@ export class DialogComponent extends Vue {
 }
 
 /**
+ * Base class for create dialogs.
+ */
+export class CreateDialogComponent<T> extends Vue {
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent {
+    throw new Error("Create dialog must implement getDialog().");
+  }
+
+  /** Open wrapped dialog */
+  open() {
+    this.getDialog().reset();
+    this.getDialog().openDialog();
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: T): AxiosPromise<T> {
+    throw new Error("Create dialog must implement save().");
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: T): void {}
+
+  /** Handle payload commit */
+  async commit(payload: T) {
+    console.log("Create", payload);
+    try {
+      let response: AxiosResponse<T> = await this.save(payload);
+      let created: T = response.data;
+      this.afterSave(created);
+      this.getDialog().closeDialog();
+    } catch (err) {
+      handleError(err);
+    }
+  }
+}
+
+/**
  * Base class for dialog sections.
  */
 @Component

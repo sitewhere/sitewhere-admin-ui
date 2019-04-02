@@ -24,10 +24,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -49,13 +46,6 @@ import {
   IAssetSearchResults
 } from "sitewhere-rest-api";
 
-export class AssetListComponent extends ListComponent<
-  IAsset,
-  IAssetSearchCriteria,
-  IAssetResponseFormat,
-  IAssetSearchResults
-> {}
-
 @Component({
   components: {
     ListPage,
@@ -65,7 +55,12 @@ export class AssetListComponent extends ListComponent<
     NavigationActionButton
   }
 })
-export default class AssetsList extends Mixins(AssetListComponent) {
+export default class AssetsList extends ListComponent<
+  IAsset,
+  IAssetSearchCriteria,
+  IAssetResponseFormat,
+  IAssetSearchResults
+> {
   pageSizes: IPageSizes = [
     {
       text: "20",

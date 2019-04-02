@@ -33,10 +33,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -58,8 +55,6 @@ import {
   IDeviceAssignment
 } from "sitewhere-rest-api";
 
-export class AreaDetailComponent extends DetailComponent<IAsset> {}
-
 @Component({
   components: {
     DetailPage,
@@ -70,7 +65,7 @@ export class AreaDetailComponent extends DetailComponent<IAsset> {}
     AssetUpdateDialog
   }
 })
-export default class AreaDetail extends Mixins(AreaDetailComponent) {
+export default class AreaDetail extends DetailComponent<IAsset> {
   /** Record as asset */
   get asset(): IAsset | null {
     return this.record;

@@ -27,10 +27,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -51,13 +48,6 @@ import {
   IDeviceGroupSearchResults
 } from "sitewhere-rest-api";
 
-export class DeviceGroupListComponent extends ListComponent<
-  IDeviceGroup,
-  IDeviceGroupSearchCriteria,
-  IDeviceGroupResponseFormat,
-  IDeviceGroupSearchResults
-> {}
-
 @Component({
   components: {
     ListPage,
@@ -67,7 +57,12 @@ export class DeviceGroupListComponent extends ListComponent<
     NavigationActionButton
   }
 })
-export default class DeviceGroupsList extends Mixins(DeviceGroupListComponent) {
+export default class DeviceGroupsList extends ListComponent<
+  IDeviceGroup,
+  IDeviceGroupSearchCriteria,
+  IDeviceGroupResponseFormat,
+  IDeviceGroupSearchResults
+> {
   /** Icon for page */
   get icon(): NavigationIcon {
     return NavigationIcon.DeviceGroup;

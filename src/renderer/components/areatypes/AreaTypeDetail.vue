@@ -32,10 +32,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -54,8 +51,6 @@ import { INavigationSection } from "../../libraries/navigation-model";
 import { getAreaType } from "../../rest/sitewhere-area-types-api";
 import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
 
-export class AreaTypeDetailComponent extends DetailComponent<IAreaType> {}
-
 @Component({
   components: {
     DetailPage,
@@ -67,7 +62,7 @@ export class AreaTypeDetailComponent extends DetailComponent<IAreaType> {}
     AreaTypeUpdateDialog
   }
 })
-export default class AreaTypeDetail extends Mixins(AreaTypeDetailComponent) {
+export default class AreaTypeDetail extends DetailComponent<IAreaType> {
   /** Record as area type */
   get areaType(): IAreaType | null {
     return this.record;

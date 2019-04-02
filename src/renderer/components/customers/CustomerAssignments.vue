@@ -20,10 +20,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -41,13 +38,6 @@ import {
   IDeviceAssignmentSearchResults
 } from "sitewhere-rest-api";
 
-export class CustomerAssignmentsListComponent extends ListComponent<
-  IDeviceAssignment,
-  IDeviceAssignmentSearchCriteria,
-  IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
-> {}
-
 @Component({
   components: {
     ListTab,
@@ -55,9 +45,12 @@ export class CustomerAssignmentsListComponent extends ListComponent<
     AssignmentListEntry
   }
 })
-export default class CustomerTypeCustomers extends Mixins(
-  CustomerAssignmentsListComponent
-) {
+export default class CustomerTypeCustomers extends ListComponent<
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+> {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly customerToken!: string;

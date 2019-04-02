@@ -64,10 +64,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -94,8 +91,6 @@ import {
   DeviceContainerPolicy
 } from "sitewhere-rest-api";
 
-export class DeviceTypeDetailComponent extends DetailComponent<IDeviceType> {}
-
 @Component({
   components: {
     DetailPage,
@@ -111,9 +106,7 @@ export class DeviceTypeDetailComponent extends DetailComponent<IDeviceType> {}
     DeviceStatusCreateDialog
   }
 })
-export default class DeviceTypeDetail extends Mixins(
-  DeviceTypeDetailComponent
-) {
+export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
   active: string | null = null;
 
   get deviceType(): IDeviceType | null {

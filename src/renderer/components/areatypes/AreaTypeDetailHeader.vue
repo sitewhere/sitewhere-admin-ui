@@ -27,10 +27,7 @@
 
 <script lang="ts">
 import { HeaderComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import HeaderField from "../common/HeaderField.vue";
@@ -40,8 +37,6 @@ import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import { formatDate } from "../common/Utils";
 import { IAreaType } from "sitewhere-rest-api";
 
-export class AreaTypeHeaderComponent extends HeaderComponent<IAreaType> {}
-
 @Component({
   components: {
     NavigationHeaderPanel,
@@ -50,9 +45,7 @@ export class AreaTypeHeaderComponent extends HeaderComponent<IAreaType> {}
     ClipboardCopyField
   }
 })
-export default class AreaTypeDetailHeader extends Mixins(
-  AreaTypeHeaderComponent
-) {
+export default class AreaTypeDetailHeader extends HeaderComponent<IAreaType> {
   // Reference record as area type.
   get areaType(): IAreaType {
     return this.record;

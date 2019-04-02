@@ -33,10 +33,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -55,8 +52,6 @@ import { INavigationSection } from "../../libraries/navigation-model";
 import { getAssetType } from "../../rest/sitewhere-asset-types-api";
 import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
 
-export class AssetTypeDetailComponent extends DetailComponent<IAssetType> {}
-
 @Component({
   components: {
     DetailPage,
@@ -68,7 +63,7 @@ export class AssetTypeDetailComponent extends DetailComponent<IAssetType> {}
     AssetTypeUpdateDialog
   }
 })
-export default class AssetTypeDetail extends Mixins(AssetTypeDetailComponent) {
+export default class AssetTypeDetail extends DetailComponent<IAssetType> {
   /** Record as asset type */
   get assetType(): IAssetType | null {
     return this.record;

@@ -31,10 +31,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins, Prop } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component, Prop } from "vue-property-decorator";
 
 import DataTableTab from "../common/DataTableTab.vue";
 
@@ -52,21 +49,17 @@ import {
   IDateRangeSearchCriteria
 } from "sitewhere-rest-api";
 
-export class CustomerLocationsListComponent extends ListComponent<
-  IDeviceLocation,
-  IDateRangeSearchCriteria,
-  IDeviceLocationResponseFormat,
-  IDeviceLocationSearchResults
-> {}
-
 @Component({
   components: {
     DataTableTab
   }
 })
-export default class CustomerLocationEvents extends Mixins(
-  CustomerLocationsListComponent
-) {
+export default class CustomerLocationEvents extends ListComponent<
+  IDeviceLocation,
+  IDateRangeSearchCriteria,
+  IDeviceLocationResponseFormat,
+  IDeviceLocationSearchResults
+> {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly customerToken!: string;

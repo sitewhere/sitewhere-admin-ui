@@ -37,10 +37,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -59,8 +56,6 @@ import { INavigationSection } from "../../libraries/navigation-model";
 import { getDeviceGroup } from "../../rest/sitewhere-device-groups-api";
 import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
 
-export class DeviceGroupDetailComponent extends DetailComponent<IDeviceGroup> {}
-
 @Component({
   components: {
     DetailPage,
@@ -72,9 +67,7 @@ export class DeviceGroupDetailComponent extends DetailComponent<IDeviceGroup> {}
     DeviceGroupElementCreateDialog
   }
 })
-export default class DeviceGroupDetail extends Mixins(
-  DeviceGroupDetailComponent
-) {
+export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
   active: string | null = null;
 
   get deviceGroup(): IDeviceGroup | null {

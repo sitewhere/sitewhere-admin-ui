@@ -1,144 +1,157 @@
 <template>
-  <div>
-    <navigation-page
-      v-if="tenant"
-      icon="fa-map"
-      :title="tenant.name"
-      loadingMessage="Loading tenant configuration ..."
-      :loaded="loaded"
-    >
-      <div slot="content">
-        <tenant-detail-header :tenant="tenant"></tenant-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-item key="microservices" href="#microservices">Microservices</v-tabs-item>
-            <v-tabs-slider></v-tabs-slider>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="microservices" id="microservices">
-              <microservice-list
-                :topology="tenantTopology"
-                @microserviceClicked="onMicroserviceClicked"
-              ></microservice-list>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit"></navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete"></navigation-action-button>
-      </div>
-    </navigation-page>
-    <tenant-update-dialog ref="edit" :tenantToken="tenantToken" @tenantUpdated="onTenantEdited"></tenant-update-dialog>
-    <tenant-delete-dialog ref="delete" :tenantToken="tenantToken" @tenantDeleted="onTenantDeleted"></tenant-delete-dialog>
-  </div>
+  <detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading tenant ..."
+    :loaded="loaded"
+    :record="tenant"
+  >
+    <template slot="header">
+      <tenant-detail-header :record="tenant"/>
+    </template>
+    <template slot="tabs">
+      <v-tab key="microservices" href="#microservices">Microservices</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="microservices" id="microservices">
+        <microservice-list :topology="tenantTopology" @microserviceClicked="onMicroserviceClicked"/>
+      </v-tab-item>
+    </template>
+    <template slot="actions">
+      <navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit"/>
+      <navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete"/>
+    </template>
+    <template slot="dialogs">
+      <tenant-update-dialog ref="edit" :tenantToken="token" @tenantUpdated="onTenantEdited"/>
+      <tenant-delete-dialog ref="delete" :tenantToken="token" @tenantDeleted="onTenantDeleted"/>
+    </template>
+  </detail-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import FloatingActionButton from "../common/FloatingActionButton";
-import TenantDetailHeader from "./TenantDetailHeader";
-import TenantUpdateDialog from "./TenantUpdateDialog";
-import TenantDeleteDialog from "./TenantDeleteDialog";
-import MicroserviceList from "../microservice/MicroserviceList";
+<script lang="ts">
+import {
+  DetailComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component } from "vue-property-decorator";
 
+import DetailPage from "../common/DetailPage.vue";
+import NavigationActionButton from "../common/NavigationActionButton.vue";
+import TenantDetailHeader from "./TenantDetailHeader.vue";
+import TenantUpdateDialog from "./TenantUpdateDialog.vue";
+import TenantDeleteDialog from "./TenantDeleteDialog.vue";
+import MicroserviceList from "../microservice/MicroserviceList.vue";
+
+import { Store } from "vuex";
+import { SiteWhereUiSettings } from "../../store";
+import { handleError } from "../common/Utils";
+import { AxiosPromise, AxiosResponse } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
 import { getTenantTopology } from "../../rest/sitewhere-instance-api";
+import {
+  ITenant,
+  ITenantResponseFormat,
+  IInstanceTopologySummary
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    tenantToken: null,
-    tenant: null,
-    tenantTopology: null,
-    active: null,
-    loaded: false
-  }),
-
+@Component({
   components: {
-    NavigationPage,
+    DetailPage,
     NavigationActionButton,
-    FloatingActionButton,
     TenantDetailHeader,
     TenantUpdateDialog,
     TenantDeleteDialog,
     MicroserviceList
-  },
+  }
+})
+export default class TenantDetail extends DetailComponent<ITenant> {
+  tenantTopology: IInstanceTopologySummary[] = [];
 
-  created: function() {
-    this.$data.tenantToken = this.$route.params.tenantToken;
-    this.refresh();
-  },
+  // References.
+  $refs!: Refs<{
+    edit: DialogComponent;
+    delete: DialogComponent;
+  }>;
 
-  methods: {
-    // Called if a microservice is clicked.
-    onMicroserviceClicked: function(microservice) {
-      this.$router.push(
-        "/system/tenants/" +
-          this.$data.tenantToken +
-          "/" +
-          microservice.identifier
-      );
-    },
+  get tenant(): ITenant | null {
+    return this.record;
+  }
 
-    // Called to refresh data.
-    refresh: function() {
-      // Load tenant data.
-      this.refreshTenant();
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Tenant;
+  }
 
-      // Load configuration data.
-      var component = this;
-      getTenantTopology(this.$store)
-        .then(function(response) {
-          component.$data.tenantTopology = response.data;
-        })
-        .catch(function(e) {});
-    },
+  get title(): string {
+    return this.tenant ? `Manage tenant ${this.tenant.token}` : "Manage tenant";
+  }
 
-    // Refresh only tenant information.
-    refreshTenant: function() {
-      this.$data.loaded = false;
-      var component = this;
-      getTenant(this.$store, this.$data.tenantToken, true)
-        .then(function(response) {
-          component.loaded = true;
-          component.onLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
+  /** Load record */
+  loadRecord(
+    store: Store<SiteWhereUiSettings>,
+    token: string
+  ): AxiosPromise<ITenant> {
+    this.refreshTopology();
+    let format: ITenantResponseFormat = {};
+    return getTenant(store, token, format);
+  }
 
-    // Called after data is loaded.
-    onLoaded: function(tenant) {
-      this.$data.tenant = tenant;
-      var section = {
-        id: "tenants",
-        title: "Manage Tenant",
-        icon: "layer-group",
-        route: "/tenants/" + tenant.token,
-        longTitle: "Manage Tenant: " + tenant.token
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Called to edit tenant.
-    onEdit: function() {
-      this.$refs["edit"].onOpenDialog();
-    },
-    // Called after tenant is edited.
-    onTenantEdited: function() {
-      this.$emit("refresh");
-    },
-    // Called to delete tenant.
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called after tenant is deleted.
-    onTenantDeleted: function() {
-      this.$router.push("/system/tenants");
+  /** Called after data is loaded */
+  afterRecordLoaded(tenant: ITenant) {
+    var section: INavigationSection = {
+      id: "tenants",
+      title: "Manage Tenant",
+      icon: "layer-group",
+      route: "/tenants/" + tenant.token,
+      longTitle: "Manage Tenant: " + tenant.token
+    };
+    this.$store.commit("currentSection", section);
+  }
+
+  /** Called if a microservice is clicked */
+  onMicroserviceClicked(microservice: IInstanceTopologySummary) {
+    this.$router.push(
+      "/system/tenants/" +
+        this.$data.tenantToken +
+        "/" +
+        microservice.identifier
+    );
+  }
+
+  // Called to refresh data.
+  async refreshTopology() {
+    try {
+      let response: AxiosResponse<
+        IInstanceTopologySummary[]
+      > = await getTenantTopology(this.$store);
+      this.tenantTopology = response.data;
+    } catch (err) {
+      handleError(err);
     }
   }
-};
+
+  // Called to edit tenant.
+  onEdit() {
+    (this.$refs["edit"] as any).onOpenDialog();
+  }
+
+  // Called after tenant is edited.
+  onTenantEdited() {
+    this.$emit("refresh");
+  }
+
+  // Called to delete tenant.
+  onDelete() {
+    (this.$refs["delete"] as any).showDeleteDialog();
+  }
+
+  // Called after tenant is deleted.
+  onTenantDeleted() {
+    this.$router.push("/system/tenants");
+  }
+}
 </script>
 
 <style>

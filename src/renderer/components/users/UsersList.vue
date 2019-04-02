@@ -47,10 +47,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
@@ -72,13 +69,6 @@ import {
   IUserSearchResults
 } from "sitewhere-rest-api";
 
-export class UsersListComponent extends ListComponent<
-  IUser,
-  IUserSearchCriteria,
-  IUserResponseFormat,
-  IUserSearchResults
-> {}
-
 @Component({
   components: {
     ListPage,
@@ -88,7 +78,12 @@ export class UsersListComponent extends ListComponent<
     UserDeleteDialog
   }
 })
-export default class UsersList extends Mixins(UsersListComponent) {
+export default class UsersList extends ListComponent<
+  IUser,
+  IUserSearchCriteria,
+  IUserResponseFormat,
+  IUserSearchResults
+> {
   headers: ITableHeaders = [
     {
       align: "left",

@@ -45,7 +45,7 @@ import { AxiosResponse } from "axios";
 import { getJwt } from "../../rest/sitewhere-api-wrapper";
 import { IAction, INavigationSection } from "../../libraries/navigation-model";
 import { NavigationIcon } from "../../libraries/constants";
-import { ITenant } from "sitewhere-rest-api";
+import { ITenant, ITenantResponseFormat } from "sitewhere-rest-api";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
 
 @Component({
@@ -275,9 +275,11 @@ export default class TenantAdministration extends Vue {
   /** Load tenant based on tenant id */
   async loadTenant() {
     try {
+      let format: ITenantResponseFormat = {};
       let response: AxiosResponse<ITenant> = await getTenant(
         this.$store,
-        this.tenantToken
+        this.tenantToken,
+        format
       );
       this.onTenantLoaded(response.data);
     } catch (err) {

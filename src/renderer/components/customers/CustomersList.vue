@@ -23,10 +23,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -47,13 +44,6 @@ import {
   ICustomerSearchResults
 } from "sitewhere-rest-api";
 
-export class CustomerListComponent extends ListComponent<
-  ICustomer,
-  ICustomerSearchCriteria,
-  ICustomerResponseFormat,
-  ICustomerSearchResults
-> {}
-
 @Component({
   components: {
     ListPage,
@@ -63,7 +53,12 @@ export class CustomerListComponent extends ListComponent<
     NavigationActionButton
   }
 })
-export default class CustomersList extends Mixins(CustomerListComponent) {
+export default class CustomersList extends ListComponent<
+  ICustomer,
+  ICustomerSearchCriteria,
+  ICustomerResponseFormat,
+  ICustomerSearchResults
+> {
   /** Get page icon */
   get icon(): NavigationIcon {
     return NavigationIcon.Customer;

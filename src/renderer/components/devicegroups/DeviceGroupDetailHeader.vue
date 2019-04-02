@@ -27,17 +27,12 @@
 
 <script lang="ts">
 import { HeaderComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import HeaderField from "../common/HeaderField.vue";
 import { IDeviceGroup } from "sitewhere-rest-api";
-
-export class DeviceGroupHeaderComponent extends HeaderComponent<IDeviceGroup> {}
 
 @Component({
   components: {
@@ -46,9 +41,7 @@ export class DeviceGroupHeaderComponent extends HeaderComponent<IDeviceGroup> {}
     ClipboardCopyField
   }
 })
-export default class DeviceDetailHeader extends Mixins(
-  DeviceGroupHeaderComponent
-) {
+export default class DeviceDetailHeader extends HeaderComponent<IDeviceGroup> {
   // Reference record as device group.
   get deviceGroup(): IDeviceGroup {
     return this.record;

@@ -53,10 +53,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -81,8 +78,6 @@ import { INavigationSection } from "../../libraries/navigation-model";
 import { getArea } from "../../rest/sitewhere-areas-api";
 import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
 
-export class AreaDetailComponent extends DetailComponent<IArea> {}
-
 @Component({
   components: {
     DetailPage,
@@ -100,7 +95,7 @@ export class AreaDetailComponent extends DetailComponent<IArea> {}
     ZoneCreateDialog
   }
 })
-export default class AreaDetail extends Mixins(AreaDetailComponent) {
+export default class AreaDetail extends DetailComponent<IArea> {
   parentArea: IArea | null = null;
 
   /** Record as area */

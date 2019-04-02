@@ -89,8 +89,6 @@ import FormSelect from "../common/form/FormSelect.vue";
 import { required, helpers } from "vuelidate/lib/validators";
 import { handleError } from "../common/Utils";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import {
   IUser,

@@ -27,10 +27,7 @@
 
 <script lang="ts">
 import { ListComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -51,13 +48,6 @@ import {
   IAssetTypeSearchResults
 } from "sitewhere-rest-api";
 
-export class AreaListComponent extends ListComponent<
-  IAssetType,
-  IAssetTypeSearchCriteria,
-  IAssetTypeResponseFormat,
-  IAssetTypeSearchResults
-> {}
-
 @Component({
   components: {
     ListPage,
@@ -67,7 +57,12 @@ export class AreaListComponent extends ListComponent<
     NavigationActionButton
   }
 })
-export default class AreasList extends Mixins(AreaListComponent) {
+export default class AreasList extends ListComponent<
+  IAssetType,
+  IAssetTypeSearchCriteria,
+  IAssetTypeResponseFormat,
+  IAssetTypeSearchResults
+> {
   /** Get page icon */
   get icon(): NavigationIcon {
     return NavigationIcon.AssetType;

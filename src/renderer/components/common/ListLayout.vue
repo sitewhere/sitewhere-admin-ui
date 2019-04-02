@@ -9,8 +9,7 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import Vue from "vue";
 
 @Component({})
 export default class ListLayout extends Vue {}

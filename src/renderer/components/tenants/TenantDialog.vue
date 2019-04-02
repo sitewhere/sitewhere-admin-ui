@@ -33,16 +33,13 @@ import {
   DialogComponent,
   DialogSection
 } from "../../libraries/component-model";
-import { ITabbedComponent } from "../../libraries/navigation-model";
+import { ITabbedComponent, Refs } from "../../libraries/navigation-model";
 import { Component } from "vue-property-decorator";
 
 import BaseDialog from "../common/BaseDialog.vue";
 import TenantDetailFields from "./TenantDetailFields.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";
 import MetadataPanel from "../common/MetadataPanel.vue";
-
-import { Refs } from "../../libraries/navigation-model";
-import { arrayToMetadata, metadataToArray } from "../common/Utils";
 
 @Component({
   components: {

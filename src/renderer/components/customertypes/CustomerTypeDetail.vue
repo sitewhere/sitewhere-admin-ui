@@ -40,10 +40,7 @@
 
 <script lang="ts">
 import { DetailComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -63,10 +60,6 @@ import { INavigationSection } from "../../libraries/navigation-model";
 import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
 import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
 
-export class CustomerTypeDetailComponent extends DetailComponent<
-  ICustomerType
-> {}
-
 @Component({
   components: {
     DetailPage,
@@ -79,9 +72,7 @@ export class CustomerTypeDetailComponent extends DetailComponent<
     CustomerTypeUpdateDialog
   }
 })
-export default class CustomerTypeDetail extends Mixins(
-  CustomerTypeDetailComponent
-) {
+export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
   active: string | null = null;
 
   get customerType(): ICustomerType | null {

@@ -27,10 +27,7 @@
 
 <script lang="ts">
 import { HeaderComponent } from "../../libraries/component-model";
-import { Component, Mixins } from "vue-property-decorator";
-
-// @ts-ignore: Unused import
-import Vue, { VueConstructor } from "vue";
+import { Component } from "vue-property-decorator";
 
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import HeaderField from "../common/HeaderField.vue";
@@ -40,8 +37,6 @@ import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import { formatDate } from "../common/Utils";
 import { IAsset } from "sitewhere-rest-api";
 
-export class AssetHeaderComponent extends HeaderComponent<IAsset> {}
-
 @Component({
   components: {
     NavigationHeaderPanel,
@@ -50,7 +45,7 @@ export class AssetHeaderComponent extends HeaderComponent<IAsset> {}
     ClipboardCopyField
   }
 })
-export default class AssetDetailHeader extends Mixins(AssetHeaderComponent) {
+export default class AssetDetailHeader extends HeaderComponent<IAsset> {
   // Reference record as area.
   get asset(): IAsset {
     return this.record;
