@@ -23,10 +23,10 @@ export default {
 
 <style scoped>
 .navbutton {
-  color: #333;
+  color: #666;
   vertical-align: middle;
 }
 .navbutton:hover {
-  color: #666;
+  color: #999;
 }
 </style>

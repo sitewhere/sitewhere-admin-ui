@@ -1,6 +1,7 @@
 <template>
   <base-dialog
     ref="dialog"
+    :icon="icon"
     :title="title"
     :width="width"
     :visible="dialogVisible"
@@ -34,6 +35,7 @@ import {
   DialogSection
 } from "../../libraries/component-model";
 import { ITabbedComponent, Refs } from "../../libraries/navigation-model";
+import { NavigationIcon } from "../../libraries/constants";
 import { Component } from "vue-property-decorator";
 
 import BaseDialog from "../common/BaseDialog.vue";
@@ -58,6 +60,11 @@ export default class UserDialog extends DialogComponent<IUser> {
     permissions: DialogSection;
     metadata: DialogSection;
   }>;
+
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.User;
+  }
 
   // Generate payload from UI.
   generatePayload() {

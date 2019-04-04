@@ -1,66 +1,41 @@
 <template>
   <span class="actions-block">
-    <v-tooltip top>
-      <v-btn
-        dark
-        icon
-        small
-        class="blue--text text--darken-4 ml-0 mr-0"
-        @click.stop="onOpenEdit"
-        slot="activator"
-      >
-        <font-awesome-icon icon="edit" size="lg"/>
-      </v-btn>
-      <span>Edit</span>
-    </v-tooltip>
-    <v-tooltip top>
-      <v-btn
-        dark
-        icon
-        small
-        class="red--text text--darken-4 ml-0"
-        @click.stop="onOpenDelete"
-        slot="activator"
-      >
-        <font-awesome-icon icon="times" size="lg"/>
-      </v-btn>
-      <span>Delete</span>
-    </v-tooltip>
-    <slot name="edit"></slot>
-    <slot name="delete"></slot>
+    <navigation-action-button v-if="showEdit" icon="edit" tooltip="Edit" @action="onEditClicked"/>
+    <navigation-action-button
+      v-if="showDelete"
+      icon="times"
+      tooltip="Delete"
+      @action="onDeleteClicked"
+    />
   </span>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-  mounted: function() {
-    this.$slots["edit"][0].componentInstance.$on("edited", this.onEdited);
-    this.$slots["delete"][0].componentInstance.$on("deleted", this.onDeleted);
-  },
+import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-  methods: {
-    onOpenEdit: function() {
-      this.$slots["edit"][0].componentInstance.onOpenDialog();
-    },
-    onOpenDelete: function() {
-      this.$slots["delete"][0].componentInstance.showDeleteDialog();
-    },
-    onEdited: function() {
-      this.$emit("edited");
-    },
-    onDeleted: function() {
-      console.log("deleted");
-      this.$emit("deleted");
-    }
+@Component({
+  components: {
+    NavigationActionButton
   }
-};
+})
+export default class ActionsBlock extends Vue {
+  @Prop({ default: true }) readonly showEdit!: boolean;
+  @Prop({ default: true }) readonly showDelete!: boolean;
+
+  // Called after create button is clicked.
+  onEditClicked(e: any) {
+    this.$emit("edit");
+  }
+
+  // Called after create button is clicked.
+  onDeleteClicked(e: any) {
+    this.$emit("delete");
+  }
+}
 </script>
 
 <style scoped>
-.actions-block {
-  display: inline-block;
-  white-space: nowrap;
-}
 </style>

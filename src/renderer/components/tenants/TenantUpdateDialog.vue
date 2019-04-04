@@ -5,7 +5,7 @@
     width="700"
     createLabel="Update"
     cancelLabel="Cancel"
-    @payload="onCommit"
+    @payload="onSave"
   />
 </template>
 
@@ -49,19 +49,22 @@ export default class TenantUpdateDialog extends EditDialogComponent<
   }
 
   /** Load payload */
-  load(): AxiosPromise<ITenant> {
+  prepareLoad(identifier: string): AxiosPromise<ITenant> {
     let format: ITenantResponseFormat = {};
-    return getTenant(this.$store, this.tenantToken, format);
-  }
-
-  /** Called on payload commit */
-  onCommit(payload: ITenant): void {
-    this.commit(payload);
+    return getTenant(this.$store, identifier, format);
   }
 
   /** Save payload */
-  save(payload: ITenantCreateRequest): AxiosPromise<ITenant> {
-    return updateTenant(this.$store, this.tenantToken, payload);
+  prepareSave(
+    original: ITenant,
+    updated: ITenantCreateRequest
+  ): AxiosPromise<ITenant> {
+    return updateTenant(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: ITenant): void {
+    this.save(payload);
   }
 
   /** Implemented in subclasses for after-save */

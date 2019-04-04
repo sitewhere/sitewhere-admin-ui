@@ -2,7 +2,10 @@
   <v-dialog v-model="visible" persistent :width="width">
     <v-card>
       <v-toolbar dense flat card dark class="mb-0" color="primary">
-        <v-toolbar-title>{{title}}</v-toolbar-title>
+        <v-toolbar-title>
+          <v-icon class="mr-1">{{ icon }}</v-icon>
+          {{title}}
+        </v-toolbar-title>
       </v-toolbar>
       <error-banner :error="error"></error-banner>
       <v-card-text class="pa-0">
@@ -15,12 +18,11 @@
       </v-card-text>
       <v-card-actions v-if="!hideButtons">
         <v-spacer></v-spacer>
-        <v-btn class="grey--text darken-1" flat="flat" @click="onCancelClicked">{{cancelLabel}}</v-btn>
+        <v-btn outline color="primary" @click="onCancelClicked">{{cancelLabel}}</v-btn>
         <v-btn
+          color="primary"
           v-if="!hideCreate"
           :disabled="invalid"
-          class="blue--text darken-1"
-          flat="flat"
           @click="onCreateClicked"
         >{{createLabel}}</v-btn>
       </v-card-actions>
@@ -34,6 +36,7 @@ import Vue from "vue";
 
 import ErrorBanner from "../common/ErrorBanner.vue";
 import { ITabbedComponent } from "../../libraries/navigation-model";
+import { NavigationIcon } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -43,7 +46,8 @@ import { ITabbedComponent } from "../../libraries/navigation-model";
 export default class BaseDialog extends Vue implements ITabbedComponent {
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
-  @Prop() readonly visible: boolean = false;
+  @Prop({ default: NavigationIcon.Device }) readonly icon!: NavigationIcon;
+  @Prop({ default: true }) readonly visible!: boolean;
   @Prop() readonly createLabel!: string;
   @Prop() readonly cancelLabel!: string;
   @Prop() readonly error!: string;

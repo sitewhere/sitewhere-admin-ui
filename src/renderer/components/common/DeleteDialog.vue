@@ -19,48 +19,40 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="grey--text darken-1" flat="flat" @click.native="onCancelClicked">Cancel</v-btn>
-        <v-btn class="blue--text darken-1" flat="flat" @click.native="onDeleteClicked">Delete</v-btn>
+        <v-btn outline color="primary" @click="onCancelClicked">Cancel</v-btn>
+        <v-btn color="primary" @click="onDeleteClicked">Delete</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
-<script>
-export default {
-  data: () => ({
-    visible: false
-  }),
+<script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
+import Vue from "vue";
 
-  props: ["title", "width", "error"],
+import ErrorBanner from "../common/ErrorBanner.vue";
 
-  methods: {
-    // Called to open the dialog.
-    openDialog: function() {
-      this.$data.visible = true;
-    },
-
-    // Called to open the dialog.
-    closeDialog: function() {
-      this.$data.visible = false;
-    },
-
-    // Called to show an error message.
-    showError: function(error) {
-      this.$data.error = error;
-    },
-
-    // Called after create button is clicked.
-    onDeleteClicked: function(e) {
-      this.$emit("delete");
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function(e) {
-      this.$data.visible = false;
-    }
+@Component({
+  components: {
+    ErrorBanner
   }
-};
+})
+export default class DeleteDialog extends Vue {
+  @Prop() readonly title!: string;
+  @Prop() readonly width!: number;
+  @Prop() readonly error!: string;
+  @Prop({ default: false }) readonly visible!: boolean;
+
+  // Called after create button is clicked.
+  onDeleteClicked(e: any) {
+    this.$emit("delete");
+  }
+
+  // Called after cancel button is clicked.
+  onCancelClicked(e: any) {
+    this.$emit("cancel");
+  }
+}
 </script>
 
 <style scoped>

@@ -28,10 +28,10 @@
             :title="formatDate(props.item.updatedDate)"
           >{{ formatDate(props.item.updatedDate) }}</td>
           <td width="12%" class="action-buttons">
-            <actions-block @edited="refresh" @deleted="refresh">
-              <user-update-dialog slot="edit" :username="props.item.username"/>
-              <user-delete-dialog slot="delete" :username="props.item.username"/>
-            </actions-block>
+            <actions-block
+              @edit="onEditUser(props.item.username)"
+              @delete="onDeleteUser(props.item.username)"
+            />
           </td>
         </template>
       </v-data-table>
@@ -40,7 +40,9 @@
       <navigation-action-button icon="plus" tooltip="Add User" @action="onAddUser"/>
     </template>
     <template slot="dialogs">
-      <user-create-dialog ref="add" @userAdded="refresh"/>
+      <user-create-dialog ref="add" @created="refresh"/>
+      <user-update-dialog ref="edit" @updated="refresh"/>
+      <user-delete-dialog ref="delete" @deleted="refresh"/>
     </template>
   </list-page>
 </template>
@@ -92,6 +94,8 @@ export default class UsersList extends ListComponent<
 > {
   $refs!: Refs<{
     add: UserCreateDialog;
+    edit: UserUpdateDialog;
+    delete: UserDeleteDialog;
   }>;
 
   headers: ITableHeaders = [
@@ -182,6 +186,16 @@ export default class UsersList extends ListComponent<
   // Called to open dialog.
   onAddUser() {
     this.$refs.add.open();
+  }
+
+  // Called to open edit dialog.
+  onEditUser(username: string) {
+    this.$refs.edit.open(username);
+  }
+
+  // Called to open delete dialog.
+  onDeleteUser(username: string) {
+    this.$refs.delete.open(username);
   }
 
   // Format a date.

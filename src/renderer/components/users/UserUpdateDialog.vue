@@ -1,11 +1,11 @@
 <template>
   <user-dialog
     ref="dialog"
-    title="Create User"
+    title="Update User"
     width="600"
-    createLabel="Create"
+    createLabel="Update"
     cancelLabel="Cancel"
-    @payload="onCommit"
+    @payload="onSave"
   />
 </template>
 
@@ -32,12 +32,10 @@ import { getUser, updateUser } from "../../rest/sitewhere-users-api";
     UserDialog
   }
 })
-export default class TenantUpdateDialog extends EditDialogComponent<
+export default class UserUpdateDialog extends EditDialogComponent<
   IUser,
   IUserCreateRequest
 > {
-  @Prop() readonly userToken!: string;
-
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<IUser>;
@@ -49,19 +47,22 @@ export default class TenantUpdateDialog extends EditDialogComponent<
   }
 
   /** Load payload */
-  load(): AxiosPromise<IUser> {
+  prepareLoad(identifier: string): AxiosPromise<IUser> {
     let format: IUserResponseFormat = {};
-    return getUser(this.$store, this.userToken, format);
-  }
-
-  /** Called on payload commit */
-  onCommit(payload: IUserCreateRequest): void {
-    this.commit(payload);
+    return getUser(this.$store, identifier, format);
   }
 
   /** Save payload */
-  save(payload: IUserCreateRequest): AxiosPromise<IUser> {
-    return updateUser(this.$store, this.userToken, payload);
+  prepareSave(
+    original: IUser,
+    updated: IUserCreateRequest
+  ): AxiosPromise<IUser> {
+    return updateUser(this.$store, original.username, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: IUserCreateRequest): void {
+    this.save(payload);
   }
 
   /** Implemented in subclasses for after-save */

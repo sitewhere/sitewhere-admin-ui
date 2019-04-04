@@ -134,7 +134,9 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 
   // Called to edit tenant.
   onEdit() {
-    this.$refs.edit.open();
+    if (this.token) {
+      this.$refs.edit.open(this.token);
+    }
   }
 
   // Called after tenant is edited.
