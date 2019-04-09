@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <div>
     <v-card-text>
       <v-data-table
         :headers="headers"
@@ -28,34 +28,28 @@
       </v-data-table>
     </v-card-text>
     <v-alert error :value="true" class="ma-0" style="width: 100%" v-if="error">{{error}}</v-alert>
-    <v-card-text v-if="!readOnly">
-      <v-card raised>
-        <v-container fluid class="mr-4 pt-1 pb-0">
-          <v-layout row>
-            <v-flex xs4>
-              <v-text-field light label="Name" v-model="newItemName"></v-text-field>
-            </v-flex>
-            <v-flex xs1></v-flex>
-            <v-flex xs6>
-              <v-text-field light label="Value" v-model="newItemValue"></v-text-field>
-            </v-flex>
-            <v-flex xs1 class="pt-3">
-              <v-tooltip left>
-                <v-btn icon @click="onAddItem" slot="activator">
-                  <font-awesome-icon
-                    class="blue--text text--darken-2"
-                    icon="plus-circle"
-                    size="2x"
-                  />
-                </v-btn>
-                <span>Add Item</span>
-              </v-tooltip>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card>
-    </v-card-text>
-  </v-card>
+    <div class="data-entry" v-if="!readOnly">
+      <v-container fluid>
+        <v-layout row>
+          <v-flex xs4>
+            <v-text-field light label="Name" placeholder=" " v-model="newItemName"/>
+          </v-flex>
+          <v-flex xs1></v-flex>
+          <v-flex xs6>
+            <v-text-field light label="Value" placeholder=" " v-model="newItemValue"/>
+          </v-flex>
+          <v-flex xs1 class="pt-3">
+            <v-tooltip left>
+              <v-btn icon @click="onAddItem" slot="activator">
+                <font-awesome-icon class="blue--text text--darken-2" icon="plus-circle" size="2x"/>
+              </v-btn>
+              <span>Add Item</span>
+            </v-tooltip>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -189,4 +183,9 @@ export default class MetadataPanel extends DialogSection {
 </script>
 
 <style scoped>
+.data-entry {
+  background-color: #eee;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
 </style>

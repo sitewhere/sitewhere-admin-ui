@@ -29,14 +29,17 @@
         :token="token"
         @elementAdded="onElementAdded"
       />
-      <device-group-update-dialog ref="edit" :token="token" @groupUpdated="onDeviceGroupUpdated"/>
+      <device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh"/>
       <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted"/>
     </template>
   </detail-page>
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
+import {
+  DetailComponent,
+  DialogComponent
+} from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
@@ -52,7 +55,7 @@ import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
+import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getDeviceGroup } from "../../rest/sitewhere-device-groups-api";
 import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
 
@@ -69,6 +72,12 @@ import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
 })
 export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
   active: string | null = null;
+
+  // References.
+  $refs!: Refs<{
+    edit: DeviceGroupUpdateDialog;
+    delete: DialogComponent<IDeviceGroup>;
+  }>;
 
   get deviceGroup(): IDeviceGroup | null {
     return this.record;
@@ -109,12 +118,9 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
 
   // Show dialog on update requested.
   onEdit() {
-    (this.$refs["edit"] as any).onOpenDialog();
-  }
-
-  // Called after device group is updated.
-  onDeviceGroupUpdated() {
-    this.refresh();
+    if (this.token) {
+      this.$refs.edit.open(this.token);
+    }
   }
 
   // Show dialog on delete requested.

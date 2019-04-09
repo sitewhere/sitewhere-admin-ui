@@ -1,69 +1,77 @@
 <template>
-  <div>
-    <device-dialog
-      ref="dialog"
-      title="Edit Device"
-      width="700"
-      createLabel="Update"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-    ></device-dialog>
-  </div>
+  <device-dialog
+    ref="dialog"
+    title="Edit Tenant"
+    width="700"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import DeviceDialog from "./DeviceDialog";
+<script lang="ts">
+import {
+  EditDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component, Prop } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import DeviceDialog from "./DeviceDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  IDevice,
+  IDeviceCreateRequest,
+  IDeviceResponseFormat
+} from "sitewhere-rest-api";
 import { getDevice, updateDevice } from "../../rest/sitewhere-devices-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     DeviceDialog
-  },
-
-  props: ["token"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-
-      let options = {};
-      options.includeDeviceType = true;
-
-      getDevice(this.$store, this.token, options)
-        .then(function(response) {
-          component.onLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-    // Called after data is loaded.
-    onLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateDevice(this.$store, this.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("deviceUpdated");
-    }
   }
-};
+})
+export default class DeviceUpdateDialog extends EditDialogComponent<
+  IDevice,
+  IDeviceCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDevice>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDevice> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IDevice> {
+    let format: IDeviceResponseFormat = {
+      includeDeviceType: true
+    };
+    return getDevice(this.$store, identifier, format);
+  }
+
+  /** Save payload */
+  prepareSave(
+    original: IDevice,
+    updated: IDeviceCreateRequest
+  ): AxiosPromise<IDevice> {
+    return updateDevice(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: IDeviceCreateRequest): void {
+    this.save(payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDevice): void {
+    this.$emit("deviceUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>

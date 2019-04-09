@@ -1,11 +1,5 @@
 <template>
-  <content-tab
-    :tabkey="tabkey"
-    :id="id"
-    :loaded="loaded"
-    @pagingUpdated="onPagingUpdated"
-    loadingMessage="Loading..."
-  >
+  <content-tab :tabkey="tabkey" :id="id" :loaded="loaded" loadingMessage="Loading...">
     <v-container class="pa-2" fluid grid-list-md fill-height>
       <v-layout row wrap>
         <v-flex xs12>
@@ -50,12 +44,17 @@ import Vue from "vue";
     ContentTab
   }
 })
-export default class DeviceTypeCommands extends Vue {
+export default class DeviceTypeCodegen extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly deviceType!: IDeviceType;
 
   loaded: boolean = true;
+  protobuf: string = "";
+
+  onProtobufDownload() {}
+
+  refresh() {}
 }
 </script>
 

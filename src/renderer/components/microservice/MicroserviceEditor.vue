@@ -1,51 +1,37 @@
 <template>
   <span>
-    <v-tabs v-if="context" v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-item key="microservices" href="#microservices">Configuration</v-tabs-item>
-        <v-tabs-item key="scripts" href="#scripts">Scripts</v-tabs-item>
-        <v-tabs-slider></v-tabs-slider>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <v-tabs-content key="microservices" id="microservices">
-          <v-card flat>
-            <v-card-text>
-              <!-- Banner shown above microservice content -->
-              <microservice-banner
-                :context="context"
-                :contextStack="contextStack"
-                @popContext="onPopContext"
-                @popToContext="onPopToContext"
-                @configureCurrent="onOpenUpdateDialog"
-              ></microservice-banner>
-              <!-- Grouped attributes for current context -->
-              <v-card class="mb-2">
-                <component-attributes
-                  :context="context"
-                  :groups="groups"
-                  :identifier="identifier"
-                  :tenantToken="tenantToken"
-                  :readOnly="true"
-                  :dirty="dirty"
-                ></component-attributes>
-              </v-card>
-              <!-- Elements -->
-              <v-card>
-                <component-content
-                  :content="content"
-                  @addComponent="onAddComponent"
-                  @pushContext="onPushChildContext"
-                  @deleteComponent="onDeleteComponent"
-                ></component-content>
-              </v-card>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-        <v-tabs-content key="scripts" id="scripts">
-          <scripts-manager :identifier="identifier" :tenantToken="tenantToken"></scripts-manager>
-        </v-tabs-content>
-      </v-tabs-items>
-    </v-tabs>
+    <v-card flat>
+      <v-card-text>
+        <!-- Banner shown above microservice content -->
+        <microservice-banner
+          :context="context"
+          :contextStack="contextStack"
+          @popContext="onPopContext"
+          @popToContext="onPopToContext"
+          @configureCurrent="onOpenUpdateDialog"
+        ></microservice-banner>
+        <!-- Grouped attributes for current context -->
+        <v-card class="mb-2">
+          <component-attributes
+            :context="context"
+            :groups="groups"
+            :identifier="identifier"
+            :tenantToken="tenantToken"
+            :readOnly="true"
+            :dirty="dirty"
+          ></component-attributes>
+        </v-card>
+        <!-- Elements -->
+        <v-card>
+          <component-content
+            :content="content"
+            @addComponent="onAddComponent"
+            @pushContext="onPushChildContext"
+            @deleteComponent="onDeleteComponent"
+          ></component-content>
+        </v-card>
+      </v-card-text>
+    </v-card>
     <attributes-create-dialog
       ref="create"
       :context="editContext"
@@ -72,7 +58,6 @@ import ComponentAttributes from "./ComponentAttributes";
 import ComponentContent from "./ComponentContent";
 import AttributesCreateDialog from "./AttributesCreateDialog";
 import AttributesUpdateDialog from "./AttributesUpdateDialog";
-import ScriptsManager from "./ScriptsManager";
 
 export default {
   data: () => ({
@@ -93,8 +78,7 @@ export default {
     ComponentAttributes,
     ComponentContent,
     AttributesCreateDialog,
-    AttributesUpdateDialog,
-    ScriptsManager
+    AttributesUpdateDialog
   },
 
   computed: {

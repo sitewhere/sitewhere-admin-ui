@@ -17,7 +17,7 @@
       </v-flex>
     </list-layout>
     <template slot="dialogs">
-      <device-group-create-dialog ref="add" @groupAdded="refresh"/>
+      <device-group-create-dialog ref="add" @deviceGroupAdded="refresh"/>
     </template>
     <template slot="actions">
       <navigation-action-button icon="plus" tooltip="Add Device Group" @action="onAddDeviceGroup"/>
@@ -38,6 +38,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
+import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDeviceGroups } from "../../rest/sitewhere-device-groups-api";
@@ -63,6 +64,10 @@ export default class DeviceGroupsList extends ListComponent<
   IDeviceGroupResponseFormat,
   IDeviceGroupSearchResults
 > {
+  $refs!: Refs<{
+    add: DeviceGroupCreateDialog;
+  }>;
+
   /** Icon for page */
   get icon(): NavigationIcon {
     return NavigationIcon.DeviceGroup;
@@ -96,7 +101,7 @@ export default class DeviceGroupsList extends ListComponent<
 
   // Called to open dialog.
   onAddDeviceGroup() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 }
 </script>

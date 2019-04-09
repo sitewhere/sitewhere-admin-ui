@@ -27,7 +27,10 @@
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
+import {
+  DetailComponent,
+  DialogComponent
+} from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
@@ -42,7 +45,7 @@ import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
+import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getDevice } from "../../rest/sitewhere-devices-api";
 import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
 
@@ -57,6 +60,12 @@ import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class DeviceDetail extends DetailComponent<IDevice> {
+  // References.
+  $refs!: Refs<{
+    edit: DeviceUpdateDialog;
+    delete: DialogComponent<IDevice>;
+  }>;
+
   get device(): IDevice | null {
     return this.record;
   }
@@ -96,7 +105,9 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
 
   // Open dialog to edit device.
   onEdit() {
-    (this.$refs["edit"] as any).onOpenDialog();
+    if (this.token) {
+      this.$refs.edit.open(this.token);
+    }
   }
 
   // Called after update.

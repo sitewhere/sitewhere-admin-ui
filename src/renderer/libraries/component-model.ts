@@ -93,9 +93,14 @@ export class DetailComponent<T> extends Vue {
   record: T | null = null;
   loaded: boolean = false;
 
+  // Get parameter for route token.
+  getTokenParameter(): string {
+    return "token";
+  }
+
   // Called on initial create.
   created() {
-    this.display(this.$route.params.token);
+    this.display(this.$route.params[this.getTokenParameter()]);
   }
 
   // Called when component is reused.
@@ -114,16 +119,13 @@ export class DetailComponent<T> extends Vue {
   /** Return promise for loading record */
   loadRecord(
     store: Store<SiteWhereUiSettings>,
-    token: string
+    token: string | null
   ): AxiosPromise<T> {
     throw new Error("Implement loadRecord()");
   }
 
   // Refresh list contents.
   async refresh() {
-    if (!this.token) {
-      throw new Error("Token was not provided for detail page.");
-    }
     try {
       this.loaded = false;
       let promise: AxiosPromise<T> = this.loadRecord(this.$store, this.token);

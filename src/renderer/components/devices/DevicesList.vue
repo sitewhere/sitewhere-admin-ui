@@ -58,7 +58,7 @@ import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { IPageSizes } from "../../libraries/navigation-model";
+import { IPageSizes, Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDevices } from "../../rest/sitewhere-devices-api";
@@ -87,6 +87,10 @@ export default class DevicesList extends ListComponent<
   IDeviceResponseFormat,
   IDeviceSearchResults
 > {
+  $refs!: Refs<{
+    add: DeviceCreateDialog;
+  }>;
+
   filter: {} = {};
   pageSizes: IPageSizes = [
     {
@@ -166,7 +170,7 @@ export default class DevicesList extends ListComponent<
 
   // Called to open dialog.
   onAddDevice() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 
   // Called to invoke a batch command.

@@ -11,10 +11,8 @@
       <v-card-text class="pa-0">
         <v-tabs v-model="active">
           <slot name="tabs"/>
-        </v-tabs>
-        <v-tabs-items v-model="active">
           <slot name="tab-items"/>
-        </v-tabs-items>
+        </v-tabs>
       </v-card-text>
       <v-card-actions v-if="!hideButtons">
         <v-spacer></v-spacer>

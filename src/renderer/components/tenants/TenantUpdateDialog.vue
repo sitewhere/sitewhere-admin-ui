@@ -36,8 +36,6 @@ export default class TenantUpdateDialog extends EditDialogComponent<
   ITenant,
   ITenantCreateRequest
 > {
-  @Prop() readonly tenantToken!: string;
-
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<ITenant>;
