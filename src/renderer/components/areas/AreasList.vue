@@ -34,6 +34,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
+import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
@@ -59,6 +60,10 @@ export default class AreasList extends ListComponent<
   IAreaResponseFormat,
   IAreaSearchResults
 > {
+  $refs!: Refs<{
+    add: AreaCreateDialog;
+  }>;
+
   /** Get page icon */
   get icon(): NavigationIcon {
     return NavigationIcon.Area;
@@ -95,7 +100,7 @@ export default class AreasList extends ListComponent<
 
   // Called to open dialog.
   onAddArea() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 
   // Called when a new area is added.
