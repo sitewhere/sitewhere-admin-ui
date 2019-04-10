@@ -39,7 +39,10 @@
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
+import {
+  DetailComponent,
+  DialogComponent
+} from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
@@ -56,7 +59,7 @@ import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
+import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
 import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
 
@@ -73,7 +76,11 @@ import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
-  active: string | null = null;
+  // References.
+  $refs!: Refs<{
+    edit: CustomerTypeUpdateDialog;
+    delete: DialogComponent<ICustomerType>;
+  }>;
 
   get customerType(): ICustomerType | null {
     return this.record;
@@ -111,7 +118,9 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
 
   // Called to open customer type edit dialog.
   onEdit() {
-    (this.$refs["edit"] as any).onOpenDialog();
+    if (this.token) {
+      this.$refs.edit.open(this.token);
+    }
   }
 
   // Called when customer type is updated.

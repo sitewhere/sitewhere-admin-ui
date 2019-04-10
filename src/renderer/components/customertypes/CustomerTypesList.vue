@@ -20,7 +20,11 @@
       <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Customer Type" @action="onAddCustomerType"></navigation-action-button>
+      <navigation-action-button
+        icon="plus"
+        tooltip="Add Customer Type"
+        @action="onAddCustomerType"
+      />
     </template>
   </list-page>
 </template>
@@ -39,6 +43,7 @@ import { Store } from "vuex";
 import { routeTo } from "../common/Utils";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
+import { Refs } from "../../libraries/navigation-model";
 import { AxiosPromise } from "axios";
 import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
 import {
@@ -63,6 +68,10 @@ export default class CustomerTypesList extends ListComponent<
   ICustomerTypeResponseFormat,
   ICustomerTypeSearchResults
 > {
+  $refs!: Refs<{
+    add: CustomerTypeCreateDialog;
+  }>;
+
   /** Get page icon */
   get icon(): NavigationIcon {
     return NavigationIcon.CustomerType;
@@ -97,7 +106,7 @@ export default class CustomerTypesList extends ListComponent<
 
   // Called to open dialog.
   onAddCustomerType() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 }
 </script>

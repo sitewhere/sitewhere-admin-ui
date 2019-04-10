@@ -34,6 +34,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
+import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
@@ -59,6 +60,10 @@ export default class CustomersList extends ListComponent<
   ICustomerResponseFormat,
   ICustomerSearchResults
 > {
+  $refs!: Refs<{
+    add: CustomerCreateDialog;
+  }>;
+
   /** Get page icon */
   get icon(): NavigationIcon {
     return NavigationIcon.Customer;
@@ -92,7 +97,7 @@ export default class CustomersList extends ListComponent<
 
   // Called to open dialog.
   onAddCustomer() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 
   // Called when a new customer is added.

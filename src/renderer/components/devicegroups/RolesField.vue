@@ -37,8 +37,6 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 
-import { IPaging, IPageSizes } from "../../libraries/navigation-model";
-
 @Component
 export default class Pager extends Vue {
   @Prop() readonly value!: string[];
@@ -55,7 +53,6 @@ export default class Pager extends Vue {
   // Called when roles are added.
   onRolesAdded() {
     let roles = this.newRoles.split(" ");
-    let addedRoles: string[] = [];
     roles.forEach(role => {
       if (this.editedRoles.indexOf(role) === -1) {
         this.editedRoles.push(role);

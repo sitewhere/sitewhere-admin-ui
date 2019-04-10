@@ -1,63 +1,61 @@
 <template>
-  <div>
-    <customer-dialog
-      ref="dialog"
-      title="Create Customer"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-      :parentCustomer="parentCustomer"
-    ></customer-dialog>
-  </div>
+  <customer-dialog
+    ref="dialog"
+    title="Create Customer"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import CustomerDialog from "./CustomerDialog";
+<script lang="ts">
+import {
+  CreateDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import CustomerDialog from "./CustomerDialog.vue";
+
+import { AxiosPromise } from "axios";
+import { ICustomer, ICustomerCreateRequest } from "sitewhere-rest-api";
 import { createCustomer } from "../../rest/sitewhere-customers-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
-    CustomerDialog,
-    FloatingActionButton
-  },
-
-  props: ["parentCustomer"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      createCustomer(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("customerAdded");
-    }
+    CustomerDialog
   }
-};
+})
+export default class CustomerCreateDialog extends CreateDialogComponent<
+  ICustomer,
+  ICustomerCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<ICustomer>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<ICustomer> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: ICustomerCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: ICustomerCreateRequest): AxiosPromise<ICustomer> {
+    return createCustomer(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ICustomer): void {
+    this.$emit("customerAdded", payload);
+  }
+}
 </script>
 
 <style scoped>

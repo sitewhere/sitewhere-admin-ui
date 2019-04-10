@@ -110,8 +110,6 @@ import {
   }
 })
 export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
-  active: string | null = null;
-
   // References.
   $refs!: Refs<{
     edit: DeviceTypeUpdateDialog;

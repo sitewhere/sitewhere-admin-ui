@@ -2,7 +2,7 @@
   <device-type-dialog
     ref="dialog"
     title="Edit Device Type"
-    width="600"
+    :loaded="loaded"
     createLabel="Update"
     cancelLabel="Cancel"
     @payload="onSave"
@@ -14,7 +14,7 @@ import {
   EditDialogComponent,
   DialogComponent
 } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { Refs } from "../../libraries/navigation-model";
 
 import DeviceTypeDialog from "./DeviceTypeDialog.vue";

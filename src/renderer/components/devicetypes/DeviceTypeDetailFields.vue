@@ -61,15 +61,6 @@ import FormTextArea from "../common/form/FormTextArea.vue";
 import FormSelect from "../common/form/FormSelect.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
-import { handleError } from "../common/Utils";
-
-import { AxiosPromise } from "axios";
-import {
-  IDeviceType,
-  IDeviceTypeSearchCriteria,
-  IDeviceTypeResponseFormat
-} from "sitewhere-rest-api";
-import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
 
 // Validation for token.
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);

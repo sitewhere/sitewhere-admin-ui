@@ -1,76 +1,78 @@
 <template>
-  <div>
-    <customer-type-dialog
-      ref="dialog"
-      title="Edit Customer Type"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Update"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-      :customerTypes="customerTypes"
-    ></customer-type-dialog>
-  </div>
+  <customer-type-dialog
+    ref="dialog"
+    title="Edit Customer Type"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import CustomerTypeDialog from "./CustomerTypeDialog";
+<script lang="ts">
+import {
+  EditDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import CustomerTypeDialog from "./CustomerTypeDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  ICustomerType,
+  ICustomerTypeCreateRequest,
+  ICustomerTypeResponseFormat
+} from "sitewhere-rest-api";
 import {
   getCustomerType,
   updateCustomerType
 } from "../../rest/sitewhere-customer-types-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
-    FloatingActionButton,
     CustomerTypeDialog
-  },
-
-  props: ["token", "customerTypes"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-      getCustomerType(this.$store, this.token)
-        .then(function(response) {
-          component.onDataLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onDataLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateCustomerType(this.$store, this.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("customerTypeUpdated");
-    }
   }
-};
+})
+export default class CustomerTypeUpdateDialog extends EditDialogComponent<
+  ICustomerType,
+  ICustomerTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<ICustomerType>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<ICustomerType> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<ICustomerType> {
+    let format: ICustomerTypeResponseFormat = {};
+    return getCustomerType(this.$store, identifier, format);
+  }
+
+  /** Save payload */
+  prepareSave(
+    original: ICustomerType,
+    updated: ICustomerTypeCreateRequest
+  ): AxiosPromise<ICustomerType> {
+    return updateCustomerType(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: ICustomerTypeCreateRequest): void {
+    this.save(payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ICustomerType): void {
+    this.$emit("customerTypeUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>

@@ -4,38 +4,38 @@
       <form-text
         required
         label="Token"
-        title="Unique token for referencing device group."
+        title="Unique token for referencing customer."
         v-model="token"
         icon="info"
       >
-        <span v-if="!$v.token.required && $v.$dirty">Device Type token is required.</span>
-        <span v-if="!$v.token.validToken && $v.$dirty">Device Type token is not valid.</span>
+        <span v-if="!$v.token.required && $v.$dirty">Customer token is required.</span>
+        <span v-if="!$v.token.validToken && $v.$dirty">Customer token is not valid.</span>
       </form-text>
     </v-flex>
     <v-flex xs12>
       <form-text
         required
         label="Name"
-        title="Name displayed for device group."
+        title="Name displayed for customer."
         v-model="name"
         icon="info"
       >
-        <span v-if="$v.name.$invalid && $v.$dirty">Name is required.</span>
+        <span v-if="!$v.name.required && $v.$dirty">Customer name is required.</span>
       </form-text>
+    </v-flex>
+    <v-flex xs12>
+      <customer-type-selector v-model="customerTypeToken" title="Type of customer being created.">
+        <span v-if="$v.customerTypeToken.$invalid && $v.$dirty">Customer type is required.</span>
+      </customer-type-selector>
     </v-flex>
     <v-flex xs12>
       <form-text-area
         required
         v-model="description"
-        title="Device group description."
+        title="Description of customer."
         label="Description"
         icon="info"
-      >
-        <span v-if="$v.description.$invalid && $v.$dirty">Description is required.</span>
-      </form-text-area>
-    </v-flex>
-    <v-flex xs12>
-      <roles-field icon="info" v-model="roles"/>
+      />
     </v-flex>
   </dialog-form>
 </template>
@@ -47,7 +47,7 @@ import { Component } from "vue-property-decorator";
 import DialogForm from "../common/form/DialogForm.vue";
 import FormText from "../common/form/FormText.vue";
 import FormTextArea from "../common/form/FormTextArea.vue";
-import RolesField from "./RolesField.vue";
+import CustomerTypeSelector from "../customertypes/CustomerTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -59,7 +59,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     DialogForm,
     FormText,
     FormTextArea,
-    RolesField
+    CustomerTypeSelector
   },
   validations: {
     token: {
@@ -69,23 +69,23 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     name: {
       required
     },
-    description: {
+    customerTypeToken: {
       required
     }
   }
 })
-export default class DeviceGroupDetailFields extends DialogSection {
+export default class CustomerDetailFields extends DialogSection {
   token: string | null = null;
   name: string | null = null;
+  customerTypeToken: string | null = null;
   description: string | null = null;
-  roles: string[] = [];
 
   /** Reset section content */
   reset(): void {
     this.token = null;
     this.name = null;
+    this.customerTypeToken = null;
     this.description = null;
-    this.roles = [];
     this.$v.$reset();
   }
 
@@ -99,8 +99,8 @@ export default class DeviceGroupDetailFields extends DialogSection {
   load(input: {}): void {
     this.token = (input as any).token;
     this.name = (input as any).name;
+    this.customerTypeToken = (input as any).customerType.token;
     this.description = (input as any).description;
-    this.roles = (input as any).roles;
   }
 
   /** Save form data to an object */
@@ -108,8 +108,8 @@ export default class DeviceGroupDetailFields extends DialogSection {
     return {
       token: this.token,
       name: this.name,
-      description: this.description,
-      roles: this.roles
+      customerTypeToken: this.customerTypeToken,
+      description: this.description
     };
   }
 }

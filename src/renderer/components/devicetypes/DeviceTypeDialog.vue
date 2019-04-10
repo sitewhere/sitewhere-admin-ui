@@ -4,6 +4,7 @@
     :icon="icon"
     :title="title"
     :width="width"
+    :loaded="loaded"
     :visible="dialogVisible"
     :createLabel="createLabel"
     :cancelLabel="cancelLabel"
@@ -52,7 +53,7 @@ import { IDeviceType } from "sitewhere-rest-api";
     MetadataPanel
   }
 })
-export default class TenantDialog extends DialogComponent<IDeviceType> {
+export default class DeviceTypeDialog extends DialogComponent<IDeviceType> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;

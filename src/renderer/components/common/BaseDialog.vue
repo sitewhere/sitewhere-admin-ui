@@ -8,11 +8,15 @@
         </v-toolbar-title>
       </v-toolbar>
       <error-banner :error="error"></error-banner>
+
       <v-card-text class="pa-0">
-        <v-tabs v-model="active">
-          <slot name="tabs"/>
-          <slot name="tab-items"/>
-        </v-tabs>
+        <div style="position: relative;">
+          <v-tabs v-model="active">
+            <slot name="tabs"/>
+            <slot name="tab-items"/>
+          </v-tabs>
+          <loading-overlay v-if="!loaded" :loadingMessage="loadingMessage"/>
+        </div>
       </v-card-text>
       <v-card-actions v-if="!hideButtons">
         <v-spacer></v-spacer>
@@ -33,17 +37,20 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import ErrorBanner from "../common/ErrorBanner.vue";
+import LoadingOverlay from "../common/LoadingOverlay.vue";
+
 import { ITabbedComponent } from "../../libraries/navigation-model";
 import { NavigationIcon } from "../../libraries/constants";
 
 @Component({
   components: {
-    ErrorBanner
+    ErrorBanner,
+    LoadingOverlay
   }
 })
 export default class BaseDialog extends Vue implements ITabbedComponent {
   @Prop() readonly title!: string;
-  @Prop() readonly width!: number;
+  @Prop({ default: 600 }) readonly width!: number;
   @Prop({ default: NavigationIcon.Device }) readonly icon!: NavigationIcon;
   @Prop({ default: true }) readonly visible!: boolean;
   @Prop() readonly createLabel!: string;
@@ -52,6 +59,8 @@ export default class BaseDialog extends Vue implements ITabbedComponent {
   @Prop() readonly hideButtons!: boolean;
   @Prop() readonly hideCreate!: boolean;
   @Prop() readonly invalid!: boolean;
+  @Prop({ default: true }) readonly loaded!: boolean;
+  @Prop({ default: "Loading..." }) readonly loadingMessage!: string;
 
   active: string | null = null;
 

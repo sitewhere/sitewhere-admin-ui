@@ -42,10 +42,7 @@
 </template>
 
 <script lang="ts">
-import {
-  DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
+import { DetailComponent } from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
@@ -59,7 +56,7 @@ import { SiteWhereUiSettings } from "../../store";
 import { handleError } from "../common/Utils";
 import { AxiosPromise, AxiosResponse } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
+import { INavigationSection } from "../../libraries/navigation-model";
 import {
   getConfigurationModel,
   getGlobalConfiguration,

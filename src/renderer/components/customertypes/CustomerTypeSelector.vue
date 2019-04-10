@@ -1,64 +1,69 @@
 <template>
-  <v-select
+  <form-select
     :items="customerTypes"
+    :title="title || `Choose type of customer`"
+    :label="label || `Customer Type`"
     item-text="name"
-    item-value="id"
-    v-model="selectedId"
-    label="Customer type"
-    prepend-icon="subject"
-  ></v-select>
+    item-value="token"
+    v-model="wrapped"
+    icon="settings"
+  >
+    <slot/>
+  </form-select>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
+
+import FormSelect from "../common/form/FormSelect.vue";
+
+import { handleError } from "../common/Utils";
+import { AxiosResponse } from "axios";
 import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
+import {
+  ICustomerType,
+  ICustomerTypeResponseFormat,
+  ICustomerTypeSearchCriteria,
+  ICustomerTypeSearchResults
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    customerTypes: [],
-    selectedId: null
-  }),
+@Component({
+  components: {
+    FormSelect
+  }
+})
+export default class CustomerTypeSelector extends Vue {
+  @Prop(String) readonly value!: string;
+  @Prop(String) readonly title!: string;
+  @Prop(String) readonly label!: string;
 
-  props: ["value"],
+  customerTypes: ICustomerType[] = [];
 
-  computed: {
-    // Indexes customer types by id.
-    customerTypesById: function() {
-      let cts = this.$data.customerTypes;
-      let ctById = {};
-      if (cts) {
-        for (let i = 0; i < cts.length; i++) {
-          let ct = cts[i];
-          ctById[ct.id] = ct;
-        }
-      }
-      return ctById;
+  get wrapped(): string {
+    return this.value;
+  }
+
+  set wrapped(updated: string) {
+    this.$emit("input", updated);
+  }
+
+  async created() {
+    let criteria: ICustomerTypeSearchCriteria = {
+      pageNumber: 1,
+      pageSize: 0
+    };
+    let format: ICustomerTypeResponseFormat = {};
+    try {
+      let response: AxiosResponse<
+        ICustomerTypeSearchResults
+      > = await listCustomerTypes(this.$store, criteria, format);
+      this.customerTypes = response.data.results;
+    } catch (err) {
+      handleError(err);
     }
-  },
-
-  watch: {
-    value: function(updated) {
-      this.$data.selectedId = updated;
-    },
-    selectedId: function(updated) {
-      this.$emit("input", updated);
-      this.$emit("customerTypeUpdated", this.customerTypesById[updated]);
-    }
-  },
-
-  // Initially load list of all area types.
-  created: function() {
-    this.$data.selectedId = this.value;
-    var paging = "page=1&pageSize=0";
-    var component = this;
-    listCustomerTypes(this.$store, false, paging)
-      .then(function(response) {
-        component.$data.customerTypes = response.data.results;
-      })
-      .catch(function(e) {});
-  },
-
-  methods: {}
-};
+  }
+}
 </script>
 
 <style scoped>

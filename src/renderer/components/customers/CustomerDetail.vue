@@ -61,7 +61,10 @@
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
+import {
+  DetailComponent,
+  DialogComponent
+} from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
@@ -81,7 +84,7 @@ import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
+import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getCustomer } from "../../rest/sitewhere-customers-api";
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
 
@@ -101,8 +104,13 @@ import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class CustomerDetail extends DetailComponent<ICustomer> {
-  active: string | null = null;
   parentCustomer: ICustomer | null = null;
+
+  // References.
+  $refs!: Refs<{
+    edit: CustomerUpdateDialog;
+    delete: DialogComponent<ICustomer>;
+  }>;
 
   /** Get record as customer */
   get customer(): ICustomer | null {
@@ -146,7 +154,9 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
 
   // Called to open area edit dialog.
   onEdit() {
-    (this.$refs["edit"] as any).onOpenDialog();
+    if (this.token) {
+      this.$refs.edit.open(this.token);
+    }
   }
 
   // Called to add a subcustomer.

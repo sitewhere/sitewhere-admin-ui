@@ -1,63 +1,62 @@
 <template>
-  <div>
-    <customer-type-dialog
-      ref="dialog"
-      title="Create Customer Type"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-      :customerTypes="customerTypes"
-    ></customer-type-dialog>
-  </div>
+  <customer-type-dialog
+    ref="dialog"
+    title="Create Customer Type"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import CustomerTypeDialog from "./CustomerTypeDialog";
+<script lang="ts">
+import {
+  CreateDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import CustomerTypeDialog from "./CustomerTypeDialog.vue";
+
+import { AxiosPromise } from "axios";
+import { ICustomerType, ICustomerTypeCreateRequest } from "sitewhere-rest-api";
 import { createCustomerType } from "../../rest/sitewhere-customer-types-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
-    CustomerTypeDialog,
-    FloatingActionButton
-  },
-
-  props: ["customerTypes"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      createCustomerType(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("customerTypeAdded");
-    }
+    CustomerTypeDialog
   }
-};
+})
+export default class CustomerTypeCreateDialog extends CreateDialogComponent<
+  ICustomerType,
+  ICustomerTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<ICustomerType>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<ICustomerType> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: ICustomerTypeCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: ICustomerTypeCreateRequest): AxiosPromise<ICustomerType> {
+    return createCustomerType(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ICustomerType): void {
+    this.$emit("customerTypeAdded", payload);
+  }
+}
 </script>
 
 <style scoped>

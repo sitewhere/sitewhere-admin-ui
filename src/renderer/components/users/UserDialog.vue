@@ -4,6 +4,7 @@
     :icon="icon"
     :title="title"
     :width="width"
+    :loaded="loaded"
     :visible="dialogVisible"
     :createLabel="createLabel"
     :cancelLabel="cancelLabel"

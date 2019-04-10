@@ -167,6 +167,7 @@ export class DialogComponent<T> extends Vue {
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;
   @Prop() readonly cancelLabel!: string;
+  @Prop({ default: true }) readonly loaded!: boolean;
 
   dialogVisible: boolean = false;
   error: string | null = null;
@@ -247,6 +248,7 @@ export class CreateDialogComponent<T, R> extends Vue {
  */
 export class EditDialogComponent<T, R> extends Vue {
   record: T | null = null;
+  loaded: boolean = false;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<T> {
@@ -269,15 +271,17 @@ export class EditDialogComponent<T, R> extends Vue {
     if (!identifier) {
       throw new Error("Identifier must be passed for edit.");
     }
+    this.getDialog().openDialog();
     this.getDialog().reset();
+    this.loaded = false;
     try {
       let response: AxiosResponse<T> = await this.prepareLoad(identifier);
       this.record = response.data;
-      this.getDialog().openDialog();
       this.getDialog().load(this.record);
     } catch (err) {
       handleError(err);
     }
+    this.loaded = true;
   }
 
   /** Implemented in subclasses to save payload */
