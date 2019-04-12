@@ -31,7 +31,10 @@
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
+import {
+  DetailComponent,
+  DialogComponent
+} from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
@@ -47,7 +50,7 @@ import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
+import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getAreaType } from "../../rest/sitewhere-area-types-api";
 import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
 
@@ -63,6 +66,12 @@ import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class AreaTypeDetail extends DetailComponent<IAreaType> {
+  // References.
+  $refs!: Refs<{
+    edit: AreaTypeUpdateDialog;
+    delete: DialogComponent<IAreaType>;
+  }>;
+
   /** Record as area type */
   get areaType(): IAreaType | null {
     return this.record;
@@ -103,7 +112,9 @@ export default class AreaTypeDetail extends DetailComponent<IAreaType> {
 
   // Called to open area type edit dialog.
   onEdit() {
-    (this.$refs["edit"] as any).onOpenDialog();
+    if (this.token) {
+      this.$refs.edit.open(this.token);
+    }
   }
 
   // Called when area type is updated.

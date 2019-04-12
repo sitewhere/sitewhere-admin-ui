@@ -21,7 +21,7 @@
       <asset-type-assets tabkey="assets" id="assets" ref="assets" :assetTypeToken="token"/>
     </template>
     <template slot="dialogs">
-      <asset-type-update-dialog ref="update" :token="token" @assetTypeUpdated="onAssetTypeUpdated"/>
+      <asset-type-update-dialog ref="edit" :token="token" @assetTypeUpdated="onAssetTypeUpdated"/>
       <asset-type-delete-dialog ref="delete" :token="token" @assetTypeDeleted="onAssetTypeDeleted"/>
     </template>
     <template slot="actions">
@@ -32,7 +32,10 @@
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
+import {
+  DetailComponent,
+  DialogComponent
+} from "../../libraries/component-model";
 import { Component } from "vue-property-decorator";
 
 import DetailPage from "../common/DetailPage.vue";
@@ -48,7 +51,7 @@ import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
+import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getAssetType } from "../../rest/sitewhere-asset-types-api";
 import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
 
@@ -64,6 +67,12 @@ import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class AssetTypeDetail extends DetailComponent<IAssetType> {
+  // References.
+  $refs!: Refs<{
+    edit: AssetTypeUpdateDialog;
+    delete: DialogComponent<IAssetType>;
+  }>;
+
   /** Record as asset type */
   get assetType(): IAssetType | null {
     return this.record;
@@ -104,7 +113,9 @@ export default class AssetTypeDetail extends DetailComponent<IAssetType> {
 
   // Called to open edit dialog.
   onEdit() {
-    (this.$refs["update"] as any).onOpenDialog();
+    if (this.token) {
+      this.$refs.edit.open(this.token);
+    }
   }
 
   // Called when asset type is updated.

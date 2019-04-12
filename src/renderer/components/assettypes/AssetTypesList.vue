@@ -38,6 +38,7 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
+import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAssetTypes } from "../../rest/sitewhere-asset-types-api";
@@ -63,6 +64,10 @@ export default class AreasList extends ListComponent<
   IAssetTypeResponseFormat,
   IAssetTypeSearchResults
 > {
+  $refs!: Refs<{
+    add: AssetTypeCreateDialog;
+  }>;
+
   /** Get page icon */
   get icon(): NavigationIcon {
     return NavigationIcon.AssetType;
@@ -96,7 +101,7 @@ export default class AreasList extends ListComponent<
 
   // Called to open dialog.
   onAddAssetType() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 }
 </script>

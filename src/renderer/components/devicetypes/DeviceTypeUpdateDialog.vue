@@ -35,7 +35,7 @@ import {
     DeviceTypeDialog
   }
 })
-export default class DeviceUpdateDialog extends EditDialogComponent<
+export default class DeviceTypeUpdateDialog extends EditDialogComponent<
   IDeviceType,
   IDeviceTypeCreateRequest
 > {

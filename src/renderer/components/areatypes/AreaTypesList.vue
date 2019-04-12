@@ -1,6 +1,6 @@
 <template>
   <list-page
-    icon="cog"
+    :icon="icon"
     title="Area Types"
     loadingMessage="Loading area types ..."
     :loaded="loaded"
@@ -33,6 +33,8 @@ import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../../store";
+import { NavigationIcon } from "../../libraries/constants";
+import { Refs } from "../../libraries/navigation-model";
 import { AxiosPromise } from "axios";
 import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
 import {
@@ -57,6 +59,15 @@ export default class AreaTypesList extends ListComponent<
   IAreaTypeResponseFormat,
   IAreaTypeSearchResults
 > {
+  $refs!: Refs<{
+    add: AreaTypeCreateDialog;
+  }>;
+
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.AreaType;
+  }
+
   /** Build search criteria for list */
   buildSearchCriteria(): IAreaTypeSearchCriteria {
     let criteria: IAreaTypeSearchCriteria = {};
@@ -91,7 +102,7 @@ export default class AreaTypesList extends ListComponent<
 
   // Called to open dialog.
   onAddAreaType() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 
   // Called when a new area type is added.

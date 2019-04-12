@@ -1,76 +1,78 @@
 <template>
-  <div>
-    <area-type-dialog
-      ref="dialog"
-      title="Edit Area Type"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Update"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-      :areaTypes="areaTypes"
-    ></area-type-dialog>
-  </div>
+  <area-type-dialog
+    ref="dialog"
+    title="Edit Area Type"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import AreaTypeDialog from "./AreaTypeDialog";
+<script lang="ts">
+import {
+  EditDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import AreaTypeDialog from "./AreaTypeDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  IAreaType,
+  IAreaTypeCreateRequest,
+  IAreaTypeResponseFormat
+} from "sitewhere-rest-api";
 import {
   getAreaType,
   updateAreaType
 } from "../../rest/sitewhere-area-types-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
-    FloatingActionButton,
     AreaTypeDialog
-  },
-
-  props: ["token", "areaTypes"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-      getAreaType(this.$store, this.token)
-        .then(function(response) {
-          component.onDataLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onDataLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateAreaType(this.$store, this.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("areaTypeUpdated");
-    }
   }
-};
+})
+export default class AreaTypeUpdateDialog extends EditDialogComponent<
+  IAreaType,
+  IAreaTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IAreaType>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IAreaType> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IAreaType> {
+    let format: IAreaTypeResponseFormat = {};
+    return getAreaType(this.$store, identifier, format);
+  }
+
+  /** Save payload */
+  prepareSave(
+    original: IAreaType,
+    updated: IAreaTypeCreateRequest
+  ): AxiosPromise<IAreaType> {
+    return updateAreaType(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: IAreaTypeCreateRequest): void {
+    this.save(payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IAreaType): void {
+    this.$emit("areaTypeUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>
