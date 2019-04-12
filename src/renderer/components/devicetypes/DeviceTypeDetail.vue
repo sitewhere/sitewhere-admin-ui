@@ -42,22 +42,15 @@
       </v-tab-item>
     </template>
     <template slot="actions">
+      <navigation-action-button icon="bolt" tooltip="Create Command" @action="onCommandCreate"/>
       <navigation-action-button icon="edit" tooltip="Edit Device Type" @action="onEdit"/>
       <navigation-action-button icon="times" tooltip="Delete Device Type" @action="onDelete"/>
     </template>
     <template slot="dialogs">
-      <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated"></device-type-update-dialog>
-      <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted"></device-type-delete-dialog>
-      <command-create-dialog
-        v-if="active === 'commands'"
-        :deviceType="deviceType"
-        @commandAdded="onCommandAdded"
-      />
-      <device-status-create-dialog
-        v-if="active === 'statuses'"
-        :deviceType="deviceType"
-        @statusAdded="onStatusAdded"
-      />
+      <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated"/>
+      <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted"/>
+      <command-create-dialog ref="command" :deviceType="deviceType" @commandAdded="onCommandAdded"/>
+      <device-status-create-dialog :deviceType="deviceType" @statusAdded="onStatusAdded"/>
     </template>
   </detail-page>
 </template>
@@ -112,6 +105,7 @@ import {
 export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
   // References.
   $refs!: Refs<{
+    command: CommandCreateDialog;
     edit: DeviceTypeUpdateDialog;
     delete: DialogComponent<IDeviceType>;
   }>;
@@ -158,6 +152,11 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
       longTitle: "Manage Device Type: " + deviceType.name
     };
     this.$store.commit("currentSection", section);
+  }
+
+  // Called on command create.
+  onCommandCreate() {
+    this.$refs.command.open();
   }
 
   // Called to open area edit dialog.

@@ -32,15 +32,17 @@ export function createDeviceCommand(
  * Get device command by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getDeviceCommand(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IDeviceCommandResponseFormat
 ): Promise<AxiosResponse<IDeviceCommand>> {
   let axios = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceCommand
-  > = SiteWhere.API.DeviceCommands.getDeviceCommand(axios, token);
+  > = SiteWhere.API.DeviceCommands.getDeviceCommand(axios, token, format);
   return loaderWrapper(store, api);
 }
 

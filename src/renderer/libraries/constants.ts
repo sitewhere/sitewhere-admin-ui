@@ -1,4 +1,5 @@
 import { ITableHeaders, IPageSizes } from "./navigation-model";
+import { ParameterType } from "sitewhere-rest-api";
 
 /**
  * Enumeration of navigation icons.
@@ -129,5 +130,68 @@ export const AlertHeaders: ITableHeaders = [
     sortable: false,
     text: "Received Date",
     value: "received"
+  }
+];
+
+// Command parameter types.
+export const ParameterTypes: {
+  text: string;
+  datatype: ParameterType;
+}[] = [
+  {
+    text: "String",
+    datatype: ParameterType.String
+  },
+  {
+    text: "Double",
+    datatype: ParameterType.Double
+  },
+  {
+    text: "Float",
+    datatype: ParameterType.Float
+  },
+  {
+    text: "Boolean",
+    datatype: ParameterType.Bool
+  },
+  {
+    text: "Int32",
+    datatype: ParameterType.Int32
+  },
+  {
+    text: "Int64",
+    datatype: ParameterType.Int64
+  },
+  {
+    text: "UInt32",
+    datatype: ParameterType.UInt32
+  },
+  {
+    text: "UInt64",
+    datatype: ParameterType.UInt64
+  },
+  {
+    text: "SInt32",
+    datatype: ParameterType.SInt32
+  },
+  {
+    text: "SInt64",
+    datatype: ParameterType.SInt64
+  },
+  {
+    text: "Fixed32",
+    datatype: ParameterType.Fixed32
+  },
+  {
+    text: "Fixed64",
+    datatype: ParameterType.Fixed64
+  },
+  {
+    text: "SFixed32",
+    datatype: ParameterType.SFixed32
+  },
+  {
+    text: "SFixed64",
+    datatype: ParameterType.SFixed64
   }
 ];

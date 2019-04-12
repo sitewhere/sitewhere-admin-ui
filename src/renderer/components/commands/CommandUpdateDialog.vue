@@ -1,68 +1,80 @@
 <template>
-  <span>
-    <command-dialog
-      title="Edit Device Command"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Update"
-      cancelLabel="Cancel"
-      :deviceType="deviceType"
-      @payload="onCommit"
-    ></command-dialog>
-  </span>
+  <command-dialog
+    ref="dialog"
+    title="Edit Command"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import CommandDialog from "./CommandDialog";
+<script lang="ts">
+import {
+  EditDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component, Prop } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import CommandDialog from "./CommandDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  IDeviceCommand,
+  IDeviceCommandCreateRequest,
+  IDeviceCommandResponseFormat
+} from "sitewhere-rest-api";
 import {
   getDeviceCommand,
   updateDeviceCommand
 } from "../../rest/sitewhere-device-commands-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     CommandDialog
-  },
-
-  props: ["token", "deviceType"],
-
-  methods: {
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-      getDeviceCommand(this.$store, this.token)
-        .then(function(response) {
-          component.onLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onLoaded: function(response) {
-      this.$children[0].load(response.data);
-      this.$children[0].openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateDeviceCommand(this.$store, this.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.$children[0].closeDialog();
-      this.$emit("edited");
-    }
   }
-};
+})
+export default class CommandUpdateDialog extends EditDialogComponent<
+  IDeviceCommand,
+  IDeviceCommandCreateRequest
+> {
+  @Prop() readonly deviceTypeToken!: string;
+
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceCommand>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceCommand> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IDeviceCommand> {
+    let format: IDeviceCommandResponseFormat = { includeCustomerType: true };
+    return getDeviceCommand(this.$store, identifier, format);
+  }
+
+  /** Save payload */
+  prepareSave(
+    original: IDeviceCommand,
+    updated: IDeviceCommandCreateRequest
+  ): AxiosPromise<IDeviceCommand> {
+    return updateDeviceCommand(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: IDeviceCommandCreateRequest): void {
+    this.save(payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceCommand): void {
+    this.$emit("commandUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>
