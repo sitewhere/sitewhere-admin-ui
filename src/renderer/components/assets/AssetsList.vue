@@ -33,7 +33,7 @@ import AssetCreateDialog from "./AssetCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { Store } from "vuex";
-import { IPageSizes } from "../../libraries/navigation-model";
+import { IPageSizes, Refs } from "../../libraries/navigation-model";
 import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -61,6 +61,10 @@ export default class AssetsList extends ListComponent<
   IAssetResponseFormat,
   IAssetSearchResults
 > {
+  $refs!: Refs<{
+    add: AssetCreateDialog;
+  }>;
+
   pageSizes: IPageSizes = [
     {
       text: "20",
@@ -110,7 +114,7 @@ export default class AssetsList extends ListComponent<
 
   // Called to open dialog.
   onAddAsset() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 }
 </script>

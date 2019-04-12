@@ -4,7 +4,7 @@
       <form-text
         required
         label="Token"
-        title="Unique token for referencing device type."
+        title="Unique token for referencing asset type."
         v-model="token"
         icon="info"
       >
@@ -16,7 +16,7 @@
       <form-text
         required
         label="Name"
-        title="Name displayed for device type."
+        title="Name displayed for asset type."
         v-model="name"
         icon="info"
       >
@@ -24,29 +24,9 @@
       </form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text-area
-        required
-        v-model="description"
-        title="Device type description."
-        label="Description"
-        icon="info"
-      >
-        <span v-if="$v.description.$invalid && $v.$dirty">Description is required.</span>
-      </form-text-area>
-    </v-flex>
-    <v-flex xs12>
-      <form-select
-        required
-        title="Template used for initial tenant configuration."
-        :items="containerPolicies"
-        v-model="containerPolicy"
-        label="Container Policy"
-        item-text="text"
-        item-value="value"
-        icon="developer_board"
-      >
-        <span v-if="$v.containerPolicy.$invalid && $v.$dirty">Container policy is required.</span>
-      </form-select>
+      <asset-type-selector v-model="assetTypeToken" title="Type of asset being created.">
+        <span v-if="$v.assetTypeToken.$invalid && $v.$dirty">Asset type is required.</span>
+      </asset-type-selector>
     </v-flex>
   </dialog-form>
 </template>
@@ -57,8 +37,7 @@ import { Component } from "vue-property-decorator";
 
 import DialogForm from "../common/form/DialogForm.vue";
 import FormText from "../common/form/FormText.vue";
-import FormTextArea from "../common/form/FormTextArea.vue";
-import FormSelect from "../common/form/FormSelect.vue";
+import AssetTypeSelector from "../assettypes/AssetTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -69,8 +48,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
   components: {
     DialogForm,
     FormText,
-    FormTextArea,
-    FormSelect
+    AssetTypeSelector
   },
   validations: {
     token: {
@@ -80,10 +58,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     name: {
       required
     },
-    description: {
-      required
-    },
-    containerPolicy: {
+    assetTypeToken: {
       required
     }
   }
@@ -91,26 +66,13 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 export default class DeviceTypeDetailFields extends DialogSection {
   token: string | null = null;
   name: string | null = null;
-  description: string | null = null;
-  containerPolicy: string | null = null;
-
-  containerPolicies: { text: string; value: string }[] = [
-    {
-      text: "Standalone Device",
-      value: "Standalone"
-    },
-    {
-      text: "Composite Device",
-      value: "Composite"
-    }
-  ];
+  assetTypeToken: string | null = null;
 
   /** Reset section content */
   reset(): void {
     this.token = null;
     this.name = null;
-    this.description = null;
-    this.containerPolicy = null;
+    this.assetTypeToken = null;
     this.$v.$reset();
   }
 
@@ -124,8 +86,7 @@ export default class DeviceTypeDetailFields extends DialogSection {
   load(input: {}): void {
     this.token = (input as any).token;
     this.name = (input as any).name;
-    this.description = (input as any).description;
-    this.containerPolicy = (input as any).containerPolicy;
+    this.assetTypeToken = (input as any).assetType.token;
   }
 
   /** Save form data to an object */
@@ -133,8 +94,7 @@ export default class DeviceTypeDetailFields extends DialogSection {
     return {
       token: this.token,
       name: this.name,
-      description: this.description,
-      containerPolicy: this.containerPolicy
+      assetTypeToken: this.assetTypeToken
     };
   }
 }

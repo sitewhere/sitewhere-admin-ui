@@ -1,72 +1,75 @@
 <template>
-  <div>
-    <asset-dialog
-      ref="dialog"
-      title="Edit Asset"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Update"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-    ></asset-dialog>
-  </div>
+  <asset-dialog
+    ref="dialog"
+    title="Edit Asset"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import AssetDialog from "./AssetDialog";
+<script lang="ts">
+import {
+  EditDialogComponent,
+  DialogComponent
+} from "../../libraries/component-model";
+import { Component } from "vue-property-decorator";
+import { Refs } from "../../libraries/navigation-model";
 
+import AssetDialog from "./AssetDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  IAsset,
+  IAssetCreateRequest,
+  IAssetResponseFormat
+} from "sitewhere-rest-api";
 import { getAsset, updateAsset } from "../../rest/sitewhere-assets-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
-    FloatingActionButton,
     AssetDialog
-  },
-
-  props: ["token"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-      getAsset(this.$store, this.token)
-        .then(function(response) {
-          component.onDataLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onDataLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateAsset(this.$store, this.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("assetUpdated");
-    }
   }
-};
+})
+export default class AssetUpdateDialog extends EditDialogComponent<
+  IAsset,
+  IAssetCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IAsset>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IAsset> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IAsset> {
+    let format: IAssetResponseFormat = { includeAssetType: true };
+    return getAsset(this.$store, identifier, format);
+  }
+
+  /** Save payload */
+  prepareSave(
+    original: IAsset,
+    updated: IAssetCreateRequest
+  ): AxiosPromise<IAsset> {
+    return updateAsset(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: IAssetCreateRequest): void {
+    this.save(payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IAsset): void {
+    this.$emit("assetUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>
