@@ -43,20 +43,22 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
 import DataTableTab from "../common/DataTableTab.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
 import ZoneUpdateDialog from "./ZoneUpdateDialog.vue";
 import ZoneDeleteDialog from "./ZoneDeleteDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { formatDate } from "../common/Utils";
 import { listZones } from "../../rest/sitewhere-zones-api";
-import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import {
   IZone,
   IZoneSearchCriteria,
@@ -145,11 +147,10 @@ export default class AreaZones extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IZoneSearchCriteria,
     format: IZoneResponseFormat
   ): AxiosPromise<IZoneSearchResults> {
-    return listZones(store, criteria, format);
+    return listZones(this.$store, criteria, format);
   }
 
   /** Make function available to template */

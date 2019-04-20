@@ -86,9 +86,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
 
-import { IPaging, IPageSizes } from "../../libraries/navigation-model";
+import {
+  Component,
+  Prop,
+  Watch,
+  IPaging,
+  IPageSizes
+} from "sitewhere-ide-common";
 
 @Component
 export default class Pager extends Vue {

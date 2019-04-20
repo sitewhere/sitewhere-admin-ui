@@ -33,13 +33,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import ErrorBanner from "../common/ErrorBanner.vue";
 import LoadingOverlay from "../common/LoadingOverlay.vue";
 
-import { ITabbedComponent } from "../../libraries/navigation-model";
+import { ITabbedComponent } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 
 @Component({

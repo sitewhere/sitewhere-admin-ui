@@ -26,8 +26,7 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -35,10 +34,7 @@ import DeviceGroupListEntry from "./DeviceGroupListEntry.vue";
 import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDeviceGroups } from "../../rest/sitewhere-device-groups-api";
@@ -87,11 +83,10 @@ export default class DeviceGroupsList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceGroupSearchCriteria,
     format: IDeviceGroupResponseFormat
   ): AxiosPromise<IDeviceGroupSearchResults> {
-    return listDeviceGroups(store, criteria, format);
+    return listDeviceGroups(this.$store, criteria, format);
   }
 
   // Called to open detail page for group.

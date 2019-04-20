@@ -32,10 +32,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -45,12 +47,9 @@ import AreaTypeDeleteDialog from "./AreaTypeDeleteDialog.vue";
 import AreaTypeUpdateDialog from "./AreaTypeUpdateDialog.vue";
 import AreaListEntry from "../areas/AreaListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getAreaType } from "../../rest/sitewhere-area-types-api";
 import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
 
@@ -88,14 +87,11 @@ export default class AreaTypeDetail extends DetailComponent<IAreaType> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<IAreaType> {
+  loadRecord(token: string): AxiosPromise<IAreaType> {
     let format: IAreaTypeResponseFormat = {
       includeContainedAreaTypes: false
     };
-    return getAreaType(store, token, format);
+    return getAreaType(this.$store, token, format);
   }
 
   // Called after data is loaded.

@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import ListEntry from "../common/ListEntry.vue";

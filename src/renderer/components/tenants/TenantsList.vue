@@ -26,8 +26,7 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -35,10 +34,7 @@ import TenantListEntry from "./TenantListEntry.vue";
 import TenantCreateDialog from "./TenantCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
-import { Refs } from "../../libraries/navigation-model";
 import { NavigationIcon } from "../../libraries/constants";
 import { listTenants } from "../../rest/sitewhere-tenants-api";
 import {
@@ -86,11 +82,10 @@ export default class TenantsList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: ITenantSearchCriteria,
     format: ITenantResponseFormat
   ): AxiosPromise<ITenantSearchResults> {
-    return listTenants(store, criteria, format);
+    return listTenants(this.$store, criteria, format);
   }
 
   // Called to open tenant management for tenant.

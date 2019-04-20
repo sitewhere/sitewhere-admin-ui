@@ -35,8 +35,12 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import {
+  Component,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
@@ -44,12 +48,9 @@ import ScheduleCreateDialog from "./ScheduleCreateDialog.vue";
 import ScheduleUpdateDialog from "./ScheduleUpdateDialog.vue";
 import ScheduleDeleteDialog from "./ScheduleDeleteDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate } from "../common/Utils";
 import { AxiosPromise } from "axios";
-import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import { listSchedules } from "../../rest/sitewhere-schedules-api";
 import {
   ISchedule,
@@ -139,11 +140,10 @@ export default class SchedulesList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IScheduleSearchCriteria,
     format: IScheduleResponseFormat
   ): AxiosPromise<IScheduleSearchResults> {
-    return listSchedules(store, criteria, format);
+    return listSchedules(this.$store, criteria, format);
   }
 
   // Called to open dialog.

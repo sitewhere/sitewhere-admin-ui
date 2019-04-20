@@ -22,8 +22,7 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -31,10 +30,7 @@ import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
@@ -84,12 +80,12 @@ export default class CustomersList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: ICustomerSearchCriteria,
     format: ICustomerResponseFormat
   ): AxiosPromise<ICustomerSearchResults> {
-    return listCustomers(store, criteria, format);
+    return listCustomers(this.$store, criteria, format);
   }
+
   // Called to open a customer.
   onOpenCustomer(customer: ICustomer) {
     routeTo(this, "/customers/" + customer.token);

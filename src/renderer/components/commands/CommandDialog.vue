@@ -32,12 +32,14 @@
 
 <script lang="ts">
 import {
+  Component,
+  Prop,
   DialogComponent,
-  DialogSection
-} from "../../libraries/component-model";
-import { ITabbedComponent, Refs } from "../../libraries/navigation-model";
+  DialogSection,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
-import { Component, Prop } from "vue-property-decorator";
 
 import BaseDialog from "../common/BaseDialog.vue";
 import CommandDetailFields from "./CommandDetailFields.vue";
@@ -88,7 +90,7 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
     if (this.$refs.details) {
       this.$refs.details.reset();
     }
-    if (this.$refs.branding) {
+    if (this.$refs.parameters) {
       this.$refs.parameters.reset();
     }
     if (this.$refs.metadata) {
@@ -103,7 +105,7 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
     if (this.$refs.details) {
       this.$refs.details.load(payload);
     }
-    if (this.$refs.branding) {
+    if (this.$refs.parameters) {
       this.$refs.parameters.load(payload);
     }
     if (this.$refs.metadata) {
@@ -119,7 +121,7 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
     }
 
     if (!this.$refs.parameters.validate()) {
-      this.$refs.dialog.setActiveTab("branding");
+      this.$refs.dialog.setActiveTab("parameters");
       return;
     }
 

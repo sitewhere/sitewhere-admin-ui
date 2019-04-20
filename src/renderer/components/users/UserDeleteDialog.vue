@@ -12,10 +12,8 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
-
 import DeleteDialog from "../common/DeleteDialog.vue";
-import { DeleteDialogComponent } from "../../libraries/component-model";
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import { IUser, IUserResponseFormat } from "sitewhere-rest-api";

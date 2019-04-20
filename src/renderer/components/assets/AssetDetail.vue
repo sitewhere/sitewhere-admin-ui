@@ -33,10 +33,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -45,12 +47,9 @@ import AssetAssignments from "./AssetAssignments.vue";
 import AssetDeleteDialog from "./AssetDeleteDialog.vue";
 import AssetUpdateDialog from "./AssetUpdateDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getAsset } from "../../rest/sitewhere-assets-api";
 import {
   IAsset,
@@ -91,14 +90,11 @@ export default class AreaDetail extends DetailComponent<IAsset> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<IAsset> {
+  loadRecord(token: string): AxiosPromise<IAsset> {
     let format: IAssetResponseFormat = {
       includeAssetType: true
     };
-    return getAsset(store, token, format);
+    return getAsset(this.$store, token, format);
   }
 
   // Called after data is loaded.

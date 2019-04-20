@@ -33,10 +33,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -46,12 +48,9 @@ import AssetTypeDeleteDialog from "./AssetTypeDeleteDialog.vue";
 import AssetTypeUpdateDialog from "./AssetTypeUpdateDialog.vue";
 import AssetListEntry from "../assets/AssetListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getAssetType } from "../../rest/sitewhere-asset-types-api";
 import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
 
@@ -89,14 +88,11 @@ export default class AssetTypeDetail extends DetailComponent<IAssetType> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<IAssetType> {
+  loadRecord(token: string): AxiosPromise<IAssetType> {
     let format: IAssetTypeResponseFormat = {
       includeContainedAreaTypes: false
     };
-    return getAssetType(store, token, format);
+    return getAssetType(this.$store, token, format);
   }
 
   // Called after data is loaded.

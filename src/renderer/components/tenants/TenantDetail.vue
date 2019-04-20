@@ -30,10 +30,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -42,12 +44,9 @@ import TenantUpdateDialog from "./TenantUpdateDialog.vue";
 import TenantDeleteDialog from "./TenantDeleteDialog.vue";
 import MicroserviceList from "../microservice/MicroserviceList.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { handleError } from "../common/Utils";
 import { AxiosPromise, AxiosResponse } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
 import { getTenantTopology } from "../../rest/sitewhere-instance-api";
 import {
@@ -89,13 +88,10 @@ export default class TenantDetail extends DetailComponent<ITenant> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<ITenant> {
+  loadRecord(token: string): AxiosPromise<ITenant> {
     this.refreshTopology();
     let format: ITenantResponseFormat = {};
-    return getTenant(store, token, format);
+    return getTenant(this.$store, token, format);
   }
 
   /** Called after data is loaded */

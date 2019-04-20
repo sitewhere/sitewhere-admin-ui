@@ -22,14 +22,11 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import ListTab from "../common/ListTab.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDeviceAssignmentHistory } from "../../rest/sitewhere-devices-api";
@@ -75,12 +72,11 @@ export default class DeviceAssignmentHistory extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceAssignmentSearchCriteria,
     format: IDeviceAssignmentResponseFormat
   ): AxiosPromise<IDeviceAssignmentSearchResults> {
     return listDeviceAssignmentHistory(
-      store,
+      this.$store,
       this.deviceToken,
       criteria,
       format

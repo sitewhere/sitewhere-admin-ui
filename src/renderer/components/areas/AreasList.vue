@@ -22,8 +22,7 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -31,10 +30,7 @@ import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
@@ -86,11 +82,10 @@ export default class AreasList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IAreaSearchCriteria,
     format: IAreaResponseFormat
   ): AxiosPromise<IAreaSearchResults> {
-    return listAreas(store, criteria, format);
+    return listAreas(this.$store, criteria, format);
   }
 
   // Called to open an area.

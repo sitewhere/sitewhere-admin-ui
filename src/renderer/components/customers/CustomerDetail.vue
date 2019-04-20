@@ -62,10 +62,10 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
   DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -79,12 +79,10 @@ import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 import CustomerUpdateDialog from "./CustomerUpdateDialog.vue";
 import CustomerDeleteDialog from "./CustomerDeleteDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
+import { INavigationSection, Refs } from "sitewhere-ide-common";
 import { getCustomer } from "../../rest/sitewhere-customers-api";
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
 
@@ -128,15 +126,12 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<ICustomer> {
+  loadRecord(token: string): AxiosPromise<ICustomer> {
     let format: ICustomerResponseFormat = {
       includeCustomerType: true,
       includeParentCustomer: true
     };
-    return getCustomer(store, token, format);
+    return getCustomer(this.$store, token, format);
   }
 
   // Called after data is loaded.

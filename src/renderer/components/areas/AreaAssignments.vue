@@ -19,15 +19,12 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
@@ -74,11 +71,10 @@ export default class AreaAssignments extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceAssignmentSearchCriteria,
     format: IDeviceAssignmentResponseFormat
   ): AxiosPromise<IDeviceAssignmentSearchResults> {
-    return listDeviceAssignments(store, criteria, format);
+    return listDeviceAssignments(this.$store, criteria, format);
   }
 
   /** Open device assignment detail page */

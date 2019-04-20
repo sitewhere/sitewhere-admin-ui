@@ -11,11 +11,11 @@
 
 <script lang="ts">
 import {
+  Component,
   EditDialogComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
-import { Refs } from "../../libraries/navigation-model";
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
 import AreaTypeDialog from "./AreaTypeDialog.vue";
 

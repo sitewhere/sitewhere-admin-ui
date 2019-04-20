@@ -11,11 +11,12 @@
 
 <script lang="ts">
 import {
+  Component,
+  Prop,
   CreateDialogComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
-import { Refs } from "../../libraries/navigation-model";
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
 import CommandDialog from "./CommandDialog.vue";
 

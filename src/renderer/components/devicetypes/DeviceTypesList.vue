@@ -22,8 +22,7 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -31,10 +30,7 @@ import DeviceTypeListEntry from "./DeviceTypeListEntry.vue";
 import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
@@ -84,11 +80,10 @@ export default class DeviceTypesList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceTypeSearchCriteria,
     format: IDeviceTypeResponseFormat
   ): AxiosPromise<IDeviceTypeSearchResults> {
-    return listDeviceTypes(store, criteria, format);
+    return listDeviceTypes(this.$store, criteria, format);
   }
 
   // Called to open detail page.

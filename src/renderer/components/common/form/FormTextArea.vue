@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 
 @Component({})
 export default class FormText extends Vue {

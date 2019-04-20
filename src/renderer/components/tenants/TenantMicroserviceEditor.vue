@@ -33,7 +33,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
 
 import NavigationPage from "../common/NavigationPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -42,7 +41,7 @@ import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
 
 import { handleError } from "../common/Utils";
-import { WithRoute } from "../../libraries/navigation-model";
+import { Component, WithRoute } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import {
   getConfigurationModel,

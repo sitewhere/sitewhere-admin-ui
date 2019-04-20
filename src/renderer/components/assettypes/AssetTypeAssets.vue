@@ -16,15 +16,12 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
 import AssetListEntry from "../assets/AssetListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listAssets } from "../../rest/sitewhere-assets-api";
 import {
@@ -66,11 +63,10 @@ export default class AssetTypeAssets extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IAssetSearchCriteria,
     format: IAssetResponseFormat
   ): AxiosPromise<IAssetSearchResults> {
-    return listAssets(store, criteria, format);
+    return listAssets(this.$store, criteria, format);
   }
 }
 </script>

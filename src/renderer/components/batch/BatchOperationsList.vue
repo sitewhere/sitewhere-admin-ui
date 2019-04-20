@@ -53,17 +53,18 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import {
+  Component,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate, routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
-import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import { listBatchOperations } from "../../rest/sitewhere-batch-operations-api";
 import {
   IBatchOperation,
@@ -155,11 +156,10 @@ export default class BatchOperationsList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IBatchOperationSearchCriteria,
     format: IBatchOperationResponseFormat
   ): AxiosPromise<IBatchOperationSearchResults> {
-    return listBatchOperations(store, criteria, format);
+    return listBatchOperations(this.$store, criteria, format);
   }
 
   // Open detail page for batch operation.

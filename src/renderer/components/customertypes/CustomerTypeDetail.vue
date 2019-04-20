@@ -40,10 +40,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -54,12 +56,9 @@ import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog.vue";
 import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog.vue";
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
 import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
 
@@ -96,12 +95,9 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<ICustomerType> {
+  loadRecord(token: string): AxiosPromise<ICustomerType> {
     let format: ICustomerTypeResponseFormat = {};
-    return getCustomerType(store, token, format);
+    return getCustomerType(this.$store, token, format);
   }
 
   // Called after data is loaded.

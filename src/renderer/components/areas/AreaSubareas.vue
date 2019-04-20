@@ -18,16 +18,13 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
@@ -38,14 +35,14 @@ import {
   IAreaSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
+Component({
   components: {
     ListTab,
     ListLayout,
     AreaListEntry,
     AreaCreateDialog
   }
-})
+});
 export default class AreaSubareas extends ListComponent<
   IArea,
   IAreaSearchCriteria,
@@ -74,11 +71,10 @@ export default class AreaSubareas extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IAreaSearchCriteria,
     format: IAreaResponseFormat
   ): AxiosPromise<IAreaSearchResults> {
-    return listAreas(store, criteria, format);
+    return listAreas(this.$store, criteria, format);
   }
 
   // Called to open an area.

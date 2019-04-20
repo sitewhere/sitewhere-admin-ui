@@ -32,16 +32,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 
 import Pager from "./Pager.vue";
 import LoadingOverlay from "./LoadingOverlay.vue";
 
-import {
-  IPaging,
-  IPageSizes,
-  ITableHeaders
-} from "../../libraries/navigation-model";
+import { IPaging, IPageSizes, ITableHeaders } from "sitewhere-ide-common";
 
 @Component({
   components: {

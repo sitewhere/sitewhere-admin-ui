@@ -28,16 +28,18 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
 import DataTableTab from "../common/DataTableTab.vue";
 
-import { Store } from "vuex";
 import { formatDate } from "../common/Utils";
-import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import { EventPageSizes, AlertHeaders } from "../../libraries/constants";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listAlertsForCustomer } from "../../rest/sitewhere-customers-api";
 import {
@@ -79,11 +81,15 @@ export default class CustomerMeasurementEvents extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDateRangeSearchCriteria,
     format: IDeviceAlertResponseFormat
   ): AxiosPromise<IDeviceAlertSearchResults> {
-    return listAlertsForCustomer(store, this.customerToken, criteria, format);
+    return listAlertsForCustomer(
+      this.$store,
+      this.customerToken,
+      criteria,
+      format
+    );
   }
 
   /** Make function available to template */

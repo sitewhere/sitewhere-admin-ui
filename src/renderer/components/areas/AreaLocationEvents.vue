@@ -30,17 +30,19 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
 import DataTableTab from "../common/DataTableTab.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listLocationsForArea } from "../../rest/sitewhere-areas-api";
 import { formatDate, fourDecimalPlaces } from "../common/Utils";
-import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import { EventPageSizes, LocationHeaders } from "../../libraries/constants";
 import {
   IDeviceLocation,
@@ -81,11 +83,10 @@ export default class AreaLocationEvents extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDateRangeSearchCriteria,
     format: IDeviceLocationResponseFormat
   ): AxiosPromise<IDeviceLocationSearchResults> {
-    return listLocationsForArea(store, this.areaToken, criteria, format);
+    return listLocationsForArea(this.$store, this.areaToken, criteria, format);
   }
 
   /** Make function available to template */

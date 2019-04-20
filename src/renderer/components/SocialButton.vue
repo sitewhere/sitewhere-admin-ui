@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 
 import Electron from "electron";
 import { GoogleAnalytics } from "../libraries/google-analytics";

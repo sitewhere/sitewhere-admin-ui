@@ -26,8 +26,7 @@
 </template>
 
 <script lang="ts">
-import { HeaderComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, HeaderComponent } from "sitewhere-ide-common";
 
 import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
 import ClipboardCopyField from "../common/ClipboardCopyField.vue";

@@ -42,8 +42,7 @@
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, DetailComponent, INavigationSection } from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -51,12 +50,9 @@ import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
 import ScriptsManager from "../microservice/ScriptsManager.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { handleError } from "../common/Utils";
 import { AxiosPromise, AxiosResponse } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
 import {
   getConfigurationModel,
   getGlobalConfiguration,
@@ -98,12 +94,9 @@ export default class GlobalMicroserviceEditor extends DetailComponent<
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    identifier: string
-  ): AxiosPromise<IConfigurationModel> {
+  loadRecord(identifier: string): AxiosPromise<IConfigurationModel> {
     this.refreshGlobalConfiguration(identifier);
-    return getConfigurationModel(store, identifier);
+    return getConfigurationModel(this.$store, identifier);
   }
 
   /** Called after data is loaded */

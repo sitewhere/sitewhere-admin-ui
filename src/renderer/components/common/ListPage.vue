@@ -24,12 +24,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
 
 import NavigationPage from "../common/NavigationPage.vue";
 import Pager from "../common/Pager.vue";
 
-import { IPaging, IPageSizes } from "../../libraries/navigation-model";
+import { Component, Prop, IPaging, IPageSizes } from "sitewhere-ide-common";
 
 @Component({
   components: {

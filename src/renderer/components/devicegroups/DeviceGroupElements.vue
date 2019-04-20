@@ -46,17 +46,19 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
 import DataTableTab from "../common/DataTableTab.vue";
 import DeviceGroupElementDeleteDialog from "./DeviceGroupElementDeleteDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listDeviceGroupElements } from "../../rest/sitewhere-device-groups-api";
-import { IPageSizes, ITableHeaders } from "../../libraries/navigation-model";
 import { NavigationIcon } from "../../libraries/constants";
 import {
   IDeviceGroup,
@@ -142,12 +144,11 @@ export default class DeviceGroupElements extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceGroupElementSearchCriteria,
     format: IDeviceGroupElementResponseFormat
   ): AxiosPromise<IDeviceGroupElementSearchResults> {
     return listDeviceGroupElements(
-      store,
+      this.$store,
       this.deviceGroup.token,
       criteria,
       format

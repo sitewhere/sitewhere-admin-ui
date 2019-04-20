@@ -34,7 +34,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
 
 import InAppSystemBar from "./common/InAppSystemBar.vue";
 import InAppFooter from "./common/InAppFooter.vue";
@@ -43,7 +42,7 @@ import Navigation from "./common/Navigation.vue";
 import { handleError } from "./common/Utils";
 import { AxiosResponse } from "axios";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
-import { IAction, INavigationSection } from "../libraries/navigation-model";
+import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
 import { NavigationIcon } from "../libraries/constants";
 
 @Component({

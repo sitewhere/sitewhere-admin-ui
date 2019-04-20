@@ -30,8 +30,7 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -39,11 +38,8 @@ import CustomerTypeListEntry from "./CustomerTypeListEntry.vue";
 import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
 import { routeTo } from "../common/Utils";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { Refs } from "../../libraries/navigation-model";
 import { AxiosPromise } from "axios";
 import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
 import {
@@ -92,11 +88,10 @@ export default class CustomerTypesList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: ICustomerTypeSearchCriteria,
     format: ICustomerTypeResponseFormat
   ): AxiosPromise<ICustomerTypeSearchResults> {
-    return listCustomerTypes(store, criteria, format);
+    return listCustomerTypes(this.$store, criteria, format);
   }
 
   // Called when a customer type is clicked.

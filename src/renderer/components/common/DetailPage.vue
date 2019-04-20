@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 
 import NavigationPage from "../common/NavigationPage.vue";
 

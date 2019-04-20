@@ -1,4 +1,4 @@
-import { ITableHeaders, IPageSizes } from "./navigation-model";
+import { ITableHeaders, IPageSizes } from "sitewhere-ide-common";
 import { ParameterType } from "sitewhere-rest-api";
 
 /**

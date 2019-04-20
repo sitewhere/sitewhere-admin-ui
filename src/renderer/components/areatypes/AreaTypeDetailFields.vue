@@ -38,8 +38,7 @@
 </template>
 
 <script lang="ts">
-import { DialogSection } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, DialogSection } from "sitewhere-ide-common";
 
 import DialogForm from "../common/form/DialogForm.vue";
 import FormText from "../common/form/FormText.vue";

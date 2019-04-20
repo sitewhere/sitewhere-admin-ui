@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 import { IDeviceType } from "sitewhere-rest-api";
 
 import ContentTab from "../common/ContentTab.vue";

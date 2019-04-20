@@ -26,8 +26,7 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -35,10 +34,7 @@ import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAssetTypes } from "../../rest/sitewhere-asset-types-api";
@@ -87,11 +83,10 @@ export default class AreasList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IAssetTypeSearchCriteria,
     format: IAssetTypeResponseFormat
   ): AxiosPromise<IAssetTypeSearchResults> {
-    return listAssetTypes(store, criteria, format);
+    return listAssetTypes(this.$store, criteria, format);
   }
 
   // Called on open.

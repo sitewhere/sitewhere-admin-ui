@@ -28,10 +28,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -40,12 +42,9 @@ import DeviceAssignmentHistory from "./DeviceAssignmentHistory.vue";
 import DeviceUpdateDialog from "./DeviceUpdateDialog.vue";
 import DeviceDeleteDialog from "./DeviceDeleteDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getDevice } from "../../rest/sitewhere-devices-api";
 import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
 
@@ -80,15 +79,12 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<IDevice> {
+  loadRecord(token: string): AxiosPromise<IDevice> {
     let format: IDeviceResponseFormat = {
       includeDeviceType: true,
       includeAssignment: true
     };
-    return getDevice(store, token, format);
+    return getDevice(this.$store, token, format);
   }
 
   // Called after data is loaded.

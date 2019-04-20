@@ -23,8 +23,12 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import {
+  Component,
+  ListComponent,
+  IPageSizes,
+  Refs
+} from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -32,9 +36,6 @@ import AssetListEntry from "./AssetListEntry.vue";
 import AssetCreateDialog from "./AssetCreateDialog.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
 
-import { Store } from "vuex";
-import { IPageSizes, Refs } from "../../libraries/navigation-model";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -100,11 +101,10 @@ export default class AssetsList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IAssetSearchCriteria,
     format: IAssetResponseFormat
   ): AxiosPromise<IAssetSearchResults> {
-    return listAssets(store, criteria, format);
+    return listAssets(this.$store, criteria, format);
   }
 
   // Called on open.

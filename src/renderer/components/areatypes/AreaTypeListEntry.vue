@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop } from "sitewhere-ide-common";
 
 import { IAreaType } from "sitewhere-rest-api";
 import ListEntry from "../common/ListEntry.vue";

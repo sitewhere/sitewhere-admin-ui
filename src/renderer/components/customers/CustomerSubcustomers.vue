@@ -18,16 +18,13 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import ListTab from "../common/ListTab.vue";
 import ListLayout from "../common/ListLayout.vue";
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
@@ -74,11 +71,10 @@ export default class CustomerSubcustomers extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: ICustomerSearchCriteria,
     format: ICustomerResponseFormat
   ): AxiosPromise<ICustomerSearchResults> {
-    return listCustomers(store, criteria, format);
+    return listCustomers(this.$store, criteria, format);
   }
 
   /** Open device assignment detail page */

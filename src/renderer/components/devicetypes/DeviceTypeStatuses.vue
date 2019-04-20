@@ -31,15 +31,12 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import ListTab from "../common/ListTab.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import DeviceStatusListEntry from "../statuses/DeviceStatusListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listDeviceStatuses } from "../../rest/sitewhere-device-statuses-api";
 import {
@@ -82,11 +79,10 @@ export default class DeviceTypeStatuses extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceStatusSearchCriteria,
     format: IDeviceStatusResponseFormat
   ): AxiosPromise<IDeviceStatusSearchResults> {
-    return listDeviceStatuses(store, criteria, format);
+    return listDeviceStatuses(this.$store, criteria, format);
   }
 }
 </script>

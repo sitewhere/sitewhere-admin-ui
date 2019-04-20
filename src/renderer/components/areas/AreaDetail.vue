@@ -53,10 +53,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -72,12 +74,9 @@ import AreaUpdateDialog from "./AreaUpdateDialog.vue";
 import AreaDeleteDialog from "./AreaDeleteDialog.vue";
 import ZoneCreateDialog from "./ZoneCreateDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getArea } from "../../rest/sitewhere-areas-api";
 import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
 
@@ -123,14 +122,11 @@ export default class AreaDetail extends DetailComponent<IArea> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<IArea> {
+  loadRecord(token: string): AxiosPromise<IArea> {
     let format: IAreaResponseFormat = {
       includeAreaType: true
     };
-    return getArea(store, token, format);
+    return getArea(this.$store, token, format);
   }
 
   // Called after data is loaded.

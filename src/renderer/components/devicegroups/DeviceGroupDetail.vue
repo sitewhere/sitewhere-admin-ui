@@ -37,10 +37,12 @@
 
 <script lang="ts">
 import {
+  Component,
   DetailComponent,
-  DialogComponent
-} from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -50,12 +52,9 @@ import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog.vue";
 import DeviceGroupElements from "./DeviceGroupElements.vue";
 import DeviceGroupElementCreateDialog from "./DeviceGroupElementCreateDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection, Refs } from "../../libraries/navigation-model";
 import { getDeviceGroup } from "../../rest/sitewhere-device-groups-api";
 import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
 
@@ -94,14 +93,11 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<IDeviceGroup> {
+  loadRecord(token: string): AxiosPromise<IDeviceGroup> {
     let format: IDeviceGroupResponseFormat = {
       includeAsset: true
     };
-    return getDeviceGroup(store, token, format);
+    return getDeviceGroup(this.$store, token, format);
   }
 
   // Called after data is loaded.

@@ -25,15 +25,12 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import ListTab from "../common/ListTab.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import CommandNamespaceListEntry from "../commands/CommandNamespaceListEntry.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { listDeviceCommandsByNamespace } from "../../rest/sitewhere-device-commands-api";
 import {
@@ -76,11 +73,10 @@ export default class DeviceTypeCommands extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceCommandSearchCriteria,
     format: IDeviceCommandResponseFormat
   ): AxiosPromise<IDeviceCommandNamespaceSearchResults> {
-    return listDeviceCommandsByNamespace(store, criteria, format);
+    return listDeviceCommandsByNamespace(this.$store, criteria, format);
   }
 }
 </script>

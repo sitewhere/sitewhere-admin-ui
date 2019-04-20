@@ -18,17 +18,17 @@
 </template>
 
 <script lang="ts">
-import { DetailComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import {
+  Component,
+  DetailComponent,
+  INavigationSection
+} from "sitewhere-ide-common";
 
 import DetailPage from "../common/DetailPage.vue";
 import MicroserviceList from "../microservice/MicroserviceList.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { INavigationSection } from "../../libraries/navigation-model";
 import { getGlobalTopology } from "../../rest/sitewhere-instance-api";
 import { IInstanceTopologySummary } from "sitewhere-rest-api";
 
@@ -51,11 +51,8 @@ export default class GlobalMicroservicesList extends DetailComponent<
   }
 
   /** Load record */
-  loadRecord(
-    store: Store<SiteWhereUiSettings>,
-    token: string
-  ): AxiosPromise<IInstanceTopologySummary[]> {
-    return getGlobalTopology(store);
+  loadRecord(token: string): AxiosPromise<IInstanceTopologySummary[]> {
+    return getGlobalTopology(this.$store);
   }
 
   /** Called after data is loaded */

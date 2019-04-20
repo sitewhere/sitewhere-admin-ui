@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component } from "sitewhere-ide-common";
 
 @Component({})
 export default class DialogForm extends Vue {}

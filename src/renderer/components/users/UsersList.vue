@@ -48,8 +48,13 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import {
+  Component,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders,
+  Refs
+} from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import NavigationActionButton from "../common/NavigationActionButton.vue";
@@ -58,16 +63,10 @@ import UserCreateDialog from "./UserCreateDialog.vue";
 import UserUpdateDialog from "./UserUpdateDialog.vue";
 import UserDeleteDialog from "./UserDeleteDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate } from "../common/Utils";
 import { AxiosPromise } from "axios";
-import {
-  IPageSizes,
-  ITableHeaders,
-  Refs
-} from "../../libraries/navigation-model";
+
 import { listUsers } from "../../rest/sitewhere-users-api";
 import {
   IUser,
@@ -176,11 +175,10 @@ export default class UsersList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IUserSearchCriteria,
     format: IUserResponseFormat
   ): AxiosPromise<IUserSearchResults> {
-    return listUsers(store, criteria, format);
+    return listUsers(this.$store, criteria, format);
   }
 
   // Called to open dialog.

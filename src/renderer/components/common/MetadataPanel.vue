@@ -28,13 +28,12 @@
       </v-data-table>
     </v-card-text>
     <v-alert error :value="true" class="ma-0" style="width: 100%" v-if="error">{{error}}</v-alert>
-    <div class="data-entry" v-if="!readOnly">
+    <div v-if="!readOnly">
       <v-container fluid>
         <v-layout row>
-          <v-flex xs4>
+          <v-flex xs5 class="pr-3">
             <v-text-field light label="Name" placeholder=" " v-model="newItemName"/>
           </v-flex>
-          <v-flex xs1></v-flex>
           <v-flex xs6>
             <v-text-field light label="Value" placeholder=" " v-model="newItemValue"/>
           </v-flex>
@@ -53,11 +52,14 @@
 </template>
 
 <script lang="ts">
-import { DialogSection } from "../../libraries/component-model";
-import { Component, Prop } from "vue-property-decorator";
+import {
+  Component,
+  Prop,
+  DialogSection,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
 import { arrayToMetadata, metadataToArray } from "../common/Utils";
-import { ITableHeaders } from "../../libraries/navigation-model";
 
 @Component({})
 export default class MetadataPanel extends DialogSection {
@@ -183,9 +185,4 @@ export default class MetadataPanel extends DialogSection {
 </script>
 
 <style scoped>
-.data-entry {
-  background-color: #eee;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-}
 </style>

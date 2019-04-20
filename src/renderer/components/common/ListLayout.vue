@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component } from "sitewhere-ide-common";
 
 import Vue from "vue";
 

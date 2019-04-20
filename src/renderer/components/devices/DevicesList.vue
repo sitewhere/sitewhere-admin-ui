@@ -43,8 +43,12 @@
 </template>
 
 <script lang="ts">
-import { ListComponent } from "../../libraries/component-model";
-import { Component } from "vue-property-decorator";
+import {
+  Component,
+  ListComponent,
+  IPageSizes,
+  Refs
+} from "sitewhere-ide-common";
 
 import ListPage from "../common/ListPage.vue";
 import ListLayout from "../common/ListLayout.vue";
@@ -55,10 +59,7 @@ import DeviceCreateDialog from "./DeviceCreateDialog.vue";
 import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog.vue";
 import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
 
-import { Store } from "vuex";
-import { SiteWhereUiSettings } from "../../store";
 import { NavigationIcon } from "../../libraries/constants";
-import { IPageSizes, Refs } from "../../libraries/navigation-model";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listDevices } from "../../rest/sitewhere-devices-api";
@@ -128,11 +129,10 @@ export default class DevicesList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    store: Store<SiteWhereUiSettings>,
     criteria: IDeviceSearchCriteria,
     format: IDeviceResponseFormat
   ): AxiosPromise<IDeviceSearchResults> {
-    return listDevices(store, criteria, format);
+    return listDevices(this.$store, criteria, format);
   }
 
   // Called to show filter criteria dialog.

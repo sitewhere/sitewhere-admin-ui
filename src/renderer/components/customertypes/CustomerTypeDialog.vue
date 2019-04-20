@@ -36,12 +36,13 @@
 
 <script lang="ts">
 import {
+  Component,
   DialogComponent,
-  DialogSection
-} from "../../libraries/component-model";
-import { ITabbedComponent, Refs } from "../../libraries/navigation-model";
+  DialogSection,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
-import { Component } from "vue-property-decorator";
 
 import BaseDialog from "../common/BaseDialog.vue";
 import CustomerTypeDetailFields from "./CustomerTypeDetailFields.vue";
