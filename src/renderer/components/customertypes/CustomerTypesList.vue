@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Customer Types"
     loadingMessage="Loading customer types ..."
@@ -7,7 +7,7 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(customerType) in matches" :key="customerType.token">
         <customer-type-list-entry
           :customerType="customerType"
@@ -15,28 +15,25 @@
           @customerTypeDeleted="refresh"
         ></customer-type-list-entry>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches"/>
     </template>
     <template slot="actions">
-      <navigation-action-button
+      <sw-navigation-action-button
         icon="plus"
         tooltip="Add Customer Type"
         @action="onAddCustomerType"
       />
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
 import CustomerTypeListEntry from "./CustomerTypeListEntry.vue";
 import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { NavigationIcon } from "../../libraries/constants";
@@ -51,11 +48,8 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
     CustomerTypeListEntry,
-    CustomerTypeCreateDialog,
-    NavigationActionButton
+    CustomerTypeCreateDialog
   }
 })
 export default class CustomerTypesList extends ListComponent<

@@ -9,13 +9,13 @@
       <icon-selector v-model="icon"/>
     </v-flex>
     <v-flex xs12>
-      <color-input-field text="Background" v-model="backgroundColor"/>
+      <sw-color-input-field text="Background" v-model="backgroundColor"/>
     </v-flex>
     <v-flex xs12>
-      <color-input-field text="Foreground" v-model="foregroundColor"/>
+      <sw-color-input-field text="Foreground" v-model="foregroundColor"/>
     </v-flex>
     <v-flex xs12>
-      <color-input-field text="Border" v-model="borderColor"/>
+      <sw-color-input-field text="Border" v-model="borderColor"/>
     </v-flex>
   </dialog-form>
 </template>
@@ -26,8 +26,6 @@ import { Component, DialogSection } from "sitewhere-ide-common";
 import DialogForm from "../common/form/DialogForm.vue";
 import FormText from "../common/form/FormText.vue";
 import FormSelect from "../common/form/FormSelect.vue";
-import IconSelector from "../common/IconSelector.vue";
-import ColorInputField from "../common/ColorInputField.vue";
 
 import { url } from "vuelidate/lib/validators";
 
@@ -35,9 +33,7 @@ import { url } from "vuelidate/lib/validators";
   components: {
     DialogForm,
     FormText,
-    FormSelect,
-    IconSelector,
-    ColorInputField
+    FormSelect
   },
   validations: {
     imageUrl: { url }

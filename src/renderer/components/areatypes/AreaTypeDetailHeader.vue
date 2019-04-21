@@ -1,49 +1,37 @@
 <template>
-  <navigation-header-panel
+  <sw-navigation-header-panel
     v-if="areaType"
     :icon="areaType.icon"
     :qrCodeUrl="qrCodeUrl"
     height="200px"
   >
     <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="areaType.token" message="Token copied to clipboard"></clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="areaType.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-header-field label="Name">
         <span>{{ areaType.name }}</span>
-      </header-field>
-      <header-field label="Description">
+      </sw-header-field>
+      <sw-header-field label="Description">
         <span>{{ areaType.description }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(areaType.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(areaType.updatedDate) }}</span>
-      </header-field>
+      </sw-header-field>
     </span>
-  </navigation-header-panel>
+  </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
-import HeaderField from "../common/HeaderField.vue";
-import LinkedHeaderField from "../common/LinkedHeaderField.vue";
-import ClipboardCopyField from "../common/ClipboardCopyField.vue";
-
 import { formatDate } from "../common/Utils";
 import { IAreaType } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    LinkedHeaderField,
-    ClipboardCopyField
-  }
-})
+@Component({})
 export default class AreaTypeDetailHeader extends HeaderComponent<IAreaType> {
   // Reference record as area type.
   get areaType(): IAreaType {

@@ -1,26 +1,21 @@
 <template>
-  <div>
-    <navigation-page
-      icon="fa-microchip"
-      title="Manage Device States"
-      loadingMessage="Loading device states ..."
-      :loaded="loaded"
-    >
-      <div slot="actions"></div>
-      <div slot="content">
-        <v-card>
-          <v-card-text>Device States</v-card-text>
-        </v-card>
-        <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      </div>
-    </navigation-page>
-  </div>
+  <sw-navigation-page
+    icon="fa-microchip"
+    title="Manage Device States"
+    loadingMessage="Loading device states ..."
+    :loaded="loaded"
+  >
+    <div slot="actions"></div>
+    <div slot="content">
+      <v-card>
+        <v-card-text>Device States</v-card-text>
+      </v-card>
+      <sw-pager :results="results" @pagingUpdated="updatePaging"/>
+    </div>
+  </sw-navigation-page>
 </template>
 
 <script>
-import NavigationPage from "../common/NavigationPage";
-import Pager from "../common/Pager";
-
 import { searchDeviceStates } from "../../rest/sitewhere-device-states-api";
 
 export default {
@@ -30,11 +25,6 @@ export default {
     deviceStates: null,
     loaded: false
   }),
-
-  components: {
-    NavigationPage,
-    Pager
-  },
 
   methods: {
     // Update paging values and run query.

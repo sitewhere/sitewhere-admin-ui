@@ -1,5 +1,5 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -18,13 +18,12 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </list-tab>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
 import { routeTo } from "../common/Utils";
@@ -39,7 +38,6 @@ import {
 
 @Component({
   components: {
-    ListTab,
     AssignmentListEntry
   }
 })

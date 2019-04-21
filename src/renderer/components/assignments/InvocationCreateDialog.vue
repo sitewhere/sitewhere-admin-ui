@@ -10,14 +10,12 @@
       :deviceType="deviceType"
       @payload="onCommit"
       @scheduleUpdated="onScheduleUpdated"
-    ></invocation-dialog>
-    <floating-action-button label="Invoke Command" icon="bolt" @action="onOpenDialog"></floating-action-button>
+    />
   </div>
 </template>
 
 <script>
 import InvocationDialog from "./InvocationDialog";
-import FloatingActionButton from "../common/FloatingActionButton";
 
 import {
   createCommandInvocationForAssignment,
@@ -32,8 +30,7 @@ export default {
   props: ["token", "deviceType"],
 
   components: {
-    InvocationDialog,
-    FloatingActionButton
+    InvocationDialog
   },
 
   methods: {

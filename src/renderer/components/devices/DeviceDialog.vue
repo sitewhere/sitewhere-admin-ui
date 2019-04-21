@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <sw-base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -20,10 +20,10 @@
         <device-detail-fields ref="details"/>
       </v-tab-item>
       <v-tab-item key="metadata" id="metadata">
-        <metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata"/>
       </v-tab-item>
     </template>
-  </base-dialog>
+  </sw-base-dialog>
 </template>
 
 <script lang="ts">
@@ -36,16 +36,12 @@ import {
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 
-import BaseDialog from "../common/BaseDialog.vue";
 import DeviceDetailFields from "./DeviceDetailFields.vue";
-import MetadataPanel from "../common/MetadataPanel.vue";
 import { IDevice } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    BaseDialog,
-    DeviceDetailFields,
-    MetadataPanel
+    DeviceDetailFields
   }
 })
 export default class DeviceDialog extends DialogComponent<IDevice> {

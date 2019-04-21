@@ -1,5 +1,5 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -21,13 +21,12 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </list-tab>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import CommandNamespaceListEntry from "../commands/CommandNamespaceListEntry.vue";
 
@@ -43,7 +42,6 @@ import {
 
 @Component({
   components: {
-    ListTab,
     NoResultsPanel,
     CommandNamespaceListEntry
   }

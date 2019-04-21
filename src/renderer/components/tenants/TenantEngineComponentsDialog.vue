@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
+import { BaseDialog } from "sitewhere-ide-components";
 import ComponentStatusIcon from "./ComponentStatusIcon";
 
 export default {

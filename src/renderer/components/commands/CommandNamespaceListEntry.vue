@@ -1,5 +1,5 @@
 <template>
-  <list-entry>
+  <sw-list-entry>
     <v-card-text>
       <v-toolbar color="#363" dense dark>
         <v-toolbar-title>{{ namespace.value }}</v-toolbar-title>
@@ -16,21 +16,19 @@
         </div>
       </v-list>
     </v-card-text>
-  </list-entry>
+  </sw-list-entry>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import ListEntry from "../common/ListEntry.vue";
 import CommandPanel from "../commands/CommandPanel.vue";
 
 import { IDeviceType } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    ListEntry,
     CommandPanel
   }
 })

@@ -1,12 +1,12 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Manage Tenants"
     loadingMessage="Loading tenant list ..."
     :loaded="loaded"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs12 v-for="(tenant) in matches" :key="tenant.token">
         <tenant-list-entry
           :tenant="tenant"
@@ -15,24 +15,21 @@
           @configureTenant="onConfigureTenant(tenant)"
         ></tenant-list-entry>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <tenant-create-dialog ref="add" @tenantAdded="refresh"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant"/>
+      <sw-navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant"/>
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
 import TenantListEntry from "./TenantListEntry.vue";
 import TenantCreateDialog from "./TenantCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
@@ -46,11 +43,8 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
     TenantListEntry,
-    TenantCreateDialog,
-    NavigationActionButton
+    TenantCreateDialog
   }
 })
 export default class TenantsList extends ListComponent<

@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
+import { BaseDialog } from "sitewhere-ide-components";
 import DeviceChooser from "../devices/DeviceChooser";
 import DeviceGroupChooser from "../devicegroups/DeviceGroupChooser";
 import RolesField from "./RolesField";

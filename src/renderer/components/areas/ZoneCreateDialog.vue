@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import FloatingActionButton from "../common/FloatingActionButton";
 import ZoneDialog from "./ZoneDialog";
 
 import { createZone } from "../../rest/sitewhere-zones-api";
@@ -23,7 +22,6 @@ export default {
   data: () => ({}),
 
   components: {
-    FloatingActionButton,
     ZoneDialog
   },
 

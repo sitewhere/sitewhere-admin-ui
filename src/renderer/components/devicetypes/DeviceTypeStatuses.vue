@@ -1,5 +1,5 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -27,13 +27,12 @@
         </div>
       </v-layout>
     </v-container>
-  </list-tab>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import DeviceStatusListEntry from "../statuses/DeviceStatusListEntry.vue";
 
@@ -49,7 +48,6 @@ import {
 
 @Component({
   components: {
-    ListTab,
     NoResultsPanel,
     DeviceStatusListEntry
   }

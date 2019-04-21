@@ -1,40 +1,35 @@
 <template>
-  <navigation-header-panel v-if="customerType" :icon="icon" :qrCodeUrl="qrCodeUrl" height="200px">
+  <sw-navigation-header-panel
+    v-if="customerType"
+    :icon="icon"
+    :qrCodeUrl="qrCodeUrl"
+    height="200px"
+  >
     <template slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="customerType.token" message="Token copied to clipboard"></clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="customerType.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-header-field label="Name">
         <span>{{ customerType.name }}</span>
-      </header-field>
-      <header-field label="Description">
+      </sw-header-field>
+      <sw-header-field label="Description">
         <span>{{ customerType.description }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(customerType.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(customerType.updatedDate) }}</span>
-      </header-field>
+      </sw-header-field>
     </template>
-  </navigation-header-panel>
+  </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
-
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
-import HeaderField from "../common/HeaderField.vue";
-import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import { ICustomerType } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    ClipboardCopyField
-  }
-})
+@Component({})
 export default class CustomerTypeDetailHeader extends HeaderComponent<
   ICustomerType
 > {

@@ -1,7 +1,12 @@
 <template>
   <span class="actions-block">
-    <navigation-action-button v-if="showEdit" icon="edit" tooltip="Edit" @action="onEditClicked"/>
-    <navigation-action-button
+    <sw-navigation-action-button
+      v-if="showEdit"
+      icon="edit"
+      tooltip="Edit"
+      @action="onEditClicked"
+    />
+    <sw-navigation-action-button
       v-if="showDelete"
       icon="times"
       tooltip="Delete"
@@ -14,13 +19,7 @@
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import NavigationActionButton from "../common/NavigationActionButton.vue";
-
-@Component({
-  components: {
-    NavigationActionButton
-  }
-})
+@Component({})
 export default class ActionsBlock extends Vue {
   @Prop({ default: true }) readonly showEdit!: boolean;
   @Prop({ default: true }) readonly showDelete!: boolean;

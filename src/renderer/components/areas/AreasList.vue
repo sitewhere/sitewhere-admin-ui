@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Areas"
     loadingMessage="Loading areas ..."
@@ -7,28 +7,25 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
         <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Area" @action="onAddArea"></navigation-action-button>
+      <sw-navigation-action-button icon="plus" tooltip="Add Area" @action="onAddArea"/>
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -43,11 +40,8 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
     AreaListEntry,
-    AreaCreateDialog,
-    NavigationActionButton
+    AreaCreateDialog
   }
 })
 export default class AreasList extends ListComponent<

@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Asset Types"
     loadingMessage="Loading asset types ..."
@@ -7,7 +7,7 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(assetType) in matches" :key="assetType.token">
         <asset-type-list-entry
           :assetType="assetType"
@@ -15,24 +15,21 @@
           @assetTypeDeleted="refresh"
         ></asset-type-list-entry>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <asset-type-create-dialog ref="add" @assetTypeAdded="refresh"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Asset Type" @action="onAddAssetType"></navigation-action-button>
+      <sw-navigation-action-button icon="plus" tooltip="Add Asset Type" @action="onAddAssetType"/>
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
 import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -47,11 +44,8 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
     AssetTypeListEntry,
-    AssetTypeCreateDialog,
-    NavigationActionButton
+    AssetTypeCreateDialog
   }
 })
 export default class AreasList extends ListComponent<

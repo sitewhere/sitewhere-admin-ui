@@ -1,11 +1,11 @@
 <template>
   <v-app v-if="user">
-    <in-app-system-bar style="-webkit-app-region: drag"/>
+    <sw-in-app-system-bar style="-webkit-app-region: drag"/>
     <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
         <div class="sitewhere-logo"/>
       </v-toolbar>
-      <navigation :sections="sections" @sectionSelected="onSectionClicked"></navigation>
+      <sw-navigation :sections="sections" @sectionSelected="onSectionClicked"/>
       <v-menu class="current-user-block" top right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
           <font-awesome-icon icon="user" class="mr-2"/>
@@ -28,16 +28,12 @@
         </v-layout>
       </v-container>
     </v-content>
-    <in-app-footer/>
+    <sw-in-app-footer/>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-
-import InAppSystemBar from "./common/InAppSystemBar.vue";
-import InAppFooter from "./common/InAppFooter.vue";
-import Navigation from "./common/Navigation.vue";
 
 import { handleError } from "./common/Utils";
 import { AxiosResponse } from "axios";
@@ -45,13 +41,7 @@ import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
 import { NavigationIcon } from "../libraries/constants";
 
-@Component({
-  components: {
-    InAppSystemBar,
-    InAppFooter,
-    Navigation
-  }
-})
+@Component({})
 export default class SystemAdministration extends Vue {
   drawer: boolean = true;
   sections: INavigationSection[] = [

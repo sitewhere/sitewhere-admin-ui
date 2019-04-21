@@ -8,22 +8,22 @@
             <v-tabs-item key="emulator" href="#emulator">Emulator</v-tabs-item>
             <v-tabs-item key="mqtt" href="#mqtt">MQTT Settings</v-tabs-item>
             <v-spacer></v-spacer>
-            <navigation-action-button
+            <sw-navigation-action-button
               icon="exclamation-triangle"
               tooltip="Add Alert"
               @action="onAddAlertClicked"
             />
-            <navigation-action-button
+            <sw-navigation-action-button
               icon="crosshairs"
               tooltip="Add Location"
               @action="onEnterAddLocationMode"
             />
-            <navigation-action-button
+            <sw-navigation-action-button
               icon="crosshairs"
               tooltip="Pan to Last Location"
               @action="onPanToLastLocation"
             />
-            <navigation-action-button
+            <sw-navigation-action-button
               icon="thermometer-full"
               tooltip="Add Measurements"
               @action="onAddMeasurementsClicked"
@@ -115,7 +115,6 @@ import AssignmentEmulatorMap from "./AssignmentEmulatorMap";
 import LocationCreateDialog from "./LocationCreateDialog";
 import MeasurementsCreateDialog from "./MeasurementsCreateDialog";
 import AlertCreateDialog from "./AlertCreateDialog";
-import NavigationActionButton from "../common/NavigationActionButton";
 
 import { getDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";
 
@@ -139,8 +138,7 @@ export default {
     AssignmentEmulatorMap,
     LocationCreateDialog,
     MeasurementsCreateDialog,
-    AlertCreateDialog,
-    NavigationActionButton
+    AlertCreateDialog
   },
 
   created: function() {

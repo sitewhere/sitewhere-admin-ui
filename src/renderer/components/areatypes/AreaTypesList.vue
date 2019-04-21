@@ -24,11 +24,13 @@
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
+import {
+  ListPage,
+  ListLayout,
+  NavigationActionButton
+} from "sitewhere-ide-components";
 import AreaTypeListEntry from "./AreaTypeListEntry.vue";
 import AreaTypeCreateDialog from "./AreaTypeCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { AxiosPromise } from "axios";

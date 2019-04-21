@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading tenant ..."
@@ -18,14 +18,14 @@
       </v-tab-item>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit"/>
-      <navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete"/>
     </template>
     <template slot="dialogs">
       <tenant-update-dialog ref="edit" :tenantToken="token" @tenantUpdated="onTenantEdited"/>
       <tenant-delete-dialog ref="delete" :tenantToken="token" @tenantDeleted="onTenantDeleted"/>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -37,8 +37,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import TenantDetailHeader from "./TenantDetailHeader.vue";
 import TenantUpdateDialog from "./TenantUpdateDialog.vue";
 import TenantDeleteDialog from "./TenantDeleteDialog.vue";
@@ -57,8 +55,6 @@ import {
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     TenantDetailHeader,
     TenantUpdateDialog,
     TenantDeleteDialog,

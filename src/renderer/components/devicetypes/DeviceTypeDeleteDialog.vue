@@ -1,12 +1,15 @@
 <template>
-  <delete-dialog title="Delete Device Type" width="400" :error="error" @delete="onDeleteConfirmed">
+  <sw-delete-dialog
+    title="Delete Device Type"
+    width="400"
+    :error="error"
+    @delete="onDeleteConfirmed"
+  >
     <v-card-text>Are you sure you want to delete this device type?</v-card-text>
-  </delete-dialog>
+  </sw-delete-dialog>
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
-
 import { deleteDeviceType } from "../../rest/sitewhere-device-types-api";
 
 export default {
@@ -15,10 +18,6 @@ export default {
   }),
 
   props: ["token"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Show delete dialog.

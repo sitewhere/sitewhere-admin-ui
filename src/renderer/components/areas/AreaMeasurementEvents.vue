@@ -1,5 +1,5 @@
 <template>
-  <data-table-tab
+  <sw-data-table-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -24,7 +24,7 @@
         :title="formatDate(props.item.receivedDate)"
       >{{ formatDate(props.item.receivedDate) }}</td>
     </template>
-  </data-table-tab>
+  </sw-data-table-tab>
 </template>
 
 <script lang="ts">
@@ -35,9 +35,6 @@ import {
   IPageSizes,
   ITableHeaders
 } from "sitewhere-ide-common";
-
-import DataTableTab from "../common/DataTableTab.vue";
-
 import { AxiosPromise } from "axios";
 import { formatDate } from "../common/Utils";
 import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";
@@ -49,11 +46,7 @@ import {
   IDateRangeSearchCriteria
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    DataTableTab
-  }
-})
+@Component({})
 export default class AreaMeasurementEvents extends ListComponent<
   IDeviceMeasurement,
   IDateRangeSearchCriteria,

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
+import { BaseDialog } from "sitewhere-ide-components";
 
 export default {
   data: () => ({

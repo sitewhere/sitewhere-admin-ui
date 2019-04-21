@@ -1,5 +1,4 @@
 declare module "@fortawesome/vue-fontawesome";
-declare module "sitewhere-ide-components";
 declare module "vue2-leaflet";
 declare module "vue-moment";
 declare module "vue-clipboards";

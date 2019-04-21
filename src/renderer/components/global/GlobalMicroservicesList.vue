@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     title="Global Microservices"
     loadingMessage="Loading global microservices list ..."
@@ -14,7 +14,7 @@
         <microservice-list :topology="topology" @microserviceClicked="onMicroserviceClicked"/>
       </v-tab-item>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -24,7 +24,6 @@ import {
   INavigationSection
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
 import MicroserviceList from "../microservice/MicroserviceList.vue";
 
 import { AxiosPromise } from "axios";
@@ -34,7 +33,6 @@ import { IInstanceTopologySummary } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DetailPage,
     MicroserviceList
   }
 })

@@ -1,5 +1,5 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -7,19 +7,17 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading assets ..."
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(asset) in matches" :key="asset.token">
         <asset-list-entry :asset="asset"></asset-list-entry>
       </v-flex>
-    </list-layout>
-  </list-tab>
+    </sw-list-layout>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
-import ListLayout from "../common/ListLayout.vue";
 import AssetListEntry from "../assets/AssetListEntry.vue";
 
 import { AxiosPromise } from "axios";
@@ -33,8 +31,6 @@ import {
 
 @Component({
   components: {
-    ListTab,
-    ListLayout,
     AssetListEntry
   }
 })

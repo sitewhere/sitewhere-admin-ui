@@ -15,11 +15,11 @@
           >{{ (props.item.name.length > 25) ? props.item.name.substring(0, 25) + "..." : props.item.name }}</td>
           <td width="370px" :title="props.item.value">{{ props.item.value }}</td>
           <td v-if="!readOnly" width="20px">
-            <navigation-action-button
+            <sw-navigation-action-button
               icon="trash-alt"
               tooltip="Delete Measurements"
               @action="onDeleteMx(props.item.name)"
-            ></navigation-action-button>
+            />
           </td>
         </template>
       </v-data-table>
@@ -35,11 +35,11 @@
             <v-text-field type="number" dark label="Value" v-model="newMxValue"></v-text-field>
           </v-flex>
           <v-flex xs1 class="pt-3">
-            <navigation-action-button
+            <sw-navigation-action-button
               icon="plus-circle"
               tooltip="Add Measurements"
               @action="onAddMx"
-            ></navigation-action-button>
+            />
           </v-flex>
         </v-layout>
       </v-container>
@@ -48,8 +48,6 @@
 </template>
 
 <script>
-import NavigationActionButton from "../common/NavigationActionButton";
-
 import { metadataToArray, arrayToMetadata } from "../common/Utils";
 
 export default {
@@ -66,10 +64,6 @@ export default {
     this.$data.newMxName = "";
     this.$data.newMxValue = 0.0;
     this.$data.error = null;
-  },
-
-  components: {
-    NavigationActionButton
   },
 
   computed: {

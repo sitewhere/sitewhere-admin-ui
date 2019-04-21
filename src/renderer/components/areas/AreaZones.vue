@@ -1,5 +1,5 @@
 <template>
-  <data-table-tab
+  <sw-data-table-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -39,7 +39,7 @@
         </actions-block>
       </td>
     </template>
-  </data-table-tab>
+  </sw-data-table-tab>
 </template>
 
 <script lang="ts">
@@ -51,7 +51,6 @@ import {
   ITableHeaders
 } from "sitewhere-ide-common";
 
-import DataTableTab from "../common/DataTableTab.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
 import ZoneUpdateDialog from "./ZoneUpdateDialog.vue";
 import ZoneDeleteDialog from "./ZoneDeleteDialog.vue";
@@ -68,7 +67,6 @@ import {
 
 @Component({
   components: {
-    DataTableTab,
     ActionsBlock,
     ZoneUpdateDialog,
     ZoneDeleteDialog

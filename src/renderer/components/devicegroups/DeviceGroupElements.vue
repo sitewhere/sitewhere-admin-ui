@@ -1,5 +1,5 @@
 <template>
-  <data-table-tab
+  <sw-data-table-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -42,7 +42,7 @@
         @elementDeleted="refresh"
       ></device-group-element-delete-dialog>
     </template>
-  </data-table-tab>
+  </sw-data-table-tab>
 </template>
 
 <script lang="ts">
@@ -54,7 +54,6 @@ import {
   ITableHeaders
 } from "sitewhere-ide-common";
 
-import DataTableTab from "../common/DataTableTab.vue";
 import DeviceGroupElementDeleteDialog from "./DeviceGroupElementDeleteDialog.vue";
 
 import { AxiosPromise } from "axios";
@@ -70,7 +69,6 @@ import {
 
 @Component({
   components: {
-    DataTableTab,
     DeviceGroupElementDeleteDialog
   }
 })

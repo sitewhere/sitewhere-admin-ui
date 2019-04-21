@@ -1,6 +1,6 @@
 <template>
   <span>
-    <base-dialog
+    <sw-base-dialog
       :title="title"
       :width="width"
       :visible="dialogVisible"
@@ -61,14 +61,14 @@
                       </div>
                     </v-flex>
                     <v-flex xs2 pa-2>
-                      <color-picker text="Border" v-model="zoneBorder"></color-picker>
+                      <sw-color-picker text="Border" v-model="zoneBorder"/>
                     </v-flex>
                     <v-flex xs2 pa-2>
-                      <color-picker
+                      <sw-color-picker
                         text="Fill"
                         v-model="zoneFill"
                         @opacityChanged="onFillOpacityUpdated"
-                      ></color-picker>
+                      />
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -76,7 +76,7 @@
             </v-card>
           </v-tabs-content>
           <v-tabs-content key="metadata" id="metadata">
-            <metadata-panel
+            <sw-metadata-panel
               :metadata="metadata"
               @itemDeleted="onMetadataDeleted"
               @itemAdded="onMetadataAdded"
@@ -84,14 +84,11 @@
           </v-tabs-content>
         </v-tabs-items>
       </v-tabs>
-    </base-dialog>
+    </sw-base-dialog>
   </span>
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
-import MetadataPanel from "../common/MetadataPanel";
-import ColorPicker from "../common/ColorPicker";
 import MapWithZoneOverlayPanel from "./MapWithZoneOverlayPanel";
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -124,9 +121,6 @@ export default {
   },
 
   components: {
-    BaseDialog,
-    MetadataPanel,
-    ColorPicker,
     MapWithZoneOverlayPanel
   },
 

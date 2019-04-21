@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading area type ..."
@@ -24,10 +24,10 @@
       <area-type-delete-dialog ref="delete" :token="token" @areaTypeDeleted="onAreaTypeDeleted"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="edit" tooltip="Edit Area Type" @action="onEdit"/>
-      <navigation-action-button icon="times" tooltip="Delete Area Type" @action="onDelete"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Area Type" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Area Type" @action="onDelete"/>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -39,8 +39,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import AreaTypeDetailHeader from "./AreaTypeDetailHeader.vue";
 import AreaTypeAreas from "./AreaTypeAreas.vue";
 import AreaTypeDeleteDialog from "./AreaTypeDeleteDialog.vue";
@@ -55,8 +53,6 @@ import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     AreaTypeDetailHeader,
     AreaTypeAreas,
     AreaListEntry,

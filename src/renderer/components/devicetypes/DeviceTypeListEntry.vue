@@ -1,25 +1,20 @@
 <template>
-  <list-entry class="pa-2">
+  <sw-list-entry class="pa-2">
     <v-card-text class="deviceType" @click="onOpenDeviceType">
       <div class="type-logo" :style="logoStyle"></div>
       <div class="type-name">{{deviceType.name}}</div>
       <div class="type-desc">{{deviceType.description}}</div>
     </v-card-text>
-  </list-entry>
+  </sw-list-entry>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import ListEntry from "../common/ListEntry.vue";
 import { IDeviceType } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    ListEntry
-  }
-})
+@Component({})
 export default class DeviceTypeListEntry extends Vue {
   @Prop() readonly deviceType!: IDeviceType;
 

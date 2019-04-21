@@ -27,9 +27,11 @@
 </template>
 
 <script>
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import HeaderField from "../common/HeaderField";
-import ClipboardCopyField from "../common/ClipboardCopyField";
+import {
+  NavigationHeaderPanel,
+  HeaderField,
+  ClipboardCopyField
+} from "sitewhere-ide-components";
 
 import { formatDate } from "../common/Utils";
 

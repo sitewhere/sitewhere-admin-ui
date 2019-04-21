@@ -1,13 +1,12 @@
 <template>
   <span>
-    <delete-dialog title="Delete Area" width="400" :error="error" @delete="onDeleteConfirmed">
+    <sw-delete-dialog title="Delete Area" width="400" :error="error" @delete="onDeleteConfirmed">
       <v-card-text>Are you sure you want to delete this area?</v-card-text>
-    </delete-dialog>
+    </sw-delete-dialog>
   </span>
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
 import { deleteArea } from "../../rest/sitewhere-areas-api";
 
 export default {
@@ -16,10 +15,6 @@ export default {
   }),
 
   props: ["token"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Show delete dialog.

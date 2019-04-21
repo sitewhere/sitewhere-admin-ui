@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Assets"
     loadingMessage="Loading assets ..."
@@ -8,18 +8,18 @@
     :pageSizes="pageSizes"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(asset) in matches" :key="asset.token">
         <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <asset-create-dialog ref="add" @assetAdded="refresh"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Asset" @action="onAddAsset"></navigation-action-button>
+      <sw-navigation-action-button icon="plus" tooltip="Add Asset" @action="onAddAsset"/>
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
@@ -30,11 +30,8 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
 import AssetListEntry from "./AssetListEntry.vue";
 import AssetCreateDialog from "./AssetCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -49,11 +46,8 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
     AssetListEntry,
-    AssetCreateDialog,
-    NavigationActionButton
+    AssetCreateDialog
   }
 })
 export default class AssetsList extends ListComponent<

@@ -1,51 +1,41 @@
 <template>
-  <navigation-header-panel
+  <sw-navigation-header-panel
     v-if="deviceType"
     :imageUrl="imageUrl"
     :qrCodeUrl="qrCodeUrl"
     height="220px"
   >
     <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="deviceType.token" message="Token copied to clipboard"></clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="deviceType.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-header-field label="Name">
         <span>{{ deviceType.name }}</span>
-      </header-field>
-      <header-field label="Description">
+      </sw-header-field>
+      <sw-header-field label="Description">
         <span>{{ deviceType.description }}</span>
-      </header-field>
-      <header-field label="Image URL">
+      </sw-header-field>
+      <sw-header-field label="Image URL">
         <span>{{ deviceType.imageUrl }}</span>
-      </header-field>
-      <header-field label="Container Policy">
+      </sw-header-field>
+      <sw-header-field label="Container Policy">
         <span>{{ deviceType.containerPolicy }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(deviceType.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(deviceType.updatedDate) }}</span>
-      </header-field>
+      </sw-header-field>
     </span>
-  </navigation-header-panel>
+  </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
-
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
-import ClipboardCopyField from "../common/ClipboardCopyField.vue";
-import HeaderField from "../common/HeaderField.vue";
 import { IDeviceType } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    ClipboardCopyField
-  }
-})
+@Component({})
 export default class DeviceDetailHeader extends HeaderComponent<IDeviceType> {
   // Reference record as device type.
   get deviceType(): IDeviceType {

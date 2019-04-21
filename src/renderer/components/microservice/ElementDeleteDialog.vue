@@ -1,6 +1,6 @@
 <template>
   <span>
-    <delete-dialog
+    <sw-delete-dialog
       ref="dialog"
       title="Delete Configuration Element"
       width="400"
@@ -12,7 +12,7 @@
         <span class="title text--darken-5">Deleting Required Element!</span>
       </v-card-text>
       <v-card-text>{{ query }}</v-card-text>
-    </delete-dialog>
+    </sw-delete-dialog>
     <v-btn class="red darken-2 white--text" @click.stop="showDeleteDialog">
       <v-icon class="white--text mr-1">fa-times</v-icon>Delete
     </v-btn>
@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
-
 export default {
   data: () => ({
     error: null
@@ -41,10 +39,6 @@ export default {
         return "Are you sure you want to delete '" + this.element.name + "'?";
       }
     }
-  },
-
-  components: {
-    DeleteDialog
   },
 
   methods: {

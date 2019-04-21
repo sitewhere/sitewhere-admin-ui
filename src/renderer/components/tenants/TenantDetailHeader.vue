@@ -15,10 +15,6 @@
 </template>
 
 <script>
-import HeaderField from "../common/HeaderField";
-import TenantUpdateDialog from "./TenantUpdateDialog";
-import TenantDeleteDialog from "./TenantDeleteDialog";
-
 export default {
   data: () => ({
     copyData: null,
@@ -26,12 +22,6 @@ export default {
   }),
 
   props: ["tenant"],
-
-  components: {
-    HeaderField,
-    TenantUpdateDialog,
-    TenantDeleteDialog
-  },
 
   methods: {}
 };

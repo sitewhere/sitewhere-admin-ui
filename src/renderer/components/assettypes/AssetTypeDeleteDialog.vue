@@ -1,6 +1,6 @@
 <template>
   <span>
-    <delete-dialog
+    <sw-delete-dialog
       ref="dialog"
       title="Delete Asset Type"
       width="400"
@@ -8,13 +8,11 @@
       @delete="onDeleteConfirmed"
     >
       <v-card-text>Are you sure you want to delete this asset type?</v-card-text>
-    </delete-dialog>
+    </sw-delete-dialog>
   </span>
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
-
 import { deleteAssetType } from "../../rest/sitewhere-asset-types-api";
 
 export default {
@@ -23,10 +21,6 @@ export default {
   }),
 
   props: ["token"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Get handle to nested dialog component.

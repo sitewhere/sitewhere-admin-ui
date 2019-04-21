@@ -1,27 +1,25 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
         <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"/>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer"/>
     </template>
-  </list-tab>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
-import ListLayout from "../common/ListLayout.vue";
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 
@@ -37,8 +35,6 @@ import {
 
 @Component({
   components: {
-    ListTab,
-    ListLayout,
     CustomerListEntry,
     CustomerCreateDialog
   }

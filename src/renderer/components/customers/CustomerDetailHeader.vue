@@ -1,52 +1,40 @@
 <template>
-  <navigation-header-panel
+  <sw-navigation-header-panel
     v-if="customer"
     :imageUrl="imageUrl"
     :qrCodeUrl="qrCodeUrl"
     height="200px"
   >
     <template slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="customer.token" message="Token copied to clipboard"></clipboard-copy-field>
-      </header-field>
-      <linked-header-field
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="customer.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-linked-header-field
         label="Customer Type"
         :text="customer.customerType.name"
         :url="'/customertypes/' + customer.customerType.token"
-      ></linked-header-field>
-      <header-field label="Name">
+      />
+      <sw-header-field label="Name">
         <span>{{ customer.name }}</span>
-      </header-field>
-      <header-field label="Description">
+      </sw-header-field>
+      <sw-header-field label="Description">
         <span>{{ customer.description }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(customer.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(customer.updatedDate) }}</span>
-      </header-field>
+      </sw-header-field>
     </template>
-  </navigation-header-panel>
+  </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
-
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
-import HeaderField from "../common/HeaderField.vue";
-import LinkedHeaderField from "../common/LinkedHeaderField.vue";
-import ClipboardCopyField from "../common/ClipboardCopyField.vue";
 import { ICustomer } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    LinkedHeaderField,
-    ClipboardCopyField
-  }
-})
+@Component({})
 export default class CustomerDetailHeader extends HeaderComponent<ICustomer> {
   // Reference record as customer.
   get customer(): ICustomer {

@@ -32,12 +32,11 @@
         >{{ props.item.metadata.invocation }}</td>
       </template>
     </v-data-table>
-    <pager :results="results" @pagingUpdated="updatePaging"></pager>
+    <sw-pager :results="results" @pagingUpdated="updatePaging"/>
   </div>
 </template>
 
 <script>
-import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
 
 import { formatDate, routeToDevice } from "../common/Utils";
@@ -77,7 +76,6 @@ export default {
   }),
 
   components: {
-    Pager,
     NoResultsPanel
   },
 

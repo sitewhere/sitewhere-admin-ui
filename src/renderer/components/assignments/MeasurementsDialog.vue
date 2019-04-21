@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
+import { BaseDialog } from "sitewhere-ide-components";
 import MeasurementsPanel from "./MeasurementsPanel";
 
 import { metadataToArray } from "../common/Utils";

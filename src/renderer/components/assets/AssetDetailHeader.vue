@@ -1,49 +1,42 @@
 <template>
-  <navigation-header-panel v-if="asset" :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="200px">
+  <sw-navigation-header-panel
+    v-if="asset"
+    :imageUrl="imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="200px"
+  >
     <span slot="content">
-      <header-field label="Token">
+      <sw-header-field label="Token">
         <clipboard-copy-field :field="asset.token" message="Token copied to clipboard"></clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
+      </sw-header-field>
+      <sw-header-field label="Name">
         <span>{{ asset.name }}</span>
-      </header-field>
-      <linked-header-field
+      </sw-header-field>
+      <sw-linked-header-field
         label="Asset Type"
         :text="asset.assetType.name"
         :url="'/assettypes/' + asset.assetType.token"
-      ></linked-header-field>
-      <header-field label="Image URL">
+      />
+      <sw-header-field label="Image URL">
         <span>{{ asset.imageUrl }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(asset.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(asset.updatedDate) }}</span>
-      </header-field>
+      </sw-header-field>
     </span>
-  </navigation-header-panel>
+  </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
-import HeaderField from "../common/HeaderField.vue";
-import LinkedHeaderField from "../common/LinkedHeaderField.vue";
-import ClipboardCopyField from "../common/ClipboardCopyField.vue";
-
 import { formatDate } from "../common/Utils";
 import { IAsset } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    LinkedHeaderField,
-    ClipboardCopyField
-  }
-})
+@Component({})
 export default class AssetDetailHeader extends HeaderComponent<IAsset> {
   // Reference record as area.
   get asset(): IAsset {

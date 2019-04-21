@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <sw-base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -27,7 +27,7 @@
         <metadata-panel ref="metadata"/>
       </v-tab-item>
     </template>
-  </base-dialog>
+  </sw-base-dialog>
 </template>
 
 <script lang="ts">
@@ -41,18 +41,14 @@ import {
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 
-import BaseDialog from "../common/BaseDialog.vue";
 import CommandDetailFields from "./CommandDetailFields.vue";
 import ParametersPanel from "./ParametersPanel.vue";
-import MetadataPanel from "../common/MetadataPanel.vue";
 import { IDeviceCommand } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    BaseDialog,
     CommandDetailFields,
-    ParametersPanel,
-    MetadataPanel
+    ParametersPanel
   }
 })
 export default class CommandDialog extends DialogComponent<IDeviceCommand> {

@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <sw-base-dialog
     title="Update Device Filters"
     width="800"
     :visible="dialogVisible"
@@ -87,11 +87,11 @@
                         v-if="createdDateFilter === 'week'"
                       >Include only devices created within the last week.</v-card-text>
                       <v-card-text v-if="createdDateFilter === 'after'">
-                        <date-time-picker
+                        <sw-date-time-picker
                           label="Devices created after this date/time"
                           :v-model="createdAfter"
                           @input="onCreatedAfterUpdated"
-                        ></date-time-picker>
+                        />
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -102,15 +102,14 @@
         </v-tabs-content>
       </v-tabs-items>
     </v-tabs>
-  </base-dialog>
+  </sw-base-dialog>
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
+import { BaseDialog } from "sitewhere-ide-components";
 import AreaChooser from "../areas/AreaChooser";
 import DeviceTypeChooser from "../devicetypes/DeviceTypeChooser";
 import DeviceGroupChooser from "../devicegroups/DeviceGroupChooser";
-import DateTimePicker from "../common/DateTimePicker";
 
 export default {
   data: () => ({
@@ -161,11 +160,9 @@ export default {
   }),
 
   components: {
-    BaseDialog,
     AreaChooser,
     DeviceTypeChooser,
-    DeviceGroupChooser,
-    DateTimePicker
+    DeviceGroupChooser
   },
 
   props: ["filter"],

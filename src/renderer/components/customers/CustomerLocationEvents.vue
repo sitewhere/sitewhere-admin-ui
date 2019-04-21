@@ -1,5 +1,5 @@
 <template>
-  <data-table-tab
+  <sw-data-table-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -26,7 +26,7 @@
         :title="formatDate(props.item.receivedDate)"
       >{{ formatDate(props.item.receivedDate) }}</td>
     </template>
-  </data-table-tab>
+  </sw-data-table-tab>
 </template>
 
 <script lang="ts">
@@ -37,8 +37,6 @@ import {
   IPageSizes,
   ITableHeaders
 } from "sitewhere-ide-common";
-
-import DataTableTab from "../common/DataTableTab.vue";
 
 import { formatDate, fourDecimalPlaces } from "../common/Utils";
 import { EventPageSizes, LocationHeaders } from "../../libraries/constants";
@@ -51,11 +49,7 @@ import {
   IDateRangeSearchCriteria
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    DataTableTab
-  }
-})
+@Component({})
 export default class CustomerLocationEvents extends ListComponent<
   IDeviceLocation,
   IDateRangeSearchCriteria,

@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import FloatingActionButton from "../common/FloatingActionButton";
 import DeviceGroupElementDialog from "./DeviceGroupElementDialog";
 
 import { addDeviceGroupElement } from "../../rest/sitewhere-device-groups-api";
@@ -21,7 +20,6 @@ export default {
   data: () => ({}),
 
   components: {
-    FloatingActionButton,
     DeviceGroupElementDialog
   },
 

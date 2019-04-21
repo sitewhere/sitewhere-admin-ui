@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     title="Manage Global Microservice"
     loadingMessage="Loading microservice configuration ..."
@@ -32,20 +32,22 @@
       </v-tab-item>
     </template>
     <template slot="actions">
-      <navigation-action-button
+      <sw-navigation-action-button
         icon="arrow-left"
         tooltip="Back To Global Microservices"
         @action="onBackToList"
       />
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
-import { Component, DetailComponent, INavigationSection } from "sitewhere-ide-common";
+import {
+  Component,
+  DetailComponent,
+  INavigationSection
+} from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
 import ScriptsManager from "../microservice/ScriptsManager.vue";
@@ -62,8 +64,6 @@ import { IConfigurationModel, IElementContent } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     MicroserviceEditor,
     UnsavedUpdatesWarning,
     ScriptsManager

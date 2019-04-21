@@ -1,5 +1,5 @@
 <template>
-  <navigation-page
+  <sw-navigation-page
     icon="list-alt"
     title="Manage Batch Operation"
     loadingMessage="Loading batch operation ..."
@@ -19,11 +19,10 @@
         </v-tabs-items>
       </v-tabs>
     </div>
-  </navigation-page>
+  </sw-navigation-page>
 </template>
 
 <script>
-import NavigationPage from "../common/NavigationPage";
 import BatchOperationDetailHeader from "./BatchOperationDetailHeader";
 import BatchOperationElementsList from "./BatchOperationElementsList";
 
@@ -38,7 +37,6 @@ export default {
   }),
 
   components: {
-    NavigationPage,
     BatchOperationDetailHeader,
     BatchOperationElementsList
   },

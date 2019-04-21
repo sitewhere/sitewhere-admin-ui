@@ -1,5 +1,5 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -7,19 +7,17 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading customers ..."
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
         <customer-list-entry :customer="customer"></customer-list-entry>
       </v-flex>
-    </list-layout>
-  </list-tab>
+    </sw-list-layout>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
-import ListLayout from "../common/ListLayout.vue";
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
 
 import { AxiosPromise } from "axios";
@@ -33,8 +31,6 @@ import {
 
 @Component({
   components: {
-    ListTab,
-    ListLayout,
     CustomerListEntry
   }
 })

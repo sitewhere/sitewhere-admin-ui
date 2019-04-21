@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading customer ..."
@@ -54,10 +54,10 @@
         tooltip="Add Subcustomer"
         @action="onAddSubcustomer"
       ></navigation-action-button>
-      <navigation-action-button icon="edit" tooltip="Edit Customer" @action="onEdit"></navigation-action-button>
-      <navigation-action-button icon="times" tooltip="Delete Customer" @action="onDelete"></navigation-action-button>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Customer" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Customer" @action="onDelete"/>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -67,8 +67,6 @@ import {
   DialogComponent
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import CustomerDetailHeader from "./CustomerDetailHeader.vue";
 import CustomerSubcustomers from "./CustomerSubcustomers.vue";
 import CustomerAssignments from "./CustomerAssignments.vue";
@@ -88,8 +86,6 @@ import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     CustomerDetailHeader,
     CustomerSubcustomers,
     CustomerAssignments,

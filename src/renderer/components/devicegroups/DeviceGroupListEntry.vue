@@ -1,5 +1,5 @@
 <template>
-  <list-entry class="pa-2">
+  <sw-list-entry class="pa-2">
     <v-card-text class="group" @click="onOpenDeviceGroup">
       <div class="group-image" :style="backgroundImageStyle"></div>
       <div class="group-name ellipsis title">{{ deviceGroup.name }}</div>
@@ -10,22 +10,17 @@
         <strong>{{ rolesView }}</strong>
       </div>
     </v-card-text>
-  </list-entry>
+  </sw-list-entry>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import ListEntry from "../common/ListEntry.vue";
 import { IStyle } from "../common/Style";
 import { IDeviceGroup } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    ListEntry
-  }
-})
+@Component({})
 export default class DeviceGroupListEntry extends Vue {
   @Prop() readonly deviceGroup!: IDeviceGroup;
 

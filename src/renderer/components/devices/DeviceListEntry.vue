@@ -1,5 +1,5 @@
 <template>
-  <list-entry class="pa-2">
+  <sw-list-entry class="pa-2">
     <v-card-text @click="onOpenDevice" class="device-root">
       <div class="device-image" :style="backgroundImageStyle(device.deviceType.imageUrl)"></div>
       <div class="title device-type ellipsis">{{ device.deviceType.name }}</div>
@@ -19,22 +19,17 @@
         </v-tooltip>
       </div>
     </v-card-text>
-  </list-entry>
+  </sw-list-entry>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import ListEntry from "../common/ListEntry.vue";
 import { IStyle, styleForAssignmentStatus } from "../common/Style";
 import { IDevice, IDeviceAssignment } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    ListEntry
-  }
-})
+@Component({})
 export default class DeviceListEntry extends Vue {
   @Prop() readonly device!: IDevice;
 

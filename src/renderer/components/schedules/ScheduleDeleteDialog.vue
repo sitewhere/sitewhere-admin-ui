@@ -1,5 +1,5 @@
 <template>
-  <delete-dialog
+  <sw-delete-dialog
     ref="dialog"
     title="Delete Schedule"
     width="400"
@@ -7,12 +7,10 @@
     @delete="onDeleteConfirmed"
   >
     <v-card-text>Are you sure you want to delete this schedule?</v-card-text>
-  </delete-dialog>
+  </sw-delete-dialog>
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
-
 import { deleteSchedule } from "../../rest/sitewhere-schedules-api";
 
 export default {
@@ -21,10 +19,6 @@ export default {
   }),
 
   props: ["token"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Get handle to nested dialog component.

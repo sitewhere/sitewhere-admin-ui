@@ -1,8 +1,13 @@
 <template>
   <span>
-    <delete-dialog ref="dialog" title="Delete Device Slot" width="400" @delete="onDeleteConfirmed">
+    <sw-delete-dialog
+      ref="dialog"
+      title="Delete Device Slot"
+      width="400"
+      @delete="onDeleteConfirmed"
+    >
       <v-card-text>Are you sure you want to delete this device slot?</v-card-text>
-    </delete-dialog>
+    </sw-delete-dialog>
     <v-btn
       class="ma-0"
       icon
@@ -15,16 +20,10 @@
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
-
 export default {
   data: () => ({}),
 
   props: ["deviceSlot"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Get handle to nested dialog component.

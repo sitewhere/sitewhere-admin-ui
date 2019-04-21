@@ -44,10 +44,12 @@
 
 <script>
 import { styleForAssignmentStatus } from "../common/Style";
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel";
-import HeaderField from "../common/HeaderField";
-import LinkedHeaderField from "../common/LinkedHeaderField";
-import ClipboardCopyField from "../common/ClipboardCopyField";
+import {
+  NavigationHeaderPanel,
+  HeaderField,
+  LinkedHeaderField,
+  ClipboardCopyField
+} from "sitewhere-ide-components";
 
 import { formatDate } from "../common/Utils";
 

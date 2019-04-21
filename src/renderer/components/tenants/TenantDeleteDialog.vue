@@ -1,12 +1,10 @@
 <template>
-  <delete-dialog title="Delete Tenant" width="400" :error="error" @delete="onDeleteConfirmed">
+  <sw-delete-dialog title="Delete Tenant" width="400" :error="error" @delete="onDeleteConfirmed">
     <v-card-text>Are you sure you want to delete this tenant?</v-card-text>
-  </delete-dialog>
+  </sw-delete-dialog>
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
-
 import { deleteTenant } from "../../rest/sitewhere-tenants-api";
 
 export default {
@@ -15,10 +13,6 @@ export default {
   }),
 
   props: ["tenantToken"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Show delete dialog.

@@ -1,59 +1,52 @@
 <template>
-  <navigation-header-panel v-if="device" :imageUrl="imageUrl" :qrCodeUrl="qrCodeUrl" height="190px">
+  <sw-navigation-header-panel
+    v-if="device"
+    :imageUrl="imageUrl"
+    :qrCodeUrl="qrCodeUrl"
+    height="190px"
+  >
     <span slot="content">
-      <header-field label="Token">
+      <sw-header-field label="Token">
         <clipboard-copy-field :field="device.token" message="Token copied to clipboard"></clipboard-copy-field>
-      </header-field>
-      <linked-header-field
+      </sw-header-field>
+      <sw-linked-header-field
         label="Device Type"
         :text="device.deviceType.name"
         :url="'/devicetypes/' + device.deviceType.token"
-      ></linked-header-field>
-      <linked-header-field
+      />
+      <sw-linked-header-field
         v-if="device.assignment.asset"
         label="Assigned Asset"
         :text="device.assignment.asset.name"
         :url="'/assets/' + device.assignment.asset.token"
-      ></linked-header-field>
-      <linked-header-field
+      />
+      <sw-linked-header-field
         v-if="device.assignment.area"
         label="Assigned Area"
         :text="device.assignment.area.name"
         :url="'/areas/' + device.assignment.area.token"
-      ></linked-header-field>
-      <header-field v-else label="Assignment">
+      />
+      <sw-header-field v-else label="Assignment">
         <span>Device is not assigned</span>
-      </header-field>
-      <header-field label="Comments">
+      </sw-header-field>
+      <sw-header-field label="Comments">
         <span>{{ device.comments }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(device.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(device.updatedDate) }}</span>
-      </header-field>
+      </sw-header-field>
     </span>
-  </navigation-header-panel>
+  </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
-
-import NavigationHeaderPanel from "../common/NavigationHeaderPanel.vue";
-import ClipboardCopyField from "../common/ClipboardCopyField.vue";
-import HeaderField from "../common/HeaderField.vue";
-import LinkedHeaderField from "../common/LinkedHeaderField.vue";
 import { IDevice, IDeviceType } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    LinkedHeaderField,
-    ClipboardCopyField
-  }
-})
+@Component({})
 export default class DeviceDetailHeader extends HeaderComponent<IDevice> {
   // Reference record as device.
   get device(): IDevice {

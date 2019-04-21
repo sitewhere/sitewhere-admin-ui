@@ -44,7 +44,8 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn flat @click="onCancelClicked">{{ cancelLabel }}</v-btn>
-            <v-btn :disabled="!firstPageComplete" flat @click="step = 2">Assign Area
+            <v-btn :disabled="!firstPageComplete" flat @click="step = 2">
+              Assign Area
               <v-icon light>keyboard_arrow_right</v-icon>
             </v-btn>
           </v-card-actions>
@@ -68,11 +69,8 @@
             </v-btn>
             <v-spacer></v-spacer>
             <v-btn flat @click="onCancelClicked">{{ cancelLabel }}</v-btn>
-            <v-btn
-              :disabled="!firstPageComplete || !secondPageComplete"
-              flat
-              @click="step = 3"
-            >Assign Asset
+            <v-btn :disabled="!firstPageComplete || !secondPageComplete" flat @click="step = 3">
+              Assign Asset
               <v-icon light>keyboard_arrow_right</v-icon>
             </v-btn>
           </v-card-actions>
@@ -105,7 +103,8 @@
               :disabled="!firstPageComplete || !secondPageComplete || !thirdPageComplete"
               flat
               @click="step = 4"
-            >Add Metadata
+            >
+              Add Metadata
               <v-icon light>keyboard_arrow_right</v-icon>
             </v-btn>
           </v-card-actions>
@@ -132,8 +131,7 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
-import MetadataPanel from "../common/MetadataPanel";
+import { BaseDialog, MetadataPanel } from "sitewhere-ide-components";
 import CustomerChooser from "../customers/CustomerChooser";
 import AreaChooser from "../areas/AreaChooser";
 import AssetChooser from "../assets/AssetChooser";

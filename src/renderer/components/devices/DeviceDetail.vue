@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading device ..."
@@ -20,10 +20,10 @@
       <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"/>
     </template>
     <template slot="dialogs">
-      <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
-      <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"/>
+      <sw-device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
+      <sw-device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"/>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -35,8 +35,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import DeviceDetailHeader from "./DeviceDetailHeader.vue";
 import DeviceAssignmentHistory from "./DeviceAssignmentHistory.vue";
 import DeviceUpdateDialog from "./DeviceUpdateDialog.vue";
@@ -50,8 +48,6 @@ import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     DeviceDetailHeader,
     DeviceAssignmentHistory,
     DeviceUpdateDialog,

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
+import { BaseDialog } from "sitewhere-ide-components";
 import ComponentAttributes from "./ComponentAttributes";
 
 export default {

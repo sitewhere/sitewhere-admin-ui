@@ -1,5 +1,5 @@
 <template>
-  <delete-dialog
+  <sw-delete-dialog
     ref="dialog"
     title="Delete User"
     width="400"
@@ -8,22 +8,17 @@
     @cancel="onCancel"
   >
     <v-card-text>{{ message }}</v-card-text>
-  </delete-dialog>
+  </sw-delete-dialog>
 </template>
 
 <script lang="ts">
-import DeleteDialog from "../common/DeleteDialog.vue";
 import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import { IUser, IUserResponseFormat } from "sitewhere-rest-api";
 import { getUser, deleteUser } from "../../rest/sitewhere-users-api";
 
-@Component({
-  components: {
-    DeleteDialog
-  }
-})
+@Component({})
 export default class UserDeleteDialog extends DeleteDialogComponent<IUser> {
   message: string | null = null;
 

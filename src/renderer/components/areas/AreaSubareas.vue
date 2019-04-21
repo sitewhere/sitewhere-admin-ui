@@ -1,27 +1,25 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
         <area-list-entry :area="area" @openArea="onOpenArea"/>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <area-create-dialog @areaAdded="refresh"/>
     </template>
-  </list-tab>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
-import ListLayout from "../common/ListLayout.vue";
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
 
@@ -37,8 +35,6 @@ import {
 
 Component({
   components: {
-    ListTab,
-    ListLayout,
     AreaListEntry,
     AreaCreateDialog
   }

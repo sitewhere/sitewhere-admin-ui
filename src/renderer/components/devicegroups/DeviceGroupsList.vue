@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Device Groups"
     loadingMessage="Loading device groups ..."
@@ -7,7 +7,7 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(group) in matches" :key="group.token">
         <device-group-list-entry
           :deviceGroup="group"
@@ -15,24 +15,25 @@
           @deviceGroupOpened="onOpenGroup"
         />
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <device-group-create-dialog ref="add" @deviceGroupAdded="refresh"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Device Group" @action="onAddDeviceGroup"/>
+      <sw-navigation-action-button
+        icon="plus"
+        tooltip="Add Device Group"
+        @action="onAddDeviceGroup"
+      />
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
 import DeviceGroupListEntry from "./DeviceGroupListEntry.vue";
 import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -47,11 +48,8 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
     DeviceGroupListEntry,
-    DeviceGroupCreateDialog,
-    NavigationActionButton
+    DeviceGroupCreateDialog
   }
 })
 export default class DeviceGroupsList extends ListComponent<

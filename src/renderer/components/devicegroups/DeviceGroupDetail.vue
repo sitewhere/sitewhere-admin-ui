@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading device group ..."
@@ -29,10 +29,14 @@
         :token="token"
         @elementAdded="onElementAdded"
       />
-      <device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh"/>
-      <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted"/>
+      <sw-device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh"/>
+      <sw-device-group-delete-dialog
+        ref="delete"
+        :token="token"
+        @groupDeleted="onDeviceGroupDeleted"
+      />
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -44,8 +48,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader.vue";
 import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog.vue";
 import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog.vue";
@@ -60,8 +62,6 @@ import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     DeviceGroupDetailHeader,
     DeviceGroupUpdateDialog,
     DeviceGroupDeleteDialog,

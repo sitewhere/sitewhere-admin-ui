@@ -1,17 +1,15 @@
 <template>
-  <delete-dialog
+  <sw-delete-dialog
     title="Delete Device Status"
     width="400"
     :error="error"
     @delete="onDeleteConfirmed"
   >
     <v-card-text>Are you sure you want to delete this device status?</v-card-text>
-  </delete-dialog>
+  </sw-delete-dialog>
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
-
 import { deleteDeviceStatus } from "../../rest/sitewhere-device-statuses-api";
 
 export default {
@@ -20,10 +18,6 @@ export default {
   }),
 
   props: ["deviceType", "status"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Show delete dialog.

@@ -1,12 +1,12 @@
 <template>
-  <list-tab
+  <sw-list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
         <assignment-list-entry
           :assignment="assignment"
@@ -14,15 +14,13 @@
           @refresh="refresh"
         />
       </v-flex>
-    </list-layout>
-  </list-tab>
+    </sw-list-layout>
+  </sw-list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-import ListTab from "../common/ListTab.vue";
-import ListLayout from "../common/ListLayout.vue";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
 import { routeTo } from "../common/Utils";
@@ -37,8 +35,6 @@ import {
 
 @Component({
   components: {
-    ListTab,
-    ListLayout,
     AssignmentListEntry
   }
 })

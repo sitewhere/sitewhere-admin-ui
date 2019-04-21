@@ -1,13 +1,12 @@
 <template>
-  <delete-dialog title="Delete Zone" width="400" :error="error" @delete="onDeleteConfirmed">
+  <sw-delete-dialog title="Delete Zone" width="400" :error="error" @delete="onDeleteConfirmed">
     <v-card-text>
       <v-card-text>Are you sure you want to delete this zone?</v-card-text>
     </v-card-text>
-  </delete-dialog>
+  </sw-delete-dialog>
 </template>
 
 <script>
-import DeleteDialog from "../common/DeleteDialog";
 import { deleteZone } from "../../rest/sitewhere-zones-api";
 
 export default {
@@ -16,10 +15,6 @@ export default {
   }),
 
   props: ["token"],
-
-  components: {
-    DeleteDialog
-  },
 
   methods: {
     // Show delete dialog.

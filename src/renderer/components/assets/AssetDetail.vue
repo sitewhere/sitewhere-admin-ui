@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading asset ..."
@@ -25,10 +25,10 @@
       <asset-delete-dialog ref="delete" :token="token" @assetDeleted="onAssetDeleted"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"/>
-      <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"/>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -40,8 +40,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import AssetDetailHeader from "./AssetDetailHeader.vue";
 import AssetAssignments from "./AssetAssignments.vue";
 import AssetDeleteDialog from "./AssetDeleteDialog.vue";
@@ -59,8 +57,6 @@ import {
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     AssetDetailHeader,
     AssetAssignments,
     AssetDeleteDialog,

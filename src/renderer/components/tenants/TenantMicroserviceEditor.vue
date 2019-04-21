@@ -1,5 +1,5 @@
 <template>
-  <navigation-page
+  <sw-navigation-page
     icon="microchip"
     title="Manage Tenant Microservice"
     loadingMessage="Loading tenant engine configuration ..."
@@ -22,20 +22,18 @@
       ></microservice-editor>
     </div>
     <div slot="actions">
-      <navigation-action-button
+      <sw-navigation-action-button
         icon="arrow-left"
         tooltip="Back To Tenant Microservices"
         @action="onBackToList"
-      ></navigation-action-button>
+      />
     </div>
-  </navigation-page>
+  </sw-navigation-page>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import NavigationPage from "../common/NavigationPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import TenantRuntimesBlock from "./TenantRuntimesBlock.vue";
 import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
@@ -58,8 +56,6 @@ import { getTenant } from "../../rest/sitewhere-tenants-api";
 
 @Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
     TenantRuntimesBlock,
     MicroserviceEditor,
     UnsavedUpdatesWarning

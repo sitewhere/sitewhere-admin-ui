@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-page
+    <sw-navigation-page
       v-if="assignment"
       icon="link"
       title="Manage Device Assignment"
@@ -44,21 +44,19 @@
         />
       </div>
       <div slot="actions">
-        <navigation-action-button
+        <sw-navigation-action-button
           icon="crosshairs"
           tooltip="Device Emulator"
           @action="onOpenEmulator"
-        ></navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Assignment" @action="onDelete"></navigation-action-button>
+        />
+        <sw-navigation-action-button icon="times" tooltip="Delete Assignment" @action="onDelete"/>
       </div>
-    </navigation-page>
+    </sw-navigation-page>
     <assignment-delete-dialog ref="delete" :token="token" @assignmentDeleted="onAssignmentDeleted"></assignment-delete-dialog>
   </div>
 </template>
 
 <script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
 import AssignmentDetailHeader from "./AssignmentDetailHeader";
 import AssignmentLocationEvents from "./AssignmentLocationEvents";
 import AssignmentMeasurementEvents from "./AssignmentMeasurementEvents";
@@ -80,8 +78,6 @@ export default {
   }),
 
   components: {
-    NavigationPage,
-    NavigationActionButton,
     AssignmentDetailHeader,
     AssignmentLocationEvents,
     AssignmentMeasurementEvents,

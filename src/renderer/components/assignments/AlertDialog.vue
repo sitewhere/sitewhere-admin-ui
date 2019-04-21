@@ -79,8 +79,7 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
-import MetadataPanel from "../common/MetadataPanel";
+import { BaseDialog, MetadataPanel } from "sitewhere-ide-components";
 
 import { arrayToMetadata, metadataToArray } from "../common/Utils";
 

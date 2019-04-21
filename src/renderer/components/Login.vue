@@ -48,7 +48,7 @@
       <v-container>
         <div class="login-wrapper">
           <div class="sitewhere-logo"></div>
-          <error-banner :error="error"></error-banner>
+          <sw-error-banner :error="error"/>
           <v-card-text class="ma-0 pa-1">
             <div
               style="width: 100%; text-align: center; color: #333; font-size: 35px; font-family: RobotoRegular"
@@ -123,7 +123,6 @@
 import Vue from "vue";
 import { Component } from "sitewhere-ide-common";
 
-import ErrorBanner from "./common/ErrorBanner.vue";
 import SocialButton from "./SocialButton.vue";
 
 import Electron from "electron";
@@ -159,7 +158,6 @@ const twitterTitle: string = "Follow SiteWhere on Twitter";
 
 @Component({
   components: {
-    ErrorBanner,
     SocialButton
   },
   mixins: [validationMixin],

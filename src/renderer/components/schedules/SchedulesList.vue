@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Schedules"
     loadingMessage="Loading batch operations ..."
@@ -31,7 +31,7 @@
         </template>
       </v-data-table>
     </v-flex>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
@@ -42,7 +42,6 @@ import {
   ITableHeaders
 } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
 import ScheduleCreateDialog from "./ScheduleCreateDialog.vue";
 import ScheduleUpdateDialog from "./ScheduleUpdateDialog.vue";
@@ -61,7 +60,6 @@ import {
 
 @Component({
   components: {
-    ListPage,
     ActionsBlock,
     ScheduleCreateDialog,
     ScheduleUpdateDialog,

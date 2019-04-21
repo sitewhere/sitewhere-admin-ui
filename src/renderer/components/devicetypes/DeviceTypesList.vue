@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Device Types"
     loadingMessage="Loading device types ..."
@@ -7,28 +7,25 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(deviceType) in matches" :key="deviceType.token">
         <device-type-list-entry :deviceType="deviceType" @deviceTypeOpened="onOpenDeviceType"/>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="dialogs">
       <device-type-create-dialog ref="add" @deviceTypeAdded="onDeviceTypeAdded"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Device Type" @action="onAddDeviceType"/>
+      <sw-navigation-action-button icon="plus" tooltip="Add Device Type" @action="onAddDeviceType"/>
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
 import DeviceTypeListEntry from "./DeviceTypeListEntry.vue";
 import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -43,11 +40,8 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
     DeviceTypeListEntry,
-    DeviceTypeCreateDialog,
-    NavigationActionButton
+    DeviceTypeCreateDialog
   }
 })
 export default class DeviceTypesList extends ListComponent<

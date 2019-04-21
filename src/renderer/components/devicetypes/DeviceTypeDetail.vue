@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading device type ..."
@@ -42,9 +42,9 @@
       </v-tab-item>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="bolt" tooltip="Create Command" @action="onCommandCreate"/>
-      <navigation-action-button icon="edit" tooltip="Edit Device Type" @action="onEdit"/>
-      <navigation-action-button icon="times" tooltip="Delete Device Type" @action="onDelete"/>
+      <sw-navigation-action-button icon="bolt" tooltip="Create Command" @action="onCommandCreate"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Device Type" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Device Type" @action="onDelete"/>
     </template>
     <template slot="dialogs">
       <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated"/>
@@ -52,7 +52,7 @@
       <command-create-dialog ref="command" :deviceType="deviceType" @commandAdded="onCommandAdded"/>
       <device-status-create-dialog :deviceType="deviceType" @statusAdded="onStatusAdded"/>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -64,8 +64,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import DeviceTypeDetailHeader from "./DeviceTypeDetailHeader.vue";
 import DeviceTypeCommands from "./DeviceTypeCommands.vue";
 import DeviceTypeStatuses from "./DeviceTypeStatuses.vue";
@@ -88,8 +86,6 @@ import {
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     DeviceTypeDetailHeader,
     DeviceTypeCommands,
     DeviceTypeStatuses,

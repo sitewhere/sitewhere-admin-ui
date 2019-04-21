@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import FloatingActionButton from "../common/FloatingActionButton";
 import MicroserviceBanner from "./MicroserviceBanner";
 import ComponentAttributes from "./ComponentAttributes";
 import ComponentContent from "./ComponentContent";
@@ -73,7 +72,6 @@ export default {
   props: ["config", "configModel", "identifier", "tenantToken"],
 
   components: {
-    FloatingActionButton,
     MicroserviceBanner,
     ComponentAttributes,
     ComponentContent,

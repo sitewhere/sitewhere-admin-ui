@@ -1,5 +1,5 @@
 <template>
-  <list-entry>
+  <sw-list-entry>
     <v-container @click="onAreaClicked">
       <v-layout row>
         <v-flex xs3>
@@ -15,7 +15,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </list-entry>
+  </sw-list-entry>
 </template>
 
 <script lang="ts">
@@ -23,13 +23,8 @@ import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
 import { IArea } from "sitewhere-rest-api";
-import ListEntry from "../common/ListEntry.vue";
 
-@Component({
-  components: {
-    ListEntry
-  }
-})
+@Component({})
 export default class AreaListEntry extends Vue {
   @Prop() readonly area!: IArea;
 

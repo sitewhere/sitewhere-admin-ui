@@ -67,10 +67,12 @@
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
-import MetadataPanel from "../common/MetadataPanel";
-import IconSelector from "../common/IconSelector";
-import ColorPicker from "../common/ColorPicker";
+import {
+  BaseDialog,
+  MetadataPanel,
+  IconSelector,
+  ColorPicker
+} from "sitewhere-ide-components";
 
 import { arrayToMetadata, metadataToArray } from "../common/Utils";
 

@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Users"
     loadingMessage="Loading users ..."
@@ -37,14 +37,14 @@
       </v-data-table>
     </v-flex>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add User" @action="onAddUser"/>
+      <sw-navigation-action-button icon="plus" tooltip="Add User" @action="onAddUser"/>
     </template>
     <template slot="dialogs">
       <user-create-dialog ref="add" @created="refresh"/>
       <user-update-dialog ref="edit" @updated="refresh"/>
       <user-delete-dialog ref="delete" @deleted="refresh"/>
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
@@ -56,8 +56,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import ActionsBlock from "../common/ActionsBlock.vue";
 import UserCreateDialog from "./UserCreateDialog.vue";
 import UserUpdateDialog from "./UserUpdateDialog.vue";
@@ -77,8 +75,6 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    NavigationActionButton,
     ActionsBlock,
     UserCreateDialog,
     UserUpdateDialog,

@@ -1,5 +1,5 @@
 <template>
-  <list-entry>
+  <sw-list-entry>
     <v-container fluid @click="onAssetClicked">
       <v-layout row>
         <v-flex xs2>
@@ -15,7 +15,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </list-entry>
+  </sw-list-entry>
 </template>
 
 <script lang="ts">
@@ -24,13 +24,8 @@ import Vue from "vue";
 
 import { IStyle } from "../common/Style";
 import { IAsset } from "sitewhere-rest-api";
-import ListEntry from "../common/ListEntry.vue";
 
-@Component({
-  components: {
-    ListEntry
-  }
-})
+@Component({})
 export default class AssetListEntry extends Vue {
   @Prop() readonly asset!: IAsset;
 

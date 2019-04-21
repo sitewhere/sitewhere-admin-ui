@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <sw-base-dialog
     :title="title"
     :width="width"
     :visible="dialogVisible"
@@ -51,10 +51,10 @@
                   </div>
                 </v-flex>
                 <v-flex xs12>
-                  <date-time-picker v-model="scheduleStartDate" label="Schedule start date"></date-time-picker>
+                  <sw-date-time-picker v-model="scheduleStartDate" label="Schedule start date"/>
                 </v-flex>
                 <v-flex xs12>
-                  <date-time-picker v-model="scheduleEndDate" label="Schedule end date"></date-time-picker>
+                  <sw-date-time-picker v-model="scheduleEndDate" label="Schedule end date"/>
                 </v-flex>
                 <v-flex xs12>
                   <v-select
@@ -105,21 +105,17 @@
         </v-card>
       </v-tabs-content>
       <v-tabs-content key="metadata" id="metadata">
-        <metadata-panel
+        <sw-metadata-panel
           :metadata="metadata"
           @itemDeleted="onMetadataDeleted"
           @itemAdded="onMetadataAdded"
         />
       </v-tabs-content>
     </v-tabs>
-  </base-dialog>
+  </sw-base-dialog>
 </template>
 
 <script>
-import BaseDialog from "../common/BaseDialog";
-import MetadataPanel from "../common/MetadataPanel";
-import DateTimePicker from "../common/DateTimePicker";
-
 import {
   formatIso8601,
   arrayToMetadata,
@@ -167,12 +163,6 @@ export default {
     scheduleType: {
       required
     }
-  },
-
-  components: {
-    BaseDialog,
-    MetadataPanel,
-    DateTimePicker
   },
 
   props: ["title", "width", "createLabel", "cancelLabel"],

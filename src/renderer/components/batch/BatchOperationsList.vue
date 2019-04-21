@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Batch Operations"
     loadingMessage="Loading batch operations ..."
@@ -49,7 +49,7 @@
         </template>
       </v-data-table>
     </v-flex>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
@@ -59,8 +59,6 @@ import {
   IPageSizes,
   ITableHeaders
 } from "sitewhere-ide-common";
-
-import ListPage from "../common/ListPage.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate, routeTo } from "../common/Utils";
@@ -73,11 +71,7 @@ import {
   IBatchOperationSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    ListPage
-  }
-})
+@Component({})
 export default class BatchOperationsList extends ListComponent<
   IBatchOperation,
   IBatchOperationSearchCriteria,

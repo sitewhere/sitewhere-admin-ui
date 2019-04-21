@@ -1,6 +1,6 @@
 <template>
   <div>
-    <confirm-dialog
+    <sw-confirm-dialog
       ref="dialog"
       buttonText="Update"
       title="Update Assignment Status"
@@ -8,7 +8,7 @@
       @action="onUpdateStatus"
     >
       <v-card-text>Are you sure you want to update the assignment status?</v-card-text>
-    </confirm-dialog>
+    </sw-confirm-dialog>
     <v-menu offset-y v-if="assignment.status === 'Active'">
       <v-tooltip left slot="activator">
         <v-btn
@@ -53,8 +53,6 @@
 </template>
 
 <script>
-import ConfirmDialog from "../common/ConfirmDialog";
-
 import {
   releaseAssignment,
   missingAssignment
@@ -84,10 +82,6 @@ export default {
   },
 
   props: ["assignment"],
-
-  components: {
-    ConfirmDialog
-  },
 
   methods: {
     // Get handle to nested dialog component.

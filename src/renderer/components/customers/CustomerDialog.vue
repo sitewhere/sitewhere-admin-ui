@@ -1,5 +1,5 @@
 <template>
-  <base-dialog
+  <sw-base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -24,10 +24,10 @@
         <branding-panel ref="branding"/>
       </v-tab-item>
       <v-tab-item key="metadata" id="metadata">
-        <metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata"/>
       </v-tab-item>
     </template>
-  </base-dialog>
+  </sw-base-dialog>
 </template>
 
 <script lang="ts">
@@ -40,18 +40,14 @@ import {
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 
-import BaseDialog from "../common/BaseDialog.vue";
 import CustomerDetailFields from "./CustomerDetailFields.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";
-import MetadataPanel from "../common/MetadataPanel.vue";
 import { ICustomer } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    BaseDialog,
     CustomerDetailFields,
-    BrandingPanel,
-    MetadataPanel
+    BrandingPanel
   }
 })
 export default class CustomerDialog extends DialogComponent<ICustomer> {

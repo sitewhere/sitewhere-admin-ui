@@ -1,5 +1,5 @@
 <template>
-  <list-page
+  <sw-list-page
     :icon="icon"
     title="Manage Devices"
     loadingMessage="Loading devices ..."
@@ -8,7 +8,7 @@
     :pageSizes="pageSizes"
     @pagingUpdated="onPagingUpdated"
   >
-    <list-layout>
+    <sw-list-layout>
       <v-flex xs6 v-for="(device) in matches" :key="device.token">
         <device-list-entry
           :device="device"
@@ -16,7 +16,7 @@
           @deviceOpened="onOpenDevice"
         ></device-list-entry>
       </v-flex>
-    </list-layout>
+    </sw-list-layout>
     <template slot="filters">
       <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
     </template>
@@ -26,20 +26,20 @@
       <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Device" @action="onAddDevice"></navigation-action-button>
-      <navigation-action-button
+      <sw-navigation-action-button icon="plus" tooltip="Add Device" @action="onAddDevice"/>
+      <sw-navigation-action-button
         v-if="filter.deviceType"
         icon="bolt"
         tooltip="Execute Batch Command"
         @action="onBatchCommandInvocation"
-      ></navigation-action-button>
-      <navigation-action-button
+      />
+      <sw-navigation-action-button
         icon="filter"
         tooltip="Filter Device List"
         @action="onShowFilterCriteria"
-      ></navigation-action-button>
+      />
     </template>
-  </list-page>
+  </sw-list-page>
 </template>
 
 <script lang="ts">
@@ -50,9 +50,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import ListPage from "../common/ListPage.vue";
-import ListLayout from "../common/ListLayout.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import DeviceListEntry from "./DeviceListEntry.vue";
 import DeviceListFilterBar from "./DeviceListFilterBar.vue";
 import DeviceCreateDialog from "./DeviceCreateDialog.vue";
@@ -72,9 +69,6 @@ import {
 
 @Component({
   components: {
-    ListPage,
-    ListLayout,
-    NavigationActionButton,
     DeviceListEntry,
     DeviceListFilterBar,
     DeviceCreateDialog,

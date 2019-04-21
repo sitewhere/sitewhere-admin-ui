@@ -1,20 +1,16 @@
 <template>
-  <span>
-    <device-status-dialog
-      ref="dialog"
-      :deviceType="deviceType"
-      title="Create Device Status"
-      width="600"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-    ></device-status-dialog>
-    <floating-action-button label="Add Status" icon="plus" @action="onOpenDialog"></floating-action-button>
-  </span>
+  <device-status-dialog
+    ref="dialog"
+    :deviceType="deviceType"
+    title="Create Device Status"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
 <script>
-import FloatingActionButton from "../common/FloatingActionButton";
 import DeviceStatusDialog from "./DeviceStatusDialog";
 
 import { createDeviceStatus } from "../../rest/sitewhere-device-statuses-api";
@@ -23,7 +19,6 @@ export default {
   data: () => ({}),
 
   components: {
-    FloatingActionButton,
     DeviceStatusDialog
   },
 

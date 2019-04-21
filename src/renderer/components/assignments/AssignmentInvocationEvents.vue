@@ -33,12 +33,11 @@
         </v-data-table>
       </v-flex>
     </v-layout>
-    <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging"></pager>
+    <sw-pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging"/>
   </div>
 </template>
 
 <script>
-import Pager from "../common/Pager";
 import NoResultsPanel from "../common/NoResultsPanel";
 
 import { formatDate } from "../common/Utils";
@@ -100,7 +99,6 @@ export default {
   props: ["token"],
 
   components: {
-    Pager,
     NoResultsPanel
   },
 

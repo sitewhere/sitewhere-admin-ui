@@ -1,5 +1,5 @@
 <template>
-  <detail-page
+  <sw-detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading area ..."
@@ -43,12 +43,12 @@
         tooltip="Up One Level"
         @action="onUpOneLevel"
       ></navigation-action-button>
-      <navigation-action-button icon="map" tooltip="Add Subarea" @action="onAddSubarea"></navigation-action-button>
-      <navigation-action-button icon="draw-polygon" tooltip="Add Zone" @action="onAddZone"></navigation-action-button>
-      <navigation-action-button icon="edit" tooltip="Edit Area" @action="onEdit"></navigation-action-button>
-      <navigation-action-button icon="times" tooltip="Delete Area" @action="onDelete"></navigation-action-button>
+      <sw-navigation-action-button icon="map" tooltip="Add Subarea" @action="onAddSubarea"/>
+      <sw-navigation-action-button icon="draw-polygon" tooltip="Add Zone" @action="onAddZone"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Area" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Area" @action="onDelete"/>
     </template>
-  </detail-page>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -60,8 +60,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import DetailPage from "../common/DetailPage.vue";
-import NavigationActionButton from "../common/NavigationActionButton.vue";
 import AreaDetailHeader from "./AreaDetailHeader.vue";
 import AreaSubareas from "./AreaSubareas.vue";
 import AreaAssignments from "./AreaAssignments.vue";
@@ -82,8 +80,6 @@ import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DetailPage,
-    NavigationActionButton,
     AreaDetailHeader,
     AreaSubareas,
     AreaAssignments,
