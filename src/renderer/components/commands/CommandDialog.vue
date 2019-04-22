@@ -12,19 +12,19 @@
     @cancelClicked="onCancelClicked"
   >
     <template slot="tabs">
-      <v-tab key="details" href="#details">Details</v-tab>
-      <v-tab key="parameters" href="#parameters">Parameters</v-tab>
-      <v-tab key="metadata" href="#metadata">Metadata</v-tab>
+      <v-tab key="details">Details</v-tab>
+      <v-tab key="parameters">Parameters</v-tab>
+      <v-tab key="metadata">Metadata</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details" id="details">
+      <v-tab-item key="details">
         <command-detail-fields ref="details"/>
       </v-tab-item>
-      <v-tab-item key="parameters" id="parameters">
+      <v-tab-item key="parameters">
         <parameters-panel ref="parameters"/>
       </v-tab-item>
-      <v-tab-item key="metadata" id="metadata">
-        <metadata-panel ref="metadata"/>
+      <v-tab-item key="metadata">
+        <sw-metadata-panel ref="metadata"/>
       </v-tab-item>
     </template>
   </sw-base-dialog>

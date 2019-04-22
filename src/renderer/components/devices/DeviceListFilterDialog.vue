@@ -12,14 +12,14 @@
     <v-tabs v-model="active">
       <v-tabs-bar dark color="primary">
         <v-tabs-slider></v-tabs-slider>
-        <v-tabs-item key="area" href="#area">Area</v-tabs-item>
-        <v-tabs-item key="deviceType" href="#deviceType">Device Type</v-tabs-item>
-        <v-tabs-item key="group" href="#group">Device Group</v-tabs-item>
-        <v-tabs-item key="created" href="#created">Created Date</v-tabs-item>
+        <v-tabs-item key="area">Area</v-tabs-item>
+        <v-tabs-item key="deviceType">Device Type</v-tabs-item>
+        <v-tabs-item key="group">Device Group</v-tabs-item>
+        <v-tabs-item key="created">Created Date</v-tabs-item>
         <slot name="tabitem"></slot>
       </v-tabs-bar>
       <v-tabs-items>
-        <v-tabs-content key="area" id="area">
+        <v-tabs-content key="area">
           <v-card flat>
             <v-card-text>
               <area-chooser
@@ -31,7 +31,7 @@
             </v-card-text>
           </v-card>
         </v-tabs-content>
-        <v-tabs-content key="deviceType" id="deviceType">
+        <v-tabs-content key="deviceType">
           <v-card flat>
             <v-card-text>
               <device-type-chooser
@@ -43,7 +43,7 @@
             </v-card-text>
           </v-card>
         </v-tabs-content>
-        <v-tabs-content key="group" id="group">
+        <v-tabs-content key="group">
           <v-card flat>
             <v-card-text>
               <device-group-chooser
@@ -55,7 +55,7 @@
             </v-card-text>
           </v-card>
         </v-tabs-content>
-        <v-tabs-content key="created" id="created">
+        <v-tabs-content key="created">
           <v-card flat>
             <v-card-text>
               <v-container fluid>

@@ -12,22 +12,22 @@
     @cancelClicked="onCancelClicked"
   >
     <template slot="tabs">
-      <v-tab key="details" href="#details">Details</v-tab>
-      <v-tab key="bounds" href="#bounds">Bounds</v-tab>
-      <v-tab key="branding" href="#branding">Branding</v-tab>
-      <v-tab key="metadata" href="#metadata">Metadata</v-tab>
+      <v-tab key="details">Details</v-tab>
+      <v-tab key="bounds">Bounds</v-tab>
+      <v-tab key="branding">Branding</v-tab>
+      <v-tab key="metadata">Metadata</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details" id="details">
+      <v-tab-item key="details">
         <area-detail-fields ref="details"/>
       </v-tab-item>
-      <v-tab-item key="bounds" id="bounds">
+      <v-tab-item key="bounds">
         <area-bounds-panel ref="bounds"/>
       </v-tab-item>
-      <v-tab-item key="branding" id="branding">
+      <v-tab-item key="branding">
         <branding-panel ref="branding"/>
       </v-tab-item>
-      <v-tab-item key="metadata" id="metadata">
+      <v-tab-item key="metadata">
         <sw-metadata-panel ref="metadata"/>
       </v-tab-item>
     </template>

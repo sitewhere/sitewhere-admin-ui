@@ -1,122 +1,93 @@
 <template>
-  <div>
-    <v-layout row wrap v-if="mxs">
-      <v-flex xs12>
-        <no-results-panel v-if="mxs.length === 0" text="No Measurement Events Found for Assignment"></no-results-panel>
-        <v-data-table
-          v-if="mxs.length > 0"
-          class="elevation-2 pa-0"
-          :headers="headers"
-          :items="mxs"
-          :hide-actions="true"
-          :total-items="0"
-        >
-          <template slot="items" slot-scope="props">
-            <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
-            <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
-            <td
-              width="10%"
-              style="white-space: nowrap"
-              :title="formatDate(props.item.eventDate)"
-            >{{ formatDate(props.item.eventDate) }}</td>
-            <td
-              width="10%"
-              style="white-space: nowrap"
-              :title="formatDate(props.item.receivedDate)"
-            >{{ formatDate(props.item.receivedDate) }}</td>
-          </template>
-        </v-data-table>
-      </v-flex>
-    </v-layout>
-    <sw-pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging"/>
-  </div>
+  <sw-data-table-tab
+    :tabkey="tabkey"
+    :loaded="loaded"
+    :headers="headers"
+    :results="results"
+    :pageSizes="pageSizes"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading assignment measurements ..."
+  >
+    <template slot="items" slot-scope="props">
+      <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
+      <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
+      <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.eventDate)"
+      >{{ formatDate(props.item.eventDate) }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.receivedDate)"
+      >{{ formatDate(props.item.receivedDate) }}</td>
+    </template>
+  </sw-data-table-tab>
 </template>
 
-<script>
-import NoResultsPanel from "../common/NoResultsPanel";
-
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
+import { AxiosPromise } from "axios";
 import { formatDate } from "../common/Utils";
+import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";
 import { listMeasurementsForAssignment } from "../../rest/sitewhere-device-assignments-api";
+import {
+  IDeviceMeasurement,
+  IDeviceMeasurementResponseFormat,
+  IDeviceMeasurementSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    mxs: null,
-    headers: [
-      {
-        align: "left",
-        sortable: false,
-        text: "Measurement Name",
-        value: "mxname"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Measurement Value",
-        value: "mxvalue"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Event Date",
-        value: "event"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Received Date",
-        value: "received"
-      }
-    ],
-    pageSizes: [
-      {
-        text: "25",
-        value: 25
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ]
-  }),
+@Component({})
+export default class AreaMeasurementEvents extends ListComponent<
+  IDeviceMeasurement,
+  IDateRangeSearchCriteria,
+  IDeviceMeasurementResponseFormat,
+  IDeviceMeasurementSearchResults
+> {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly token!: string;
 
-  props: ["token"],
+  pageSizes: IPageSizes = EventPageSizes;
+  headers: ITableHeaders = MeasurementHeaders;
 
-  components: {
-    NoResultsPanel
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh list of assignments.
-    refresh: function() {
-      var component = this;
-      var query = this.$data.paging.query;
-      listMeasurementsForAssignment(this.$store, this.token, query)
-        .then(function(response) {
-          component.results = response.data;
-          component.mxs = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    }
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDateRangeSearchCriteria {
+    let criteria: IDateRangeSearchCriteria = {};
+    return criteria;
   }
-};
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceMeasurementResponseFormat {
+    let format: IDeviceMeasurementResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    criteria: IDateRangeSearchCriteria,
+    format: IDeviceMeasurementResponseFormat
+  ): AxiosPromise<IDeviceMeasurementSearchResults> {
+    return listMeasurementsForAssignment(
+      this.$store,
+      this.token,
+      criteria,
+      format
+    );
+  }
+
+  /** Make function available to template */
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

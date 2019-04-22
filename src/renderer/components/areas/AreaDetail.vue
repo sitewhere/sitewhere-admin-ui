@@ -10,23 +10,22 @@
       <area-detail-header :record="area"/>
     </template>
     <template slot="tabs">
-      <v-tab key="areas" href="#areas">Subareas</v-tab>
-      <v-tab key="assignments" href="#assignments">Assigned Devices</v-tab>
-      <v-tab key="locations" href="#locations">Locations</v-tab>
-      <v-tab key="measurements" href="#measurements">Measurements</v-tab>
-      <v-tab key="alerts" href="#alerts">Alerts</v-tab>
-      <v-tab key="zones" href="#zones">Zones</v-tab>
+      <v-tab key="areas">Subareas</v-tab>
+      <v-tab key="assignments">Assigned Devices</v-tab>
+      <v-tab key="locations">Locations</v-tab>
+      <v-tab key="measurements">Measurements</v-tab>
+      <v-tab key="alerts">Alerts</v-tab>
+      <v-tab key="zones">Zones</v-tab>
     </template>
     <template slot="tab-items">
-      <area-subareas tabkey="areas" id="areas" ref="subareas" :areaToken="token"/>
-      <area-assignments tabkey="assignments" id="assignments" :areaToken="token"/>
-      <area-location-events tabkey="locations" id="locations" :areaToken="token"/>
-      <area-measurement-events tabkey="measurements" id="measurements" :areaToken="token"/>
-      <area-alert-events tabkey="alerts" id="alerts" :areaToken="token"/>
-      <area-zones ref="zones" tabkey="zones" id="zones" :areaToken="token"/>
+      <area-subareas tabkey="areas" ref="subareas" :areaToken="token"/>
+      <area-assignments tabkey="assignments" :areaToken="token"/>
+      <area-location-events tabkey="locations" :areaToken="token"/>
+      <area-measurement-events tabkey="measurements" :areaToken="token"/>
+      <area-alert-events tabkey="alerts" :areaToken="token"/>
+      <area-zones ref="zones" tabkey="zones" :areaToken="token"/>
     </template>
     <template slot="dialogs">
-      <area-create-dialog ref="areaCreate" :parentArea="area" @areaAdded="onSubareaAdded"/>
       <area-update-dialog
         ref="edit"
         :token="token"
@@ -37,12 +36,12 @@
       <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded"/>
     </template>
     <template slot="actions">
-      <navigation-action-button
+      <sw-navigation-action-button
         v-if="parentArea"
         icon="arrow-circle-up"
         tooltip="Up One Level"
         @action="onUpOneLevel"
-      ></navigation-action-button>
+      />
       <sw-navigation-action-button icon="map" tooltip="Add Subarea" @action="onAddSubarea"/>
       <sw-navigation-action-button icon="draw-polygon" tooltip="Add Zone" @action="onAddZone"/>
       <sw-navigation-action-button icon="edit" tooltip="Edit Area" @action="onEdit"/>

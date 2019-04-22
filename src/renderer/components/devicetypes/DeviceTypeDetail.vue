@@ -14,31 +14,17 @@
       />
     </template>
     <template slot="tabs">
-      <v-tab key="commands" href="#commands">Commands</v-tab>
-      <v-tab key="statuses" href="#statuses">Device Statuses</v-tab>
-      <v-tab key="code" href="#code">Code Generation</v-tab>
-      <v-tab
-        v-if="containerPolicy === 'Composite'"
-        key="composition"
-        href="#composition"
-      >Composition</v-tab>
+      <v-tab key="commands">Commands</v-tab>
+      <v-tab key="statuses">Device Statuses</v-tab>
+      <v-tab key="code">Code Generation</v-tab>
+      <v-tab v-if="containerPolicy === 'Composite'" key="composition">Composition</v-tab>
     </template>
     <template slot="tab-items">
-      <device-type-commands
-        tabkey="commands"
-        id="commands"
-        ref="commands"
-        :deviceType="deviceType"
-      />
-      <device-type-statuses
-        tabkey="statuses"
-        id="statuses"
-        ref="statuses"
-        :deviceType="deviceType"
-      />
+      <device-type-commands tabkey="commands" ref="commands" :deviceType="deviceType"/>
+      <device-type-statuses tabkey="statuses" ref="statuses" :deviceType="deviceType"/>
       <device-type-codegen tabkey="code" id="code" :deviceType="deviceType"/>
-      <v-tab-item v-if="containerPolicy === 'Composite'" key="composition" id="composition">
-        <device-type-composition :deviceType="deviceType"></device-type-composition>
+      <v-tab-item v-if="containerPolicy === 'Composite'" key="composition">
+        <device-type-composition :deviceType="deviceType"/>
       </v-tab-item>
     </template>
     <template slot="actions">

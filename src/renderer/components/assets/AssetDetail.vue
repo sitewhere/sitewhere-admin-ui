@@ -10,15 +10,10 @@
       <asset-detail-header :record="asset"/>
     </template>
     <template slot="tabs">
-      <v-tab key="assignments" href="#assignments">Assignments</v-tab>
+      <v-tab key="assignments">Assignments</v-tab>
     </template>
     <template slot="tab-items">
-      <asset-assignments
-        tabkey="assignments"
-        id="assignments"
-        ref="assignments"
-        :assetToken="token"
-      />
+      <asset-assignments tabkey="assignments" ref="assignments" :assetToken="token"/>
     </template>
     <template slot="dialogs">
       <asset-update-dialog ref="edit" :token="token" @asseUpdated="onAssetUpdated"/>

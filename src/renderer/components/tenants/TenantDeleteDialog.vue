@@ -1,42 +1,53 @@
 <template>
-  <sw-delete-dialog title="Delete Tenant" width="400" :error="error" @delete="onDeleteConfirmed">
-    <v-card-text>Are you sure you want to delete this tenant?</v-card-text>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Tenant"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
   </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteTenant } from "../../rest/sitewhere-tenants-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import { ITenant, ITenantResponseFormat } from "sitewhere-rest-api";
+import { getTenant, deleteTenant } from "../../rest/sitewhere-tenants-api";
 
-  props: ["tenantToken"],
+@Component({})
+export default class TenantDeleteDialog extends DeleteDialogComponent<ITenant> {
+  message: string | null = null;
 
-  methods: {
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.$children[0].openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteTenant(this.$store, this.tenantToken, true)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.$children[0].closeDialog();
-      this.$emit("tenantDeleted");
-    }
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<ITenant> {
+    let format: ITenantResponseFormat = {};
+    return getTenant(this.$store, identifier, format);
   }
-};
+
+  /** Called after record is loaded */
+  afterLoad(tenant: ITenant): void {
+    this.message = `Are you sure you want to delete '${tenant.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(tenant: ITenant): AxiosPromise<ITenant> {
+    return deleteTenant(this.$store, tenant.token);
+  }
+
+  // Called after create button is clicked.
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  // Called after cancel button is clicked.
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
 </script>
 
 <style scoped>

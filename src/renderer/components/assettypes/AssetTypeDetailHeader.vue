@@ -1,11 +1,6 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="assetType"
-    :imageUrl="assetType.imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="190px"
-  >
-    <span slot="content">
+  <sw-navigation-header-panel v-if="assetType" :imageUrl="assetType.imageUrl" height="190px">
+    <template slot="content">
       <sw-header-field label="Token">
         <sw-clipboard-copy-field :field="assetType.token" message="Token copied to clipboard"/>
       </sw-header-field>
@@ -21,7 +16,10 @@
       <sw-header-field label="Updated">
         <span>{{ formatDate(assetType.updatedDate) }}</span>
       </sw-header-field>
-    </span>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
   </sw-navigation-header-panel>
 </template>
 
@@ -30,8 +28,13 @@ import { Component, HeaderComponent } from "sitewhere-ide-common";
 
 import { formatDate } from "../common/Utils";
 import { IAssetType } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-@Component({})
+@Component({
+  components: {
+    AuthenticatedImage
+  }
+})
 export default class AreaTypeDetailHeader extends HeaderComponent<IAssetType> {
   // Reference record as asset type.
   get assetType(): IAssetType {

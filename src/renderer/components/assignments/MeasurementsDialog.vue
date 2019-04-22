@@ -12,12 +12,12 @@
     <v-tabs dark v-model="active">
       <v-tabs-bar slot="activators">
         <v-tabs-slider></v-tabs-slider>
-        <v-tabs-item key="details" href="#details">Measurement Details</v-tabs-item>
+        <v-tabs-item key="details">Measurement Details</v-tabs-item>
         <slot name="tabitem"></slot>
-        <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
+        <v-tabs-item key="metadata">Metadata</v-tabs-item>
       </v-tabs-bar>
       <slot name="tabcontent"></slot>
-      <v-tabs-content key="details" id="details">
+      <v-tabs-content key="details">
         <measurements-panel :mxs="mxs" @mxDeleted="onMxDeleted" @mxAdded="onMxAdded"></measurements-panel>
       </v-tabs-content>
     </v-tabs>

@@ -10,18 +10,18 @@
       <device-detail-header :record="device" @deviceDeleted="onDeviceDeleted"/>
     </template>
     <template slot="tabs">
-      <v-tab key="assignments" href="#assignments">Assignment History</v-tab>
+      <v-tab key="assignments">Assignment History</v-tab>
     </template>
     <template slot="tab-items">
-      <device-assignment-history tabkey="assignments" id="assignments" :deviceToken="token"/>
+      <device-assignment-history tabkey="assignments" :deviceToken="token"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"/>
-      <navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"/>
     </template>
     <template slot="dialogs">
-      <sw-device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
-      <sw-device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"/>
+      <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
+      <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"/>
     </template>
   </sw-detail-page>
 </template>

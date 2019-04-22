@@ -10,10 +10,10 @@
       <tenant-detail-header :record="tenant"/>
     </template>
     <template slot="tabs">
-      <v-tab key="microservices" href="#microservices">Microservices</v-tab>
+      <v-tab key="microservices">Microservices</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="microservices" id="microservices">
+      <v-tab-item key="microservices">
         <microservice-list :topology="tenantTopology" @microserviceClicked="onMicroserviceClicked"/>
       </v-tab-item>
     </template>
@@ -67,7 +67,7 @@ export default class TenantDetail extends DetailComponent<ITenant> {
   // References.
   $refs!: Refs<{
     edit: TenantUpdateDialog;
-    delete: DialogComponent<ITenant>;
+    delete: TenantDeleteDialog;
   }>;
 
   get tenant(): ITenant | null {
@@ -138,7 +138,9 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 
   // Called to delete tenant.
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    if (this.token) {
+      this.$refs.delete.open(this.token);
+    }
   }
 
   // Called after tenant is deleted.

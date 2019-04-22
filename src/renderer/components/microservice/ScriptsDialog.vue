@@ -11,12 +11,12 @@
   >
     <v-tabs v-model="active">
       <v-tabs-bar dark color="primary">
-        <v-tabs-item key="details" href="#details">Script Details</v-tabs-item>
-        <v-tabs-item key="content" href="#content">Script Content</v-tabs-item>
+        <v-tabs-item key="details">Script Details</v-tabs-item>
+        <v-tabs-item key="content">Script Content</v-tabs-item>
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
-        <v-tabs-content key="details" id="details">
+        <v-tabs-content key="details">
           <v-card flat>
             <v-card-text>
               <v-container fluid>
@@ -66,7 +66,7 @@
             </v-card-text>
           </v-card>
         </v-tabs-content>
-        <v-tabs-content key="content" id="content">
+        <v-tabs-content key="content">
           <v-card>
             <v-card-text>
               <v-container fluid>

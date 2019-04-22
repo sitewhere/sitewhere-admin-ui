@@ -1,98 +1,86 @@
 <template>
-  <navigation-header-panel
-    v-if="assignment"
-    :imageUrl="assignment.device.deviceType.imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="220px"
-  >
-    <span slot="content">
-      <header-field label="Assignment token">
-        <clipboard-copy-field
+  <sw-navigation-header-panel v-if="assignment" :imageUrl="imageUrl" height="220px">
+    <template slot="content">
+      <sw-header-field label="Assignment token">
+        <sw-clipboard-copy-field
           :field="assignment.token"
           message="Assignment token copied to clipboard"
-        ></clipboard-copy-field>
-      </header-field>
-      <linked-header-field
+        />
+      </sw-header-field>
+      <sw-linked-header-field
         v-if="assignment.asset"
         label="Assigned asset"
         :text="assignment.assetName"
         :url="'/assets/' + assignment.asset.token"
-      ></linked-header-field>
-      <header-field v-else label="Assigned asset">
+      />
+      <sw-header-field v-else label="Assigned asset">
         <span>No asset assigned</span>
-      </header-field>
-      <linked-header-field
+      </sw-header-field>
+      <sw-linked-header-field
         label="Assigned device"
         :text="assignment.device.deviceType.name"
         :url="'/devices/' + assignment.device.token"
-      ></linked-header-field>
-      <header-field label="Created date">
+      />
+      <sw-header-field label="Created date">
         <span>{{ formatDate(assignment.createdDate) }}</span>
-      </header-field>
-      <header-field label="Last updated date">
+      </sw-header-field>
+      <sw-header-field label="Last updated date">
         <span>{{ formatDate(assignment.updatedDate) }}</span>
-      </header-field>
-      <header-field label="Active date">
+      </sw-header-field>
+      <sw-header-field label="Active date">
         <span>{{ formatDate(assignment.activeDate) }}</span>
-      </header-field>
-      <header-field label="Released date">
+      </sw-header-field>
+      <sw-header-field label="Released date">
         <span>{{ formatDate(assignment.releasedDate) }}</span>
-      </header-field>
-    </span>
-  </navigation-header-panel>
+      </sw-header-field>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-import { styleForAssignmentStatus } from "../common/Style";
-import {
-  NavigationHeaderPanel,
-  HeaderField,
-  LinkedHeaderField,
-  ClipboardCopyField
-} from "sitewhere-ide-components";
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
 
 import { formatDate } from "../common/Utils";
+import { IDeviceAssignment } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-export default {
-  data: () => ({}),
-
-  props: ["assignment"],
-
+@Component({
   components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    LinkedHeaderField,
-    ClipboardCopyField
-  },
-
-  computed: {
-    // Compute card style based on assignment status.
-    assignmentStyle: function() {
-      let style = styleForAssignmentStatus(this.assignment);
-      style["position"] = "absolute";
-      style["left"] = 0;
-      style["right"] = 0;
-      style["top"] = 0;
-      style["bottom"] = 0;
-      return style;
-    },
-    // Compute QR code URL.
-    qrCodeUrl: function() {
-      return "assignments/" + this.assignment.token + "/label/qrcode";
-    }
-  },
-
-  methods: {
-    // Format date.
-    formatDate: function(date) {
-      return formatDate(date);
-    },
-    // Open the assignment emulator.
-    onOpenEmulator: function() {
-      this.$emit("emulatorOpened");
-    }
+    AuthenticatedImage
   }
-};
+})
+export default class AssignmentDetailHeader extends HeaderComponent<
+  IDeviceAssignment
+> {
+  // Reference record as assignment.
+  get assignment(): IDeviceAssignment {
+    return this.record;
+  }
+
+  // Token.
+  get token(): string {
+    return this.assignment ? this.assignment.token : "";
+  }
+
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.assignment
+      ? (this.assignment as any).device.deviceType.imageUrl
+      : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "assignments/" + this.token + "/label/qrcode";
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

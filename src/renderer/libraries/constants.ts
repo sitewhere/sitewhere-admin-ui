@@ -10,6 +10,7 @@ export enum NavigationIcon {
   Global = "language",
   Device = "developer_board",
   DeviceType = "settings",
+  DeviceAssignment = "bookmark",
   DeviceGroup = "apps",
   Customer = "account_balance",
   CustomerType = "settings",
@@ -118,6 +119,68 @@ export const AlertHeaders: ITableHeaders = [
     sortable: false,
     text: "Message",
     value: "message"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Event Date",
+    value: "event"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Received Date",
+    value: "received"
+  }
+];
+
+// Table headers used for device command responses.
+export const ResponseHeaders: ITableHeaders = [
+  {
+    align: "left",
+    sortable: false,
+    text: "Originating Event Id",
+    value: "oeid"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Response",
+    value: "response"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Event Date",
+    value: "event"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Received Date",
+    value: "received"
+  }
+];
+
+// Table headers used for device command invocations.
+export const InvocationHeaders: ITableHeaders = [
+  {
+    align: "left",
+    sortable: false,
+    text: "Command",
+    value: "command"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Source",
+    value: "source"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Target",
+    value: "target"
   },
   {
     align: "left",

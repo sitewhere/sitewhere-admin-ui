@@ -7,10 +7,10 @@
     :record="topology"
   >
     <template slot="tabs">
-      <v-tab key="microservices" href="#microservices">Microservices</v-tab>
+      <v-tab key="microservices">Microservices</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="microservices" id="microservices">
+      <v-tab-item key="microservices">
         <microservice-list :topology="topology" @microserviceClicked="onMicroserviceClicked"/>
       </v-tab-item>
     </template>

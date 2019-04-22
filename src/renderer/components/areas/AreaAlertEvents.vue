@@ -1,7 +1,6 @@
 <template>
   <sw-data-table-tab
     :tabkey="tabkey"
-    :id="id"
     :loaded="loaded"
     :headers="headers"
     :results="results"
@@ -48,14 +47,13 @@ import {
 } from "sitewhere-rest-api";
 
 @Component({})
-export default class CustomerMeasurementEvents extends ListComponent<
+export default class AreaAlertEvents extends ListComponent<
   IDeviceAlert,
   IDateRangeSearchCriteria,
   IDeviceAlertResponseFormat,
   IDeviceAlertSearchResults
 > {
   @Prop() readonly tabkey!: string;
-  @Prop() readonly id!: string;
   @Prop() readonly areaToken!: string;
 
   pageSizes: IPageSizes = EventPageSizes;

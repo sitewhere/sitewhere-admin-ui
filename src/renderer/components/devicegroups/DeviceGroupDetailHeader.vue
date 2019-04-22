@@ -1,11 +1,6 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="deviceGroup"
-    :imageUrl="imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="200px"
-  >
-    <span slot="content">
+  <sw-navigation-header-panel v-if="deviceGroup" :imageUrl="imageUrl" height="200px">
+    <template slot="content">
       <sw-header-field label="Token">
         <sw-clipboard-copy-field :field="deviceGroup.token" message="Token copied to clipboard"/>
       </sw-header-field>
@@ -21,15 +16,23 @@
       <sw-header-field label="Roles">
         <span>{{ rolesList }}</span>
       </sw-header-field>
-    </span>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
   </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { IDeviceGroup } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-@Component({})
+@Component({
+  components: {
+    AuthenticatedImage
+  }
+})
 export default class DeviceDetailHeader extends HeaderComponent<IDeviceGroup> {
   // Reference record as device group.
   get deviceGroup(): IDeviceGroup {

@@ -1,11 +1,6 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="deviceType"
-    :imageUrl="imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="220px"
-  >
-    <span slot="content">
+  <sw-navigation-header-panel v-if="deviceType" :imageUrl="imageUrl" height="220px">
+    <template slot="content">
       <sw-header-field label="Token">
         <sw-clipboard-copy-field :field="deviceType.token" message="Token copied to clipboard"/>
       </sw-header-field>
@@ -27,15 +22,23 @@
       <sw-header-field label="Updated">
         <span>{{ formatDate(deviceType.updatedDate) }}</span>
       </sw-header-field>
-    </span>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
   </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { IDeviceType } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-@Component({})
+@Component({
+  components: {
+    AuthenticatedImage
+  }
+})
 export default class DeviceDetailHeader extends HeaderComponent<IDeviceType> {
   // Reference record as device type.
   get deviceType(): IDeviceType {

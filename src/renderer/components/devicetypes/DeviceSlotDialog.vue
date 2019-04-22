@@ -13,9 +13,9 @@
       <v-tabs dark v-model="active">
         <v-tabs-bar slot="activators" class="blue darken-2">
           <v-tabs-slider></v-tabs-slider>
-          <v-tabs-item key="settings" href="#settings">Device Slot Settings</v-tabs-item>
+          <v-tabs-item key="settings">Device Slot Settings</v-tabs-item>
         </v-tabs-bar>
-        <v-tabs-content key="settings" id="settings">
+        <v-tabs-content key="settings">
           <v-card flat>
             <v-card-text>
               <v-container fluid>

@@ -1,7 +1,6 @@
 <template>
   <sw-list-tab
     :tabkey="tabkey"
-    :id="id"
     :loaded="loaded"
     :results="results"
     @pagingUpdated="onPagingUpdated"
@@ -33,12 +32,12 @@ import {
   IAreaSearchResults
 } from "sitewhere-rest-api";
 
-Component({
+@Component({
   components: {
     AreaListEntry,
     AreaCreateDialog
   }
-});
+})
 export default class AreaSubareas extends ListComponent<
   IArea,
   IAreaSearchCriteria,
@@ -46,7 +45,6 @@ export default class AreaSubareas extends ListComponent<
   IAreaSearchResults
 > {
   @Prop() readonly tabkey!: string;
-  @Prop() readonly id!: string;
   @Prop() readonly areaToken!: string;
 
   /** Build search criteria for list */

@@ -11,12 +11,12 @@
   >
     <v-tabs v-model="active">
       <v-tabs-bar dark color="primary">
-        <v-tabs-item key="details" href="#details">Element details</v-tabs-item>
-        <v-tabs-item key="roles" href="#roles">Roles</v-tabs-item>
+        <v-tabs-item key="details">Element details</v-tabs-item>
+        <v-tabs-item key="roles">Roles</v-tabs-item>
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
-        <v-tabs-content key="details" id="details">
+        <v-tabs-content key="details">
           <v-card flat>
             <v-card-text>
               <v-select
@@ -43,7 +43,7 @@
             </v-card-text>
           </v-card>
         </v-tabs-content>
-        <v-tabs-content key="roles" id="roles">
+        <v-tabs-content key="roles">
           <v-card flat>
             <v-card-text>
               <roles-field :roles="elementRoles" @onRolesUpdated="onRolesUpdated"></roles-field>

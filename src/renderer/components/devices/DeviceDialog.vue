@@ -12,14 +12,14 @@
     @cancelClicked="onCancelClicked"
   >
     <template slot="tabs">
-      <v-tab key="details" href="#details">Details</v-tab>
-      <v-tab key="metadata" href="#metadata">Metadata</v-tab>
+      <v-tab key="details">Details</v-tab>
+      <v-tab key="metadata">Metadata</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details" id="details">
+      <v-tab-item key="details">
         <device-detail-fields ref="details"/>
       </v-tab-item>
-      <v-tab-item key="metadata" id="metadata">
+      <v-tab-item key="metadata">
         <sw-metadata-panel ref="metadata"/>
       </v-tab-item>
     </template>
@@ -76,6 +76,7 @@ export default class DeviceDialog extends DialogComponent<IDevice> {
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
+    this.$refs.dialog.setActiveTab("details");
   }
 
   // Load dialog from a given payload.

@@ -14,10 +14,10 @@
       />
     </template>
     <template slot="tabs">
-      <v-tab key="instances" href="#instances">Customers of Type</v-tab>
+      <v-tab key="instances">Customers of Type</v-tab>
     </template>
     <template slot="tab-items">
-      <customer-type-customers key="instances" id="instances" :customerTypeToken="token"/>
+      <customer-type-customers key="instances" :customerTypeToken="token"/>
     </template>
     <template slot="dialogs">
       <customer-type-update-dialog

@@ -1,10 +1,5 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="customer"
-    :imageUrl="imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="200px"
-  >
+  <sw-navigation-header-panel v-if="customer" :imageUrl="imageUrl" height="200px">
     <template slot="content">
       <sw-header-field label="Token">
         <sw-clipboard-copy-field :field="customer.token" message="Token copied to clipboard"/>
@@ -27,14 +22,22 @@
         <span>{{ formatDate(customer.updatedDate) }}</span>
       </sw-header-field>
     </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
   </sw-navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { ICustomer } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-@Component({})
+@Component({
+  components: {
+    AuthenticatedImage
+  }
+})
 export default class CustomerDetailHeader extends HeaderComponent<ICustomer> {
   // Reference record as customer.
   get customer(): ICustomer {

@@ -1,11 +1,6 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="area"
-    :imageUrl="imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="200px"
-  >
-    <span slot="content">
+  <sw-navigation-header-panel v-if="area" :imageUrl="imageUrl" height="200px">
+    <template slot="content">
       <sw-header-field label="Token">
         <sw-clipboard-copy-field :field="area.token" message="Token copied to clipboard"/>
       </sw-header-field>
@@ -26,7 +21,10 @@
       <sw-header-field label="Updated">
         <span>{{ formatDate(area.updatedDate) }}</span>
       </sw-header-field>
-    </span>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
   </sw-navigation-header-panel>
 </template>
 
@@ -35,8 +33,13 @@ import { Component, HeaderComponent } from "sitewhere-ide-common";
 
 import { formatDate } from "../common/Utils";
 import { IArea } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-@Component({})
+@Component({
+  components: {
+    AuthenticatedImage
+  }
+})
 export default class AreaDetailHeader extends HeaderComponent<IArea> {
   // Reference record as area.
   get area(): IArea {

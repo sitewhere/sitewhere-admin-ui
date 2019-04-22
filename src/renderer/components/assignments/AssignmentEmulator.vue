@@ -5,8 +5,8 @@
       <v-card>
         <v-tabs v-model="active">
           <v-tabs-bar dark color="primary">
-            <v-tabs-item key="emulator" href="#emulator">Emulator</v-tabs-item>
-            <v-tabs-item key="mqtt" href="#mqtt">MQTT Settings</v-tabs-item>
+            <v-tabs-item key="emulator">Emulator</v-tabs-item>
+            <v-tabs-item key="mqtt">MQTT Settings</v-tabs-item>
             <v-spacer></v-spacer>
             <sw-navigation-action-button
               icon="exclamation-triangle"
@@ -31,7 +31,7 @@
             <v-tabs-slider></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-items>
-            <v-tabs-content key="emulator" id="emulator" :lazy="true">
+            <v-tabs-content key="emulator" :lazy="true">
               <div>
                 <assignment-emulator-map
                   ref="map"
@@ -56,7 +56,7 @@
                 </v-card>
               </div>
             </v-tabs-content>
-            <v-tabs-content key="mqtt" id="mqtt">
+            <v-tabs-content key="mqtt">
               <v-card flat>
                 <v-card-text>
                   <v-container fluid>

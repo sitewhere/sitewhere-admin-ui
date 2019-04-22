@@ -10,23 +10,18 @@
       <customer-detail-header :record="customer"/>
     </template>
     <template slot="tabs">
-      <v-tab key="customers" href="#customers">Subcustomers</v-tab>
-      <v-tab key="assignments" href="#assignments">Assigned Devices</v-tab>
-      <v-tab key="locations" href="#locations">Locations</v-tab>
-      <v-tab key="measurements" href="#measurements">Measurements</v-tab>
-      <v-tab key="alerts" href="#alerts">Alerts</v-tab>
+      <v-tab key="customers">Subcustomers</v-tab>
+      <v-tab key="assignments">Assigned Devices</v-tab>
+      <v-tab key="locations">Locations</v-tab>
+      <v-tab key="measurements">Measurements</v-tab>
+      <v-tab key="alerts">Alerts</v-tab>
     </template>
     <template slot="tab-items">
-      <customer-subcustomers
-        tabkey="customers"
-        id="customers"
-        ref="customers"
-        :customer="customer"
-      />
-      <customer-assignments tabkey="assignments" id="assignments" :customerToken="token"/>
-      <customer-location-events tabkey="locations" id="locations" :customerToken="token"/>
-      <customer-measurement-events tabkey="measurements" id="measurements" :customerToken="token"/>
-      <customer-alert-events tabkey="alerts" id="alerts" :customerToken="token"/>
+      <customer-subcustomers tabkey="customers" ref="customers" :customer="customer"/>
+      <customer-assignments tabkey="assignments" :customerToken="token"/>
+      <customer-location-events tabkey="locations" :customerToken="token"/>
+      <customer-measurement-events tabkey="measurements" :customerToken="token"/>
+      <customer-alert-events tabkey="alerts" :customerToken="token"/>
     </template>
     <template slot="dialogs">
       <customer-create-dialog
@@ -49,11 +44,11 @@
         </v-btn>
         <span>Up One Level</span>
       </v-tooltip>
-      <navigation-action-button
+      <sw-navigation-action-button
         icon="building"
         tooltip="Add Subcustomer"
         @action="onAddSubcustomer"
-      ></navigation-action-button>
+      />
       <sw-navigation-action-button icon="edit" tooltip="Edit Customer" @action="onEdit"/>
       <sw-navigation-action-button icon="times" tooltip="Delete Customer" @action="onDelete"/>
     </template>

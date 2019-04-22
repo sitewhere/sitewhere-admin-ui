@@ -15,11 +15,11 @@
       />
     </template>
     <template slot="tabs">
-      <v-tab key="configuration" href="#configuration">Configuration</v-tab>
-      <v-tab key="scripts" href="#scripts">Scripts</v-tab>
+      <v-tab key="configuration">Configuration</v-tab>
+      <v-tab key="scripts">Scripts</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="configuration" id="configuration">
+      <v-tab-item key="configuration">
         <microservice-editor
           :config="configuration"
           :configModel="configurationModel"
@@ -27,7 +27,7 @@
           @dirty="onConfigurationUpdated"
         />
       </v-tab-item>
-      <v-tab-item key="scripts" id="scripts">
+      <v-tab-item key="scripts">
         <scripts-manager :identifier="identifier"/>
       </v-tab-item>
     </template>

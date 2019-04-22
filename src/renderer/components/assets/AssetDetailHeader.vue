@@ -1,13 +1,8 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="asset"
-    :imageUrl="imageUrl"
-    :qrCodeUrl="qrCodeUrl"
-    height="200px"
-  >
-    <span slot="content">
+  <sw-navigation-header-panel v-if="asset" :imageUrl="imageUrl" height="200px">
+    <template slot="content">
       <sw-header-field label="Token">
-        <clipboard-copy-field :field="asset.token" message="Token copied to clipboard"></clipboard-copy-field>
+        <sw-clipboard-copy-field :field="asset.token" message="Token copied to clipboard"/>
       </sw-header-field>
       <sw-header-field label="Name">
         <span>{{ asset.name }}</span>
@@ -26,7 +21,10 @@
       <sw-header-field label="Updated">
         <span>{{ formatDate(asset.updatedDate) }}</span>
       </sw-header-field>
-    </span>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
   </sw-navigation-header-panel>
 </template>
 
@@ -35,8 +33,13 @@ import { Component, HeaderComponent } from "sitewhere-ide-common";
 
 import { formatDate } from "../common/Utils";
 import { IAsset } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-@Component({})
+@Component({
+  components: {
+    AuthenticatedImage
+  }
+})
 export default class AssetDetailHeader extends HeaderComponent<IAsset> {
   // Reference record as area.
   get asset(): IAsset {

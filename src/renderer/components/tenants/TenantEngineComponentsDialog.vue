@@ -10,11 +10,11 @@
   >
     <v-tabs v-model="active">
       <v-tabs-bar dark color="primary">
-        <v-tabs-item key="components" href="#components">Components</v-tabs-item>
+        <v-tabs-item key="components">Components</v-tabs-item>
         <v-tabs-slider></v-tabs-slider>
       </v-tabs-bar>
       <v-tabs-items>
-        <v-tabs-content key="components" id="components">
+        <v-tabs-content key="components">
           <v-card flat>
             <v-card-text>
               <el-tree

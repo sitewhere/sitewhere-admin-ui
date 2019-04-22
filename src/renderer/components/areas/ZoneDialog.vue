@@ -12,12 +12,12 @@
     >
       <v-tabs v-model="active">
         <v-tabs-bar dark color="primary">
-          <v-tabs-item key="settings" href="#settings">Zone Settings</v-tabs-item>
-          <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
+          <v-tabs-item key="settings">Zone Settings</v-tabs-item>
+          <v-tabs-item key="metadata">Metadata</v-tabs-item>
           <v-tabs-slider></v-tabs-slider>
         </v-tabs-bar>
         <v-tabs-items>
-          <v-tabs-content key="settings" id="settings" :lazy="true">
+          <v-tabs-content key="settings" :lazy="true">
             <v-card flat>
               <v-card-text>
                 <map-with-zone-overlay-panel
@@ -75,7 +75,7 @@
               </v-card-text>
             </v-card>
           </v-tabs-content>
-          <v-tabs-content key="metadata" id="metadata">
+          <v-tabs-content key="metadata">
             <sw-metadata-panel
               :metadata="metadata"
               @itemDeleted="onMetadataDeleted"

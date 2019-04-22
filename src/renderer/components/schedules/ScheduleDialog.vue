@@ -12,11 +12,11 @@
     <v-tabs dark v-model="active">
       <v-tabs-bar slot="activators">
         <v-tabs-slider></v-tabs-slider>
-        <v-tabs-item key="details" href="#details">Schedule Details</v-tabs-item>
-        <v-tabs-item key="metadata" href="#metadata">Metadata</v-tabs-item>
+        <v-tabs-item key="details">Schedule Details</v-tabs-item>
+        <v-tabs-item key="metadata">Metadata</v-tabs-item>
       </v-tabs-bar>
       <slot name="tabcontent"></slot>
-      <v-tabs-content key="details" id="details">
+      <v-tabs-content key="details">
         <v-card flat>
           <v-card-text>
             <v-container fluid>
@@ -104,7 +104,7 @@
           </v-card-text>
         </v-card>
       </v-tabs-content>
-      <v-tabs-content key="metadata" id="metadata">
+      <v-tabs-content key="metadata">
         <sw-metadata-panel
           :metadata="metadata"
           @itemDeleted="onMetadataDeleted"

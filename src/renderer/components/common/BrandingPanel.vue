@@ -6,7 +6,7 @@
       </form-text>
     </v-flex>
     <v-flex xs12>
-      <icon-selector v-model="icon"/>
+      <sw-icon-selector v-model="icon"/>
     </v-flex>
     <v-flex xs12>
       <sw-color-input-field text="Background" v-model="backgroundColor"/>

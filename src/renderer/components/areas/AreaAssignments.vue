@@ -1,7 +1,6 @@
 <template>
   <sw-list-tab
     :tabkey="tabkey"
-    :id="id"
     :loaded="loaded"
     :results="results"
     @pagingUpdated="onPagingUpdated"
@@ -45,7 +44,6 @@ export default class AreaAssignments extends ListComponent<
   IDeviceAssignmentSearchResults
 > {
   @Prop() readonly tabkey!: string;
-  @Prop() readonly id!: string;
   @Prop() readonly areaToken!: string;
 
   /** Build search criteria for list */

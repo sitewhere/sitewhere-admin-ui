@@ -1,7 +1,7 @@
 <template>
   <device-dialog
     ref="dialog"
-    title="Create Tenant"
+    title="Create Device"
     width="600"
     createLabel="Create"
     cancelLabel="Cancel"

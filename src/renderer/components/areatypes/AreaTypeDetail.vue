@@ -14,10 +14,10 @@
       />
     </template>
     <template slot="tabs">
-      <v-tab key="areas" href="#areas">Areas of Type</v-tab>
+      <v-tab key="areas">Areas of Type</v-tab>
     </template>
     <template slot="tab-items">
-      <area-type-areas tabkey="areas" id="areas" ref="areas" :areaTypeToken="token"/>
+      <area-type-areas tabkey="areas" ref="areas" :areaTypeToken="token"/>
     </template>
     <template slot="dialogs">
       <area-type-update-dialog ref="edit" :token="token" @areaTypeUpdated="onAreaTypeUpdated"/>

@@ -14,14 +14,14 @@
       />
     </template>
     <template slot="tabs">
-      <v-tab key="elements" href="#elements">Group Elements</v-tab>
+      <v-tab key="elements">Group Elements</v-tab>
     </template>
     <template slot="tab-items">
-      <device-group-elements tabkey="elements" id="elements" ref="list" :deviceGroup="deviceGroup"/>
+      <device-group-elements tabkey="elements" ref="list" :deviceGroup="deviceGroup"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="edit" tooltip="Edit Device Group" @action="onEdit"/>
-      <navigation-action-button icon="times" tooltip="Delete Device Group" @action="onDelete"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Device Group" @action="onEdit"/>
+      <sw-navigation-action-button icon="times" tooltip="Delete Device Group" @action="onDelete"/>
     </template>
     <template slot="dialogs">
       <device-group-element-create-dialog
@@ -29,12 +29,8 @@
         :token="token"
         @elementAdded="onElementAdded"
       />
-      <sw-device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh"/>
-      <sw-device-group-delete-dialog
-        ref="delete"
-        :token="token"
-        @groupDeleted="onDeviceGroupDeleted"
-      />
+      <device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh"/>
+      <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted"/>
     </template>
   </sw-detail-page>
 </template>

@@ -15,10 +15,10 @@
       />
     </template>
     <template slot="tabs">
-      <v-tab key="assets" href="#assets">Assets</v-tab>
+      <v-tab key="assets">Assets</v-tab>
     </template>
     <template slot="tab-items">
-      <asset-type-assets tabkey="assets" id="assets" ref="assets" :assetTypeToken="token"/>
+      <asset-type-assets tabkey="assets" ref="assets" :assetTypeToken="token"/>
     </template>
     <template slot="dialogs">
       <asset-type-update-dialog ref="edit" :token="token" @assetTypeUpdated="onAssetTypeUpdated"/>

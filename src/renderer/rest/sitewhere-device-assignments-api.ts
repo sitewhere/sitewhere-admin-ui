@@ -23,7 +23,12 @@ import {
   IDeviceAlertSearchResults,
   IDeviceCommandInvocationSearchResults,
   IDeviceCommandResponseSearchResults,
-  IDateRangeSearchCriteria
+  IDateRangeSearchCriteria,
+  IDeviceMeasurementResponseFormat,
+  IDeviceAlertResponseFormat,
+  IDeviceLocationResponseFormat,
+  IDeviceCommandInvocationResponseFormat,
+  IDeviceCommandResponseResponseFormat
 } from "sitewhere-rest-api";
 
 /**
@@ -46,15 +51,17 @@ export function createDeviceAssignment(
  * Get a device assignment by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getDeviceAssignment(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IDeviceAssignmentResponseFormat
 ): Promise<AxiosResponse<IDeviceAssignment>> {
   let axios = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceAssignment
-  > = SiteWhere.API.DeviceAssignments.getDeviceAssignment(axios, token);
+  > = SiteWhere.API.DeviceAssignments.getDeviceAssignment(axios, token, format);
   return loaderWrapper(store, api);
 }
 
@@ -123,11 +130,13 @@ export function createMeasurementsForAssignment(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listMeasurementsForAssignment(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria: IDateRangeSearchCriteria,
+  format: IDeviceMeasurementResponseFormat
 ): Promise<AxiosResponse<IDeviceMeasurementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
@@ -135,7 +144,8 @@ export function listMeasurementsForAssignment(
   > = SiteWhere.API.DeviceAssignments.listMeasurementsForAssignment(
     axios,
     token,
-    criteria
+    criteria,
+    format
   );
   return loaderWrapper(store, api);
 }
@@ -145,11 +155,13 @@ export function listMeasurementsForAssignment(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listMeasurementsForAssignmentAsChartSeries(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria: IDateRangeSearchCriteria,
+  format: IDeviceMeasurementResponseFormat
 ): Promise<AxiosResponse<IChartSeries<number>>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
@@ -157,7 +169,8 @@ export function listMeasurementsForAssignmentAsChartSeries(
   > = SiteWhere.API.DeviceAssignments.listMeasurementsForAssignmentAsChartSeries(
     axios,
     token,
-    criteria
+    criteria,
+    format
   );
   return loaderWrapper(store, api);
 }
@@ -189,11 +202,13 @@ export function createLocationForAssignment(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listLocationsForAssignment(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria: IDateRangeSearchCriteria,
+  format: IDeviceLocationResponseFormat
 ): Promise<AxiosResponse<IDeviceLocationSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
@@ -201,7 +216,8 @@ export function listLocationsForAssignment(
   > = SiteWhere.API.DeviceAssignments.listLocationsForAssignment(
     axios,
     token,
-    criteria
+    criteria,
+    format
   );
   return loaderWrapper(store, api);
 }
@@ -237,7 +253,8 @@ export function createAlertForAssignment(
 export function listAlertsForAssignment(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria: IDateRangeSearchCriteria,
+  format: IDeviceAlertResponseFormat
 ): Promise<AxiosResponse<IDeviceAlertSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
@@ -245,7 +262,8 @@ export function listAlertsForAssignment(
   > = SiteWhere.API.DeviceAssignments.listAlertsForAssignment(
     axios,
     token,
-    criteria
+    criteria,
+    format
   );
   return loaderWrapper(store, api);
 }
@@ -302,11 +320,13 @@ export function scheduleCommandInvocation(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listCommandInvocationsForAssignment(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria: IDateRangeSearchCriteria,
+  format: IDeviceCommandInvocationResponseFormat
 ): Promise<AxiosResponse<IDeviceCommandInvocationSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
@@ -314,7 +334,8 @@ export function listCommandInvocationsForAssignment(
   > = SiteWhere.API.DeviceAssignments.listCommandInvocationsForAssignment(
     axios,
     token,
-    criteria
+    criteria,
+    format
   );
   return loaderWrapper(store, api);
 }
@@ -324,11 +345,13 @@ export function listCommandInvocationsForAssignment(
  * @param store
  * @param token
  * @param criteria
+ * @param format
  */
 export function listCommandResponsesForAssignment(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDateRangeSearchCriteria
+  criteria: IDateRangeSearchCriteria,
+  format: IDeviceCommandResponseResponseFormat
 ): Promise<AxiosResponse<IDeviceCommandResponseSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
@@ -336,7 +359,8 @@ export function listCommandResponsesForAssignment(
   > = SiteWhere.API.DeviceAssignments.listCommandResponsesForAssignment(
     axios,
     token,
-    criteria
+    criteria,
+    format
   );
   return loaderWrapper(store, api);
 }

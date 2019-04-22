@@ -12,18 +12,18 @@
     @cancelClicked="onCancelClicked"
   >
     <template slot="tabs">
-      <v-tab key="details" href="#details">User Details</v-tab>
-      <v-tab key="permissions" href="#permissions">Permissions</v-tab>
-      <v-tab key="metadata" href="#metadata">Metadata</v-tab>
+      <v-tab key="details">User Details</v-tab>
+      <v-tab key="permissions">Permissions</v-tab>
+      <v-tab key="metadata">Metadata</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details" id="details">
+      <v-tab-item key="details">
         <user-detail-fields ref="details"/>
       </v-tab-item>
-      <v-tab-item key="permissions" id="permissions">
+      <v-tab-item key="permissions">
         <user-permissions ref="permissions"/>
       </v-tab-item>
-      <v-tab-item key="metadata" id="metadata">
+      <v-tab-item key="metadata">
         <sw-metadata-panel ref="metadata"/>
       </v-tab-item>
     </template>
