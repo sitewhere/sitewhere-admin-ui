@@ -36,7 +36,7 @@ import {
 
 import { AxiosPromise } from "axios";
 import { listCommandResponsesForAssignment } from "../../rest/sitewhere-device-assignments-api";
-import { formatDate, fourDecimalPlaces } from "../common/Utils";
+import { formatDate } from "../common/Utils";
 import { EventPageSizes, ResponseHeaders } from "../../libraries/constants";
 import {
   IDeviceCommandResponse,

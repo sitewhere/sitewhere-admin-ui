@@ -32,7 +32,6 @@
 import {
   Component,
   DetailComponent,
-  DialogComponent,
   INavigationSection,
   Refs
 } from "sitewhere-ide-common";
