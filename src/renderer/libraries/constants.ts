@@ -11,6 +11,7 @@ export enum NavigationIcon {
   Device = "developer_board",
   DeviceType = "settings",
   DeviceAssignment = "bookmark",
+  DeviceCommand = "call_made",
   DeviceGroup = "apps",
   Customer = "account_balance",
   CustomerType = "settings",
@@ -66,6 +67,28 @@ export const LocationHeaders: ITableHeaders = [
   }
 ];
 
+// Table headers used for device locations.
+export const AssignmentLocationHeaders: ITableHeaders = [
+  {
+    align: "left",
+    sortable: false,
+    text: "Latitude/Longitude/Elevation",
+    value: "lle"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Event Date",
+    value: "event"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Received Date",
+    value: "received"
+  }
+];
+
 // Table headers used for device measurements.
 export const MeasurementHeaders: ITableHeaders = [
   {
@@ -100,6 +123,34 @@ export const MeasurementHeaders: ITableHeaders = [
   }
 ];
 
+// Table headers used for device measurements.
+export const AssignmentMeasurementHeaders: ITableHeaders = [
+  {
+    align: "left",
+    sortable: false,
+    text: "Measurement Name",
+    value: "mxname"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Measurement Value",
+    value: "mxvalue"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Event Date",
+    value: "event"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Received Date",
+    value: "received"
+  }
+];
+
 // Table headers used for device alerts.
 export const AlertHeaders: ITableHeaders = [
   {
@@ -108,6 +159,34 @@ export const AlertHeaders: ITableHeaders = [
     text: "Asset",
     value: "asset"
   },
+  {
+    align: "left",
+    sortable: false,
+    text: "Type",
+    value: "type"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Message",
+    value: "message"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Event Date",
+    value: "event"
+  },
+  {
+    align: "left",
+    sortable: false,
+    text: "Received Date",
+    value: "received"
+  }
+];
+
+// Table headers used for device alerts.
+export const AssignmentAlertHeaders: ITableHeaders = [
   {
     align: "left",
     sortable: false,

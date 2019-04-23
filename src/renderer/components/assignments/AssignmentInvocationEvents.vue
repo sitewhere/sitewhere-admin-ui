@@ -38,7 +38,7 @@ import {
 import { AxiosPromise } from "axios";
 import { listCommandInvocationsForAssignment } from "../../rest/sitewhere-device-assignments-api";
 import { formatDate } from "../common/Utils";
-import { EventPageSizes, ResponseHeaders } from "../../libraries/constants";
+import { EventPageSizes, InvocationHeaders } from "../../libraries/constants";
 import {
   IDeviceCommandInvocation,
   IDeviceCommandInvocationResponseFormat,
@@ -57,7 +57,7 @@ export default class AssignmentResponseEvents extends ListComponent<
   @Prop() readonly token!: string;
 
   pageSizes: IPageSizes = EventPageSizes;
-  headers: ITableHeaders = ResponseHeaders;
+  headers: ITableHeaders = InvocationHeaders;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDateRangeSearchCriteria {

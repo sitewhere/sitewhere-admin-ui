@@ -25,9 +25,10 @@
     </template>
     <template slot="dialogs">
       <invocation-create-dialog
-        :token="token"
+        ref="invoke"
+        :assignmentToken="token"
+        :deviceTypeToken="deviceTypeToken"
         @invocationAdded="onInvocationAdded"
-        :deviceType="assignment.device.deviceType"
       />
       <assignment-delete-dialog
         ref="delete"
@@ -37,11 +38,20 @@
     </template>
     <template slot="actions">
       <sw-navigation-action-button
+        icon="bolt"
+        tooltip="Invoke Command"
+        @action="onAddCommandInvocation"
+      />
+      <sw-navigation-action-button
         icon="crosshairs"
         tooltip="Device Emulator"
         @action="onOpenEmulator"
       />
-      <sw-navigation-action-button icon="times" tooltip="Delete Assignment" @action="onDelete"/>
+      <sw-navigation-action-button
+        icon="times"
+        tooltip="Delete Assignment"
+        @action="onAssignmentDelete"
+      />
     </template>
   </sw-detail-page>
 </template>
@@ -51,7 +61,8 @@ import {
   Component,
   DetailComponent,
   INavigationSection,
-  Refs
+  Refs,
+  DialogComponent
 } from "sitewhere-ide-common";
 
 import AssignmentDetailHeader from "./AssignmentDetailHeader.vue";
@@ -68,6 +79,8 @@ import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";
 import {
+  IDevice,
+  IDeviceType,
   IDeviceAssignment,
   IDeviceAssignmentResponseFormat
 } from "sitewhere-rest-api";
@@ -91,11 +104,27 @@ export default class AssignmentDetail extends DetailComponent<
   $refs!: Refs<{
     edit: null;
     delete: null;
+    invoke: InvocationCreateDialog;
   }>;
 
   /** Record as assignment */
   get assignment(): IDeviceAssignment | null {
     return this.record;
+  }
+
+  /** Device for assignment */
+  get device(): IDevice | null {
+    return this.assignment ? (this.assignment as any).device : null;
+  }
+
+  /** Device type for assignment */
+  get deviceType(): IDeviceType | null {
+    return this.device ? (this.device as any).deviceType : null;
+  }
+
+  /** Device type token for assignment */
+  get deviceTypeToken(): string | null {
+    return this.deviceType ? this.deviceType.token : null;
   }
 
   /** Icon for page */
@@ -128,14 +157,28 @@ export default class AssignmentDetail extends DetailComponent<
     this.$store.commit("currentSection", section);
   }
 
+  onAssignmentDelete() {
+    console.log("Would be deleting assignment");
+  }
+
   // Called when site is deleted.
   onAssignmentDeleted() {
     routeTo(this, "/areas");
   }
 
-  // Called when emulator is opened.
+  /** Called to open assignment emulator */
   onOpenEmulator() {
     routeTo(this, "/assignments/" + this.$data.token + "/emulator");
+  }
+
+  /** Called to create command invocation */
+  onAddCommandInvocation() {
+    this.$refs.invoke.open();
+  }
+
+  /** Called after invocation is added */
+  onInvocationAdded() {
+    console.log("Invocation added");
   }
 }
 </script>

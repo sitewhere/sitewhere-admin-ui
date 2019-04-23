@@ -62,7 +62,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     }
   }
 })
-export default class DeviceTypeDetailFields extends DialogSection {
+export default class AssetDetailFields extends DialogSection {
   token: string | null = null;
   name: string | null = null;
   assetTypeToken: string | null = null;

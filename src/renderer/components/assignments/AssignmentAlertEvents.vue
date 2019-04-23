@@ -9,16 +9,15 @@
     loadingMessage="Loading assignmnet alerts ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
-      <td width="20%" :title="props.item.type">{{ props.item.type }}</td>
-      <td width="30%" :title="props.item.message">{{ props.item.message }}</td>
+      <td width="30%" :title="props.item.type">{{ props.item.type }}</td>
+      <td width="40%" :title="props.item.message">{{ props.item.message }}</td>
       <td
-        width="10%"
+        width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
       >{{ formatDate(props.item.eventDate) }}</td>
       <td
-        width="10%"
+        width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
       >{{ formatDate(props.item.receivedDate) }}</td>
@@ -36,7 +35,10 @@ import {
 } from "sitewhere-ide-common";
 
 import { formatDate } from "../common/Utils";
-import { EventPageSizes, AlertHeaders } from "../../libraries/constants";
+import {
+  EventPageSizes,
+  AssignmentAlertHeaders
+} from "../../libraries/constants";
 import { AxiosPromise } from "axios";
 import { listAlertsForAssignment } from "../../rest/sitewhere-device-assignments-api";
 import {
@@ -57,7 +59,7 @@ export default class AssignmentAlertEvents extends ListComponent<
   @Prop() readonly token!: string;
 
   pageSizes: IPageSizes = EventPageSizes;
-  headers: ITableHeaders = AlertHeaders;
+  headers: ITableHeaders = AssignmentAlertHeaders;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDateRangeSearchCriteria {

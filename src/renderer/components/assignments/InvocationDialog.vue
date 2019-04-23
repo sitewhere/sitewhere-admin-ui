@@ -1,230 +1,146 @@
 <template>
-  <div>
-    <base-dialog
-      :title="title"
-      :width="width"
-      :visible="dialogVisible"
-      :createLabel="createLabel"
-      :cancelLabel="cancelLabel"
-      :error="error"
-      @createClicked="onCreateClicked"
-      @cancelClicked="onCancelClicked"
-    >
-      <v-tabs v-model="active">
-        <v-tabs-bar dark color="primary">
-          <v-tabs-item key="details">Command Details</v-tabs-item>
-          <v-tabs-item key="schedule">Schedule</v-tabs-item>
-          <v-tabs-item key="metadata">Metadata</v-tabs-item>
-          <v-tabs-slider></v-tabs-slider>
-        </v-tabs-bar>
-        <v-tabs-items>
-          <v-tabs-content key="details">
-            <v-card flat>
-              <v-card-text>
-                <v-container fluid>
-                  <v-layout row wrap>
-                    <v-flex xs12>
-                      <v-select
-                        :items="commands"
-                        v-model="commandSelection"
-                        label="Command"
-                        item-text="name"
-                        item-value="token"
-                        light
-                        single-line
-                        auto
-                        prepend-icon="flash_on"
-                        hide-details
-                      ></v-select>
-                    </v-flex>
-                    <v-card v-if="command" style="width: 100%;">
-                      <v-card-text>{{ command.description }}</v-card-text>
-                      <v-card-text class="pt-0" v-if="command.parameters.length">
-                        <v-flex xs12 v-for="(param) in command.parameters" :key="param.name">
-                          <v-text-field
-                            :label="param.name"
-                            :required="param.required"
-                            v-model="parameters[param.name]"
-                          ></v-text-field>
-                        </v-flex>
-                      </v-card-text>
-                    </v-card>
-                  </v-layout>
-                </v-container>
-              </v-card-text>
-            </v-card>
-          </v-tabs-content>
-          <v-tabs-content key="schedule">
-            <schedule-chooser></schedule-chooser>
-          </v-tabs-content>
-          <v-tabs-content key="metadata">
-            <metadata-panel
-              :metadata="metadata"
-              @itemDeleted="onMetadataDeleted"
-              @itemAdded="onMetadataAdded"
-            />
-          </v-tabs-content>
-        </v-tabs-items>
-      </v-tabs>
-    </base-dialog>
-  </div>
+  <sw-base-dialog
+    ref="dialog"
+    :icon="icon"
+    :title="title"
+    :width="width"
+    :loaded="loaded"
+    :visible="dialogVisible"
+    :createLabel="createLabel"
+    :cancelLabel="cancelLabel"
+    @createClicked="onCreateClicked"
+    @cancelClicked="onCancelClicked"
+  >
+    <template slot="tabs">
+      <v-tab key="details">Details</v-tab>
+      <v-tab key="schedule">Schedule</v-tab>
+      <v-tab key="metadata">Metadata</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="details">
+        <invocation-detail-fields
+          :deviceTypeToken="deviceTypeToken"
+          :assignmentToken="assignmentToken"
+          ref="details"
+        />
+      </v-tab-item>
+      <v-tab-item key="schedule">
+        <schedule-chooser-section ref="schedule"/>
+      </v-tab-item>
+      <v-tab-item key="metadata">
+        <sw-metadata-panel ref="metadata"/>
+      </v-tab-item>
+    </template>
+  </sw-base-dialog>
 </template>
 
-<script>
-import Lodash from "lodash";
-import { BaseDialog, MetadataPanel } from "sitewhere-ide-components";
-import ScheduleChooser from "../schedules/ScheduleChooser";
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  DialogComponent,
+  DialogSection,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
+import { NavigationIcon } from "../../libraries/constants";
 
-import { arrayToMetadata, metadataToArray } from "../common/Utils";
-import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
-import { listSchedules } from "../../rest/sitewhere-schedules-api";
+import InvocationDetailFields from "./InvocationDetailFields.vue";
+import ScheduleChooserSection from "./ScheduleChooserSection.vue";
+import { IDeviceCommandInvocation, IUser } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    active: null,
-    dialogVisible: false,
-    commands: [],
-    commandSelection: null,
-    schedules: [],
-    scheduleSelection: null,
-    useSchedule: false,
-    parameters: {},
-    metadata: [],
-    error: null
-  }),
-
+@Component({
   components: {
-    BaseDialog,
-    MetadataPanel,
-    ScheduleChooser
-  },
+    InvocationDetailFields,
+    ScheduleChooserSection
+  }
+})
+export default class InvocationDialog extends DialogComponent<
+  IDeviceCommandInvocation
+> {
+  @Prop() readonly assignmentToken!: string;
+  @Prop() readonly deviceTypeToken!: string;
 
-  props: ["title", "width", "createLabel", "cancelLabel", "deviceType"],
+  // References.
+  $refs!: Refs<{
+    dialog: ITabbedComponent;
+    details: InvocationDetailFields;
+    schedule: ScheduleChooserSection;
+    metadata: DialogSection;
+  }>;
 
-  computed: {
-    // Get currently selected command.
-    command: function() {
-      return Lodash.find(this.commands, { token: this.commandSelection });
-    },
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceCommand;
+  }
 
-    // Message shown next to schedule switch.
-    scheduleMessage: function() {
-      return !this.useSchedule
-        ? "No schedule. Invoke command immediately."
-        : "Invoke command on schedule below.";
+  // Generate payload from UI.
+  generatePayload() {
+    let payload: any = {};
+    Object.assign(
+      payload,
+      this.$refs.details.save(),
+      this.$refs.schedule.save(),
+      this.$refs.metadata.save(),
+      {
+        initiator: "REST",
+        initiatorId: this.user.username,
+        target: "Assignment",
+        targetId: this.assignmentToken
+      }
+    );
+    return payload;
+  }
+
+  // Reset dialog contents.
+  reset() {
+    if (this.$refs.details) {
+      this.$refs.details.reset();
     }
-  },
-
-  watch: {
-    // Clear schedule selection if not using schedule.
-    useSchedule: function(value) {
-      if (!value) {
-        this.$data.scheduleSelection = null;
-      }
-    },
-
-    // Indicate that schedule was updated.
-    scheduleSelection: function(value) {
-      this.$emit("scheduleUpdated", value);
+    if (this.$refs.schedule) {
+      this.$refs.schedule.reset();
     }
-  },
+    if (this.$refs.metadata) {
+      this.$refs.metadata.reset();
+    }
+    this.$refs.dialog.setActiveTab("details");
+  }
 
-  methods: {
-    // Generate payload from UI.
-    generatePayload: function() {
-      var user = this.$store.getters.user;
-      var payload = {};
-      payload.initiator = "REST";
-      payload.initiatorId = user.username;
-      payload.target = "Assignment";
-      payload.commandToken = this.$data.commandSelection;
-      payload.parameterValues = this.$data.parameters;
-      payload.metadata = arrayToMetadata(this.$data.metadata);
-      return payload;
-    },
-
-    // Reset dialog contents.
-    reset: function(e) {
-      this.$data.commandSelection = null;
-      this.$data.useSchedule = false;
-      this.$data.scheduleSelection = null;
-      this.$data.metadata = [];
-      this.$data.active = "details";
-
-      // Command list filter options.
-      let options = {};
-      options.deviceTypeToken = this.deviceType.token;
-
-      var component = this;
-      listDeviceCommands(this.$store, options)
-        .then(function(response) {
-          component.$data.commands = response.data.results;
-        })
-        .catch(function(e) {
-          component.showError(e);
-        });
-      listSchedules(this.$store, null)
-        .then(function(response) {
-          component.$data.schedules = response.data.results;
-        })
-        .catch(function(e) {
-          component.showError(e);
-        });
-    },
-
-    // Load dialog from a given payload.
-    load: function(payload) {
-      this.reset();
-
-      if (payload) {
-        this.$data.commandSelection = payload.xxx;
-        this.$data.metadata = metadataToArray(payload.metadata);
-      }
-    },
-
-    // Called to open the dialog.
-    openDialog: function() {
-      this.$data.dialogVisible = true;
-    },
-
-    // Called to open the dialog.
-    closeDialog: function() {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called to show an error message.
-    showError: function(error) {
-      this.$data.error = error;
-    },
-
-    // Called after create button is clicked.
-    onCreateClicked: function(e) {
-      var payload = this.generatePayload();
-      this.$emit("payload", payload);
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function(e) {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function(name) {
-      var metadata = this.$data.metadata;
-      for (var i = 0; i < metadata.length; i++) {
-        if (metadata[i].name === name) {
-          metadata.splice(i, 1);
-        }
-      }
-    },
-
-    // Called when a metadata entry has been added.
-    onMetadataAdded: function(entry) {
-      var metadata = this.$data.metadata;
-      metadata.push(entry);
+  // Load dialog from a given payload.
+  load(payload: IDeviceCommandInvocation) {
+    this.reset();
+    if (this.$refs.details) {
+      this.$refs.details.load(payload);
+    }
+    if (this.$refs.branding) {
+      this.$refs.schedule.load(payload);
+    }
+    if (this.$refs.metadata) {
+      this.$refs.metadata.load(payload);
     }
   }
-};
+
+  // Called after create button is clicked.
+  onCreateClicked(e: any) {
+    if (!this.$refs.details.validate()) {
+      this.$refs.dialog.setActiveTab("details");
+      return;
+    }
+
+    if (!this.$refs.schedule.validate()) {
+      this.$refs.dialog.setActiveTab("schedule");
+      return;
+    }
+
+    var payload = this.generatePayload();
+    this.$emit("payload", payload);
+  }
+
+  // Get logged in user.
+  get user(): IUser {
+    return this.$store.getters.user;
+  }
+}
 </script>
 
 <style scoped>

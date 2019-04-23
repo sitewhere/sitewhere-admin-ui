@@ -9,18 +9,17 @@
     loadingMessage="Loading assignment locations ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="40%" :title="props.item.assetName">{{ props.item.assetName }}</td>
       <td
-        width="40%"
+        width="50%"
         title="Lat/Lon/Elevation"
       >{{ fourDecimalPlaces(props.item.latitude) + ', ' + fourDecimalPlaces(props.item.longitude) + ', ' + fourDecimalPlaces(props.item.elevation) }}</td>
       <td
-        width="10%"
+        width="25%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
       >{{ formatDate(props.item.eventDate) }}</td>
       <td
-        width="10%"
+        width="25%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
       >{{ formatDate(props.item.receivedDate) }}</td>
@@ -40,7 +39,10 @@ import {
 import { AxiosPromise } from "axios";
 import { listLocationsForAssignment } from "../../rest/sitewhere-device-assignments-api";
 import { formatDate, fourDecimalPlaces } from "../common/Utils";
-import { EventPageSizes, LocationHeaders } from "../../libraries/constants";
+import {
+  EventPageSizes,
+  AssignmentLocationHeaders
+} from "../../libraries/constants";
 import {
   IDeviceLocation,
   IDeviceLocationResponseFormat,
@@ -59,7 +61,7 @@ export default class AssignmentLocationEvents extends ListComponent<
   @Prop() readonly token!: string;
 
   pageSizes: IPageSizes = EventPageSizes;
-  headers: ITableHeaders = LocationHeaders;
+  headers: ITableHeaders = AssignmentLocationHeaders;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDateRangeSearchCriteria {

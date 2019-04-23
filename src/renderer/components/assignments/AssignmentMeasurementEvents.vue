@@ -9,16 +9,15 @@
     loadingMessage="Loading assignment measurements ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
-      <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
-      <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
+      <td width="35%" :title="props.item.name">{{ props.item.name }}</td>
+      <td width="35%" :title="props.item.value">{{ props.item.value }}</td>
       <td
-        width="10%"
+        width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
       >{{ formatDate(props.item.eventDate) }}</td>
       <td
-        width="10%"
+        width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
       >{{ formatDate(props.item.receivedDate) }}</td>
@@ -36,7 +35,10 @@ import {
 } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { formatDate } from "../common/Utils";
-import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";
+import {
+  EventPageSizes,
+  AssignmentMeasurementHeaders
+} from "../../libraries/constants";
 import { listMeasurementsForAssignment } from "../../rest/sitewhere-device-assignments-api";
 import {
   IDeviceMeasurement,
@@ -56,7 +58,7 @@ export default class AreaMeasurementEvents extends ListComponent<
   @Prop() readonly token!: string;
 
   pageSizes: IPageSizes = EventPageSizes;
-  headers: ITableHeaders = MeasurementHeaders;
+  headers: ITableHeaders = AssignmentMeasurementHeaders;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDateRangeSearchCriteria {

@@ -117,7 +117,6 @@ export default class AssetDialog extends DialogComponent<IAsset> {
     }
 
     var payload = this.generatePayload();
-    console.log("Before payload emit:", this);
     this.$emit("payload", payload);
   }
 }

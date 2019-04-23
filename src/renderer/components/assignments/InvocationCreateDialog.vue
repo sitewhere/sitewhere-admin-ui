@@ -1,91 +1,81 @@
 <template>
-  <div>
-    <invocation-dialog
-      ref="dialog"
-      title="Invoke Device Command"
-      width="600"
-      resetOnOpen="true"
-      createLabel="Invoke"
-      cancelLabel="Cancel"
-      :deviceType="deviceType"
-      @payload="onCommit"
-      @scheduleUpdated="onScheduleUpdated"
-    />
-  </div>
+  <invocation-dialog
+    :assignmentToken="assignmentToken"
+    :deviceTypeToken="deviceTypeToken"
+    ref="dialog"
+    title="Invoke Device Command"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import InvocationDialog from "./InvocationDialog";
-
+<script lang="ts">
 import {
-  createCommandInvocationForAssignment,
-  scheduleCommandInvocation
-} from "../../rest/sitewhere-device-assignments-api";
+  Component,
+  Prop,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    schedule: null
-  }),
+import InvocationDialog from "./InvocationDialog.vue";
 
-  props: ["token", "deviceType"],
+import { AxiosPromise } from "axios";
+import {
+  IDeviceCommandInvocation,
+  IDeviceCommandInvocationCreateRequest
+} from "sitewhere-rest-api";
+import { createCommandInvocationForAssignment } from "../../rest/sitewhere-device-assignments-api";
 
+@Component({
   components: {
     InvocationDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Called if schedule selection is updated.
-    onScheduleUpdated: function(schedule) {
-      this.$data.schedule = schedule;
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      if (this.schedule) {
-        scheduleCommandInvocation(
-          this.$store,
-          this.token,
-          this.schedule,
-          payload
-        )
-          .then(function(response) {
-            component.onCommitted(response);
-          })
-          .catch(function(e) {});
-      } else {
-        createCommandInvocationForAssignment(this.$store, this.token, payload)
-          .then(function(response) {
-            component.onCommitted(response);
-          })
-          .catch(function(e) {});
-      }
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("invocationAdded");
-    }
   }
-};
+})
+export default class InvocationCreateDialog extends CreateDialogComponent<
+  IDeviceCommandInvocation,
+  IDeviceCommandInvocationCreateRequest
+> {
+  @Prop() readonly assignmentToken!: string;
+  @Prop() readonly deviceTypeToken!: string;
+
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceCommandInvocation>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceCommandInvocation> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceCommandInvocationCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(
+    payload: IDeviceCommandInvocationCreateRequest
+  ): AxiosPromise<IDeviceCommandInvocation> {
+    if (!this.assignmentToken) {
+      throw new Error("No assignment token set.");
+    }
+    return createCommandInvocationForAssignment(
+      this.$store,
+      this.assignmentToken,
+      payload
+    );
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceCommandInvocation): void {
+    this.$emit("invocationAdded", payload);
+  }
+}
 </script>
 
 <style scoped>
-.add-button {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-}
 </style>
