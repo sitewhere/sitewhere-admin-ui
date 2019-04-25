@@ -1,5 +1,5 @@
 <template>
-  <div class="command-content">
+  <div class="command-content body-2">
     <div class="command-desc">/** {{ command.description }} **/</div>
     <span class="command-name" @click.native="commandClicked">{{ command.name }}</span>
     (
@@ -30,8 +30,7 @@ export default {
 
 <style scoped>
 .command-content {
-  font-family: "courier";
-  font-size: 14px;
+  font-family: "courier new";
   width: 100%;
 }
 

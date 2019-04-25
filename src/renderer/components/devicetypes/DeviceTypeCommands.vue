@@ -8,14 +8,8 @@
     :results="results"
   >
     <sw-list-layout>
-      <v-flex xs12>
-        <command-namespace-list-entry
-          :namespace="namespace"
-          @delete="onDeleteCommand"
-          @edit="onEditCommand"
-          v-for="namespace in matches"
-          :key="namespace.value"
-        />
+      <v-flex xs12 v-for="command in matches" :key="command.token">
+        <command-panel :command="command" @delete="onDeleteCommand" @edit="onEditCommand"/>
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
@@ -28,32 +22,31 @@
 import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
 
 import NoResultsPanel from "../common/NoResultsPanel.vue";
-import CommandNamespaceListEntry from "../commands/CommandNamespaceListEntry.vue";
+import CommandPanel from "../commands/CommandPanel.vue";
 import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { listDeviceCommandsByNamespace } from "../../rest/sitewhere-device-commands-api";
+import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
 import {
   IDeviceType,
   IDeviceCommand,
-  IDeviceCommandNamespace,
   IDeviceCommandSearchCriteria,
   IDeviceCommandResponseFormat,
-  IDeviceCommandNamespaceSearchResults
+  IDeviceCommandSearchResults
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
     NoResultsPanel,
-    CommandNamespaceListEntry,
+    CommandPanel,
     CommandUpdateDialog
   }
 })
 export default class DeviceTypeCommands extends ListComponent<
-  IDeviceCommandNamespace,
+  IDeviceCommand,
   IDeviceCommandSearchCriteria,
   IDeviceCommandResponseFormat,
-  IDeviceCommandNamespaceSearchResults
+  IDeviceCommandSearchResults
 > {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
@@ -81,8 +74,8 @@ export default class DeviceTypeCommands extends ListComponent<
   performSearch(
     criteria: IDeviceCommandSearchCriteria,
     format: IDeviceCommandResponseFormat
-  ): AxiosPromise<IDeviceCommandNamespaceSearchResults> {
-    return listDeviceCommandsByNamespace(this.$store, criteria, format);
+  ): AxiosPromise<IDeviceCommandSearchResults> {
+    return listDeviceCommands(this.$store, criteria, format);
   }
 
   /** Edit an existing command */
