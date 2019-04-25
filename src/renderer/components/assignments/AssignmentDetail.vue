@@ -61,8 +61,7 @@ import {
   Component,
   DetailComponent,
   INavigationSection,
-  Refs,
-  DialogComponent
+  Refs
 } from "sitewhere-ide-common";
 
 import AssignmentDetailHeader from "./AssignmentDetailHeader.vue";

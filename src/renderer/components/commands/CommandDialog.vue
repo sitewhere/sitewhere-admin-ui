@@ -57,14 +57,14 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
-    details: DialogSection;
-    parameters: DialogSection;
+    details: CommandDetailFields;
+    parameters: ParametersPanel;
     metadata: DialogSection;
   }>;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
-    return NavigationIcon.Customer;
+    return NavigationIcon.DeviceCommand;
   }
 
   // Generate payload from UI.

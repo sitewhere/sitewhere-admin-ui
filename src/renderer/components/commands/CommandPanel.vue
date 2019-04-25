@@ -1,18 +1,10 @@
 <template>
   <v-list-tile avatar @click="onUpdateCommand">
     <v-list-tile-content>
-      <command-html :command="command"></command-html>
+      <command-html :command="command"/>
     </v-list-tile-content>
     <v-list-tile-action>
-      <actions-block @edited="onCommandUpdated" @deleted="onCommandDeleted">
-        <command-update-dialog
-          slot="edit"
-          ref="update"
-          :token="command.token"
-          :deviceType="deviceType"
-        ></command-update-dialog>
-        <command-delete-dialog slot="delete" :token="command.token"></command-delete-dialog>
-      </actions-block>
+      <actions-block @edit="onUpdateCommand" @delete="onDeleteCommand"/>
     </v-list-tile-action>
   </v-list-tile>
 </template>
@@ -33,22 +25,17 @@ export default {
     CommandUpdateDialog
   },
 
-  props: ["command", "deviceType"],
+  props: ["command"],
 
   methods: {
-    // Opens update dialog on tile click.
+    // Called after command has been updated.
     onUpdateCommand: function() {
-      this.$refs["update"].onOpenDialog();
+      this.$emit("edit", this.command);
     },
 
     // Called after command has been deleted.
-    onCommandDeleted: function() {
-      this.$emit("commandDeleted");
-    },
-
-    // Called after command has been updated.
-    onCommandUpdated: function() {
-      this.$emit("commandUpdated");
+    onDeleteCommand: function() {
+      this.$emit("delete", this.command);
     }
   }
 };

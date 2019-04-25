@@ -7,33 +7,35 @@
     loadingMessage="Loading device commands..."
     :results="results"
   >
-    <v-container class="pa-2" fluid grid-list-md fill-height>
-      <v-layout row wrap>
-        <v-flex xs12>
-          <command-namespace-list-entry
-            :namespace="namespace"
-            :deviceType="deviceType"
-            @commandDeleted="refresh"
-            @commandUpdated="refresh"
-            v-for="namespace in matches"
-            :key="namespace.value"
-          />
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <sw-list-layout>
+      <v-flex xs12>
+        <command-namespace-list-entry
+          :namespace="namespace"
+          @delete="onDeleteCommand"
+          @edit="onEditCommand"
+          v-for="namespace in matches"
+          :key="namespace.value"
+        />
+      </v-flex>
+    </sw-list-layout>
+    <template slot="dialogs">
+      <command-update-dialog ref="edit" @commandUpdated="refresh"/>
+    </template>
   </sw-list-tab>
 </template>
 
 <script lang="ts">
-import { Component, Prop, ListComponent } from "sitewhere-ide-common";
+import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
 
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import CommandNamespaceListEntry from "../commands/CommandNamespaceListEntry.vue";
+import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { listDeviceCommandsByNamespace } from "../../rest/sitewhere-device-commands-api";
 import {
   IDeviceType,
+  IDeviceCommand,
   IDeviceCommandNamespace,
   IDeviceCommandSearchCriteria,
   IDeviceCommandResponseFormat,
@@ -43,7 +45,8 @@ import {
 @Component({
   components: {
     NoResultsPanel,
-    CommandNamespaceListEntry
+    CommandNamespaceListEntry,
+    CommandUpdateDialog
   }
 })
 export default class DeviceTypeCommands extends ListComponent<
@@ -54,12 +57,17 @@ export default class DeviceTypeCommands extends ListComponent<
 > {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
-  @Prop() readonly deviceType!: IDeviceType;
+  @Prop() readonly deviceTypeToken!: string;
+
+  // References.
+  $refs!: Refs<{
+    edit: CommandUpdateDialog;
+  }>;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceCommandSearchCriteria {
     let criteria: IDeviceCommandSearchCriteria = {};
-    criteria.deviceTypeToken = this.deviceType.token;
+    criteria.deviceTypeToken = this.deviceTypeToken;
     return criteria;
   }
 
@@ -76,6 +84,15 @@ export default class DeviceTypeCommands extends ListComponent<
   ): AxiosPromise<IDeviceCommandNamespaceSearchResults> {
     return listDeviceCommandsByNamespace(this.$store, criteria, format);
   }
+
+  /** Edit an existing command */
+  onEditCommand(command: IDeviceCommand) {
+    console.log("Edit command");
+    this.$refs.edit.open(command.token);
+  }
+
+  /** Delete an existing command */
+  onDeleteCommand(command: IDeviceCommand) {}
 }
 </script>
 

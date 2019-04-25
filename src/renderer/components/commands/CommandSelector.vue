@@ -27,7 +27,6 @@ import {
   IDeviceCommandSearchCriteria,
   IDeviceCommandSearchResults
 } from "sitewhere-rest-api";
-import { loadavg } from "os";
 
 @Component({
   components: {

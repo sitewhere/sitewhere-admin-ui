@@ -4,7 +4,7 @@
     title="Create Command"
     createLabel="Create"
     cancelLabel="Cancel"
-    deviceTypeToken
+    :deviceTypeToken="deviceTypeToken"
     @payload="onCommit"
   />
 </template>

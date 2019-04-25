@@ -155,19 +155,23 @@ export default class ParametersPanel extends DialogSection {
 
   /** Load form data from an object */
   load(input: {}): void {
-    this.name = (input as any).name;
-    this.type = (input as any).type;
-    this.required = (input as any).required;
+    this.parameters = (input as any).parameters;
+  }
+
+  /** Load content of a single parameter */
+  loadParameter(parameter: ICommandParameter) {
+    this.name = parameter.name;
+    this.type = parameter.type;
+    this.required = parameter.required;
   }
 
   /** Save form data to an object */
   save(): {} {
     return {
-      name: this.name,
-      type: this.type,
-      required: this.required
+      parameters: this.parameters
     };
   }
+
   // Called when a parameter is deleted.
   onDeleteParameter(name: string) {
     this.$emit("parameterDeleted", name);

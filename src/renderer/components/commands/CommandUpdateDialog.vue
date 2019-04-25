@@ -40,8 +40,6 @@ export default class CommandUpdateDialog extends EditDialogComponent<
   IDeviceCommand,
   IDeviceCommandCreateRequest
 > {
-  @Prop() readonly deviceTypeToken!: string;
-
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<IDeviceCommand>;

@@ -20,7 +20,7 @@
       <v-tab v-if="containerPolicy === 'Composite'" key="composition">Composition</v-tab>
     </template>
     <template slot="tab-items">
-      <device-type-commands tabkey="commands" ref="commands" :deviceType="deviceType"/>
+      <device-type-commands tabkey="commands" ref="commands" :deviceTypeToken="token"/>
       <device-type-statuses tabkey="statuses" ref="statuses" :deviceType="deviceType"/>
       <device-type-codegen tabkey="code" id="code" :deviceType="deviceType"/>
       <v-tab-item v-if="containerPolicy === 'Composite'" key="composition">
@@ -35,7 +35,7 @@
     <template slot="dialogs">
       <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated"/>
       <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted"/>
-      <command-create-dialog ref="command" :deviceType="deviceType" @commandAdded="onCommandAdded"/>
+      <command-create-dialog ref="command" :deviceTypeToken="token" @commandAdded="onCommandAdded"/>
       <device-status-create-dialog :deviceType="deviceType" @statusAdded="onStatusAdded"/>
     </template>
   </sw-detail-page>
@@ -102,7 +102,7 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
 
   get title(): string {
     return this.deviceType
-      ? `Manage device type ${this.deviceType.token}`
+      ? `Manage device type ${this.token}`
       : "Manage device type";
   }
 
