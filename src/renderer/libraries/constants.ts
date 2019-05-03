@@ -12,6 +12,7 @@ export enum NavigationIcon {
   DeviceType = "settings",
   DeviceAssignment = "bookmark",
   DeviceCommand = "call_made",
+  DeviceStatus = "warning",
   DeviceGroup = "apps",
   Customer = "account_balance",
   CustomerType = "settings",
@@ -20,7 +21,14 @@ export enum NavigationIcon {
   Asset = "link",
   AssetType = "settings",
   BatchOperation = "view_module",
-  Schedule = "access_alarm"
+  Schedule = "access_alarm",
+  Zone = "timeline",
+  Emulator = "settings_remote",
+  Add = "add_circle",
+  Edit = "create",
+  Delete = "delete_forever",
+  Filter = "filter_list",
+  Up = "arrow_upward"
 }
 
 // Page sizes shown for event list pages.

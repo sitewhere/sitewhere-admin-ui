@@ -31,15 +31,17 @@ export function createDeviceStatus(
  * Update an existing device status.
  * @param store
  * @param token
+ * @param format
  */
 export function getDeviceStatus(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IDeviceStatusResponseFormat
 ): Promise<AxiosResponse<IDeviceStatus>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceStatus
-  > = SiteWhere.API.DeviceStatuses.getDeviceStatus(axios, token);
+  > = SiteWhere.API.DeviceStatuses.getDeviceStatus(axios, token, format);
   return loaderWrapper(store, api);
 }
 

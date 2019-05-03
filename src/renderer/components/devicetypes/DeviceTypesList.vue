@@ -16,7 +16,7 @@
       <device-type-create-dialog ref="add" @deviceTypeAdded="onDeviceTypeAdded"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="plus" tooltip="Add Device Type" @action="onAddDeviceType"/>
+      <add-button tooltip="Add Device Type" @action="onAddDeviceType"/>
     </template>
   </sw-list-page>
 </template>
@@ -26,6 +26,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import DeviceTypeListEntry from "./DeviceTypeListEntry.vue";
 import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -41,7 +42,8 @@ import {
 @Component({
   components: {
     DeviceTypeListEntry,
-    DeviceTypeCreateDialog
+    DeviceTypeCreateDialog,
+    AddButton
   }
 })
 export default class DeviceTypesList extends ListComponent<

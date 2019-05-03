@@ -16,7 +16,7 @@
       <customer-create-dialog ref="add" @customerAdded="onCustomerAdded"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="plus" tooltip="Add Customer" @action="onAddCustomer"/>
+      <add-button tooltip="Add Customer" @action="onAddCustomer"/>
     </template>
   </sw-list-page>
 </template>
@@ -26,6 +26,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -41,7 +42,8 @@ import {
 @Component({
   components: {
     CustomerListEntry,
-    CustomerCreateDialog
+    CustomerCreateDialog,
+    AddButton
   }
 })
 export default class CustomersList extends ListComponent<

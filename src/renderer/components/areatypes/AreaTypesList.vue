@@ -16,7 +16,7 @@
       <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded" :areaTypes="matches"/>
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Area Type" @action="onAddAreaType"></navigation-action-button>
+      <add-button icon="plus" tooltip="Add Area Type" @action="onAddAreaType"/>
     </template>
   </list-page>
 </template>
@@ -24,13 +24,10 @@
 <script lang="ts">
 import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-import {
-  ListPage,
-  ListLayout,
-  NavigationActionButton
-} from "sitewhere-ide-components";
+import { ListPage, ListLayout } from "sitewhere-ide-components";
 import AreaTypeListEntry from "./AreaTypeListEntry.vue";
 import AreaTypeCreateDialog from "./AreaTypeCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { AxiosPromise } from "axios";
@@ -48,7 +45,7 @@ import {
     ListLayout,
     AreaTypeListEntry,
     AreaTypeCreateDialog,
-    NavigationActionButton
+    AddButton
   }
 })
 export default class AreaTypesList extends ListComponent<

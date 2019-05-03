@@ -20,11 +20,7 @@
       <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
-        icon="plus"
-        tooltip="Add Customer Type"
-        @action="onAddCustomerType"
-      />
+      <add-button tooltip="Add Customer Type" @action="onAddCustomerType"/>
     </template>
   </sw-list-page>
 </template>
@@ -34,6 +30,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import CustomerTypeListEntry from "./CustomerTypeListEntry.vue";
 import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { NavigationIcon } from "../../libraries/constants";
@@ -49,7 +46,8 @@ import {
 @Component({
   components: {
     CustomerTypeListEntry,
-    CustomerTypeCreateDialog
+    CustomerTypeCreateDialog,
+    AddButton
   }
 })
 export default class CustomerTypesList extends ListComponent<

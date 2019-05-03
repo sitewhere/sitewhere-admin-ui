@@ -54,8 +54,8 @@ export default class DeviceTypeDialog extends DialogComponent<IDeviceType> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
-    details: DialogSection;
-    branding: DialogSection;
+    details: DeviceTypeDetailFields;
+    branding: BrandingPanel;
     metadata: DialogSection;
   }>;
 

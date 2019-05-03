@@ -1,21 +1,16 @@
 <template>
-  <v-tabs-content :id="attributeGroup.uid">
-    <v-card>
-      <v-card-text class="subheading pa-0 pl-2">
-        <v-container fluid>
-          <attribute-field-panel
-            v-for="attribute in attributeGroup.attributes"
-            :key="attribute.name"
-            :attribute="attribute"
-            :identifier="identifier"
-            :tenantToken="tenantToken"
-            :readOnly="readOnly"
-            @attributeUpdated="onAttributeUpdated"
-          ></attribute-field-panel>
-        </v-container>
-      </v-card-text>
-    </v-card>
-  </v-tabs-content>
+  <v-container fluid>
+    <attribute-field-panel
+      class="mb-2"
+      v-for="attribute in attributeGroup.attributes"
+      :key="attribute.name"
+      :attribute="attribute"
+      :identifier="identifier"
+      :tenantToken="tenantToken"
+      :readOnly="readOnly"
+      @attributeUpdated="onAttributeUpdated"
+    />
+  </v-container>
 </template>
 
 <script>

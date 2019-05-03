@@ -26,18 +26,13 @@
       <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="plus" tooltip="Add Device" @action="onAddDevice"/>
-      <sw-navigation-action-button
+      <add-button tooltip="Add Device" @action="onAddDevice"/>
+      <device-command-button
         v-if="filter.deviceType"
-        icon="bolt"
         tooltip="Execute Batch Command"
         @action="onBatchCommandInvocation"
       />
-      <sw-navigation-action-button
-        icon="filter"
-        tooltip="Filter Device List"
-        @action="onShowFilterCriteria"
-      />
+      <filter-button tooltip="Filter Device List" @action="onShowFilterCriteria"/>
     </template>
   </sw-list-page>
 </template>
@@ -55,6 +50,9 @@ import DeviceListFilterBar from "./DeviceListFilterBar.vue";
 import DeviceCreateDialog from "./DeviceCreateDialog.vue";
 import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog.vue";
 import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
+import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
+import FilterButton from "../common/navbuttons/FilterButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -73,7 +71,10 @@ import {
     DeviceListFilterBar,
     DeviceCreateDialog,
     AssignmentCreateDialog,
-    BatchCommandCreateDialog
+    BatchCommandCreateDialog,
+    AddButton,
+    DeviceCommandButton,
+    FilterButton
   }
 })
 export default class DevicesList extends ListComponent<

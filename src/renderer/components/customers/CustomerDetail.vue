@@ -44,13 +44,9 @@
         </v-btn>
         <span>Up One Level</span>
       </v-tooltip>
-      <sw-navigation-action-button
-        icon="building"
-        tooltip="Add Subcustomer"
-        @action="onAddSubcustomer"
-      />
-      <sw-navigation-action-button icon="edit" tooltip="Edit Customer" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Customer" @action="onDelete"/>
+      <customer-button tooltip="Add Subcustomer" @action="onAddSubcustomer"/>
+      <edit-button tooltip="Edit Customer" @action="onEdit"/>
+      <delete-button tooltip="Delete Customer" @action="onDelete"/>
     </template>
   </sw-detail-page>
 </template>
@@ -71,6 +67,9 @@ import CustomerAlertEvents from "./CustomerAlertEvents.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 import CustomerUpdateDialog from "./CustomerUpdateDialog.vue";
 import CustomerDeleteDialog from "./CustomerDeleteDialog.vue";
+import CustomerButton from "../common/navbuttons/CustomerButton.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -89,7 +88,10 @@ import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
     CustomerAlertEvents,
     CustomerCreateDialog,
     CustomerDeleteDialog,
-    CustomerUpdateDialog
+    CustomerUpdateDialog,
+    CustomerButton,
+    EditButton,
+    DeleteButton
   }
 })
 export default class CustomerDetail extends DetailComponent<ICustomer> {

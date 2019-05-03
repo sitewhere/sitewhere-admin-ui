@@ -20,7 +20,7 @@
       <asset-type-create-dialog ref="add" @assetTypeAdded="refresh"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="plus" tooltip="Add Asset Type" @action="onAddAssetType"/>
+      <add-button tooltip="Add Asset Type" @action="onAddAssetType"/>
     </template>
   </sw-list-page>
 </template>
@@ -30,6 +30,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -45,7 +46,8 @@ import {
 @Component({
   components: {
     AssetTypeListEntry,
-    AssetTypeCreateDialog
+    AssetTypeCreateDialog,
+    AddButton
   }
 })
 export default class AreasList extends ListComponent<

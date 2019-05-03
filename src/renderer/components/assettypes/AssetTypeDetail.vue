@@ -25,8 +25,8 @@
       <asset-type-delete-dialog ref="delete" :token="token" @assetTypeDeleted="onAssetTypeDeleted"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="edit" tooltip="Edit Asset Type" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Asset Type" @action="onDelete"/>
+      <edit-button tooltip="Edit Asset Type" @action="onEdit"/>
+      <delete-button tooltip="Delete Asset Type" @action="onDelete"/>
     </template>
   </sw-detail-page>
 </template>
@@ -45,6 +45,8 @@ import AssetTypeAssets from "./AssetTypeAssets.vue";
 import AssetTypeDeleteDialog from "./AssetTypeDeleteDialog.vue";
 import AssetTypeUpdateDialog from "./AssetTypeUpdateDialog.vue";
 import AssetListEntry from "../assets/AssetListEntry.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -58,7 +60,9 @@ import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
     AssetTypeAssets,
     AssetListEntry,
     AssetTypeDeleteDialog,
-    AssetTypeUpdateDialog
+    AssetTypeUpdateDialog,
+    EditButton,
+    DeleteButton
   }
 })
 export default class AssetTypeDetail extends DetailComponent<IAssetType> {

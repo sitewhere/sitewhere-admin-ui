@@ -1,22 +1,24 @@
 <template>
-  <v-layout row wrap class="mb-3">
-    <v-flex xs4 class="text-xs-right subheading mt-1 pr-4">
-      <v-tooltip top v-if="attribute.required">
-        <font-awesome-icon class="mr-1 red--text" icon="asterisk" size="xs" slot="activator"/>
-        <span>Attribute is required</span>
-      </v-tooltip>
-      <strong>{{ attribute.name }}</strong>:
-      <v-tooltip right>
-        <font-awesome-icon
-          class="grey--text text--lighten-2"
-          icon="question-circle"
-          size="sm"
-          slot="activator"
-        />
-        <span>{{ attribute.description }}</span>
-      </v-tooltip>
+  <v-layout row wrap class="attr-row">
+    <v-flex xs3 class="pr-4">
+      <div class="attr-name">
+        <span class="subheading">{{ attribute.name }}</span>:
+        <v-tooltip right>
+          <font-awesome-icon
+            class="grey--text text--lighten-2"
+            icon="question-circle"
+            size="sm"
+            slot="activator"
+          />
+          <span>{{ attribute.description }}</span>
+        </v-tooltip>
+        <v-tooltip top v-if="attribute.required">
+          <font-awesome-icon class="mr-1 red--text" icon="asterisk" size="xs" slot="activator"/>
+          <span>Attribute is required</span>
+        </v-tooltip>
+      </div>
     </v-flex>
-    <v-flex xs6>
+    <v-flex xs7>
       <v-text-field
         v-if="readOnly"
         :required="attribute.required"
@@ -57,30 +59,32 @@
       <device-type-selector
         v-else-if="attribute.type === 'DeviceTypeReference'"
         v-model="editedConstValue"
-      ></device-type-selector>
+      />
       <customer-selector
         v-else-if="attribute.type === 'CustomerReference'"
         v-model="editedConstValue"
-      ></customer-selector>
-      <area-selector v-else-if="attribute.type === 'AreaReference'" v-model="editedConstValue"></area-selector>
+      />
+      <area-selector v-else-if="attribute.type === 'AreaReference'" v-model="editedConstValue"/>
       <scripts-selector
         v-else-if="attribute.type === 'Script'"
         v-model="editedConstValue"
         :identifier="identifier"
         :tenantToken="tenantToken"
-      ></scripts-selector>
+      />
     </v-flex>
-    <v-flex xs2 class="pl-2">
-      <span v-if="readOnly && editedEnvVar">
-        <strong>ENV</strong>
-        : {{editedEnvVar}}
-      </span>
-      <v-text-field
-        v-else-if="!readOnly"
-        v-model="editedEnvVar"
-        hide-details
-        placeholder="Env Variable"
-      ></v-text-field>
+    <v-flex xs2 class="pl-4">
+      <div class="attr-env">
+        <span v-if="readOnly && editedEnvVar">
+          <v-icon small>arrow_back</v-icon>
+          {{editedEnvVar}}
+        </span>
+        <v-text-field
+          v-else-if="!readOnly"
+          v-model="editedEnvVar"
+          hide-details
+          placeholder="Env Variable"
+        />
+      </div>
     </v-flex>
   </v-layout>
 </template>
@@ -176,8 +180,15 @@ export default {
 </script>
 
 <style scoped>
-.input-group {
-  padding: 0;
-  margin: 0;
+.attr-row {
+  position: relative;
+}
+.attr-name {
+  position: absolute;
+  bottom: 5px;
+}
+.attr-env {
+  position: absolute;
+  bottom: 0px;
 }
 </style>

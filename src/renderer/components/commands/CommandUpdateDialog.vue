@@ -12,7 +12,6 @@
 <script lang="ts">
 import {
   Component,
-  Prop,
   EditDialogComponent,
   DialogComponent,
   Refs

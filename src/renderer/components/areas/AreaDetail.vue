@@ -36,16 +36,11 @@
       <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
-        v-if="parentArea"
-        icon="arrow-circle-up"
-        tooltip="Up One Level"
-        @action="onUpOneLevel"
-      />
-      <sw-navigation-action-button icon="map" tooltip="Add Subarea" @action="onAddSubarea"/>
-      <sw-navigation-action-button icon="draw-polygon" tooltip="Add Zone" @action="onAddZone"/>
-      <sw-navigation-action-button icon="edit" tooltip="Edit Area" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Area" @action="onDelete"/>
+      <up-button v-if="parentArea" tooltip="Up One Level" @action="onUpOneLevel"/>
+      <area-button tooltip="Add Subarea" @action="onAddSubarea"/>
+      <zone-button tooltip="Add Zone" @action="onAddZone"/>
+      <edit-button tooltip="Edit Area" @action="onEdit"/>
+      <delete-button tooltip="Delete Area" @action="onDelete"/>
     </template>
   </sw-detail-page>
 </template>
@@ -70,6 +65,11 @@ import AreaCreateDialog from "./AreaCreateDialog.vue";
 import AreaUpdateDialog from "./AreaUpdateDialog.vue";
 import AreaDeleteDialog from "./AreaDeleteDialog.vue";
 import ZoneCreateDialog from "./ZoneCreateDialog.vue";
+import UpButton from "../common/navbuttons/UpButton.vue";
+import AreaButton from "../common/navbuttons/AreaButton.vue";
+import ZoneButton from "../common/navbuttons/ZoneButton.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -89,7 +89,12 @@ import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
     AreaCreateDialog,
     AreaUpdateDialog,
     AreaDeleteDialog,
-    ZoneCreateDialog
+    ZoneCreateDialog,
+    UpButton,
+    AreaButton,
+    ZoneButton,
+    EditButton,
+    DeleteButton
   }
 })
 export default class AreaDetail extends DetailComponent<IArea> {

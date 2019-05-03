@@ -28,7 +28,6 @@ import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
 import { AxiosPromise } from "axios";
 import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
 import {
-  IDeviceType,
   IDeviceCommand,
   IDeviceCommandSearchCriteria,
   IDeviceCommandResponseFormat,

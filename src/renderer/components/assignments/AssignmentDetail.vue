@@ -37,21 +37,9 @@
       />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
-        icon="bolt"
-        tooltip="Invoke Command"
-        @action="onAddCommandInvocation"
-      />
-      <sw-navigation-action-button
-        icon="crosshairs"
-        tooltip="Device Emulator"
-        @action="onOpenEmulator"
-      />
-      <sw-navigation-action-button
-        icon="times"
-        tooltip="Delete Assignment"
-        @action="onAssignmentDelete"
-      />
+      <device-command-button tooltip="Invoke Command" @action="onAddCommandInvocation"/>
+      <emulator-button tooltip="Device Emulator" @action="onOpenEmulator"/>
+      <delete-button tooltip="Delete Assignment" @action="onAssignmentDelete"/>
     </template>
   </sw-detail-page>
 </template>
@@ -72,6 +60,9 @@ import AssignmentInvocationEvents from "./AssignmentInvocationEvents.vue";
 import AssignmentResponseEvents from "./AssignmentResponseEvents.vue";
 import AssignmentDeleteDialog from "./AssignmentDeleteDialog.vue";
 import InvocationCreateDialog from "./InvocationCreateDialog.vue";
+import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
+import EmulatorButton from "../common/navbuttons/EmulatorButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -93,7 +84,10 @@ import {
     AssignmentInvocationEvents,
     AssignmentResponseEvents,
     AssignmentDeleteDialog,
-    InvocationCreateDialog
+    InvocationCreateDialog,
+    DeviceCommandButton,
+    EmulatorButton,
+    DeleteButton
   }
 })
 export default class AssignmentDetail extends DetailComponent<

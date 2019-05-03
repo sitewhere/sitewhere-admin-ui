@@ -2,70 +2,77 @@
   <device-status-dialog
     ref="dialog"
     title="Edit Device Status"
-    width="600"
-    :deviceType="deviceType"
+    :loaded="loaded"
     createLabel="Update"
     cancelLabel="Cancel"
-    @payload="onCommit"
-  ></device-status-dialog>
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import DeviceStatusDialog from "./DeviceStatusDialog";
+<script lang="ts">
+import {
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
+import DeviceStatusDialog from "./DeviceStatusDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  IDeviceStatus,
+  IDeviceStatusCreateRequest,
+  IDeviceStatusResponseFormat
+} from "sitewhere-rest-api";
 import {
   getDeviceStatus,
   updateDeviceStatus
 } from "../../rest/sitewhere-device-statuses-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     DeviceStatusDialog
-  },
-
-  props: ["deviceType", "status"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      var component = this;
-      getDeviceStatus(this.$store, this.status.token)
-        .then(function(response) {
-          component.onLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateDeviceStatus(this.$store, this.status.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("statusUpdated");
-    }
   }
-};
+})
+export default class DeviceStatusUpdateDialog extends EditDialogComponent<
+  IDeviceStatus,
+  IDeviceStatusCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceStatus>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceStatus> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IDeviceStatus> {
+    let format: IDeviceStatusResponseFormat = {};
+    return getDeviceStatus(this.$store, identifier, format);
+  }
+
+  /** Save payload */
+  prepareSave(
+    original: IDeviceStatus,
+    updated: IDeviceStatusCreateRequest
+  ): AxiosPromise<IDeviceStatus> {
+    return updateDeviceStatus(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: IDeviceStatusCreateRequest): void {
+    this.save(payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceStatus): void {
+    this.$emit("deviceStatusUpdated", payload);
+  }
+}
 </script>
 
 <style scoped>

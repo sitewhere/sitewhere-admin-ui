@@ -1,51 +1,57 @@
 <template>
-  <div>
-    <device-unit-panel :deviceUnit="schema" @contentUpdated="onContentUpdated"></device-unit-panel>
-    <v-snackbar :timeout="2000" success v-model="showSaved">Changes Saved
-      <v-btn dark flat @click.native="showSaved = false">Close</v-btn>
-    </v-snackbar>
-  </div>
+  <sw-content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
+    <device-unit-panel
+      :deviceUnit="deviceElementSchema"
+      @addDeviceUnit="onAddDeviceUnit"
+      @deleteDeviceUnit="onDeleteDeviceUnit"
+      @addDeviceSlot="onAddDeviceSlot"
+      @deleteDeviceSlot="onDeleteDeviceSlot"
+    />
+  </sw-content-tab>
 </template>
 
-<script>
-import DeviceUnitPanel from "./DeviceUnitPanel";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 
-import { updateDeviceType } from "../../rest/sitewhere-device-types-api";
+import DeviceUnitPanel from "./DeviceUnitPanel.vue";
 
-export default {
-  data: () => ({
-    showSaved: false,
-    schema: null
-  }),
+import { IDeviceType } from "sitewhere-rest-api";
 
-  props: ["deviceType"],
-
+@Component({
   components: {
     DeviceUnitPanel
-  },
-
-  created: function() {
-    this.$data.schema = this.deviceType.deviceElementSchema;
-  },
-
-  methods: {
-    // Refresh UI when content updates.
-    onContentUpdated: function() {
-      var component = this;
-      updateDeviceType(this.$store, this.deviceType.token, this.deviceType)
-        .then(function(response) {
-          component.onContentSaved();
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after content has been saved.
-    onContentSaved: function() {
-      this.$data.showSaved = true;
-      this.$data.schema = this.deviceType.deviceElementSchema;
-    }
   }
-};
+})
+export default class DeviceTypeComposition extends Vue {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly deviceType!: IDeviceType;
+
+  /** Device element schema */
+  get deviceElementSchema() {
+    return this.deviceType ? this.deviceType.deviceElementSchema : null;
+  }
+
+  /** Handle event for adding a device unit */
+  onAddDeviceUnit(parentUnitPath: string) {
+    console.log("add", parentUnitPath);
+  }
+
+  /** Handle event for deleting a device unit */
+  onDeleteDeviceUnit(unitPath: string) {
+    console.log("delete", unitPath);
+  }
+
+  /** Handle event for adding a device slot */
+  onAddDeviceSlot(unitPath: string) {
+    console.log("add slot", unitPath);
+  }
+
+  /** Handle event for deleting a device unit */
+  onDeleteDeviceSlot(unitPath: string, slotPath: string) {
+    console.log("delete slot", unitPath, slotPath);
+  }
+}
 </script>
 
 <style scoped>

@@ -2,25 +2,20 @@
   <div>
     <v-form v-if="groups && groups.length > 0" v-model="formValid" ref="form" lazy-validation>
       <v-tabs v-model="active">
-        <v-tabs-bar dark color="primary">
-          <v-tabs-item
-            v-for="group in groups"
-            :key="group.uid"
-            :href="'#' + group.uid"
-          >{{ group.name }}</v-tabs-item>
-        </v-tabs-bar>
-        <v-tabs-items>
+        <v-tab v-for="group in groups" :key="group.uid">{{ group.name }}</v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="active">
+        <v-tab-item v-for="group in groups" :key="group.uid">
           <attribute-group-panel
-            v-for="group in groups"
             :attributeGroup="group"
             :readOnly="readOnly"
             :identifier="identifier"
             :tenantToken="tenantToken"
             :key="group.uid"
             @attributeUpdated="onAttributeUpdated"
-          ></attribute-group-panel>
-        </v-tabs-items>
-      </v-tabs>
+          />
+        </v-tab-item>
+      </v-tabs-items>
     </v-form>
     <v-card v-else-if="!readOnly">
       <v-card-text>This component does not contain any configurable attributes.</v-card-text>
@@ -57,7 +52,6 @@ export default {
       immediate: true,
       handler(val, old) {
         if (val && val.length > 0) {
-          this.$data.active = val[0].uid;
           this.loadAttributesFromGroups(val);
         }
       }

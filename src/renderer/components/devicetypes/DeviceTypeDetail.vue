@@ -16,27 +16,34 @@
     <template slot="tabs">
       <v-tab key="commands">Commands</v-tab>
       <v-tab key="statuses">Device Statuses</v-tab>
+      <!--
       <v-tab key="code">Code Generation</v-tab>
+      -->
       <v-tab v-if="containerPolicy === 'Composite'" key="composition">Composition</v-tab>
     </template>
     <template slot="tab-items">
       <device-type-commands tabkey="commands" ref="commands" :deviceTypeToken="token"/>
       <device-type-statuses tabkey="statuses" ref="statuses" :deviceType="deviceType"/>
+      <!--
       <device-type-codegen tabkey="code" id="code" :deviceType="deviceType"/>
-      <v-tab-item v-if="containerPolicy === 'Composite'" key="composition">
-        <device-type-composition :deviceType="deviceType"/>
-      </v-tab-item>
+      -->
+      <device-type-composition tabkey="composition" :deviceType="deviceType"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="bolt" tooltip="Create Command" @action="onCommandCreate"/>
-      <sw-navigation-action-button icon="edit" tooltip="Edit Device Type" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Device Type" @action="onDelete"/>
+      <device-command-button tooltip="Create Command" @action="onCommandCreate"/>
+      <device-status-button tooltip="Create Status" @action="onStatusCreate"/>
+      <edit-button tooltip="Edit Device Type" @action="onEdit"/>
+      <delete-button tooltip="Delete Device Type" @action="onDelete"/>
     </template>
     <template slot="dialogs">
       <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated"/>
       <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted"/>
       <command-create-dialog ref="command" :deviceTypeToken="token" @commandAdded="onCommandAdded"/>
-      <device-status-create-dialog :deviceType="deviceType" @statusAdded="onStatusAdded"/>
+      <device-status-create-dialog
+        ref="status"
+        :deviceTypeToken="token"
+        @statusAdded="onStatusAdded"
+      />
     </template>
   </sw-detail-page>
 </template>
@@ -45,7 +52,6 @@
 import {
   Component,
   DetailComponent,
-  DialogComponent,
   INavigationSection,
   Refs
 } from "sitewhere-ide-common";
@@ -53,12 +59,15 @@ import {
 import DeviceTypeDetailHeader from "./DeviceTypeDetailHeader.vue";
 import DeviceTypeCommands from "./DeviceTypeCommands.vue";
 import DeviceTypeStatuses from "./DeviceTypeStatuses.vue";
-import DeviceTypeCodegen from "./DeviceTypeCodegen.vue";
 import DeviceTypeComposition from "./DeviceTypeComposition.vue";
 import DeviceTypeDeleteDialog from "./DeviceTypeDeleteDialog.vue";
 import DeviceTypeUpdateDialog from "./DeviceTypeUpdateDialog.vue";
 import CommandCreateDialog from "../commands/CommandCreateDialog.vue";
 import DeviceStatusCreateDialog from "../statuses/DeviceStatusCreateDialog.vue";
+import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
+import DeviceStatusButton from "../common/navbuttons/DeviceStatusButton.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -75,20 +84,26 @@ import {
     DeviceTypeDetailHeader,
     DeviceTypeCommands,
     DeviceTypeStatuses,
-    DeviceTypeCodegen,
     DeviceTypeComposition,
     DeviceTypeDeleteDialog,
     DeviceTypeUpdateDialog,
     CommandCreateDialog,
-    DeviceStatusCreateDialog
+    DeviceStatusCreateDialog,
+    DeviceCommandButton,
+    DeviceStatusButton,
+    EditButton,
+    DeleteButton
   }
 })
 export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
+  active: string | null = null;
+
   // References.
   $refs!: Refs<{
     command: CommandCreateDialog;
+    status: DeviceStatusCreateDialog;
     edit: DeviceTypeUpdateDialog;
-    delete: DialogComponent<IDeviceType>;
+    delete: DeviceTypeDeleteDialog;
   }>;
 
   get deviceType(): IDeviceType | null {
@@ -102,7 +117,7 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
 
   get title(): string {
     return this.deviceType
-      ? `Manage device type ${this.token}`
+      ? `Manage device type "${this.deviceType.name}"`
       : "Manage device type";
   }
 
@@ -137,6 +152,11 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
     this.$refs.command.open();
   }
 
+  // Called on status create.
+  onStatusCreate() {
+    this.$refs.status.open();
+  }
+
   // Called to open area edit dialog.
   onEdit() {
     if (this.token) {
@@ -150,7 +170,9 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
   }
 
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    if (this.token) {
+      this.$refs.delete.open(this.token);
+    }
   }
 
   // Called after delete.

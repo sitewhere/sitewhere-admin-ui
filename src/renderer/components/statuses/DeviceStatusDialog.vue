@@ -1,195 +1,113 @@
 <template>
-  <base-dialog
+  <sw-base-dialog
+    ref="dialog"
+    :icon="icon"
     :title="title"
     :width="width"
+    :loaded="loaded"
     :visible="dialogVisible"
     :createLabel="createLabel"
     :cancelLabel="cancelLabel"
-    :error="error"
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <v-tabs dark v-model="active">
-      <v-tabs-bar slot="activators">
-        <v-tabs-slider></v-tabs-slider>
-        <v-tabs-item key="details">Status Details</v-tabs-item>
-        <v-tabs-item key="metadata">Metadata</v-tabs-item>
-      </v-tabs-bar>
-      <slot name="tabcontent"></slot>
-      <v-tabs-content key="details">
-        <v-card flat>
-          <v-card-text>
-            <v-container fluid>
-              <v-layout row wrap>
-                <v-flex xs12>
-                  <v-text-field
-                    required
-                    label="Status code"
-                    v-model="statusCode"
-                    prepend-icon="info"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12>
-                  <v-text-field required label="Name" v-model="statusName" prepend-icon="info"></v-text-field>
-                </v-flex>
-                <v-flex xs12>
-                  <icon-selector v-model="statusIcon"></icon-selector>
-                </v-flex>
-                <v-flex xs12 class="mb-4">
-                  <v-icon>info</v-icon>
-                  <span class="color-label subheading ml-2">Background color:</span>
-                  <color-picker v-model="statusBackground"></color-picker>
-                </v-flex>
-                <v-flex xs12 class="mb-4">
-                  <v-icon>info</v-icon>
-                  <span class="color-label subheading ml-2">Foreground color:</span>
-                  <color-picker v-model="statusForeground"></color-picker>
-                </v-flex>
-                <v-flex xs12 class="mb-4">
-                  <v-icon>info</v-icon>
-                  <span class="color-label subheading ml-2">Border color:</span>
-                  <color-picker v-model="statusBorder"></color-picker>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-        </v-card>
-      </v-tabs-content>
-      <v-tabs-content key="metadata">
-        <metadata-panel
-          :metadata="metadata"
-          @itemDeleted="onMetadataDeleted"
-          @itemAdded="onMetadataAdded"
-        />
-      </v-tabs-content>
-    </v-tabs>
-  </base-dialog>
+    <template slot="tabs">
+      <v-tab key="details">Details</v-tab>
+      <v-tab key="metadata">Metadata</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="details">
+        <device-status-detail-fields ref="details"/>
+      </v-tab-item>
+      <v-tab-item key="metadata">
+        <sw-metadata-panel ref="metadata"/>
+      </v-tab-item>
+    </template>
+  </sw-base-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import {
-  BaseDialog,
-  MetadataPanel,
-  IconSelector,
-  ColorPicker
-} from "sitewhere-ide-components";
+  Component,
+  Prop,
+  DialogComponent,
+  DialogSection,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
+import { NavigationIcon } from "../../libraries/constants";
 
-import { arrayToMetadata, metadataToArray } from "../common/Utils";
+import DeviceStatusDetailFields from "./DeviceStatusDetailFields.vue";
+import { IDeviceStatus } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    active: null,
-    dialogVisible: false,
-    statusCode: null,
-    statusName: null,
-    statusIcon: null,
-    statusBackground: null,
-    statusForeground: null,
-    statusBorder: null,
-    metadata: [],
-    error: null
-  }),
-
+@Component({
   components: {
-    BaseDialog,
-    MetadataPanel,
-    IconSelector,
-    ColorPicker
-  },
+    DeviceStatusDetailFields
+  }
+})
+export default class DeviceStatusDialog extends DialogComponent<IDeviceStatus> {
+  @Prop() readonly deviceTypeToken!: string;
 
-  props: ["deviceType", "title", "width", "createLabel", "cancelLabel"],
+  // References.
+  $refs!: Refs<{
+    dialog: ITabbedComponent;
+    details: DeviceStatusDetailFields;
+    metadata: DialogSection;
+  }>;
 
-  methods: {
-    // Generate payload from UI.
-    generatePayload: function() {
-      var payload = {};
-      payload.deviceTypeToken = this.deviceType.token;
-      payload.code = this.$data.statusCode;
-      payload.name = this.$data.statusName;
-      payload.icon = this.$data.statusIcon;
-      payload.backgroundColor = this.$data.statusBackground;
-      payload.foregroundColor = this.$data.statusForeground;
-      payload.borderColor = this.$data.statusBorder;
-      payload.metadata = arrayToMetadata(this.$data.metadata);
-      return payload;
-    },
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceStatus;
+  }
 
-    // Reset dialog contents.
-    reset: function(e) {
-      this.$data.statusCode = null;
-      this.$data.statusName = null;
-      this.$data.statusIcon = null;
-      this.$data.statusBackground = null;
-      this.$data.statusForeground = null;
-      this.$data.statusBorder = null;
-      this.$data.metadata = [];
-      this.$data.active = "details";
-    },
+  // Generate payload from UI.
+  generatePayload() {
+    let payload: any = {
+      deviceTypeToken: this.deviceTypeToken
+    };
+    Object.assign(
+      payload,
+      this.$refs.details.save(),
+      this.$refs.metadata.save()
+    );
+    return payload;
+  }
 
-    // Load dialog from a given payload.
-    load: function(payload) {
-      this.reset();
+  // Reset dialog contents.
+  reset() {
+    if (this.$refs.details) {
+      this.$refs.details.reset();
+    }
+    if (this.$refs.metadata) {
+      this.$refs.metadata.reset();
+    }
+    this.$refs.dialog.setActiveTab("details");
+  }
 
-      if (payload) {
-        this.$data.statusCode = payload.code;
-        this.$data.statusName = payload.name;
-        this.$data.statusIcon = payload.icon;
-        this.$data.statusBackground = payload.backgroundColor;
-        this.$data.statusForeground = payload.foregroundColor;
-        this.$data.statusBorder = payload.borderColor;
-        this.$data.metadata = metadataToArray(payload.metadata);
-      }
-    },
-
-    // Called to open the dialog.
-    openDialog: function() {
-      this.$data.dialogVisible = true;
-    },
-
-    // Called to open the dialog.
-    closeDialog: function() {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called to show an error message.
-    showError: function(error) {
-      this.$data.error = error;
-    },
-
-    // Called after create button is clicked.
-    onCreateClicked: function(e) {
-      var payload = this.generatePayload();
-      this.$emit("payload", payload);
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function(e) {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function(name) {
-      var metadata = this.$data.metadata;
-      for (var i = 0; i < metadata.length; i++) {
-        if (metadata[i].name === name) {
-          metadata.splice(i, 1);
-        }
-      }
-    },
-
-    // Called when a metadata entry has been added.
-    onMetadataAdded: function(entry) {
-      var metadata = this.$data.metadata;
-      metadata.push(entry);
+  // Load dialog from a given payload.
+  load(payload: IDeviceStatus) {
+    this.reset();
+    if (this.$refs.details) {
+      this.$refs.details.load(payload);
+    }
+    if (this.$refs.metadata) {
+      this.$refs.metadata.load(payload);
     }
   }
-};
+
+  // Called after create button is clicked.
+  onCreateClicked(e: any) {
+    if (!this.$refs.details.validate()) {
+      this.$refs.dialog.setActiveTab("details");
+      return;
+    }
+
+    var payload = this.generatePayload();
+    console.log("Before payload emit:", this);
+    this.$emit("payload", payload);
+  }
+}
 </script>
 
 <style scoped>
-.color-label {
-  display: inline-block;
-  color: #888;
-  min-width: 150px;
-}
 </style>

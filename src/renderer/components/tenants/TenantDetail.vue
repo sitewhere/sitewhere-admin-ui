@@ -103,12 +103,11 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 
   /** Called if a microservice is clicked */
   onMicroserviceClicked(microservice: IInstanceTopologySummary) {
-    this.$router.push(
-      "/system/tenants/" +
-        this.$data.tenantToken +
-        "/" +
-        microservice.identifier
-    );
+    if (this.tenant) {
+      this.$router.push(
+        "/system/tenants/" + this.tenant.token + "/" + microservice.identifier
+      );
+    }
   }
 
   // Called to refresh data.

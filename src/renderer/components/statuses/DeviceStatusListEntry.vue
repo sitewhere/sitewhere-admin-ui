@@ -1,85 +1,77 @@
 <template>
-  <span>
-    <v-card hover>
-      <v-toolbar
-        flat
-        dark
-        dense
-        card
-        @click="onShowEditDialog"
-        :style="{'background-color': status.backgroundColor, 'border': '1px solid ' + status.borderColor}"
-      >
-        <font-awesome-icon :icon="status.icon" size="lg"/>
-        <v-toolbar-title :style="{'color': status.foregroundColor}">{{ status.name }}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-tooltip class="ma-0 pa-0" top>
-          <v-btn class="ma-0 pa-0" icon slot="activator" @click.stop="onShowEditDialog">
-            <v-icon class="white--text">fa-edit</v-icon>
-          </v-btn>
-          <span>Edit Device Status</span>
-        </v-tooltip>
-        <v-tooltip class="ma-0 pa-0" top>
-          <v-btn class="ml-0 pl-0" icon slot="activator" @click.stop="onShowDeleteDialog">
-            <v-icon class="white--text">fa-times</v-icon>
-          </v-btn>
-          <span>Delete Device Status</span>
-        </v-tooltip>
-      </v-toolbar>
-    </v-card>
-    <device-status-update-dialog
-      ref="update"
-      :deviceType="deviceType"
-      :status="status"
-      @statusUpdated="onStatusUpdated"
-    ></device-status-update-dialog>
-    <device-status-delete-dialog
-      ref="delete"
-      :deviceType="deviceType"
-      :status="status"
-      @statusDeleted="onStatusDeleted"
-    ></device-status-delete-dialog>
-  </span>
+  <sw-list-entry>
+    <v-toolbar flat dark dense card @click="onEditStatus" :style="cardStyle">
+      <font-awesome-icon :icon="icon" size="lg"/>
+      <v-toolbar-title :style="textStyle">{{ name }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-tooltip top>
+        <v-icon :style="deleteStyle" @click="onDeleteStatus" slot="activator">{{ deleteIcon }}</v-icon>
+        <span>Delete Device Status</span>
+      </v-tooltip>
+    </v-toolbar>
+  </sw-list-entry>
 </template>
 
-<script>
-import DeviceStatusUpdateDialog from "./DeviceStatusUpdateDialog";
-import DeviceStatusDeleteDialog from "./DeviceStatusDeleteDialog";
+<script lang="ts">
+import { Component, Prop } from "sitewhere-ide-common";
+import Vue from "vue";
 
-export default {
-  data: () => ({}),
+import { IDeviceStatus } from "sitewhere-rest-api";
+import { NavigationIcon } from "../../libraries/constants";
 
-  components: {
-    DeviceStatusUpdateDialog,
-    DeviceStatusDeleteDialog
-  },
+@Component({})
+export default class DeviceTypeListEntry extends Vue {
+  @Prop() readonly deviceStatus!: IDeviceStatus;
 
-  props: ["status", "deviceType"],
-
-  methods: {
-    // Show edit dialog.
-    onShowEditDialog: function() {
-      this.$refs["update"].onOpenDialog();
-    },
-    // Show delete dialog.
-    onShowDeleteDialog: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called after status has been deleted.
-    onStatusDeleted: function() {
-      this.$emit("statusDeleted");
-    },
-    // Called after status has been updated.
-    onStatusUpdated: function() {
-      this.$emit("statusUpdated");
-    }
+  /** Icon for status */
+  get icon() {
+    return this.deviceStatus ? this.deviceStatus.icon : null;
   }
-};
+
+  /** Icon for delete */
+  get deleteIcon() {
+    return NavigationIcon.Delete;
+  }
+
+  /** Name for status */
+  get name() {
+    return this.deviceStatus ? this.deviceStatus.name : null;
+  }
+
+  /** Card style for status */
+  get cardStyle() {
+    return {
+      "background-color": this.deviceStatus.backgroundColor,
+      border: "1px solid " + this.deviceStatus.borderColor
+    };
+  }
+
+  /** Text style for status */
+  get textStyle() {
+    return {
+      color: this.deviceStatus.foregroundColor
+    };
+  }
+
+  /** Text style for delete icon */
+  get deleteStyle() {
+    return {
+      color: this.deviceStatus.foregroundColor,
+      opacity: 0.5
+    };
+  }
+
+  // Called after status has been deleted.
+  onEditStatus() {
+    this.$emit("edit", this.deviceStatus);
+  }
+
+  // Called after status has been updated.
+  onDeleteStatus() {
+    this.$emit("delete", this.deviceStatus);
+  }
+}
 </script>
 
 <style scoped>
-.status-text {
-  font-size: 18px;
-  vertical-align: top;
-  margin-left: 5px;
-}
 </style>

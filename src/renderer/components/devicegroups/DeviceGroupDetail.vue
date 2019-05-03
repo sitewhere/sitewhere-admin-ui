@@ -20,8 +20,8 @@
       <device-group-elements tabkey="elements" ref="list" :deviceGroup="deviceGroup"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="edit" tooltip="Edit Device Group" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Device Group" @action="onDelete"/>
+      <edit-button tooltip="Edit Device Group" @action="onEdit"/>
+      <delete-button tooltip="Delete Device Group" @action="onDelete"/>
     </template>
     <template slot="dialogs">
       <device-group-element-create-dialog
@@ -39,7 +39,6 @@
 import {
   Component,
   DetailComponent,
-  DialogComponent,
   INavigationSection,
   Refs
 } from "sitewhere-ide-common";
@@ -49,6 +48,8 @@ import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog.vue";
 import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog.vue";
 import DeviceGroupElements from "./DeviceGroupElements.vue";
 import DeviceGroupElementCreateDialog from "./DeviceGroupElementCreateDialog.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -62,7 +63,9 @@ import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
     DeviceGroupUpdateDialog,
     DeviceGroupDeleteDialog,
     DeviceGroupElements,
-    DeviceGroupElementCreateDialog
+    DeviceGroupElementCreateDialog,
+    EditButton,
+    DeleteButton
   }
 })
 export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
@@ -71,7 +74,7 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
   // References.
   $refs!: Refs<{
     edit: DeviceGroupUpdateDialog;
-    delete: DialogComponent<IDeviceGroup>;
+    delete: DeviceGroupDeleteDialog;
   }>;
 
   get deviceGroup(): IDeviceGroup | null {
@@ -84,7 +87,7 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
 
   get title(): string {
     return this.deviceGroup
-      ? `Manage device group ${this.deviceGroup.token}`
+      ? `Manage device group "${this.deviceGroup.name}"`
       : "";
   }
 
@@ -117,7 +120,9 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
 
   // Show dialog on delete requested.
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    if (this.token) {
+      this.$refs.delete.open(this.token);
+    }
   }
 
   // Called after device group is deleted.

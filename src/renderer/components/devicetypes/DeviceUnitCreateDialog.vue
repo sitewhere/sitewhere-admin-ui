@@ -1,78 +1,62 @@
 <template>
-  <span>
-    <device-unit-dialog
-      ref="dialog"
-      style="display: none;"
-      title="Create Device Unit"
-      width="600"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      mode="create"
-      @payload="onCommit"
-    ></device-unit-dialog>
-    <v-btn
-      class="ma-0"
-      dark
-      icon
-      v-tooltip:left="{ html: 'Add Nested Device Unit' }"
-      @click.native.stop="onOpenDialog"
-    >
-      <v-icon class="white--text">create_new_folder</v-icon>
-    </v-btn>
-  </span>
+  <device-unit-dialog
+    ref="dialog"
+    title="Create Device Unit"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import lodash from "lodash";
-import DeviceUnitDialog from "./DeviceUnitDialog";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import DeviceUnitDialog from "./DeviceUnitDialog.vue";
 
-  props: ["deviceUnit"],
+import { AxiosPromise } from "axios";
+import { IDeviceType, IDeviceTypeCreateRequest } from "sitewhere-rest-api";
+import { createDeviceType } from "../../rest/sitewhere-device-types-api";
 
+@Component({
   components: {
     DeviceUnitDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      let match = lodash.find(this.deviceUnit.deviceUnits, {
-        path: payload.path
-      });
-      if (match) {
-        this.getDialogComponent().showError({
-          message: "A unit with that path already exists."
-        });
-      } else {
-        this.onCommitted(payload);
-      }
-    },
-
-    // Handle successful commit.
-    onCommitted: function(payload) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("deviceUnitAdded", payload);
-    },
-
-    // Handle failed commit.
-    onFailed: function(error) {
-      this.getDialogComponent().showError(error);
-    }
   }
-};
+})
+export default class DeviceUnitCreateDialog extends CreateDialogComponent<
+  IDeviceType,
+  IDeviceTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceType>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceType> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceTypeCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IDeviceTypeCreateRequest): AxiosPromise<IDeviceType> {
+    return createDeviceType(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceType): void {
+    this.$emit("deviceUnitAdded", payload);
+  }
+}
 </script>
 
 <style scoped>

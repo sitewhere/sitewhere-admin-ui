@@ -1,47 +1,58 @@
 <template>
   <sw-delete-dialog
+    ref="dialog"
     title="Delete Device Type"
     width="400"
-    :error="error"
-    @delete="onDeleteConfirmed"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
   >
-    <v-card-text>Are you sure you want to delete this device type?</v-card-text>
+    <v-card-text>{{ message }}</v-card-text>
   </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteDeviceType } from "../../rest/sitewhere-device-types-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import { IDeviceType, IDeviceTypeResponseFormat } from "sitewhere-rest-api";
+import {
+  getDeviceType,
+  deleteDeviceType
+} from "../../rest/sitewhere-device-types-api";
 
-  props: ["token"],
+@Component({})
+export default class DeviceTypeDeleteDialog extends DeleteDialogComponent<
+  IDeviceType
+> {
+  message: string | null = null;
 
-  methods: {
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.$children[0].openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteDeviceType(this.$store, this.token, true)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.$children[0].closeDialog();
-      this.$emit("deviceTypeDeleted");
-    }
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IDeviceType> {
+    let format: IDeviceTypeResponseFormat = {};
+    return getDeviceType(this.$store, identifier, format);
   }
-};
+
+  /** Called after record is loaded */
+  afterLoad(deviceType: IDeviceType): void {
+    this.message = `Are you sure you want to delete '${deviceType.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(deviceType: IDeviceType): AxiosPromise<IDeviceType> {
+    return deleteDeviceType(this.$store, deviceType.token);
+  }
+
+  // Called after create button is clicked.
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  // Called after cancel button is clicked.
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
 </script>
 
 <style scoped>

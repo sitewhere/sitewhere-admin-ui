@@ -9,27 +9,26 @@
           @popContext="onPopContext"
           @popToContext="onPopToContext"
           @configureCurrent="onOpenUpdateDialog"
-        ></microservice-banner>
-        <!-- Grouped attributes for current context -->
-        <v-card class="mb-2">
+        >
           <component-attributes
+            class="mb-2 mt-2"
             :context="context"
             :groups="groups"
             :identifier="identifier"
             :tenantToken="tenantToken"
             :readOnly="true"
             :dirty="dirty"
-          ></component-attributes>
-        </v-card>
-        <!-- Elements -->
-        <v-card>
-          <component-content
-            :content="content"
-            @addComponent="onAddComponent"
-            @pushContext="onPushChildContext"
-            @deleteComponent="onDeleteComponent"
-          ></component-content>
-        </v-card>
+          />
+          <!-- Elements -->
+          <v-card>
+            <component-content
+              :content="content"
+              @addComponent="onAddComponent"
+              @pushContext="onPushChildContext"
+              @deleteComponent="onDeleteComponent"
+            ></component-content>
+          </v-card>
+        </microservice-banner>
       </v-card-text>
     </v-card>
     <attributes-create-dialog

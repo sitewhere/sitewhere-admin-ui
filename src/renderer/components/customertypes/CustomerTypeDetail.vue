@@ -32,8 +32,8 @@
       />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="edit" tooltip="Edit Customer Type" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Customer Type" @action="onDelete"/>
+      <edit-button tooltip="Edit Customer Type" @action="onEdit"/>
+      <delete-button tooltip="Delete Customer Type" @action="onDelete"/>
     </template>
   </sw-detail-page>
 </template>
@@ -53,6 +53,8 @@ import CustomerTypeCustomers from "./CustomerTypeCustomers.vue";
 import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog.vue";
 import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog.vue";
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -67,7 +69,9 @@ import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
     CustomerTypeCustomers,
     CustomerListEntry,
     CustomerTypeDeleteDialog,
-    CustomerTypeUpdateDialog
+    CustomerTypeUpdateDialog,
+    EditButton,
+    DeleteButton
   }
 })
 export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {

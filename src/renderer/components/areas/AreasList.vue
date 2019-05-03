@@ -16,7 +16,7 @@
       <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="plus" tooltip="Add Area" @action="onAddArea"/>
+      <add-button tooltip="Add Area" @action="onAddArea"/>
     </template>
   </sw-list-page>
 </template>
@@ -26,6 +26,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -41,7 +42,8 @@ import {
 @Component({
   components: {
     AreaListEntry,
-    AreaCreateDialog
+    AreaCreateDialog,
+    AddButton
   }
 })
 export default class AreasList extends ListComponent<

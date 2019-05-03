@@ -23,7 +23,11 @@
           <font-awesome-icon icon="cog" size="lg"/>
         </v-btn>
       </v-toolbar>
-      <v-card-text v-html="context.model.description"></v-card-text>
+      <v-card-text>
+        <div class="subheading mb-3" v-html="context.model.description"/>
+        <v-divider/>
+        <slot/>
+      </v-card-text>
     </v-card>
   </div>
 </template>

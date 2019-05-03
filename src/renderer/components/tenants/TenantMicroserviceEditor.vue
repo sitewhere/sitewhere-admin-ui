@@ -1,34 +1,46 @@
 <template>
-  <sw-navigation-page
-    icon="microchip"
-    title="Manage Tenant Microservice"
-    loadingMessage="Loading tenant engine configuration ..."
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading microservice configuration ..."
     :loaded="loaded"
+    :record="tenant"
   >
-    <div slot="content">
-      <tenant-runtimes-block :identifier="identifier" :tenantToken="tenantToken"></tenant-runtimes-block>
+    <template slot="header">
+      <tenant-runtimes-block class="ma-1" :identifier="identifier" :tenantToken="tenantToken"/>
       <unsaved-updates-warning
         class="mb-3"
         :unsaved="dirty"
         @save="onSaveConfiguration"
         @revert="onRevertConfiguration"
-      ></unsaved-updates-warning>
-      <microservice-editor
-        :config="config"
-        :configModel="configModel"
-        :identifier="identifier"
-        :tenantToken="tenantToken"
-        @dirty="onConfigurationUpdated"
-      ></microservice-editor>
-    </div>
-    <div slot="actions">
+      />
+    </template>
+    <template slot="tabs">
+      <v-tab key="configuration">Configuration</v-tab>
+      <v-tab key="scripts">Scripts</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="configuration">
+        <microservice-editor
+          :config="config"
+          :configModel="configModel"
+          :identifier="identifier"
+          :tenantToken="tenantToken"
+          @dirty="onConfigurationUpdated"
+        />
+      </v-tab-item>
+      <v-tab-item key="scripts">
+        <scripts-manager :identifier="identifier"/>
+      </v-tab-item>
+    </template>
+    <template slot="actions">
       <sw-navigation-action-button
         icon="arrow-left"
         tooltip="Back To Tenant Microservices"
         @action="onBackToList"
       />
-    </div>
-  </sw-navigation-page>
+    </template>
+  </sw-detail-page>
 </template>
 
 <script lang="ts">
@@ -37,7 +49,9 @@ import Vue from "vue";
 import TenantRuntimesBlock from "./TenantRuntimesBlock.vue";
 import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
 import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
+import ScriptsManager from "../microservice/ScriptsManager.vue";
 
+import { NavigationIcon } from "../../libraries/constants";
 import { handleError } from "../common/Utils";
 import { Component, WithRoute } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
@@ -58,7 +72,8 @@ import { getTenant } from "../../rest/sitewhere-tenants-api";
   components: {
     TenantRuntimesBlock,
     MicroserviceEditor,
-    UnsavedUpdatesWarning
+    UnsavedUpdatesWarning,
+    ScriptsManager
   }
 })
 export default class TenantMicroserviceEditor extends Vue implements WithRoute {
@@ -71,14 +86,36 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
   loaded: boolean = false;
 
   created() {
-    this.tenantToken = this.$route.params.tenantToken;
+    this.tenantToken = this.$route.params.token;
     this.identifier = this.$route.params.identifier;
-    this.refreshModel();
-    this.refreshConfiguration();
-    this.refreshTenant();
+    this.refresh();
   }
 
-  // Called to refresh configuration model.
+  /** Get icon shown in title bar */
+  get icon() {
+    return NavigationIcon.Tenant;
+  }
+
+  /** Get title shown in title bar */
+  get title() {
+    return this.configModel
+      ? this.configModel.microserviceDetails.name +
+          " Microservice Configuration"
+      : "Tenant Microservice Configuration";
+  }
+
+  /** Refresh all data */
+  async refresh() {
+    this.loaded = false;
+    await Promise.all([
+      this.refreshModel(),
+      this.refreshConfiguration(),
+      this.refreshTenant()
+    ]);
+    this.loaded = true;
+  }
+
+  /** Refresh configuration model */
   async refreshModel() {
     if (this.identifier) {
       try {
@@ -86,26 +123,15 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
           IConfigurationModel
         > = await getConfigurationModel(this.$store, this.identifier);
         this.configModel = response.data;
-        var microservice = response.data.microserviceDetails;
-        var section = {
-          id: "tenants",
-          title: "Manage Microservice",
-          icon: "layer-group",
-          route: "/tenants/" + this.tenantToken + "/" + microservice.identifier,
-          longTitle: "Manage Tenant Microservice: " + microservice.name
-        };
-        this.loaded = true;
-        this.$store.commit("currentSection", section);
       } catch (err) {
         handleError(err);
       }
     }
   }
 
-  // Called to refresh configuration data.
+  /** Refresh configuration data */
   async refreshConfiguration() {
     if (this.identifier && this.tenantToken) {
-      this.loaded = false;
       try {
         let configResponse: AxiosResponse<
           IElementContent
@@ -115,7 +141,6 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
           this.tenantToken
         );
         this.config = configResponse.data;
-        this.loaded = true;
       } catch (err) {
         handleError(err);
       }

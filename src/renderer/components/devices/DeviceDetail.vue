@@ -16,8 +16,8 @@
       <device-assignment-history tabkey="assignments" :deviceToken="token"/>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete"/>
+      <edit-button tooltip="Edit Device" @action="onEdit"/>
+      <delete-button tooltip="Delete Device" @action="onDelete"/>
     </template>
     <template slot="dialogs">
       <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
@@ -30,7 +30,6 @@
 import {
   Component,
   DetailComponent,
-  DialogComponent,
   INavigationSection,
   Refs
 } from "sitewhere-ide-common";
@@ -39,6 +38,8 @@ import DeviceDetailHeader from "./DeviceDetailHeader.vue";
 import DeviceAssignmentHistory from "./DeviceAssignmentHistory.vue";
 import DeviceUpdateDialog from "./DeviceUpdateDialog.vue";
 import DeviceDeleteDialog from "./DeviceDeleteDialog.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
@@ -51,14 +52,16 @@ import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
     DeviceDetailHeader,
     DeviceAssignmentHistory,
     DeviceUpdateDialog,
-    DeviceDeleteDialog
+    DeviceDeleteDialog,
+    EditButton,
+    DeleteButton
   }
 })
 export default class DeviceDetail extends DetailComponent<IDevice> {
   // References.
   $refs!: Refs<{
     edit: DeviceUpdateDialog;
-    delete: DialogComponent<IDevice>;
+    delete: DeviceDeleteDialog;
   }>;
 
   get device(): IDevice | null {
@@ -109,7 +112,9 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
 
   // Open dialog to delete device.
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    if (this.token) {
+      this.$refs.delete.open(this.token);
+    }
   }
 
   // Called after device is deleted.
