@@ -89,94 +89,98 @@
   </v-layout>
 </template>
 
-<script>
-import DeviceTypeSelector from "../devicetypes/DeviceTypeSelector";
-import CustomerSelector from "../customers/CustomerSelector";
-import AreaSelector from "../areas/AreaSelector";
-import ScriptsSelector from "../microservice/ScriptsSelector";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop, Watch } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    editedBooleanValue: true,
-    editedConstValue: null,
-    editedEnvVar: null,
-    displayValue: null
-  }),
+import { IConfiguredAttribute, IAttributeUpdate } from "./ConfigurationModel";
 
+import DeviceTypeSelector from "../devicetypes/DeviceTypeSelector.vue";
+import CustomerSelector from "../customers/CustomerSelector.vue";
+import AreaSelector from "../areas/AreaSelector.vue";
+import ScriptsSelector from "../microservice/ScriptsSelector.vue";
+
+@Component({
   components: {
     DeviceTypeSelector,
     CustomerSelector,
     AreaSelector,
     ScriptsSelector
-  },
+  }
+})
+export default class ComponentAttributes extends Vue {
+  @Prop() readonly attribute!: IConfiguredAttribute;
+  @Prop({ default: false }) readonly readOnly!: boolean;
+  @Prop() readonly identifier!: string;
+  @Prop() readonly tenantToken!: string;
 
-  props: ["attribute", "readOnly", "identifier", "tenantToken"],
+  editedBooleanValue: boolean = true;
+  editedConstValue: any | null = null;
+  editedEnvVar: any | null = null;
+  displayValue: any | null = null;
 
-  watch: {
-    attribute: {
-      immediate: true,
-      handler(attr, old) {
-        let val = attr ? attr.value : null;
-        if (val && val.startsWith("${") && val.endsWith("}")) {
-          let content = val.substring(2);
-          content = content.substring(0, content.length - 1);
-          let parts = content.split(":");
-          this.$data.editedBooleanValue = parts[1] && parts[1] === "true";
-          this.$data.editedConstValue = parts[1];
-          this.$data.editedEnvVar = parts[0];
-          this.$data.displayValue = parts[1];
-        } else {
-          this.$data.editedBooleanValue = val && val === "true";
-          this.$data.editedConstValue = val;
-          this.$data.editedEnvVar = null;
-          if (!val && this.readOnly && attr.default) {
-            this.$data.displayValue = "(Defaulted to " + attr.default + ")";
-          } else {
-            this.$data.displayValue = val;
-          }
-        }
-      }
-    },
-
-    /** Push update */
-    editedBooleanValue: function(val) {
-      this.$data.editedConstValue = "" + val;
-      this.onValueUpdated();
-    },
-
-    /** Push update */
-    editedConstValue: function(val) {
-      this.onValueUpdated();
-    },
-
-    /** Push update */
-    editedEnvVar: function(val) {
-      this.onValueUpdated();
-    }
-  },
-
-  methods: {
-    onValueUpdated: function() {
-      let val = this.$data.editedConstValue;
-      let env = this.$data.editedEnvVar;
-      let newValue;
-
-      if (val && val.length > 0) {
-        newValue = env ? "${" + env + ":" + val + "}" : val;
+  // Handle attribute updates.
+  @Watch("attribute", { immediate: true }) onAttributeUpdated(
+    attr: IConfiguredAttribute,
+    old: IConfiguredAttribute
+  ) {
+    let val = attr ? attr.value : null;
+    if (val && val.startsWith("${") && val.endsWith("}")) {
+      let content = val.substring(2);
+      content = content.substring(0, content.length - 1);
+      let parts: string[] = content.split(":");
+      this.editedBooleanValue = parts && parts[1] === "true";
+      this.editedConstValue = parts[1];
+      this.editedEnvVar = parts[0];
+      this.displayValue = parts[1];
+    } else {
+      this.editedBooleanValue = val !== null && val === "true";
+      this.editedConstValue = val;
+      this.editedEnvVar = null;
+      if (!val && this.readOnly && attr.default) {
+        this.displayValue = "(Defaulted to " + attr.default + ")";
       } else {
-        newValue = env ? "${" + env + "}" : null;
-      }
-
-      if (newValue && newValue !== this.attribute.value) {
-        var updated = {};
-        updated.attribute = this.attribute;
-        updated.oldValue = this.attribute.value;
-        updated.newValue = newValue;
-        this.$emit("attributeUpdated", updated);
+        this.displayValue = val;
       }
     }
   }
-};
+
+  // Handle boolean value updates.
+  @Watch("editedBooleanValue") onBooleanValueUpdated(val: any, oldVal: any) {
+    this.editedConstValue = "" + val;
+    this.onValueUpdated();
+  }
+
+  // Handle boolean value updates.
+  @Watch("editedConstValue") onConstantValueUpdated(val: any, oldVal: any) {
+    this.onValueUpdated();
+  }
+
+  // Handle boolean value updates.
+  @Watch("editedEnvVar") onEnvVarUpdated(val: any, oldVal: any) {
+    this.onValueUpdated();
+  }
+
+  onValueUpdated() {
+    let val = this.editedConstValue;
+    let env = this.editedEnvVar;
+    let newValue;
+
+    if (val && val.length > 0) {
+      newValue = env ? "${" + env + ":" + val + "}" : val;
+    } else {
+      newValue = env ? "${" + env + "}" : null;
+    }
+
+    if (newValue && newValue !== this.attribute.value) {
+      var updated: IAttributeUpdate = {
+        attribute: this.attribute,
+        newValue: newValue
+      };
+      this.$emit("attributeUpdated", updated);
+    }
+  }
+}
 </script>
 
 <style scoped>

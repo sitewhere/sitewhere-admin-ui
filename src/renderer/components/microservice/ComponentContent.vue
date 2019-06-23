@@ -22,49 +22,47 @@
   </div>
 </template>
 
-<script>
-import ElementPlaceholder from "./ElementPlaceholder";
-import ElementDeleteDialog from "./ElementDeleteDialog";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
+import ElementPlaceholder from "./ElementPlaceholder.vue";
+import ElementDeleteDialog from "./ElementDeleteDialog.vue";
+import { IConfiguredContent, IConfiguredElement } from "./ConfigurationModel";
+import { IElementNode } from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    active: null,
-    formValid: true
-  }),
-
-  props: ["content"],
-
+@Component({
   components: {
     ElementPlaceholder,
     ElementDeleteDialog
-  },
-
-  methods: {
-    // Compute element title.
-    elementTitle: function(element) {
-      let title = element.name;
-      if (element.resolvedIndexAttribute) {
-        title += " (" + element.resolvedIndexAttribute + ")";
-      }
-      return title;
-    },
-
-    /** Add a component */
-    onAddComponent: function(option) {
-      this.$emit("addComponent", option);
-    },
-
-    /** Delete a component */
-    onDeleteComponent: function(child) {
-      this.$emit("deleteComponent", child);
-    },
-
-    /** Push a context onto the stack */
-    onPushContext: function(context) {
-      this.$emit("pushContext", context);
-    }
   }
-};
+})
+export default class ComponentContent extends Vue {
+  @Prop() readonly content!: IConfiguredContent[];
+
+  // Compute element title.
+  elementTitle(element: IConfiguredElement) {
+    let title = element.name;
+    if (element.resolvedIndexAttribute) {
+      title += " (" + element.resolvedIndexAttribute + ")";
+    }
+    return title;
+  }
+
+  /** Add a component */
+  onAddComponent(option: IElementNode) {
+    this.$emit("addComponent", option);
+  }
+
+  /** Delete a component */
+  onDeleteComponent(child: IConfiguredElement) {
+    this.$emit("deleteComponent", child);
+  }
+
+  /** Push a context onto the stack */
+  onPushContext(context: IConfiguredElement) {
+    this.$emit("pushContext", context);
+  }
+}
 </script>
 
 <style scoped>

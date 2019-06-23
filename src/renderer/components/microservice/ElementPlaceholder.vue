@@ -49,19 +49,21 @@
   </v-toolbar>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
+import { IConfiguredElement } from "./ConfigurationModel";
+import { IElementNode } from "sitewhere-rest-api";
 
-  props: ["contextElement"],
+@Component({})
+export default class ElementPlaceholder extends Vue {
+  @Prop() readonly contextElement!: IConfiguredElement;
 
-  methods: {
-    // Add a component.
-    onAddComponent: function(option) {
-      this.$emit("addComponent", option);
-    }
+  /** Fire event to add chosen node type */
+  onAddComponent(option: IElementNode) {
+    this.$emit("addComponent", option);
   }
-};
+}
 </script>
 
 <style scoped>

@@ -13,24 +13,32 @@
   </v-container>
 </template>
 
-<script>
-import AttributeFieldPanel from "./AttributeFieldPanel";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop, Watch } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import {
+  IConfiguredAttributeGroup,
+  IAttributeUpdate
+} from "./ConfigurationModel";
 
-  props: ["attributeGroup", "readOnly", "identifier", "tenantToken"],
+import AttributeFieldPanel from "./AttributeFieldPanel.vue";
 
+@Component({
   components: {
     AttributeFieldPanel
-  },
-
-  methods: {
-    onAttributeUpdated: function(updated) {
-      this.$emit("attributeUpdated", updated);
-    }
   }
-};
+})
+export default class AttributeGroupPanel extends Vue {
+  @Prop() readonly attributeGroup!: IConfiguredAttributeGroup;
+  @Prop({ default: false }) readonly readOnly!: boolean;
+  @Prop() readonly identifier!: string;
+  @Prop() readonly tenantToken!: string;
+
+  onAttributeUpdated(updated: IAttributeUpdate) {
+    this.$emit("attributeUpdated", updated);
+  }
+}
 </script>
 
 <style scoped>

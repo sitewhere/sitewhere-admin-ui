@@ -32,27 +32,31 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
+import { IConfigurationContext } from "./ConfigurationModel";
 
-  props: ["context", "contextStack"],
+@Component({})
+export default class MicroserviceBanner extends Vue {
+  @Prop() readonly context!: IConfigurationContext;
+  @Prop() readonly contextStack!: IConfigurationContext[];
 
-  methods: {
-    // Pop context from stack.
-    onPopContext: function() {
-      this.$emit("popContext");
-    },
-    // Pop to a given context.
-    onPopToContext: function(context) {
-      this.$emit("popToContext", context);
-    },
-    // Pop context from stack.
-    onConfigureCurrent: function() {
-      this.$emit("configureCurrent");
-    }
+  // Pop context from stack.
+  onPopContext() {
+    this.$emit("popContext");
   }
-};
+
+  // Pop to a given context.
+  onPopToContext(context: any) {
+    this.$emit("popToContext", context);
+  }
+
+  // Pop context from stack.
+  onConfigureCurrent() {
+    this.$emit("configureCurrent");
+  }
+}
 </script>
 
 <style scoped>

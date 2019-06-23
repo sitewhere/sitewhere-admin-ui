@@ -23,66 +23,67 @@
   </div>
 </template>
 
-<script>
-import AttributeGroupPanel from "./AttributeGroupPanel";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop, Watch } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    active: null,
-    formValid: true,
-    attributeValues: null
-  }),
+import {
+  IConfiguredAttributeGroup,
+  IConfigurationContext,
+  IAttributeUpdate,
+  AttributeValues
+} from "./ConfigurationModel";
 
-  props: [
-    "context",
-    "groups",
-    "readOnly",
-    "dirty",
-    "identifier",
-    "tenantToken"
-  ],
+import AttributeGroupPanel from "./AttributeGroupPanel.vue";
 
+@Component({
   components: {
     AttributeGroupPanel
-  },
+  }
+})
+export default class ComponentAttributes extends Vue {
+  @Prop() readonly context!: IConfigurationContext;
+  @Prop({ default: [] }) readonly groups!: IConfiguredAttributeGroup[];
+  @Prop({ default: false }) readonly readOnly!: boolean;
+  @Prop({ default: false }) readonly dirty!: boolean;
+  @Prop() readonly identifier!: string;
+  @Prop() readonly tenantToken!: string;
 
-  watch: {
-    // Update tab and attribute values when groups are updated.
-    groups: {
-      immediate: true,
-      handler(val, old) {
-        if (val && val.length > 0) {
-          this.loadAttributesFromGroups(val);
-        }
-      }
-    }
-  },
+  active: string | null = null;
+  formValid: boolean = true;
+  attributeValues: AttributeValues = {};
 
-  methods: {
-    /** Load initial attribute values from groups */
-    loadAttributesFromGroups: function(groups) {
-      console.log(this.identifier);
-      let values = {};
-      for (const group of groups) {
-        for (const attribute of group.attributes) {
-          let value = attribute.value;
-          if (value) {
-            values[attribute.localName] = value;
-          }
-        }
-      }
-      this.$data.attributeValues = values;
-      this.$emit("initialValues", values);
-    },
-
-    /** Handle attribute updated */
-    onAttributeUpdated: function(updated) {
-      let values = this.$data.attributeValues;
-      values[updated.attribute.localName] = updated.newValue;
-      this.$emit("valuesUpdated", values);
+  // Handle rebuilding groups.
+  @Watch("groups") onGroupsUpdated(
+    val: IConfiguredAttributeGroup[],
+    oldVal: IConfiguredAttributeGroup[]
+  ) {
+    if (val && val.length > 0) {
+      this.loadAttributesFromGroups(val);
     }
   }
-};
+
+  /** Load initial attribute values from groups */
+  loadAttributesFromGroups(groups: IConfiguredAttributeGroup[]) {
+    let values: AttributeValues = {};
+    groups.forEach(group => {
+      group.attributes.forEach(attribute => {
+        let value = attribute.value;
+        if (value) {
+          values[attribute.localName] = value;
+        }
+      });
+    });
+    this.attributeValues = values;
+    this.$emit("initialValues", values);
+  }
+
+  /** Handle attribute updated */
+  onAttributeUpdated(updated: IAttributeUpdate) {
+    this.attributeValues[updated.attribute.localName] = updated.newValue;
+    this.$emit("valuesUpdated", this.attributeValues);
+  }
+}
 </script>
 
 <style scoped>
