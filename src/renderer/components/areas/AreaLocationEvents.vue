@@ -92,6 +92,3 @@ export default class AreaLocationEvents extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

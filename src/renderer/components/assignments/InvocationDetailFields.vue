@@ -90,6 +90,3 @@ export default class InvocationDetailFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

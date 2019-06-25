@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card flat>
     <v-card-text>
       <tenant-runtime-entry
         v-for="runtime in tenantRuntimes"
@@ -7,7 +7,6 @@
         :tenantState="runtime"
       ></tenant-runtime-entry>
     </v-card-text>
-    <v-divider></v-divider>
   </v-card>
 </template>
 

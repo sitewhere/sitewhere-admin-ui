@@ -65,6 +65,3 @@ export default class AssetTypeSelector extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

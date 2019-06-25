@@ -7,7 +7,6 @@
     :record="tenant"
   >
     <template slot="header">
-      <tenant-runtimes-block class="ma-1" :identifier="identifier" :tenantToken="tenantToken"/>
       <unsaved-updates-warning
         class="mb-3"
         :unsaved="dirty"
@@ -18,12 +17,13 @@
     <template slot="tabs">
       <v-tab key="configuration">Configuration</v-tab>
       <v-tab key="scripts">Scripts</v-tab>
+      <v-tab key="runtime">Runtime</v-tab>
     </template>
     <template slot="tab-items">
       <v-tab-item key="configuration">
         <microservice-editor
-          :config="config"
-          :configModel="configModel"
+          :configuration="configuration"
+          :configurationModel="configurationModel"
           :identifier="identifier"
           :tenantToken="tenantToken"
           @dirty="onConfigurationUpdated"
@@ -31,6 +31,9 @@
       </v-tab-item>
       <v-tab-item key="scripts">
         <scripts-manager :identifier="identifier"/>
+      </v-tab-item>
+      <v-tab-item key="runtime">
+        <tenant-runtimes-block class="ma-1" :identifier="identifier" :tenantToken="tenantToken"/>
       </v-tab-item>
     </template>
     <template slot="actions">
@@ -79,8 +82,8 @@ import { getTenant } from "../../rest/sitewhere-tenants-api";
 export default class TenantMicroserviceEditor extends Vue implements WithRoute {
   tenantToken: string | null = null;
   identifier: string | null = null;
-  config: IElementContent | null = null;
-  configModel: IConfigurationModel | null = null;
+  configuration: IElementContent | null = null;
+  configurationModel: IConfigurationModel | null = null;
   tenant: ITenant | null = null;
   dirty: boolean = false;
   loaded: boolean = false;
@@ -98,8 +101,8 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
 
   /** Get title shown in title bar */
   get title() {
-    return this.configModel
-      ? this.configModel.microserviceDetails.name +
+    return this.configurationModel
+      ? this.configurationModel.microserviceDetails.name +
           " Microservice Configuration"
       : "Tenant Microservice Configuration";
   }
@@ -122,7 +125,7 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
         let response: AxiosResponse<
           IConfigurationModel
         > = await getConfigurationModel(this.$store, this.identifier);
-        this.configModel = response.data;
+        this.configurationModel = response.data;
       } catch (err) {
         handleError(err);
       }
@@ -140,7 +143,8 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
           this.identifier,
           this.tenantToken
         );
-        this.config = configResponse.data;
+        this.configuration = configResponse.data;
+        this.loaded = true;
       } catch (err) {
         handleError(err);
       }
@@ -173,12 +177,12 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
   // Called when configuration is to be saved.
   onSaveConfiguration() {
     var component = this;
-    if (this.config && this.identifier && this.tenantToken) {
+    if (this.configuration && this.identifier && this.tenantToken) {
       updateTenantConfiguration(
         this.$store,
         this.identifier,
         this.tenantToken,
-        this.config
+        this.configuration
       )
         .then(function(response: AxiosResponse<void>) {
           component.dirty = false;
@@ -192,6 +196,7 @@ export default class TenantMicroserviceEditor extends Vue implements WithRoute {
   // Called when configuration is to be reverted.
   onRevertConfiguration() {
     this.refreshConfiguration();
+    this.loaded = false;
     this.dirty = false;
   }
 

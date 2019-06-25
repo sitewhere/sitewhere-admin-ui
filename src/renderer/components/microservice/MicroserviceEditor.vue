@@ -1,52 +1,50 @@
 <template>
   <span>
-    <v-card flat>
-      <v-card-text>
-        <!-- Banner shown above microservice content -->
-        <microservice-banner
-          :context="context"
-          :contextStack="contextStack"
-          @popContext="onPopContext"
-          @popToContext="onPopToContext"
-          @configureCurrent="onOpenUpdateDialog"
-        >
-          <component-attributes
-            class="mb-2 mt-2"
-            :context="context"
-            :groups="groups"
+    <!-- Banner shown above microservice content -->
+    <microservice-banner
+      :context="context"
+      :contextStack="contextStack"
+      @popContext="onPopContext"
+      @popToContext="onPopToContext"
+      @configureCurrent="onOpenUpdateDialog"
+    >
+      <!-- Attributes -->
+      <v-tabs v-model="active" v-if="groups.length > 0">
+        <v-tab v-for="group in groups" :key="group.name">{{ group.name }}</v-tab>
+        <slot name="tab-items"/>
+        <v-tab-item v-for="group in groups" :key="group.name">
+          <attribute-group-panel
+            :attributeGroup="group"
+            :readOnly="true"
             :identifier="identifier"
             :tenantToken="tenantToken"
-            :readOnly="true"
-            :dirty="dirty"
           />
-          <!-- Elements -->
-          <v-card>
-            <component-content
-              :content="content"
-              @addComponent="onAddComponent"
-              @pushContext="onPushChildContext"
-              @deleteComponent="onDeleteComponent"
-            ></component-content>
-          </v-card>
-        </microservice-banner>
-      </v-card-text>
-    </v-card>
+        </v-tab-item>
+      </v-tabs>
+      <!-- Elements -->
+      <component-content
+        :content="content"
+        @addComponent="onAddComponent"
+        @pushContext="onPushChildContext"
+        @deleteComponent="onDeleteComponent"
+      />
+    </microservice-banner>
     <attributes-create-dialog
       ref="create"
-      :context="editContext"
-      :groups="editGroups"
+      :context="editingContext"
+      :groups="editingGroups"
       :identifier="identifier"
       :tenantToken="tenantToken"
-      @attributesCreated="onAttributesCreated"
-    ></attributes-create-dialog>
+      @attributesSaved="onCommitAddedComponent"
+    />
     <attributes-update-dialog
       ref="update"
-      :context="editContext"
-      :groups="editGroups"
+      :context="editingContext"
+      :groups="editingGroups"
       :identifier="identifier"
       :tenantToken="tenantToken"
-      @attributesUpdated="onAttributesUpdated"
-    ></attributes-update-dialog>
+      @attributesSaved="onAttributesUpdated"
+    />
   </span>
 </template>
 
@@ -58,35 +56,32 @@ import { IAttributeContent, IElementNode } from "sitewhere-rest-api";
 
 import {
   IConfigurationContext,
-  IChildContextsByRole,
   IConfiguredAttributeGroup,
-  IConfiguredAttribute,
   IConfiguredContent,
-  IContentElement,
   IConfiguredElement,
   AttributeValues
 } from "./ConfigurationModel";
 
 import MicroserviceConfiguration from "./MicroserviceConfiguration";
 import MicroserviceBanner from "./MicroserviceBanner.vue";
-import ComponentAttributes from "./ComponentAttributes.vue";
 import ComponentContent from "./ComponentContent.vue";
+import AttributeGroupPanel from "./AttributeGroupPanel.vue";
 import AttributesCreateDialog from "./AttributesCreateDialog.vue";
 import AttributesUpdateDialog from "./AttributesUpdateDialog.vue";
-import { IElementContent } from "../../../../../sitewhere-rest-api/src";
+import { IElementContent, IConfigurationModel } from "sitewhere-rest-api";
 
 @Component({
   components: {
     MicroserviceBanner,
-    ComponentAttributes,
     ComponentContent,
+    AttributeGroupPanel,
     AttributesCreateDialog,
     AttributesUpdateDialog
   }
 })
 export default class MicroserviceEditor extends Vue {
-  @Prop() readonly configuration!: any;
-  @Prop() readonly configurationModel!: any;
+  @Prop() readonly configuration!: IElementContent;
+  @Prop() readonly configurationModel!: IConfigurationModel;
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
 
@@ -95,18 +90,18 @@ export default class MicroserviceEditor extends Vue {
   content: IConfiguredContent | null = null;
   editingContext: IConfigurationContext | null = null;
   editingGroups: IConfiguredAttributeGroup[] = [];
+  active: string | null = null;
   dirty: boolean = false;
 
   // References.
   $refs!: Refs<{
     create: AttributesCreateDialog;
-    update: any;
+    update: AttributesUpdateDialog;
   }>;
 
   /** Computed to determine whether config data is loaded*/
-
-  get configurationAvailable() {
-    return this.configuration && this.configurationModel;
+  get configurationAvailable(): boolean {
+    return this.configuration != null && this.configurationModel != null;
   }
 
   /** Current context for configuration */
@@ -119,6 +114,13 @@ export default class MicroserviceEditor extends Vue {
     return this.editor ? this.editor.contextStack : [];
   }
 
+  @Watch("configuration", { immediate: true })
+  onConfigurationUpdated(val: IElementContent, oldVal: IElementContent) {
+    if (val && this.editor) {
+      this.onConfigurationAvailable(true, false);
+    }
+  }
+
   @Watch("configurationAvailable", { immediate: true })
   onConfigurationAvailable(val: boolean, oldVal: boolean) {
     if (val) {
@@ -129,96 +131,54 @@ export default class MicroserviceEditor extends Vue {
     }
   }
 
-  /** Update current context attributes */
-  onOpenUpdateDialog() {
-    if (this.editor) {
-      this.editingContext = this.editor.getLastContext();
-      if (this.editingContext) {
-        this.editingGroups = this.editor.getAttributeGroupsForContext(
-          this.editingContext
-        );
-        this.$refs["update"].onOpenDialog();
-      }
-    }
-  }
-
-  /** Called after attributes have been updated */
-  onAttributesUpdated(updated: AttributeValues) {
-    if (this.editor) {
-      let combined: AttributeValues = {};
-      let last: IConfigurationContext | null = this.editor.getLastContext();
-
-      if (last) {
-        let updatedValues = updated.values;
-
-        // Start with existing values.
-        let existing = last.configuration.attributes;
-        if (existing) {
-          existing.forEach(attribute => {
-            combined[attribute.name] = attribute.value;
-          });
-        }
-        // Overwrite with updated values.
-        Object.assign(combined, updatedValues);
-
-        // Generate updated array.
-        let newValues: IAttributeContent[] = [];
-        for (var key in updatedValues) {
-          if (updatedValues.hasOwnProperty(key)) {
-            let value = updatedValues[key];
-            let attr: IAttributeContent = {
-              name: key,
-              namespace: "",
-              value: value
-            };
-            newValues.push(attr);
-          }
-        }
-        last.configuration.attributes = newValues;
-        this.groups = this.editor.getAttributeGroupsForContext(last);
-        this.fireDirty();
-      }
-    }
-  }
-
-  /** Called to delete a child component */
-  onDeleteComponent(child: IConfiguredElement) {
-    this.onDeleteChild(child.id);
-    if (this.editor) {
-      let last = this.editor.getLastContext();
-      if (last) {
-        this.content = this.editor.getContentForContext(last);
-        this.fireDirty();
-      }
+  @Watch("context", { immediate: true })
+  onContextUpdated(
+    context: IConfigurationContext,
+    previous: IConfigurationContext
+  ) {
+    if (context && this.editor) {
+      this.content = this.editor.getContentForContext(context);
+      this.groups = this.editor.getAttributeGroupsForContext(context);
     }
   }
 
   /** Add a component */
   onAddComponent(option: IElementNode) {
     if (this.editor) {
-      let edit = this.editor.getRelativeContext(option.localName);
-      if (edit) {
-        if (edit.model.attributes) {
-          this.$data.editContext = edit;
-          this.$data.editGroups = this.editor.getAttributeGroupsForContext(
-            edit
+      var last: IConfigurationContext | null = this.editor.getLastContext();
+      if (last) {
+        let model: IElementNode | null = this.editor.findModelNodeByName(
+          last.model,
+          option.localName
+        );
+        if (model) {
+          var config: IElementContent = {
+            id: this.editor.generateUniqueId(),
+            name: model.localName,
+            namespace: model.namespace,
+            attributes: [],
+            children: []
+          };
+          var context: IConfigurationContext = {
+            configuration: config,
+            model: model
+          };
+          this.editingContext = context;
+          this.editingGroups = this.editor.getAttributeGroupsForContext(
+            context
           );
           this.$refs.create.open();
-        } else {
-          this.onAddChild(edit.model.localName, {});
-          this.fireDirty();
         }
       }
     }
   }
 
   /** Add child to current context */
-  onAddChild(name: string, values: AttributeValues) {
+  onCommitAddedComponent(values: AttributeValues) {
     if (this.editor) {
-      var context = this.editor.getLastContext();
-      if (context) {
-        var model = context.model;
-        let config = context.configuration;
+      var added: IConfigurationContext | null = this.editingContext;
+      if (added) {
+        let config = added.configuration;
 
         let attributes: IAttributeContent[] = [];
         for (var key in values) {
@@ -232,28 +192,78 @@ export default class MicroserviceEditor extends Vue {
             attributes.push(attr);
           }
         }
-
-        // Create new config element based on selected model.
-        var childModel: IElementNode | null = this.editor.findModelNodeByName(
-          model,
-          name
-        );
-        if (childModel) {
-          var childConfig: IElementContent = {
-            id: this.editor.generateUniqueId(),
-            name: childModel.localName,
-            namespace: childModel.namespace,
-            attributes: attributes,
-            children: []
-          };
-
-          if (!config.children) {
-            config.children = [];
-          }
-          config.children.push(childConfig);
-          this.editor.fixChildOrder(model, config);
-          this.content = this.editor.getContentForContext(context);
+        config.attributes = attributes;
+        var current: IConfigurationContext | null = this.editor.getLastContext();
+        if (current) {
+          current.configuration.children.push(config);
+          this.editor.fixChildOrder(current.model, current.configuration);
+          this.content = this.editor.getContentForContext(current);
+          this.fireDirty();
         }
+      }
+    }
+  }
+
+  /** Update current context attributes */
+  onOpenUpdateDialog() {
+    if (this.editor) {
+      this.editingContext = this.editor.getLastContext();
+      if (this.editingContext) {
+        this.editingGroups = this.editor.getAttributeGroupsForContext(
+          this.editingContext
+        );
+        this.$refs.update.open("");
+      }
+    }
+  }
+
+  /** Called after attributes have been updated */
+  onAttributesUpdated(updated: AttributeValues) {
+    if (this.editor) {
+      let combined: AttributeValues = {};
+
+      if (this.editingContext) {
+        // Start with existing values.
+        let existing: IAttributeContent[] = this.editingContext.configuration
+          .attributes;
+        if (existing) {
+          existing.forEach(attribute => {
+            combined[attribute.name] = attribute.value;
+          });
+        }
+        // Overwrite with updated values.
+        Object.assign(combined, updated);
+
+        // Generate updated array.
+        let newValues: IAttributeContent[] = [];
+        for (var key in combined) {
+          if (combined.hasOwnProperty(key)) {
+            let value = combined[key];
+            let attr: IAttributeContent = {
+              name: key,
+              namespace: "",
+              value: value
+            };
+            newValues.push(attr);
+          }
+        }
+        this.editingContext.configuration.attributes = newValues;
+        this.groups = this.editor.getAttributeGroupsForContext(
+          this.editingContext
+        );
+        this.fireDirty();
+      }
+    }
+  }
+
+  /** Called to delete a child component */
+  onDeleteComponent(child: IConfiguredElement) {
+    this.onDeleteChild(child.id);
+    if (this.editor) {
+      let last = this.editor.getLastContext();
+      if (last) {
+        this.content = this.editor.getContentForContext(last);
+        this.fireDirty();
       }
     }
   }
@@ -278,6 +288,27 @@ export default class MicroserviceEditor extends Vue {
           }
         }
       }
+    }
+  }
+
+  /** Pop up one context level */
+  onPopContext() {
+    if (this.editor) {
+      this.editor.popContext();
+    }
+  }
+
+  /** Pop to a given context in the stack */
+  onPopToContext(context: IConfigurationContext) {
+    if (this.editor) {
+      this.editor.popToContext(context.model.localName);
+    }
+  }
+
+  /** Push a child context onto the stack */
+  onPushChildContext(element: IConfiguredElement) {
+    if (this.editor) {
+      this.editor.pushChildContext(element);
     }
   }
 

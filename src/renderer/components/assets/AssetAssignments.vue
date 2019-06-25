@@ -79,6 +79,3 @@ export default class AreaAssignments extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

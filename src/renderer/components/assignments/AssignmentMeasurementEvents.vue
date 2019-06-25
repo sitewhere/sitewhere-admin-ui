@@ -91,6 +91,3 @@ export default class AreaMeasurementEvents extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

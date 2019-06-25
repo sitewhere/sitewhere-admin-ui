@@ -76,6 +76,3 @@ export default class InvocationCreateDialog extends CreateDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

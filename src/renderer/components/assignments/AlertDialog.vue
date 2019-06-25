@@ -14,7 +14,7 @@
         <v-tabs-slider></v-tabs-slider>
         <v-tabs-item key="details">Alert Details</v-tabs-item>
         <slot name="tabitem"></slot>
-        <v-tabs-item key="metadata"">Metadata</v-tabs-item>
+        <v-tabs-item key="metadata">Metadata</v-tabs-item>
       </v-tabs-bar>
       <slot name="tabcontent"></slot>
       <v-tabs-content key="details">
@@ -201,6 +201,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-</style>

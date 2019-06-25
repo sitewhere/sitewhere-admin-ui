@@ -99,6 +99,3 @@ export default class AssignmentLocationEvents extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

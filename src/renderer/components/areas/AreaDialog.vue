@@ -128,6 +128,3 @@ export default class AreaDialog extends DialogComponent<IArea> {
   }
 }
 </script>
-
-<style scoped>
-</style>

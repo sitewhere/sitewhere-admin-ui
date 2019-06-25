@@ -74,6 +74,3 @@ export default class AreaTypeUpdateDialog extends EditDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

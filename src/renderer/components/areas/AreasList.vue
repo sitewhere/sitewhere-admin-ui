@@ -100,6 +100,3 @@ export default class AreasList extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

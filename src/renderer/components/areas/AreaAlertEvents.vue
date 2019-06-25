@@ -85,6 +85,3 @@ export default class AreaAlertEvents extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

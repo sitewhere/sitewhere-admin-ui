@@ -129,6 +129,3 @@ export default class AssetTypeDetail extends DetailComponent<IAssetType> {
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -77,6 +77,3 @@ export default class AreaSubareas extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

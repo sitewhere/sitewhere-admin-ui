@@ -128,6 +128,3 @@ export default class AreaTypeDetail extends DetailComponent<IAreaType> {
   }
 }
 </script>
-
-<style scoped>
-</style>

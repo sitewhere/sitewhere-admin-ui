@@ -56,6 +56,3 @@ export default class AreaTypeDetailHeader extends HeaderComponent<IAreaType> {
   }
 }
 </script>
-
-<style scoped>
-</style>

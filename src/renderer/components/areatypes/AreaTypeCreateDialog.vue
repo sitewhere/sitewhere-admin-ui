@@ -58,6 +58,3 @@ export default class AreaTypeCreateDialog extends CreateDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

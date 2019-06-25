@@ -71,6 +71,3 @@ export default class AssetUpdateDialog extends EditDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

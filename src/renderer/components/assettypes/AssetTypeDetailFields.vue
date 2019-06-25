@@ -142,6 +142,3 @@ export default class AssetTypeDetailFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

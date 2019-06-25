@@ -121,6 +121,3 @@ export default class AssetDialog extends DialogComponent<IAsset> {
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -67,6 +67,3 @@ export default class AreaTypeSelector extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

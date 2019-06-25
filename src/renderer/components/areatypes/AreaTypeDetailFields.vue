@@ -103,6 +103,3 @@ export default class AreaTypeDetailFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

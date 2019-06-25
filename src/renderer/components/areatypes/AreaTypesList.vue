@@ -105,7 +105,3 @@ export default class AreaTypesList extends ListComponent<
   }
 }
 </script>
-
-
-<style scoped>
-</style>

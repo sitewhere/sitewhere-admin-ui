@@ -71,6 +71,3 @@ export default class CustomerUpdateDialog extends EditDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

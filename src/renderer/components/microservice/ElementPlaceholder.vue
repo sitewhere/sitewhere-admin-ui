@@ -65,6 +65,3 @@ export default class ElementPlaceholder extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

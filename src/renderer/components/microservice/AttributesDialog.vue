@@ -1,7 +1,6 @@
 <template>
   <sw-base-dialog
     ref="dialog"
-    :tabbed="false"
     :icon="icon"
     :title="title"
     :width="width"
@@ -11,16 +10,22 @@
     :cancelLabel="cancelLabel"
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
+    :lazy="true"
   >
-    <component-attributes
-      :context="context"
-      :groups="groups"
-      :readOnly="false"
-      :identifier="identifier"
-      :tenantToken="tenantToken"
-      @initialValues="onInitialValues"
-      @valuesUpdated="onValuesUpdated"
-    />
+    <template slot="tabs">
+      <v-tab v-for="group in groups" :key="group.name">{{ group.name }}</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item v-for="group in groups" :key="group.name">
+        <attribute-group-panel
+          :attributeGroup="group"
+          :readOnly="readOnly"
+          :identifier="identifier"
+          :tenantToken="tenantToken"
+          @attributeUpdated="onAttributeUpdated"
+        />
+      </v-tab-item>
+    </template>
   </sw-base-dialog>
 </template>
 
@@ -37,14 +42,15 @@ import { NavigationIcon } from "../../libraries/constants";
 import {
   IConfiguredAttributeGroup,
   IConfigurationContext,
-  AttributeValues
+  AttributeValues,
+  IAttributeUpdate
 } from "./ConfigurationModel";
 
-import ComponentAttributes from "./ComponentAttributes.vue";
+import AttributeGroupPanel from "./AttributeGroupPanel.vue";
 
 @Component({
   components: {
-    ComponentAttributes
+    AttributeGroupPanel
   }
 })
 export default class AttributesDialog extends DialogComponent<AttributeValues> {
@@ -52,8 +58,10 @@ export default class AttributesDialog extends DialogComponent<AttributeValues> {
   @Prop({ default: [] }) readonly groups!: IConfiguredAttributeGroup[];
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
+  @Prop({ default: false }) readonly readOnly!: boolean;
 
   attributeValues: AttributeValues = {};
+  dirty: boolean = false;
 
   // References.
   $refs!: Refs<{
@@ -65,6 +73,27 @@ export default class AttributesDialog extends DialogComponent<AttributeValues> {
     return NavigationIcon.DeviceType;
   }
 
+  /** Load initial attribute values from groups */
+  loadAttributesFromGroups() {
+    let values: AttributeValues = {};
+    this.groups.forEach(group => {
+      group.attributes.forEach(attribute => {
+        let value = attribute.value;
+        if (value) {
+          values[attribute.localName] = value;
+        }
+      });
+    });
+    this.attributeValues = values;
+    this.$emit("initialValues", values);
+  }
+
+  /** Handle attribute updated */
+  onAttributeUpdated(updated: IAttributeUpdate) {
+    this.attributeValues[updated.attribute.localName] = updated.newValue;
+    this.dirty = true;
+  }
+
   // Reset dialog contents.
   reset() {
     this.attributeValues = {};
@@ -73,25 +102,12 @@ export default class AttributesDialog extends DialogComponent<AttributeValues> {
   // Load dialog from a given payload.
   load(payload: AttributeValues) {
     this.reset();
-    this.attributeValues = payload;
+    this.loadAttributesFromGroups();
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     this.$emit("payload", this.attributeValues);
   }
-
-  /** Called with initial attribute values */
-  onInitialValues(values: AttributeValues) {
-    this.attributeValues = values;
-  }
-
-  // Called when attribute values are updated.
-  onValuesUpdated(values: AttributeValues) {
-    this.attributeValues = values;
-  }
 }
 </script>
-
-<style scoped>
-</style>

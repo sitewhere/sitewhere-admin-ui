@@ -2,30 +2,33 @@
   <attributes-dialog
     ref="dialog"
     :title="componentName"
-    width="600"
+    width="900"
     createLabel="Update"
     cancelLabel="Cancel"
-    @payload="onCommit"
+    @payload="onSave"
     :context="context"
     :groups="groups"
     :identifier="identifier"
     :tenantToken="tenantToken"
-  ></attributes-dialog>
+  />
 </template>
 
 <script lang="ts">
 import {
   Component,
+  Prop,
   EditDialogComponent,
   DialogComponent,
   Refs
 } from "sitewhere-ide-common";
 
-import { AttributeValues } from "./ConfigurationModel";
+import {
+  IConfiguredAttributeGroup,
+  IConfigurationContext,
+  AttributeValues
+} from "./ConfigurationModel";
 
 import AttributesDialog from "./AttributesDialog.vue";
-
-import { AxiosPromise } from "axios";
 
 @Component({
   components: {
@@ -36,10 +39,20 @@ export default class AttributesUpdateDialog extends EditDialogComponent<
   AttributeValues,
   AttributeValues
 > {
+  @Prop() readonly context!: IConfigurationContext;
+  @Prop({ default: [] }) readonly groups!: IConfiguredAttributeGroup[];
+  @Prop() readonly identifier!: string;
+  @Prop() readonly tenantToken!: string;
+
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<any>;
   }>;
+
+  /** Component name shown in title */
+  get componentName() {
+    return this.context ? this.context.model.name : "Component";
+  }
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<any> {
@@ -66,10 +79,7 @@ export default class AttributesUpdateDialog extends EditDialogComponent<
 
   /** Implemented in subclasses for after-save */
   afterSave(payload: AttributeValues): void {
-    this.$emit("attributesUpdated", payload);
+    this.$emit("attributesSaved", payload);
   }
 }
 </script>
-
-<style scoped>
-</style>

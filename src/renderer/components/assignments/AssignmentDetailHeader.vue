@@ -82,6 +82,3 @@ export default class AssignmentDetailHeader extends HeaderComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

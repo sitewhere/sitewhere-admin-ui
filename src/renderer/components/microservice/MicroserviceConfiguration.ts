@@ -56,7 +56,7 @@ export default class MicroserviceConfiguration {
   }
 
   /** Push child context */
-  pushChildContext(child: IElementNode) {
+  pushChildContext(child: IConfiguredElement) {
     if (child && child.id) {
       let context = this.getRelativeContextFor(child.id, child.localName);
       if (context) {
@@ -382,6 +382,7 @@ export default class MicroserviceConfiguration {
           groups.push(currentGroup);
         }
         let attr: IAttributeContent = attrByName[modelAttr.localName];
+        let attrValue: string | undefined = attr ? attr.value : undefined;
         let configAttr: IConfiguredAttribute = {
           localName: modelAttr.localName,
           name: modelAttr.name,
@@ -389,7 +390,7 @@ export default class MicroserviceConfiguration {
           icon: modelAttr.icon,
           description: modelAttr.description,
           choices: modelAttr.choices,
-          value: attr.value,
+          value: attrValue,
           default: modelAttr.defaultValue,
           required: modelAttr.required
         };

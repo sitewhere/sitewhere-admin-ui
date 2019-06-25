@@ -58,6 +58,3 @@ export default class AssetTypeCreateDialog extends CreateDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -49,6 +49,3 @@ export default class AssetListEntry extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

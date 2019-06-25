@@ -66,6 +66,3 @@ export default class AssetTypeAssets extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

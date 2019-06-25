@@ -122,6 +122,3 @@ export default class DeviceTypeDialog extends DialogComponent<IAssetType> {
   }
 }
 </script>
-
-<style scoped>
-</style>

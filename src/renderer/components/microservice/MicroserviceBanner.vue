@@ -1,17 +1,17 @@
 <template>
   <div>
-    <v-breadcrumbs divider="/" class="pa-0 ma-0">
+    <v-breadcrumbs divider="/" class="pb-0 mb-0">
       <v-breadcrumbs-item v-for="bcContext in contextStack" :key="bcContext.model.localName">
         <v-btn
           small
           flat
-          @click="onPopToContext(bcContext.model.localName)"
+          @click="onPopToContext(bcContext)"
           class="pa-0 ma-0"
           style="font-size: 8pt;"
         >{{ bcContext.model.name }}</v-btn>
       </v-breadcrumbs-item>
     </v-breadcrumbs>
-    <v-card class="mb-3">
+    <v-card flat class="mb-3" v-if="context">
       <v-toolbar flat dark dense card class="primary">
         <font-awesome-icon :icon="context.model.icon" size="lg"/>
         <v-toolbar-title class="white--text">{{context.model.name}}</v-toolbar-title>
@@ -48,7 +48,7 @@ export default class MicroserviceBanner extends Vue {
   }
 
   // Pop to a given context.
-  onPopToContext(context: any) {
+  onPopToContext(context: IConfigurationContext) {
     this.$emit("popToContext", context);
   }
 
@@ -58,6 +58,3 @@ export default class MicroserviceBanner extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

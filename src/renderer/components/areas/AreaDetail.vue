@@ -193,6 +193,3 @@ export default class AreaDetail extends DetailComponent<IArea> {
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -100,6 +100,3 @@ export default class AssignmentResponseEvents extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

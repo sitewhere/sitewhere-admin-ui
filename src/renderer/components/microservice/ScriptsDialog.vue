@@ -10,96 +10,84 @@
     @cancelClicked="onCancelClicked"
   >
     <v-tabs v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-item key="details">Script Details</v-tabs-item>
-        <v-tabs-item key="content">Script Content</v-tabs-item>
-        <v-tabs-slider></v-tabs-slider>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <v-tabs-content key="details">
-          <v-card flat>
-            <v-card-text>
-              <v-container fluid>
-                <v-layout row wrap>
-                  <v-flex xs12>
-                    <v-text-field required label="Id" v-model="scriptId"></v-text-field>
-                    <div class="verror">
-                      <span v-if="$v.scriptId.$invalid && $v.$dirty">Id is required.</span>
-                    </div>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field required label="Name" v-model="scriptName"></v-text-field>
-                    <div class="verror">
-                      <span v-if="$v.scriptName.$invalid && $v.$dirty">Name is required.</span>
-                    </div>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field
-                      required
-                      multi-line
-                      label="Description"
-                      v-model="scriptDescription"
-                    ></v-text-field>
-                    <div class="verror">
-                      <span
-                        v-if="$v.scriptDescription.$invalid && $v.$dirty"
-                      >Description is required.</span>
-                    </div>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-select
-                      required
-                      :items="scriptTypes"
-                      v-model="scriptType"
-                      label="Script Type"
-                      light
-                      single-line
-                      auto
-                      hide-details
-                    ></v-select>
-                    <div class="verror">
-                      <span v-if="$v.scriptType.$invalid && $v.$dirty">Script Type is required.</span>
-                    </div>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-        <v-tabs-content key="content">
-          <v-card>
-            <v-card-text>
-              <v-container fluid>
-                <v-layout row wrap>
-                  <v-flex xs12>
-                    <v-select
-                      :items="scriptTemplates"
-                      v-model="scriptTemplate"
-                      label="Script Template"
-                      light
-                      single-line
-                      auto
-                      item-text="name"
-                      item-value="id"
-                      hide-details
-                      @change="onTemplateUpdated"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field
-                      textarea
-                      multi-line
-                      :rows="15"
-                      label="Script Content"
-                      v-model="scriptContent"
-                    ></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-      </v-tabs-items>
+      <v-tab key="details">Script Details</v-tab>
+      <v-tab key="content">Script Content</v-tab>
+      <v-tab-item key="details">
+        <v-card flat>
+          <v-card-text>
+            <v-container fluid>
+              <v-layout row wrap>
+                <v-flex xs12>
+                  <v-text-field required label="Id" v-model="scriptId"></v-text-field>
+                  <div class="verror">
+                    <span v-if="$v.scriptId.$invalid && $v.$dirty">Id is required.</span>
+                  </div>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field required label="Name" v-model="scriptName"></v-text-field>
+                  <div class="verror">
+                    <span v-if="$v.scriptName.$invalid && $v.$dirty">Name is required.</span>
+                  </div>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field required multi-line label="Description" v-model="scriptDescription"></v-text-field>
+                  <div class="verror">
+                    <span v-if="$v.scriptDescription.$invalid && $v.$dirty">Description is required.</span>
+                  </div>
+                </v-flex>
+                <v-flex xs12>
+                  <v-select
+                    required
+                    :items="scriptTypes"
+                    v-model="scriptType"
+                    label="Script Type"
+                    light
+                    single-line
+                    auto
+                    hide-details
+                  ></v-select>
+                  <div class="verror">
+                    <span v-if="$v.scriptType.$invalid && $v.$dirty">Script Type is required.</span>
+                  </div>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
+      <v-tab-item key="content">
+        <v-card>
+          <v-card-text>
+            <v-container fluid>
+              <v-layout row wrap>
+                <v-flex xs12>
+                  <v-select
+                    :items="scriptTemplates"
+                    v-model="scriptTemplate"
+                    label="Script Template"
+                    light
+                    single-line
+                    auto
+                    item-text="name"
+                    item-value="id"
+                    hide-details
+                    @change="onTemplateUpdated"
+                  ></v-select>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field
+                    textarea
+                    multi-line
+                    :rows="15"
+                    label="Script Content"
+                    v-model="scriptContent"
+                  ></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
     </v-tabs>
   </base-dialog>
 </template>
@@ -244,6 +232,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-</style>

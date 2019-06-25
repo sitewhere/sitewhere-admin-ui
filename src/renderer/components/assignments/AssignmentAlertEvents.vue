@@ -87,6 +87,3 @@ export default class AssignmentAlertEvents extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

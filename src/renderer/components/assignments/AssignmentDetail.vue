@@ -175,6 +175,3 @@ export default class AssignmentDetail extends DetailComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

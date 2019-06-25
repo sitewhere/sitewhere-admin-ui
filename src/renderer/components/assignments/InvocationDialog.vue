@@ -142,6 +142,3 @@ export default class InvocationDialog extends DialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

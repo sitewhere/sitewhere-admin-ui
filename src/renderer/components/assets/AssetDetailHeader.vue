@@ -66,6 +66,3 @@ export default class AssetDetailHeader extends HeaderComponent<IAsset> {
   }
 }
 </script>
-
-<style scoped>
-</style>

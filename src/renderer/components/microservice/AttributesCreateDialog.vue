@@ -1,8 +1,8 @@
 <template>
   <attributes-dialog
     ref="dialog"
-    title="Create Tenant"
-    width="600"
+    :title="componentName"
+    width="900"
     createLabel="Create"
     cancelLabel="Cancel"
     :context="context"
@@ -30,8 +30,6 @@ import {
 
 import AttributesDialog from "./AttributesDialog.vue";
 
-import { AxiosPromise } from "axios";
-
 @Component({
   components: {
     AttributesDialog
@@ -56,6 +54,11 @@ export default class AttributesCreateDialog extends CreateDialogComponent<
     return this.$refs.dialog;
   }
 
+  /** Component name shown in title */
+  get componentName() {
+    return this.context ? this.context.model.name : "Component";
+  }
+
   /** Called on payload commit */
   onCommit(payload: AttributeValues): void {
     this.commit(payload);
@@ -68,10 +71,7 @@ export default class AttributesCreateDialog extends CreateDialogComponent<
 
   /** Implemented in subclasses for after-save */
   afterSave(payload: AttributeValues): void {
-    this.$emit("componentAdded", payload);
+    this.$emit("attributesSaved", payload);
   }
 }
 </script>
-
-<style scoped>
-</style>

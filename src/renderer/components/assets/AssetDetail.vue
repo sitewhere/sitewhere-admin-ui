@@ -127,6 +127,3 @@ export default class AreaDetail extends DetailComponent<IAsset> {
   }
 }
 </script>
-
-<style scoped>
-</style>
