@@ -1,26 +1,30 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-data-table class="elevation-0" :headers="headers" :items="mxs"
-        :rows-per-page-items="pagesize" no-data-text="No measurements have been added">
+      <v-data-table
+        class="elevation-0"
+        :headers="headers"
+        :items="mxs"
+        :rows-per-page-items="pagesize"
+        no-data-text="No measurements have been added"
+      >
         <template slot="items" slot-scope="props">
-          <td width="250px" :title="props.item.name">
-            {{ (props.item.name.length > 25) ? props.item.name.substring(0, 25) + "..." : props.item.name }}
-          </td>
-          <td width="370px" :title="props.item.value">
-            {{ props.item.value }}
-          </td>
+          <td
+            width="250px"
+            :title="props.item.name"
+          >{{ (props.item.name.length > 25) ? props.item.name.substring(0, 25) + "..." : props.item.name }}</td>
+          <td width="370px" :title="props.item.value">{{ props.item.value }}</td>
           <td v-if="!readOnly" width="20px">
-            <navigation-action-button icon="trash-alt" tooltip="Delete Measurements"
-              @action="onDeleteMx(props.item.name)">
-            </navigation-action-button>
+            <sw-navigation-action-button
+              icon="trash-alt"
+              tooltip="Delete Measurements"
+              @action="onDeleteMx(props.item.name)"
+            />
           </td>
         </template>
       </v-data-table>
     </v-card-text>
-    <v-alert error :value="true" class="ma-0" style="width: 100%" v-if="error">
-      {{error}}
-    </v-alert>
+    <v-alert error :value="true" class="ma-0" style="width: 100%" v-if="error">{{error}}</v-alert>
     <v-card-text v-if="!readOnly" class="blue darken-2 pa-0">
       <v-container fluid class="mr-4 pt-1 pb-0">
         <v-layout row>
@@ -28,15 +32,15 @@
             <v-text-field dark label="Name" v-model="newMxName"></v-text-field>
           </v-flex>
           <v-flex xs7>
-            <v-text-field type="number" dark label="Value"
-              v-model="newMxValue">
-            </v-text-field>
+            <v-text-field type="number" dark label="Value" v-model="newMxValue"></v-text-field>
           </v-flex>
           <v-flex xs1 class="pt-3">
-            <navigation-action-button icon="plus-circle" tooltip="Add Measurements"
-              @action="onAddMx">
-            </navigation-action-button>
-         </v-flex>
+            <sw-navigation-action-button
+              icon="plus-circle"
+              tooltip="Add Measurements"
+              @action="onAddMx"
+            />
+          </v-flex>
         </v-layout>
       </v-container>
     </v-card-text>
@@ -44,115 +48,109 @@
 </template>
 
 <script>
-import Utils from "../common/Utils";
-import NavigationActionButton from "../common/NavigationActionButton";
+import { metadataToArray, arrayToMetadata } from "../common/Utils";
 
 export default {
-
   data: () => ({
     pagesize: [5],
-    newMxName: '',
+    newMxName: "",
     newMxValue: 0.0,
     error: null
   }),
 
-  props: ['mxs', 'readOnly'],
+  props: ["mxs", "readOnly"],
 
-  created: function () {
-    this.$data.newMxName = ''
-    this.$data.newMxValue = 0.0
-    this.$data.error = null
-  },
-
-  components: {
-    NavigationActionButton
+  created: function() {
+    this.$data.newMxName = "";
+    this.$data.newMxValue = 0.0;
+    this.$data.error = null;
   },
 
   computed: {
-    headers: function () {
+    headers: function() {
       if (!this.readOnly) {
         return [
           {
-            align: 'left',
+            align: "left",
             sortable: false,
-            text: 'Name',
-            value: 'name'
-          }, {
-            align: 'left',
+            text: "Name",
+            value: "name"
+          },
+          {
+            align: "left",
             sortable: false,
-            text: 'Value',
-            value: 'value'
-          }, {
-            align: 'left',
+            text: "Value",
+            value: "value"
+          },
+          {
+            align: "left",
             sortable: false,
-            text: 'Delete',
-            value: 'value'
+            text: "Delete",
+            value: "value"
           }
-        ]
+        ];
       } else {
         return [
           {
-            align: 'left',
+            align: "left",
             sortable: false,
-            text: 'Name',
-            value: 'name'
-          }, {
-            align: 'left',
+            text: "Name",
+            value: "name"
+          },
+          {
+            align: "left",
             sortable: false,
-            text: 'Value',
-            value: 'value'
+            text: "Value",
+            value: "value"
           }
-        ]
+        ];
       }
     }
   },
 
   methods: {
     // Converts associative format to flat.
-    buildFlatMetadata: function (input) {
-      return Utils.metadataToArray(input)
+    buildFlatMetadata: function(input) {
+      return metadataToArray(input);
     },
 
     // Converts flat format into associative.
-    buildAssociativeMetadata: function (input) {
-      return Utils.arrayToMetadata(input)
+    buildAssociativeMetadata: function(input) {
+      return arrayToMetadata(input);
     },
 
     // Let owner know an item was deleted.
-    onDeleteMx: function (name) {
-      this.$emit('itemDeleted', name)
+    onDeleteMx: function(name) {
+      this.$emit("itemDeleted", name);
     },
 
     // Let owner know an item was added.
-    onAddMx: function () {
-      var mx = {}
-      mx['name'] = this.$data.newMxName
-      mx['value'] = this.$data.newMxValue
-      var error = null
+    onAddMx: function() {
+      var mx = {};
+      mx["name"] = this.$data.newMxName;
+      mx["value"] = this.$data.newMxValue;
+      var error = null;
 
       // Check for empty.
       if (mx.name.length === 0) {
-        error = 'Name must not be empty.'
+        error = "Name must not be empty.";
       }
 
       // Check for bad characters.
-      var regex = /^[\w-\\.]+$/
+      var regex = /^[\w-\\.]+$/;
       if (!error && !regex.test(mx.name)) {
-        error = 'Name contains invalid characters.'
+        error = "Name contains invalid characters.";
       }
 
       if (!error) {
-        this.$emit('mxAdded', mx)
-        this.$data.newMxName = ''
-        this.$data.newMxValue = ''
-        this.$data.error = null
+        this.$emit("mxAdded", mx);
+        this.$data.newMxName = "";
+        this.$data.newMxValue = "";
+        this.$data.error = null;
       } else {
-        this.$data.error = error
+        this.$data.error = error;
       }
     }
   }
-}
+};
 </script>
-
-<style scoped>
-</style>

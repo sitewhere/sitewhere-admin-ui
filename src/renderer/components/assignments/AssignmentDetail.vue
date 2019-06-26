@@ -1,93 +1,82 @@
 <template>
-  <div>
-    <navigation-page v-if="assignment" icon="link"
-      title="Manage Device Assignment"
-      loadingMessage="Loading device assignment ..." :loaded="loaded">
-      <div slot="content">
-        <assignment-detail-header :assignment="assignment">
-        </assignment-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-            <v-tabs-item key="assignments" href="#assignments">
-              Locations
-            </v-tabs-item>
-            <v-tabs-item key="measurements" href="#measurements">
-              Measurements
-            </v-tabs-item>
-            <v-tabs-item key="alerts" href="#alerts">
-              Alerts
-            </v-tabs-item>
-            <v-tabs-item key="invocations" href="#invocations">
-              Command Invocations
-            </v-tabs-item>
-            <v-tabs-item key="responses" href="#responses">
-              Command Responses
-            </v-tabs-item>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="assignments" id="assignments">
-              <assignment-location-events :token="assignment.token"></assignment-location-events>
-            </v-tabs-content>
-            <v-tabs-content key="measurements" id="measurements">
-              <assignment-measurement-events :token="assignment.token"></assignment-measurement-events>
-            </v-tabs-content>
-            <v-tabs-content key="alerts" id="alerts">
-              <assignment-alert-events :token="assignment.token"></assignment-alert-events>
-            </v-tabs-content>
-            <v-tabs-content key="invocations" id="invocations">
-              <assignment-invocation-events ref="invocations" :token="assignment.token"></assignment-invocation-events>
-            </v-tabs-content>
-            <v-tabs-content key="responses" id="responses">
-              <assignment-response-events :token="assignment.token"></assignment-response-events>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-        <invocation-create-dialog v-if="active === 'invocations'"
-          :token="token" @invocationAdded="onInvocationAdded"
-          :deviceType="assignment.device.deviceType"/>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="crosshairs" tooltip="Device Emulator"
-          @action="onOpenEmulator">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Assignment"
-          @action="onDelete">
-        </navigation-action-button>
-      </div>
-    </navigation-page>
-    <assignment-delete-dialog ref="delete" :token="token"
-      @assignmentDeleted="onAssignmentDeleted">
-    </assignment-delete-dialog>
-  </div>
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading assignment ..."
+    :loaded="loaded"
+    :record="assignment"
+  >
+    <template slot="header">
+      <assignment-detail-header :record="assignment"/>
+    </template>
+    <template slot="tabs">
+      <v-tab key="locations">Locations</v-tab>
+      <v-tab key="measurements">Measurements</v-tab>
+      <v-tab key="alerts">Alerts</v-tab>
+      <v-tab key="invocations">Command Invocations</v-tab>
+      <v-tab key="responses">Command Responses</v-tab>
+    </template>
+    <template slot="tab-items">
+      <assignment-location-events tabkey="locations" :token="token"/>
+      <assignment-measurement-events tabkey="measurements" :token="token"/>
+      <assignment-alert-events tabkey="alerts" :token="token"/>
+      <assignment-invocation-events tabkey="invocations" :token="token"/>
+      <assignment-response-events tabkey="responses" :token="token"/>
+    </template>
+    <template slot="dialogs">
+      <invocation-create-dialog
+        ref="invoke"
+        :assignmentToken="token"
+        :deviceTypeToken="deviceTypeToken"
+        @invocationAdded="onInvocationAdded"
+      />
+      <assignment-delete-dialog
+        ref="delete"
+        :token="token"
+        @assignmentDeleted="onAssignmentDeleted"
+      />
+    </template>
+    <template slot="actions">
+      <device-command-button tooltip="Invoke Command" @action="onAddCommandInvocation"/>
+      <emulator-button tooltip="Device Emulator" @action="onOpenEmulator"/>
+      <delete-button tooltip="Delete Assignment" @action="onAssignmentDelete"/>
+    </template>
+  </sw-detail-page>
 </template>
 
-<script>
-import Utils from "../common/Utils";
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import AssignmentDetailHeader from "./AssignmentDetailHeader";
-import AssignmentLocationEvents from "./AssignmentLocationEvents";
-import AssignmentMeasurementEvents from "./AssignmentMeasurementEvents";
-import AssignmentAlertEvents from "./AssignmentAlertEvents";
-import AssignmentInvocationEvents from "./AssignmentInvocationEvents";
-import AssignmentResponseEvents from "./AssignmentResponseEvents";
-import AssignmentDeleteDialog from "./AssignmentDeleteDialog";
-import InvocationCreateDialog from "./InvocationCreateDialog";
+<script lang="ts">
+import {
+  Component,
+  DetailComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
-import { _getDeviceAssignment } from "../../http/sitewhere-api-wrapper";
+import AssignmentDetailHeader from "./AssignmentDetailHeader.vue";
+import AssignmentLocationEvents from "./AssignmentLocationEvents.vue";
+import AssignmentMeasurementEvents from "./AssignmentMeasurementEvents.vue";
+import AssignmentAlertEvents from "./AssignmentAlertEvents.vue";
+import AssignmentInvocationEvents from "./AssignmentInvocationEvents.vue";
+import AssignmentResponseEvents from "./AssignmentResponseEvents.vue";
+import AssignmentDeleteDialog from "./AssignmentDeleteDialog.vue";
+import InvocationCreateDialog from "./InvocationCreateDialog.vue";
+import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
+import EmulatorButton from "../common/navbuttons/EmulatorButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-export default {
-  data: () => ({
-    token: null,
-    assignment: null,
-    active: null,
-    loaded: false
-  }),
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { getDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";
+import {
+  IDevice,
+  IDeviceType,
+  IDeviceAssignment,
+  IDeviceAssignmentResponseFormat
+} from "sitewhere-rest-api";
 
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
     AssignmentDetailHeader,
     AssignmentLocationEvents,
     AssignmentMeasurementEvents,
@@ -95,62 +84,94 @@ export default {
     AssignmentInvocationEvents,
     AssignmentResponseEvents,
     AssignmentDeleteDialog,
-    InvocationCreateDialog
-  },
-
-  created: function() {
-    this.$data.token = this.$route.params.token;
-    this.refresh();
-  },
-
-  methods: {
-    // Called to refresh data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
-
-      // Load site information.
-      _getDeviceAssignment(this.$store, token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onAssignmentLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Called after data is loaded.
-    onAssignmentLoaded: function(assignment) {
-      this.$data.assignment = assignment;
-      var section = {
-        id: "assignments",
-        title: "Assignments",
-        icon: "link",
-        route: "/admin/assignments/" + assignment.token,
-        longTitle: "Manage Assignment: " + assignment.token
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Open dialog to delete assignment.
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called when site is deleted.
-    onAssignmentDeleted: function() {
-      Utils.routeTo(this, "/areas");
-    },
-    // Called when emulator is opened.
-    onOpenEmulator: function() {
-      Utils.routeTo(this, "/assignments/" + this.$data.token + "/emulator");
-    },
-    // Called if command invocation is added.
-    onInvocationAdded: function() {
-      this.$refs["invocations"].refresh();
-    }
+    InvocationCreateDialog,
+    DeviceCommandButton,
+    EmulatorButton,
+    DeleteButton
   }
-};
-</script>
+})
+export default class AssignmentDetail extends DetailComponent<
+  IDeviceAssignment
+> {
+  // References.
+  $refs!: Refs<{
+    edit: null;
+    delete: null;
+    invoke: InvocationCreateDialog;
+  }>;
 
-<style scoped>
-</style>
+  /** Record as assignment */
+  get assignment(): IDeviceAssignment | null {
+    return this.record;
+  }
+
+  /** Device for assignment */
+  get device(): IDevice | null {
+    return this.assignment ? (this.assignment as any).device : null;
+  }
+
+  /** Device type for assignment */
+  get deviceType(): IDeviceType | null {
+    return this.device ? (this.device as any).deviceType : null;
+  }
+
+  /** Device type token for assignment */
+  get deviceTypeToken(): string | null {
+    return this.deviceType ? this.deviceType.token : null;
+  }
+
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceAssignment;
+  }
+
+  /** Get page title */
+  get title(): string {
+    return this.assignment ? this.assignment.token : "";
+  }
+
+  /** Load record */
+  loadRecord(token: string): AxiosPromise<IDeviceAssignment> {
+    let format: IDeviceAssignmentResponseFormat = {
+      includeDevice: true
+    };
+    return getDeviceAssignment(this.$store, token, format);
+  }
+
+  // Called after data is loaded.
+  afterRecordLoaded(assignment: IDeviceAssignment) {
+    var section: INavigationSection = {
+      id: "assignments",
+      title: "Assignments",
+      icon: NavigationIcon.DeviceAssignment,
+      route: "/admin/assignments/" + assignment.token,
+      longTitle: "Manage Assignment: " + assignment.token
+    };
+    this.$store.commit("currentSection", section);
+  }
+
+  onAssignmentDelete() {
+    console.log("Would be deleting assignment");
+  }
+
+  // Called when site is deleted.
+  onAssignmentDeleted() {
+    routeTo(this, "/areas");
+  }
+
+  /** Called to open assignment emulator */
+  onOpenEmulator() {
+    routeTo(this, "/assignments/" + this.$data.token + "/emulator");
+  }
+
+  /** Called to create command invocation */
+  onAddCommandInvocation() {
+    this.$refs.invoke.open();
+  }
+
+  /** Called after invocation is added */
+  onInvocationAdded() {
+    console.log("Invocation added");
+  }
+}
+</script>

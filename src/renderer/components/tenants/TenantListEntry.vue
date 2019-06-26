@@ -1,25 +1,18 @@
 <template>
-  <v-card flat hover>
+  <v-card style="border: 1px solid #ddd;" flat hover>
     <v-card-text class="tenant" @click.stop="onOpenTenant" :style="tenantPanelStyle(tenant)">
-      <div v-if="tenant.imageUrl" class="tenant-logo" :style="tenantLogoStyle(tenant)">
-      </div>
+      <div v-if="tenant.imageUrl" class="tenant-logo" :style="tenantLogoStyle(tenant)"></div>
       <div v-else class="tenant-logo">
         <font-awesome-icon class="ma-3" icon="question" size="xl"/>
       </div>
       <div class="tenant-divider"></div>
-      <div class="tenant-name headline ellipsis mt-2">
-        {{tenant.name}} ({{tenant.token}})
-      </div>
+      <div class="tenant-name headline ellipsis mt-2">{{tenant.name}} ({{tenant.token}})</div>
       <div class="tenant-actions">
-        <v-btn @click.stop="onConfigureTenant"
-          class="blue white--text tenant-configure ma-0" >
-          <font-awesome-icon class="white--text mr-2" icon="cogs" size="lg"/>
-          Configure
+        <v-btn @click.stop="onConfigureTenant" class="blue white--text tenant-configure ma-0">
+          <font-awesome-icon class="white--text mr-2" icon="cogs" size="lg"/>Configure
         </v-btn>
-        <v-btn @click.stop="onOpenTenant"
-          class="green white--text tenant-open" >
-          <font-awesome-icon class="white--text mr-2" icon="database" size="lg"/>
-          Manage Data
+        <v-btn @click.stop="onOpenTenant" class="green white--text tenant-open">
+          <font-awesome-icon class="white--text mr-2" icon="database" size="lg"/>Manage Data
         </v-btn>
       </div>
     </v-card-text>

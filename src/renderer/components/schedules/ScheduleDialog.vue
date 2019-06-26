@@ -1,54 +1,69 @@
 <template>
-  <base-dialog :title="title" :width="width" :visible="dialogVisible"
-    :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-    @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
+  <sw-base-dialog
+    :title="title"
+    :width="width"
+    :visible="dialogVisible"
+    :createLabel="createLabel"
+    :cancelLabel="cancelLabel"
+    :error="error"
+    @createClicked="onCreateClicked"
+    @cancelClicked="onCancelClicked"
+  >
     <v-tabs dark v-model="active">
       <v-tabs-bar slot="activators">
         <v-tabs-slider></v-tabs-slider>
-        <v-tabs-item key="details" href="#details">
-          Schedule Details
-        </v-tabs-item>
-        <v-tabs-item key="metadata" href="#metadata">
-          Metadata
-        </v-tabs-item>
+        <v-tabs-item key="details">Schedule Details</v-tabs-item>
+        <v-tabs-item key="metadata">Metadata</v-tabs-item>
       </v-tabs-bar>
       <slot name="tabcontent"></slot>
-      <v-tabs-content key="details" id="details">
+      <v-tabs-content key="details">
         <v-card flat>
           <v-card-text>
             <v-container fluid>
               <v-layout row wrap>
                 <v-flex xs12>
-                  <v-text-field required class="mt-1" label="Schedule token"
-                    v-model="scheduleToken" hide-details prepend-icon="info">
-                  </v-text-field>
+                  <v-text-field
+                    required
+                    class="mt-1"
+                    label="Schedule token"
+                    v-model="scheduleToken"
+                    hide-details
+                    prepend-icon="info"
+                  ></v-text-field>
                   <div class="verror">
                     <span v-if="!$v.scheduleToken.required && $v.$dirty">Schedule token is required.</span>
-                    <span v-if="!$v.scheduleToken.validToken && $v.$dirty">Schedule token is not valid.</span>
+                    <span
+                      v-if="!$v.scheduleToken.validToken && $v.$dirty"
+                    >Schedule token is not valid.</span>
                   </div>
                 </v-flex>
                 <v-flex xs12>
-                  <v-text-field required class="mt-1" label="Schedule name"
-                    v-model="scheduleName" hide-details prepend-icon="info">
-                  </v-text-field>
+                  <v-text-field
+                    required
+                    class="mt-1"
+                    label="Schedule name"
+                    v-model="scheduleName"
+                    hide-details
+                    prepend-icon="info"
+                  ></v-text-field>
                   <div class="verror">
                     <span v-if="$v.scheduleName.$invalid && $v.$dirty">Name is required.</span>
                   </div>
                 </v-flex>
                 <v-flex xs12>
-                  <date-time-picker v-model="scheduleStartDate"
-                    label="Schedule start date">
-                  </date-time-picker>
+                  <sw-date-time-picker v-model="scheduleStartDate" label="Schedule start date"/>
                 </v-flex>
                 <v-flex xs12>
-                  <date-time-picker v-model="scheduleEndDate"
-                    label="Schedule end date">
-                  </date-time-picker>
+                  <sw-date-time-picker v-model="scheduleEndDate" label="Schedule end date"/>
                 </v-flex>
                 <v-flex xs12>
-                  <v-select required :items="triggerTypes"
-                    v-model="scheduleType" label="Trigger type"
-                    prepend-icon="info"></v-select>
+                  <v-select
+                    required
+                    :items="triggerTypes"
+                    v-model="scheduleType"
+                    label="Trigger type"
+                    prepend-icon="info"
+                  ></v-select>
                   <div class="verror">
                     <span v-if="$v.scheduleType.$invalid && $v.$dirty">Trigger type is required.</span>
                   </div>
@@ -57,43 +72,60 @@
                   <v-divider class="mb-3"></v-divider>
                 </v-flex>
                 <v-flex xs12 v-if="scheduleType === 'CronTrigger'">
-                  <v-text-field required class="mt-1" label="Cron expression"
-                    v-model="scheduleCron" hide-details prepend-icon="info">
-                  </v-text-field>
+                  <v-text-field
+                    required
+                    class="mt-1"
+                    label="Cron expression"
+                    v-model="scheduleCron"
+                    hide-details
+                    prepend-icon="info"
+                  ></v-text-field>
                 </v-flex>
                 <v-flex xs12 v-if="scheduleType === 'SimpleTrigger'">
-                  <v-text-field type="number" class="mt-1" label="Interval (ms)"
-                    v-model="scheduleInterval" hide-details prepend-icon="info">
-                  </v-text-field>
-                  <v-text-field type="number" class="mt-1" label="Repetitions"
-                    v-model="scheduleRepetitons" hide-details
-                    prepend-icon="info">
-                  </v-text-field>
+                  <v-text-field
+                    type="number"
+                    class="mt-1"
+                    label="Interval (ms)"
+                    v-model="scheduleInterval"
+                    hide-details
+                    prepend-icon="info"
+                  ></v-text-field>
+                  <v-text-field
+                    type="number"
+                    class="mt-1"
+                    label="Repetitions"
+                    v-model="scheduleRepetitons"
+                    hide-details
+                    prepend-icon="info"
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
           </v-card-text>
         </v-card>
       </v-tabs-content>
-      <v-tabs-content key="metadata" id="metadata">
-        <metadata-panel :metadata="metadata"
-          @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
+      <v-tabs-content key="metadata">
+        <sw-metadata-panel
+          :metadata="metadata"
+          @itemDeleted="onMetadataDeleted"
+          @itemAdded="onMetadataAdded"
+        />
       </v-tabs-content>
     </v-tabs>
-  </base-dialog>
+  </sw-base-dialog>
 </template>
 
 <script>
-import Utils from "../common/Utils"
-import BaseDialog from "../common/BaseDialog"
-import MetadataPanel from "../common/MetadataPanel"
-import DateTimePicker from "../common/DateTimePicker"
+import {
+  formatIso8601,
+  arrayToMetadata,
+  metadataToArray
+} from "../common/Utils";
 import { required, helpers } from "vuelidate/lib/validators";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
+const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 export default {
-
   data: () => ({
     active: null,
     menu: null,
@@ -109,11 +141,12 @@ export default {
     metadata: [],
     triggerTypes: [
       {
-        "text": "Simple Trigger",
-        "value": "SimpleTrigger"
-      }, {
-        "text": "Cron Trigger",
-        "value": "CronTrigger"
+        text: "Simple Trigger",
+        value: "SimpleTrigger"
+      },
+      {
+        text: "Cron Trigger",
+        value: "CronTrigger"
       }
     ],
     error: null
@@ -132,22 +165,16 @@ export default {
     }
   },
 
-  components: {
-    BaseDialog,
-    MetadataPanel,
-    DateTimePicker
-  },
-
   props: ["title", "width", "createLabel", "cancelLabel"],
 
   methods: {
     // Generate payload from UI.
-    generatePayload: function () {
+    generatePayload: function() {
       let payload = {};
       payload.token = this.$data.scheduleToken;
       payload.name = this.$data.scheduleName;
-      payload.startDate = Utils.formatIso8601(this.$data.scheduleStartDate);
-      payload.endDate = Utils.formatIso8601(this.$data.scheduleEndDate);
+      payload.startDate = formatIso8601(this.$data.scheduleStartDate);
+      payload.endDate = formatIso8601(this.$data.scheduleEndDate);
       payload.triggerType = this.$data.scheduleType;
 
       let triggerConfig = {};
@@ -158,12 +185,12 @@ export default {
         triggerConfig.repeatInterval = this.$data.scheduleInterval;
         triggerConfig.repeatCount = this.$data.scheduleRepetitons;
       }
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
+      payload.metadata = arrayToMetadata(this.$data.metadata);
       return payload;
     },
 
     // Reset dialog contents.
-    reset: function (e) {
+    reset: function(e) {
       this.$data.scheduleToken = null;
       this.$data.scheduleName = null;
       this.$data.scheduleStartDate = null;
@@ -178,14 +205,14 @@ export default {
     },
 
     // Load dialog from a given payload.
-    load: function (payload) {
+    load: function(payload) {
       this.reset();
 
       if (payload) {
         this.$data.scheduleToken = payload.token;
         this.$data.scheduleName = payload.name;
-        this.$data.scheduleStartDate = Utils.parseIso8601(payload.startDate);
-        this.$data.scheduleEndDate = Utils.parseIso8601(payload.endDate);
+        this.$data.scheduleStartDate = parseIso8601(payload.startDate);
+        this.$data.scheduleEndDate = parseIso8601(payload.endDate);
         this.$data.scheduleType = payload.triggerType;
 
         let triggerConfig = payload.triggerConfiguration;
@@ -197,27 +224,27 @@ export default {
             this.$data.scheduleRepetitons = triggerConfig.repeatCount;
           }
         }
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
+        this.$data.metadata = metadataToArray(payload.metadata);
       }
     },
 
     // Called to open the dialog.
-    openDialog: function () {
+    openDialog: function() {
       this.$data.dialogVisible = true;
     },
 
     // Called to open the dialog.
-    closeDialog: function () {
+    closeDialog: function() {
       this.$data.dialogVisible = false;
     },
 
     // Called to show an error message.
-    showError: function (error) {
+    showError: function(error) {
       this.$data.error = error;
     },
 
     // Called after create button is clicked.
-    onCreateClicked: function (e) {
+    onCreateClicked: function(e) {
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
@@ -227,12 +254,12 @@ export default {
     },
 
     // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
+    onCancelClicked: function(e) {
       this.$data.dialogVisible = false;
     },
 
     // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
+    onMetadataDeleted: function(name) {
       var metadata = this.$data.metadata;
       for (var i = 0; i < metadata.length; i++) {
         if (metadata[i].name === name) {
@@ -242,12 +269,12 @@ export default {
     },
 
     // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
+    onMetadataAdded: function(entry) {
       var metadata = this.$data.metadata;
       metadata.push(entry);
     }
   }
-}
+};
 </script>
 
 <style scoped>

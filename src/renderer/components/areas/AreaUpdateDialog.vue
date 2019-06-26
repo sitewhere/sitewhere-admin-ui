@@ -1,64 +1,73 @@
 <template>
-  <div>
-    <area-dialog title="Edit Area" width="600" resetOnOpen="true"
-      createLabel="Update" cancelLabel="Cancel" @payload="onCommit"
-      :parentArea="parentArea">
-    </area-dialog>
-  </div>
+  <area-dialog
+    ref="dialog"
+    title="Edit Area"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import FloatingActionButton from '../common/FloatingActionButton'
-import AreaDialog from './AreaDialog'
-import {_getArea, _updateArea} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import {
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import AreaDialog from "./AreaDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import {
+  IArea,
+  IAreaCreateRequest,
+  IAreaResponseFormat
+} from "sitewhere-rest-api";
+import { getArea, updateArea } from "../../rest/sitewhere-areas-api";
 
+@Component({
   components: {
-    FloatingActionButton,
     AreaDialog
-  },
+  }
+})
+export default class CustomerUpdateDialog extends EditDialogComponent<
+  IArea,
+  IAreaCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IArea>;
+  }>;
 
-  props: ['token', 'parentArea'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IArea> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getArea(this.$store, this.token)
-        .then(function (response) {
-          component.onDataLoaded(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IArea> {
+    let format: IAreaResponseFormat = { includeAreaType: true };
+    return getArea(this.$store, identifier, format);
+  }
 
-    // Called after data is loaded.
-    onDataLoaded: function (response) {
-      this.$children[0].load(response.data)
-      this.$children[0].openDialog()
-    },
+  /** Save payload */
+  prepareSave(
+    original: IArea,
+    updated: IAreaCreateRequest
+  ): AxiosPromise<IArea> {
+    return updateArea(this.$store, original.token, updated);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateArea(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Called on payload commit */
+  onSave(payload: IAreaCreateRequest): void {
+    this.save(payload);
+  }
 
-    // Handle successful commit.
-    onCommitted: function (result) {
-      this.$children[0].closeDialog()
-      this.$emit('areaUpdated')
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IArea): void {
+    this.$emit("areaUpdated", payload);
   }
 }
 </script>
-
-<style scoped>
-</style>

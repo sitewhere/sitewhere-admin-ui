@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover color="white">
+  <sw-list-entry>
     <v-container @click="onAreaTypeClicked">
       <v-layout row>
         <v-flex xs2>
@@ -15,28 +15,24 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-card>
+  </sw-list-entry>
 </template>
 
-<script>
-import Utils from "../common/Utils";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import { IAreaType } from "sitewhere-rest-api";
 
-  components: {
-    Utils
-  },
+@Component({})
+export default class AreaTypeListEntry extends Vue {
+  @Prop() readonly areaType!: IAreaType;
 
-  props: ["areaType", "areaTypes"],
-
-  methods: {
-    // Callen when card is clicked.
-    onAreaTypeClicked: function() {
-      Utils.routeTo(this, "/areatypes/" + this.areaType.token);
-    }
+  // Callen when clicked.
+  onAreaTypeClicked() {
+    this.$emit("openAreaType", this.areaType);
   }
-};
+}
 </script>
 
 <style scoped>

@@ -1,64 +1,76 @@
 <template>
-  <div>
-    <customer-dialog title="Edit Customer" width="600" resetOnOpen="true"
-      createLabel="Update" cancelLabel="Cancel" @payload="onCommit"
-      :parentCustomer="parentCustomer">
-    </customer-dialog>
-  </div>
+  <customer-dialog
+    ref="dialog"
+    title="Edit Customer"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import FloatingActionButton from '../common/FloatingActionButton'
-import CustomerDialog from './CustomerDialog'
+<script lang="ts">
 import {
-  _getCustomer,
-  _updateCustomer
-} from '../../http/sitewhere-api-wrapper'
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import CustomerDialog from "./CustomerDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import {
+  ICustomer,
+  ICustomerCreateRequest,
+  ICustomerResponseFormat
+} from "sitewhere-rest-api";
+import {
+  getCustomer,
+  updateCustomer
+} from "../../rest/sitewhere-customers-api";
 
+@Component({
   components: {
-    FloatingActionButton,
     CustomerDialog
-  },
+  }
+})
+export default class CustomerUpdateDialog extends EditDialogComponent<
+  ICustomer,
+  ICustomerCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<ICustomer>;
+  }>;
 
-  props: ['token', 'parentCustomer'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<ICustomer> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getCustomer(this.$store, this.token)
-        .then(function (response) {
-          component.onDataLoaded(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<ICustomer> {
+    let format: ICustomerResponseFormat = { includeCustomerType: true };
+    return getCustomer(this.$store, identifier, format);
+  }
 
-    // Called after data is loaded.
-    onDataLoaded: function (response) {
-      this.$children[0].load(response.data)
-      this.$children[0].openDialog()
-    },
+  /** Save payload */
+  prepareSave(
+    original: ICustomer,
+    updated: ICustomerCreateRequest
+  ): AxiosPromise<ICustomer> {
+    return updateCustomer(this.$store, original.token, updated);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateCustomer(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Called on payload commit */
+  onSave(payload: ICustomerCreateRequest): void {
+    this.save(payload);
+  }
 
-    // Handle successful commit.
-    onCommitted: function (result) {
-      this.$children[0].closeDialog()
-      this.$emit('customerUpdated')
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ICustomer): void {
+    this.$emit("customerUpdated", payload);
   }
 }
 </script>

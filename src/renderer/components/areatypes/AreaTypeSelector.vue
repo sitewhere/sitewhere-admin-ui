@@ -1,62 +1,69 @@
 <template>
-  <v-select :items="areaTypes" item-text="name" item-value="id"
-    v-model="selectedId" label="Area type" prepend-icon="subject">
-  </v-select>
+  <form-select
+    :items="areaTypes"
+    :title="title || `Choose type of area`"
+    :label="label || `Area Type`"
+    item-text="name"
+    item-value="token"
+    v-model="wrapped"
+    icon="settings"
+  >
+    <slot/>
+  </form-select>
 </template>
 
-<script>
-import {_listAreaTypes} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 
-export default {
+import FormSelect from "../common/form/FormSelect.vue";
 
-  data: () => ({
-    areaTypes: [],
-    selectedId: null
-  }),
+import { handleError } from "../common/Utils";
+import { AxiosResponse } from "axios";
+import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
+import {
+  IAreaType,
+  IAreaTypeResponseFormat,
+  IAreaTypeSearchCriteria,
+  IAreaTypeSearchResults
+} from "sitewhere-rest-api";
 
-  props: ['value'],
+@Component({
+  components: {
+    FormSelect
+  }
+})
+export default class AreaTypeSelector extends Vue {
+  @Prop(String) readonly value!: string;
+  @Prop(String) readonly title!: string;
+  @Prop(String) readonly label!: string;
 
-  computed: {
-    // Indexes area types by id.
-    areaTypesById: function () {
-      let ats = this.$data.areaTypes
-      let atById = {}
-      if (ats) {
-        for (let i = 0; i < ats.length; i++) {
-          let at = ats[i]
-          atById[at.id] = at
-        }
-      }
-      return atById
+  areaTypes: IAreaType[] = [];
+
+  get wrapped(): string {
+    return this.value;
+  }
+
+  set wrapped(updated: string) {
+    this.$emit("input", updated);
+  }
+
+  async created() {
+    let criteria: IAreaTypeSearchCriteria = {
+      pageNumber: 1,
+      pageSize: 0
+    };
+    let format: IAreaTypeResponseFormat = {};
+    try {
+      let response: AxiosResponse<IAreaTypeSearchResults> = await listAreaTypes(
+        this.$store,
+        criteria,
+        format
+      );
+      this.areaTypes = response.data.results;
+    } catch (err) {
+      handleError(err);
     }
-  },
-
-  watch: {
-    value: function (updated) {
-      this.$data.selectedId = updated
-    },
-    selectedId: function (updated) {
-      this.$emit('input', updated)
-      this.$emit('areaTypeUpdated', this.areaTypesById[updated])
-    }
-  },
-
-  // Initially load list of all area types.
-  created: function () {
-    this.$data.selectedId = this.value
-    var paging = 'page=1&pageSize=0'
-    var component = this
-    _listAreaTypes(this.$store, false, paging)
-      .then(function (response) {
-        component.$data.areaTypes = response.data.results
-      }).catch(function (e) {
-      })
-  },
-
-  methods: {
   }
 }
 </script>
-
-<style scoped>
-</style>

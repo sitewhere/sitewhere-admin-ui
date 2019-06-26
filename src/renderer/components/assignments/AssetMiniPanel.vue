@@ -1,59 +1,59 @@
 <template>
   <div>
-    <div v-if="assignment.asset" class="assn-asset-image"
-      :style="backgroundImageStyle(assignment.asset.imageUrl)"></div>
-    <div v-else-if="assignment.area" class="assn-asset-image"
-      :style="backgroundImageStyle(assignment.area.imageUrl)"></div>
-    <div v-else-if="assignment.customer" class="assn-asset-image"
-      :style="backgroundImageStyle(assignment.customer.imageUrl)"></div>
-    <div v-else class="assn-asset-image"
-      :style="backgroundImageStyle(assignment.device.imageUrl)"></div>
-    <div v-if="assignment.asset" class="assn-asset-title">
-      {{ assignment.asset.name }}
-    </div>
-    <div v-else-if="assignment.area" class="assn-asset-title">
-      {{ assignment.area.name }}
-    </div>
-    <div v-else-if="assignment.customer" class="assn-asset-title">
-      {{ assignment.customer.name }}
-    </div>
-    <div v-if="assignment.asset" class="assn-asset-value1">
-      {{ assignment.asset.token }}
-    </div>
-    <div v-else-if="assignment.area" class="assn-asset-value1">
-      {{ assignment.area.token }}
-    </div>
+    <div
+      v-if="assignment.asset"
+      class="assn-asset-image"
+      :style="backgroundImageStyle(assignment.asset.imageUrl)"
+    ></div>
+    <div
+      v-else-if="assignment.area"
+      class="assn-asset-image"
+      :style="backgroundImageStyle(assignment.area.imageUrl)"
+    ></div>
+    <div
+      v-else-if="assignment.customer"
+      class="assn-asset-image"
+      :style="backgroundImageStyle(assignment.customer.imageUrl)"
+    ></div>
+    <div v-else class="assn-asset-image" :style="backgroundImageStyle(assignment.device.imageUrl)"></div>
+    <div v-if="assignment.asset" class="assn-asset-title">{{ assignment.asset.name }}</div>
+    <div v-else-if="assignment.area" class="assn-asset-title">{{ assignment.area.name }}</div>
+    <div v-else-if="assignment.customer" class="assn-asset-title">{{ assignment.customer.name }}</div>
+    <div v-if="assignment.asset" class="assn-asset-value1">{{ assignment.asset.token }}</div>
+    <div v-else-if="assignment.area" class="assn-asset-value1">{{ assignment.area.token }}</div>
 
-    <div v-if="(assignment.assignmentType == 'Unassociated') && (assignment.device)" class="assn-asset-image"
-      :style="backgroundImageStyle(assignment.device.assetImageUrl)"></div>
-      <div v-if="assignment.assignmentType == 'Unassociated'" class="assn-asset-title">
-        Unassociated Device
-      </div>
+    <div
+      v-if="(assignment.assignmentType == 'Unassociated') && (assignment.device)"
+      class="assn-asset-image"
+      :style="backgroundImageStyle(assignment.device.assetImageUrl)"
+    ></div>
+    <div
+      v-if="assignment.assignmentType == 'Unassociated'"
+      class="assn-asset-title"
+    >Unassociated Device</div>
     <div v-if="assignment.asset" class="assn-asset-tag">Asset</div>
     <div v-else-if="assignment.area" class="assn-asset-tag">Area</div>
   </div>
 </template>
 
 <script>
-
 export default {
-  data: () => ({
-  }),
+  data: () => ({}),
 
-  props: ['assignment'],
+  props: ["assignment"],
 
   methods: {
     // Create background image style.
-    backgroundImageStyle: function (image) {
+    backgroundImageStyle: function(image) {
       return {
-        'background-image': 'url(' + image + ')',
-        'background-size': 'contain',
-        'background-repeat': 'no-repeat',
-        'background-position': '50% 50%'
-      }
+        "background-image": "url(" + image + ")",
+        "background-size": "contain",
+        "background-repeat": "no-repeat",
+        "background-position": "50% 50%"
+      };
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -62,7 +62,7 @@ export default {
   top: 8px;
   left: 10px;
   width: 70px;
-	height: 70px;
+  height: 70px;
   border: 1px solid #eee;
 }
 .assn-asset-title {
@@ -101,8 +101,8 @@ export default {
 }
 .assn-asset-tag {
   position: absolute;
-	top: 3px;
-	left: 3px;
+  top: 3px;
+  left: 3px;
   background-color: #3a87ad;
   color: #f0f0f0;
   font-size: 10px;

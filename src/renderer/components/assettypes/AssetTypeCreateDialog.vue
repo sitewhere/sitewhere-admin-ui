@@ -1,55 +1,60 @@
 <template>
-  <div>
-    <asset-type-dialog ref="dialog" title="Create Asset Type" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </asset-type-dialog>
-  </div>
+  <asset-type-dialog
+    ref="dialog"
+    title="Create Asset Type"
+    resetOnOpen="true"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import AssetTypeDialog from "./AssetTypeDialog";
-import { _createAssetType } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import AssetTypeDialog from "./AssetTypeDialog.vue";
 
+import { AxiosPromise } from "axios";
+import { IAssetType, IAssetTypeCreateRequest } from "sitewhere-rest-api";
+import { createAssetType } from "../../rest/sitewhere-asset-types-api";
+
+@Component({
   components: {
-    AssetTypeDialog,
-    FloatingActionButton
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      _createAssetType(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("assetTypeAdded");
-    }
+    AssetTypeDialog
   }
-};
-</script>
+})
+export default class AssetTypeCreateDialog extends CreateDialogComponent<
+  IAssetType,
+  IAssetTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IAssetType>;
+  }>;
 
-<style scoped>
-</style>
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IAssetType> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IAssetTypeCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IAssetTypeCreateRequest): AxiosPromise<IAssetType> {
+    return createAssetType(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IAssetType): void {
+    this.$emit("assetTypeAdded", payload);
+  }
+}
+</script>

@@ -1,91 +1,113 @@
 <template>
-  <base-dialog :title="title" width="900" :visible="dialogVisible"
-    :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-    @createClicked="onCreateClicked" @cancelClicked="onCancelClicked">
-    <component-attributes :context="context" :groups="groups" :readOnly="false"
-      :identifier="identifier" :tenantToken="tenantToken" 
-      @initialValues="onInitialValues" @valuesUpdated="onValuesUpdated">
-    </component-attributes>
-  </base-dialog>
+  <sw-base-dialog
+    ref="dialog"
+    :icon="icon"
+    :title="title"
+    :width="width"
+    :loaded="loaded"
+    :visible="dialogVisible"
+    :createLabel="createLabel"
+    :cancelLabel="cancelLabel"
+    @createClicked="onCreateClicked"
+    @cancelClicked="onCancelClicked"
+    :lazy="true"
+  >
+    <template slot="tabs">
+      <v-tab v-for="group in groups" :key="group.name">{{ group.name }}</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item v-for="group in groups" :key="group.name">
+        <attribute-group-panel
+          :attributeGroup="group"
+          :readOnly="readOnly"
+          :identifier="identifier"
+          :tenantToken="tenantToken"
+          @attributeUpdated="onAttributeUpdated"
+        />
+      </v-tab-item>
+    </template>
+  </sw-base-dialog>
 </template>
 
-<script>
-import BaseDialog from '../common/BaseDialog'
-import ComponentAttributes from './ComponentAttributes'
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  DialogComponent,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
+import { NavigationIcon } from "../../libraries/constants";
 
-export default {
+import {
+  IConfiguredAttributeGroup,
+  IConfigurationContext,
+  AttributeValues,
+  IAttributeUpdate
+} from "./ConfigurationModel";
 
-  data: () => ({
-    attributeValues: null,
-    dialogVisible: false,
-    error: null
-  }),
+import AttributeGroupPanel from "./AttributeGroupPanel.vue";
 
+@Component({
   components: {
-    BaseDialog,
-    ComponentAttributes
-  },
+    AttributeGroupPanel
+  }
+})
+export default class AttributesDialog extends DialogComponent<AttributeValues> {
+  @Prop() readonly context!: IConfigurationContext;
+  @Prop({ default: [] }) readonly groups!: IConfiguredAttributeGroup[];
+  @Prop() readonly identifier!: string;
+  @Prop() readonly tenantToken!: string;
+  @Prop({ default: false }) readonly readOnly!: boolean;
 
-  props: ['context', 'groups', 'title', 'createLabel', 'cancelLabel',
-    'identifier', 'tenantToken'],
+  attributeValues: AttributeValues = {};
+  dirty: boolean = false;
 
-  methods: {
-    // Generate payload from UI.
-    generatePayload: function () {
-      let payload = {}
-      payload.localName = this.context.model.localName
-      payload.values = this.$data.attributeValues
-      return payload
-    },
+  // References.
+  $refs!: Refs<{
+    dialog: ITabbedComponent;
+  }>;
 
-    // Reset dialog contents.
-    reset: function (e) {
-      this.$data.attributeValues = null
-    },
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceType;
+  }
 
-    // Load dialog from a given payload.
-    load: function (payload) {
-      this.reset()
-    },
+  /** Load initial attribute values from groups */
+  loadAttributesFromGroups() {
+    let values: AttributeValues = {};
+    this.groups.forEach(group => {
+      group.attributes.forEach(attribute => {
+        let value = attribute.value;
+        if (value) {
+          values[attribute.localName] = value;
+        }
+      });
+    });
+    this.attributeValues = values;
+    this.$emit("initialValues", values);
+  }
 
-    // Called to open the dialog.
-    openDialog: function () {
-      this.$data.dialogVisible = true
-    },
+  /** Handle attribute updated */
+  onAttributeUpdated(updated: IAttributeUpdate) {
+    this.attributeValues[updated.attribute.localName] = updated.newValue;
+    this.dirty = true;
+  }
 
-    // Called to open the dialog.
-    closeDialog: function () {
-      this.$data.dialogVisible = false
-    },
+  // Reset dialog contents.
+  reset() {
+    this.attributeValues = {};
+  }
 
-    // Called to show an error message.
-    showError: function (error) {
-      this.$data.error = error
-    },
+  // Load dialog from a given payload.
+  load(payload: AttributeValues) {
+    this.reset();
+    this.loadAttributesFromGroups();
+  }
 
-    /** Called with initial attribute values */
-    onInitialValues: function (values) {
-      this.$data.attributeValues = values
-    },
-
-    // Called when attribute values are updated.
-    onValuesUpdated: function (values) {
-      this.$data.attributeValues = values
-    },
-
-    // Called after create button is clicked.
-    onCreateClicked: function (e) {
-      var payload = this.generatePayload()
-      this.$emit('payload', payload)
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
-      this.$data.dialogVisible = false
-    }
+  // Called after create button is clicked.
+  onCreateClicked(e: any) {
+    this.$emit("payload", this.attributeValues);
   }
 }
 </script>
-
-<style scoped>
-</style>

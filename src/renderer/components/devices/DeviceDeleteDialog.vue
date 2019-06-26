@@ -1,54 +1,51 @@
 <template>
-  <delete-dialog ref="dialog" title="Delete Device" width="400" :error="error"
-    @delete="onDeleteConfirmed">
-    <v-card-text>
-      Are you sure you want to delete this device?
-    </v-card-text>
-  </delete-dialog>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Device"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
+  </sw-delete-dialog>
 </template>
 
-<script>
-import DeleteDialog from '../common/DeleteDialog'
-import {_deleteDevice} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
+import { AxiosPromise } from "axios";
+import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
+import { getDevice, deleteDevice } from "../../rest/sitewhere-devices-api";
 
-  data: () => ({
-    error: null
-  }),
+@Component({})
+export default class DeviceDeleteDialog extends DeleteDialogComponent<IDevice> {
+  message: string | null = null;
 
-  props: ['token'],
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IDevice> {
+    let format: IDeviceResponseFormat = {};
+    return getDevice(this.$store, identifier, format);
+  }
 
-  components: {
-    DeleteDialog
-  },
+  /** Called after record is loaded */
+  afterLoad(device: IDevice): void {
+    this.message = `Are you sure you want to delete '${device.token}'?`;
+  }
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
-    },
+  /** Load payload */
+  prepareDelete(device: IDevice): AxiosPromise<IDevice> {
+    return deleteDevice(this.$store, device.token);
+  }
 
-    // Show delete dialog.
-    showDeleteDialog: function () {
-      this.getDialogComponent().openDialog()
-    },
+  // Called after create button is clicked.
+  onDelete(e: any) {
+    this.delete();
+  }
 
-    // Perform delete.
-    onDeleteConfirmed: function () {
-      var component = this
-      _deleteDevice(this.$store, this.token, true)
-        .then(function (response) {
-          component.onDeleted(response)
-        }).catch(function (e) {
-        })
-    },
-
-    // Handle successful delete.
-    onDeleted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('deviceDeleted')
-    }
+  // Called after cancel button is clicked.
+  onCancel(e: any) {
+    this.cancel();
   }
 }
 </script>

@@ -1,66 +1,69 @@
 <template>
-  <div>
-    <command-dialog ref="dialog" title="Create Command" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      :deviceType="deviceType"
-      @payload="onCommit">
-    </command-dialog>
-    <floating-action-button label="Add Command" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button>
-  </div>
+  <command-dialog
+    ref="dialog"
+    title="Create Command"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    :deviceTypeToken="deviceTypeToken"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import CommandDialog from "./CommandDialog";
-import { _createDeviceCommand } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import CommandDialog from "./CommandDialog.vue";
 
+import { AxiosPromise } from "axios";
+import {
+  IDeviceCommand,
+  IDeviceCommandCreateRequest
+} from "sitewhere-rest-api";
+import { createDeviceCommand } from "../../rest/sitewhere-device-commands-api";
+
+@Component({
   components: {
-    FloatingActionButton,
     CommandDialog
-  },
-
-  props: ["deviceType"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      _createDeviceCommand(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("commandAdded");
-    }
   }
-};
+})
+export default class CommandCreateDialog extends CreateDialogComponent<
+  IDeviceCommand,
+  IDeviceCommandCreateRequest
+> {
+  @Prop() readonly deviceTypeToken!: string;
+
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceCommand>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceCommand> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceCommandCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IDeviceCommandCreateRequest): AxiosPromise<IDeviceCommand> {
+    return createDeviceCommand(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceCommand): void {
+    this.$emit("commandAdded", payload);
+  }
+}
 </script>
 
 <style scoped>
-.add-button {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-}
 </style>

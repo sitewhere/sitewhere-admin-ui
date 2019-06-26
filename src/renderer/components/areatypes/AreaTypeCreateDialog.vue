@@ -1,57 +1,60 @@
 <template>
-  <div>
-    <area-type-dialog ref="dialog" title="Create Area Type" width="600"
-      resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit" :areaTypes="areaTypes">
-    </area-type-dialog>
-  </div>
+  <area-type-dialog
+    ref="dialog"
+    title="Create Area Type"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import AreaTypeDialog from "./AreaTypeDialog";
-import { _createAreaType } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import AreaTypeDialog from "./AreaTypeDialog.vue";
 
+import { AxiosPromise } from "axios";
+import { IAreaType, IAreaTypeCreateRequest } from "sitewhere-rest-api";
+import { createAreaType } from "../../rest/sitewhere-area-types-api";
+
+@Component({
   components: {
-    AreaTypeDialog,
-    FloatingActionButton
-  },
-
-  props: ["areaTypes"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      _createAreaType(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("areaTypeAdded");
-    }
+    AreaTypeDialog
   }
-};
-</script>
+})
+export default class AreaTypeCreateDialog extends CreateDialogComponent<
+  IAreaType,
+  IAreaTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IAreaType>;
+  }>;
 
-<style scoped>
-</style>
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IAreaType> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IAreaTypeCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IAreaTypeCreateRequest): AxiosPromise<IAreaType> {
+    return createAreaType(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IAreaType): void {
+    this.$emit("areaTypeAdded", payload);
+  }
+}
+</script>

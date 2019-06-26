@@ -1,96 +1,102 @@
 <template>
-  <navigation-page icon="map" title="Areas"
-    loadingMessage="Loading areas ..." :loaded="loaded">
-    <div slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;" v-if="areas">
-        <v-layout row wrap>
-           <v-flex xs6 v-for="(area) in areas" :key="area.token">
-            <area-list-entry :area="area" @openArea="onOpenArea">
-            </area-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="updatePaging"></pager>
+  <sw-list-page
+    :icon="icon"
+    title="Areas"
+    loadingMessage="Loading areas ..."
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <sw-list-layout>
+      <v-flex xs6 v-for="(area) in matches" :key="area.token">
+        <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
+      </v-flex>
+    </sw-list-layout>
+    <template slot="dialogs">
       <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
-    </div>
-    <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Area"
-        @action="onAddArea">
-      </navigation-action-button>
-    </div>
-  </navigation-page>
+    </template>
+    <template slot="actions">
+      <add-button tooltip="Add Area" @action="onAddArea"/>
+    </template>
+  </sw-list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Utils from "../common/Utils";
-import Pager from "../common/Pager";
-import AreaListEntry from "./AreaListEntry";
-import AreaCreateDialog from "./AreaCreateDialog";
-import { _listAreas } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    areas: null,
-    loaded: false
-  }),
+import AreaListEntry from "./AreaListEntry.vue";
+import AreaCreateDialog from "./AreaCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
+import { NavigationIcon } from "../../libraries/constants";
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { listAreas } from "../../rest/sitewhere-areas-api";
+import {
+  IArea,
+  IAreaSearchCriteria,
+  IAreaResponseFormat,
+  IAreaSearchResults
+} from "sitewhere-rest-api";
+
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
     AreaListEntry,
-    AreaCreateDialog
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-    // Refresh list of areas.
-    refresh: function() {
-      this.$data.loaded = false;
-      var paging = this.$data.paging.query;
-      var component = this;
-
-      // Search options.
-      let options = {};
-      options.includeAreaType = true;
-      options.includeAssignments = false;
-      options.includeZones = false;
-
-      _listAreas(this.$store, options, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.areas = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Called to open an area.
-    onOpenArea: function(area) {
-      Utils.routeTo(this, "/areas/" + area.token);
-    },
-
-    // Called to open dialog.
-    onAddArea: function() {
-      this.$refs.add.onOpenDialog();
-    },
-
-    // Called when a new area is added.
-    onAreaAdded: function() {
-      this.refresh();
-    }
+    AreaCreateDialog,
+    AddButton
   }
-};
-</script>
+})
+export default class AreasList extends ListComponent<
+  IArea,
+  IAreaSearchCriteria,
+  IAreaResponseFormat,
+  IAreaSearchResults
+> {
+  $refs!: Refs<{
+    add: AreaCreateDialog;
+  }>;
 
-<style scoped>
-</style>
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Area;
+  }
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IAreaSearchCriteria {
+    let criteria: IAreaSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IAreaResponseFormat {
+    let format: IAreaResponseFormat = {};
+    format.includeAreaType = true;
+    format.includeAssignments = false;
+    format.includeZones = false;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    criteria: IAreaSearchCriteria,
+    format: IAreaResponseFormat
+  ): AxiosPromise<IAreaSearchResults> {
+    return listAreas(this.$store, criteria, format);
+  }
+
+  // Called to open an area.
+  onOpenArea(area: IArea) {
+    routeTo(this, "/areas/" + area.token);
+  }
+
+  // Called to open dialog.
+  onAddArea() {
+    this.$refs.add.open();
+  }
+
+  // Called when a new area is added.
+  onAreaAdded() {
+    this.refresh();
+  }
+}
+</script>

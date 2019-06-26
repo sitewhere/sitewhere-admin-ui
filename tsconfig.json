@@ -1,3 +1,26 @@
 {
-  "extends": "./node_modules/electron-webpack/tsconfig-base.json"
+  "extends": "./node_modules/electron-webpack/tsconfig-base.json",
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noEmitOnError": false,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "strictFunctionTypes": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": ["node"],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "lib": ["es2018", "dom"]
+  }
 }

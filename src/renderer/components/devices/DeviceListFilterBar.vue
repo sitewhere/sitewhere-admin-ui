@@ -3,8 +3,7 @@
     <v-card color="primary" v-if="!emptyFilter">
       <v-card-text class="pt-0 mt-0">
         <v-tooltip bottom>
-          <v-chip close v-if="areaFilter" @input="onAreaFilterClosed"
-            slot="activator">
+          <v-chip close v-if="areaFilter" @input="onAreaFilterClosed" slot="activator">
             <v-avatar>
               <img :src="areaFilter.imageUrl" alt="areaFilter.name">
             </v-avatar>
@@ -13,8 +12,7 @@
           <span>Only include devices from this area</span>
         </v-tooltip>
         <v-tooltip bottom>
-          <v-chip close v-if="deviceTypeFilter"
-            @input="onDeviceTypeFilterClosed" slot="activator">
+          <v-chip close v-if="deviceTypeFilter" @input="onDeviceTypeFilterClosed" slot="activator">
             <v-avatar>
               <img :src="deviceTypeFilter.imageUrl" alt="deviceTypeFilter.name">
             </v-avatar>
@@ -23,8 +21,12 @@
           <span>Only include devices from this device type</span>
         </v-tooltip>
         <v-tooltip bottom>
-          <v-chip close v-if="deviceGroupFilter"
-            @input="onDeviceGroupFilterClosed" slot="activator">
+          <v-chip
+            close
+            v-if="deviceGroupFilter"
+            @input="onDeviceGroupFilterClosed"
+            slot="activator"
+          >
             <v-avatar>
               <v-icon light>view_module</v-icon>
             </v-avatar>
@@ -35,9 +37,7 @@
       </v-card-text>
     </v-card>
     <v-spacer></v-spacer>
-    <device-list-filter-dialog ref="criteria"
-      :filter="filter" @filter="onFilterUpdated">
-    </device-list-filter-dialog>
+    <device-list-filter-dialog ref="criteria" :filter="filter" @filter="onFilterUpdated"></device-list-filter-dialog>
   </v-card>
 </template>
 

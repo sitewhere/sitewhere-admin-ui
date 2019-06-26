@@ -1,69 +1,76 @@
 <template>
-  <div>
-    <asset-type-dialog ref="dialog" title="Edit Asset Type" width="600"
-      resetOnOpen="true" createLabel="Update" cancelLabel="Cancel"
-      @payload="onCommit">
-    </asset-type-dialog>
-  </div>
+  <asset-type-dialog
+    ref="dialog"
+    title="Edit Asset Type"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import FloatingActionButton from '../common/FloatingActionButton'
-import AssetTypeDialog from './AssetTypeDialog'
-import {_getAssetType, _updateAssetType} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import {
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import AssetTypeDialog from "./AssetTypeDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import {
+  IAssetType,
+  IAssetTypeCreateRequest,
+  IAssetTypeResponseFormat
+} from "sitewhere-rest-api";
+import {
+  getAssetType,
+  updateAssetType
+} from "../../rest/sitewhere-asset-types-api";
 
+@Component({
   components: {
-    FloatingActionButton,
     AssetTypeDialog
-  },
+  }
+})
+export default class AssetTypeUpdateDialog extends EditDialogComponent<
+  IAssetType,
+  IAssetTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IAssetType>;
+  }>;
 
-  props: ['token'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IAssetType> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
-    },
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IAssetType> {
+    let format: IAssetTypeResponseFormat = {};
+    return getAssetType(this.$store, identifier, format);
+  }
 
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getAssetType(this.$store, this.token)
-        .then(function (response) {
-          component.onDataLoaded(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Save payload */
+  prepareSave(
+    original: IAssetType,
+    updated: IAssetTypeCreateRequest
+  ): AxiosPromise<IAssetType> {
+    return updateAssetType(this.$store, original.token, updated);
+  }
 
-    // Called after data is loaded.
-    onDataLoaded: function (response) {
-      this.getDialogComponent().load(response.data)
-      this.getDialogComponent().openDialog()
-    },
+  /** Called on payload commit */
+  onSave(payload: IAssetTypeCreateRequest): void {
+    this.save(payload);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateAssetType(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
-    },
-
-    // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('assetTypeUpdated')
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IAssetType): void {
+    this.$emit("assetTypeUpdated", payload);
   }
 }
 </script>
-
-<style scoped>
-</style>

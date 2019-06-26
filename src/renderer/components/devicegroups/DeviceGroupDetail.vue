@@ -1,171 +1,145 @@
 <template>
-  <div>
-    <navigation-page icon="cubes" title="Manage Device Group"
-      loadingMessage="Loading device group ..." :loaded="loaded">
-      <div slot="content">
-        <device-group-detail-header :group="group"
-          @deviceGroupUpdated="refresh" @deviceGroupDeleted="onDeviceGroupDeleted">
-        </device-group-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-            <v-tabs-item key="elements" href="#elements">
-              Group Elements
-            </v-tabs-item>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="elements" id="elements">
-              <device-group-element-list-panel ref="list" :token="token">
-              </device-group-element-list-panel>
-              <floating-action-button label="Add Group Element" icon="plus"
-                @action="onAddElement">
-              </floating-action-button>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-        <device-group-element-create-dialog ref="create" :token="token"
-          @elementAdded="onElementAdded">
-        </device-group-element-create-dialog>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Device Group"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Device Group"
-          @action="onDelete">
-        </navigation-action-button>
-      </div>
-    </navigation-page>
-    <device-group-update-dialog ref="edit" :token="token"
-      @groupUpdated="onDeviceGroupUpdated">
-    </device-group-update-dialog>
-    <device-group-delete-dialog ref="delete" :token="token"
-      @groupDeleted="onDeviceGroupDeleted">
-    </device-group-delete-dialog>
-  </div>
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading device group ..."
+    :loaded="loaded"
+    :record="deviceGroup"
+  >
+    <template slot="header">
+      <device-group-detail-header
+        :record="deviceGroup"
+        @deviceGroupUpdated="refresh"
+        @deviceGroupDeleted="onDeviceGroupDeleted"
+      />
+    </template>
+    <template slot="tabs">
+      <v-tab key="elements">Group Elements</v-tab>
+    </template>
+    <template slot="tab-items">
+      <device-group-elements tabkey="elements" ref="list" :deviceGroup="deviceGroup"/>
+    </template>
+    <template slot="actions">
+      <edit-button tooltip="Edit Device Group" @action="onEdit"/>
+      <delete-button tooltip="Delete Device Group" @action="onDelete"/>
+    </template>
+    <template slot="dialogs">
+      <device-group-element-create-dialog
+        ref="create"
+        :token="token"
+        @elementAdded="onElementAdded"
+      />
+      <device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh"/>
+      <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted"/>
+    </template>
+  </sw-detail-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Utils from "../common/Utils";
-import Pager from "../common/Pager";
-import FloatingActionButton from "../common/FloatingActionButton";
-import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader";
-import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog";
-import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog";
-import DeviceGroupElementListPanel from "./DeviceGroupElementListPanel";
-import DeviceGroupElementCreateDialog from "./DeviceGroupElementCreateDialog";
-import { _getDeviceGroup } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  DetailComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    active: null,
-    results: null,
-    paging: null,
-    token: null,
-    group: null,
-    elements: null,
-    pageSizes: [
-      {
-        text: "20",
-        value: 20
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ],
-    fab: null,
-    loaded: false
-  }),
+import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader.vue";
+import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog.vue";
+import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog.vue";
+import DeviceGroupElements from "./DeviceGroupElements.vue";
+import DeviceGroupElementCreateDialog from "./DeviceGroupElementCreateDialog.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { getDeviceGroup } from "../../rest/sitewhere-device-groups-api";
+import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
+
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
-    FloatingActionButton,
     DeviceGroupDetailHeader,
     DeviceGroupUpdateDialog,
     DeviceGroupDeleteDialog,
-    DeviceGroupElementListPanel,
-    DeviceGroupElementCreateDialog
-  },
+    DeviceGroupElements,
+    DeviceGroupElementCreateDialog,
+    EditButton,
+    DeleteButton
+  }
+})
+export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
+  active: string | null = null;
 
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
+  // References.
+  $refs!: Refs<{
+    edit: DeviceGroupUpdateDialog;
+    delete: DeviceGroupDeleteDialog;
+  }>;
 
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
+  get deviceGroup(): IDeviceGroup | null {
+    return this.record;
+  }
 
-  methods: {
-    // Display entity with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Refresh data.
-    refresh: function() {
-      this.$data.loaded = false;
+  get icon(): string {
+    return NavigationIcon.DeviceGroup;
+  }
 
-      let component = this;
-      // Load information.
-      _getDeviceGroup(this.$store, this.$data.token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onDeviceGroupLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Called after device group is loaded.
-    onDeviceGroupLoaded: function(group) {
-      this.$data.group = group;
-      var section = {
-        id: "groups",
-        title: "Device Group",
-        icon: "cubes",
-        route: "/admin/groups/" + group.token,
-        longTitle: "Manage Device Group: " + group.token
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Show dialog on update requested.
-    onEdit: function() {
-      this.$refs["edit"].onOpenDialog();
-    },
-    // Called after device group is updated.
-    onDeviceGroupUpdated: function() {
-      this.refresh();
-    },
-    // Show dialog on delete requested.
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called after device group is deleted.
-    onDeviceGroupDeleted: function() {
-      Utils.routeTo(this, "/groups");
-    },
-    // Called when 'add element' button is clicked.
-    onAddElement: function() {
-      this.$refs["create"].onOpenDialog();
-    },
-    // Called when an element is added.
-    onElementAdded: function() {
-      this.$refs["list"].refresh();
+  get title(): string {
+    return this.deviceGroup
+      ? `Manage device group "${this.deviceGroup.name}"`
+      : "";
+  }
+
+  /** Load record */
+  loadRecord(token: string): AxiosPromise<IDeviceGroup> {
+    let format: IDeviceGroupResponseFormat = {
+      includeAsset: true
+    };
+    return getDeviceGroup(this.$store, token, format);
+  }
+
+  // Called after data is loaded.
+  afterRecordLoaded(deviceGroup: IDeviceGroup) {
+    var section: INavigationSection = {
+      id: "groups",
+      title: "Device Group",
+      icon: "cubes",
+      route: "/admin/groups/" + deviceGroup.token,
+      longTitle: "Manage Device Group: " + deviceGroup.token
+    };
+    this.$store.commit("currentSection", section);
+  }
+
+  // Show dialog on update requested.
+  onEdit() {
+    if (this.token) {
+      this.$refs.edit.open(this.token);
     }
   }
-};
+
+  // Show dialog on delete requested.
+  onDelete() {
+    if (this.token) {
+      this.$refs.delete.open(this.token);
+    }
+  }
+
+  // Called after device group is deleted.
+  onDeviceGroupDeleted() {
+    routeTo(this, "/groups");
+  }
+
+  // Called when 'add element' button is clicked.
+  onAddElement() {
+    (this.$refs["create"] as any).onOpenDialog();
+  }
+
+  // Called when an element is added.
+  onElementAdded() {
+    (this.$refs["list"] as any).refresh();
+  }
+}
 </script>
 
 <style scoped>

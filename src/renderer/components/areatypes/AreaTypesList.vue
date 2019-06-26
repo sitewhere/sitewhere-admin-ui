@@ -1,95 +1,107 @@
 <template>
-  <navigation-page icon="cog" title="Area Types"
-    loadingMessage="Loading area types ..." :loaded="loaded">
-    <div v-if="areaTypes" slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;">
-        <v-layout row wrap>
-           <v-flex xs6 v-for="(areaType) in areaTypes" :key="areaType.token">
-            <area-type-list-entry :areaType="areaType" :areaTypes="areaTypes"
-              @areaTypeOpened="onOpenAreaType" @areaTypeDeleted="refresh">
-            </area-type-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" @pagingUpdated="updatePaging"></pager>
-      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded"
-        :areaTypes="areaTypes"/>
-    </div>
-    <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Area Type"
-        @action="onAddAreaType">
-      </navigation-action-button>
-    </div>
-  </navigation-page>
+  <list-page
+    :icon="icon"
+    title="Area Types"
+    loadingMessage="Loading area types ..."
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <list-layout>
+      <v-flex xs6 v-for="(areaType) in matches" :key="areaType.token">
+        <area-type-list-entry :areaType="areaType" @openAreaType="onOpenAreaType"></area-type-list-entry>
+      </v-flex>
+    </list-layout>
+    <template slot="dialogs">
+      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded" :areaTypes="matches"/>
+    </template>
+    <template slot="actions">
+      <add-button icon="plus" tooltip="Add Area Type" @action="onAddAreaType"/>
+    </template>
+  </list-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import AreaTypeListEntry from "./AreaTypeListEntry";
-import AreaTypeCreateDialog from "./AreaTypeCreateDialog";
-import { _listAreaTypes } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    areaTypes: [],
-    loaded: false
-  }),
+import { ListPage, ListLayout } from "sitewhere-ide-components";
+import AreaTypeListEntry from "./AreaTypeListEntry.vue";
+import AreaTypeCreateDialog from "./AreaTypeCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
+import { NavigationIcon } from "../../libraries/constants";
+import { AxiosPromise } from "axios";
+import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
+import {
+  IAreaType,
+  IAreaTypeSearchCriteria,
+  IAreaTypeResponseFormat,
+  IAreaTypeSearchResults
+} from "sitewhere-rest-api";
+
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
+    ListPage,
+    ListLayout,
     AreaTypeListEntry,
-    AreaTypeCreateDialog
-  },
+    AreaTypeCreateDialog,
+    AddButton
+  }
+})
+export default class AreaTypesList extends ListComponent<
+  IAreaType,
+  IAreaTypeSearchCriteria,
+  IAreaTypeResponseFormat,
+  IAreaTypeSearchResults
+> {
+  $refs!: Refs<{
+    add: AreaTypeCreateDialog;
+  }>;
 
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.AreaType;
+  }
 
-    // Refresh list of area types.
-    refresh: function() {
-      this.$data.loaded = false;
-      var paging = this.$data.paging.query;
-      var component = this;
-      _listAreaTypes(this.$store, false, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.$data.areaTypes = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
+  /** Build search criteria for list */
+  buildSearchCriteria(): IAreaTypeSearchCriteria {
+    let criteria: IAreaTypeSearchCriteria = {};
+    return criteria;
+  }
 
-    // Called when an area type is clicked.
-    onOpenAreaType: function(token) {
-      var tenant = this.$store.getters.selectedTenant;
-      if (tenant) {
-        this.$router.push("/tenants/" + tenant.id + "/areatypes/" + token);
-      }
-    },
+  /** Build response format for list */
+  buildResponseFormat(): IAreaTypeResponseFormat {
+    let format: IAreaTypeResponseFormat = {};
+    format.includeContainedAreaTypes = true;
+    return format;
+  }
 
-    // Called to open dialog.
-    onAddAreaType: function() {
-      this.$refs.add.onOpenDialog();
-    },
+  /** Perform search */
+  performSearch(
+    criteria: IAreaTypeSearchCriteria,
+    format: IAreaTypeResponseFormat
+  ): AxiosPromise<IAreaTypeSearchResults> {
+    return listAreaTypes(this.$store, criteria, format);
+  }
 
-    // Called when a new area type is added.
-    onAreaTypeAdded: function() {
-      this.refresh();
+  // Called when an area type is clicked.
+  onOpenAreaType(areaType: IAreaType) {
+    var tenant = this.$store.getters.selectedTenant;
+    if (tenant) {
+      this.$router.push(
+        "/tenants/" + tenant.id + "/areatypes/" + areaType.token
+      );
     }
   }
-};
-</script>
 
-<style scoped>
-</style>
+  // Called to open dialog.
+  onAddAreaType() {
+    this.$refs.add.open();
+  }
+
+  // Called when a new area type is added.
+  onAreaTypeAdded() {
+    this.refresh();
+  }
+}
+</script>

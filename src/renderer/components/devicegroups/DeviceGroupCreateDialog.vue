@@ -1,53 +1,62 @@
 <template>
-  <div>
-    <device-group-dialog ref="dialog" title="Create Device Group" width="700"
-      createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
-    </device-group-dialog>
-  </div>
+  <device-group-dialog
+    ref="dialog"
+    title="Create Device Group"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import DeviceGroupDialog from "./DeviceGroupDialog";
-import { _createDeviceGroup } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import DeviceGroupDialog from "./DeviceGroupDialog.vue";
 
+import { AxiosPromise } from "axios";
+import { IDeviceGroup, IDeviceGroupCreateRequest } from "sitewhere-rest-api";
+import { createDeviceGroup } from "../../rest/sitewhere-device-groups-api";
+
+@Component({
   components: {
-    FloatingActionButton,
     DeviceGroupDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      _createDeviceGroup(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("groupAdded");
-    }
   }
-};
+})
+export default class DeviceTypeCreateDialog extends CreateDialogComponent<
+  IDeviceGroup,
+  IDeviceGroupCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceGroup>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceGroup> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceGroupCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IDeviceGroupCreateRequest): AxiosPromise<IDeviceGroup> {
+    return createDeviceGroup(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceGroup): void {
+    this.$emit("deviceGroupAdded", payload);
+  }
+}
 </script>
 
 <style scoped>

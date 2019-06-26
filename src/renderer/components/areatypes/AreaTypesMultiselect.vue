@@ -4,8 +4,7 @@
       <template v-for="(areaType) in areaTypes">
         <v-list-tile :key="areaType.id">
           <v-list-tile-action>
-            <v-checkbox v-model="selected" :value="areaType.id">
-            </v-checkbox>
+            <v-checkbox v-model="selected" :value="areaType.id"></v-checkbox>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>
@@ -17,9 +16,7 @@
         <v-divider :key="'div' + areaType.id"></v-divider>
       </template>
     </v-list>
-    <v-card-text v-else>
-      No area types available.
-    </v-card-text>
+    <v-card-text v-else>No area types available.</v-card-text>
   </v-card>
 </template>
 
@@ -67,6 +64,3 @@ export default {
   methods: {}
 };
 </script>
-
-<style scoped>
-</style>

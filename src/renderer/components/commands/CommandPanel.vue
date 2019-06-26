@@ -1,62 +1,48 @@
 <template>
-  <v-list-tile avatar @click="onUpdateCommand">
-    <v-list-tile-content>
-      <command-html :command="command"></command-html>
-    </v-list-tile-content>
-    <v-list-tile-action>
-      <actions-block @edited="onCommandUpdated" @deleted="onCommandDeleted">
-        <command-update-dialog slot="edit" ref="update"
-          :token="command.token" :deviceType="deviceType">
-        </command-update-dialog>
-        <command-delete-dialog slot="delete"
-          :token="command.token">
-        </command-delete-dialog>
-      </actions-block>
-    </v-list-tile-action>
-  </v-list-tile>
+  <sw-list-entry class="pa-2">
+    <v-list-tile avatar @click="onUpdateCommand">
+      <v-list-tile-content>
+        <command-html :command="command"/>
+      </v-list-tile-content>
+      <v-list-tile-action>
+        <actions-block @edit="onUpdateCommand" @delete="onDeleteCommand"/>
+      </v-list-tile-action>
+    </v-list-tile>
+  </sw-list-entry>
 </template>
 
-<script>
-import ActionsBlock from '../common/ActionsBlock'
-import CommandHtml from './CommandHtml'
-import CommandDeleteDialog from './CommandDeleteDialog'
-import CommandUpdateDialog from './CommandUpdateDialog'
+<script lang="ts">
+import { Component, Prop } from "sitewhere-ide-common";
+import Vue from "vue";
 
-export default {
+import CommandHtml from "./CommandHtml.vue";
+import ActionsBlock from "../common/ActionsBlock.vue";
 
-  data: () => ({
-  }),
+import { IDeviceCommand } from "sitewhere-rest-api";
 
+@Component({
   components: {
-    ActionsBlock,
     CommandHtml,
-    CommandDeleteDialog,
-    CommandUpdateDialog
-  },
+    ActionsBlock
+  }
+})
+export default class CommandPanel extends Vue {
+  @Prop() readonly command!: IDeviceCommand;
 
-  props: ['command', 'deviceType'],
+  // Called after command has been updated.
+  onUpdateCommand() {
+    this.$emit("edit", this.command);
+  }
 
-  methods: {
-    // Opens update dialog on tile click.
-    onUpdateCommand: function () {
-      this.$refs['update'].onOpenDialog()
-    },
-
-    // Called after command has been deleted.
-    onCommandDeleted: function () {
-      this.$emit('commandDeleted')
-    },
-
-    // Called after command has been updated.
-    onCommandUpdated: function () {
-      this.$emit('commandUpdated')
-    }
+  // Called after command has been deleted.
+  onDeleteCommand() {
+    this.$emit("delete", this.command);
   }
 }
 </script>
 
 <style scoped>
 .command-comment {
-  font-family: 'courier';
+  font-family: "courier";
 }
 </style>

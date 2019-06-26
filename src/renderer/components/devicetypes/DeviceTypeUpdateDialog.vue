@@ -1,59 +1,78 @@
 <template>
-  <device-type-dialog title="Edit Device Type" width="600" resetOnOpen="true"
-    createLabel="Update" cancelLabel="Cancel" @payload="onCommit">
-  </device-type-dialog>
+  <device-type-dialog
+    ref="dialog"
+    title="Edit Device Type"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import DeviceTypeDialog from './DeviceTypeDialog'
+<script lang="ts">
 import {
-  _getDeviceType,
-  _updateDeviceType
-} from '../../http/sitewhere-api-wrapper'
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import DeviceTypeDialog from "./DeviceTypeDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import {
+  IDeviceType,
+  IDeviceTypeCreateRequest,
+  IDeviceTypeResponseFormat
+} from "sitewhere-rest-api";
+import {
+  getDeviceType,
+  updateDeviceType
+} from "../../rest/sitewhere-device-types-api";
 
+@Component({
   components: {
     DeviceTypeDialog
-  },
+  }
+})
+export default class DeviceTypeUpdateDialog extends EditDialogComponent<
+  IDeviceType,
+  IDeviceTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceType>;
+  }>;
 
-  props: ['token'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceType> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getDeviceType(this.$store, this.token)
-        .then(function (response) {
-          component.onLoaded(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IDeviceType> {
+    let format: IDeviceTypeResponseFormat = {
+      includeAsset: false
+    };
+    return getDeviceType(this.$store, identifier, format);
+  }
 
-    // Called after data is loaded.
-    onLoaded: function (response) {
-      this.$children[0].load(response.data)
-      this.$children[0].openDialog()
-    },
+  /** Save payload */
+  prepareSave(
+    original: IDeviceType,
+    updated: IDeviceTypeCreateRequest
+  ): AxiosPromise<IDeviceType> {
+    return updateDeviceType(this.$store, original.token, updated);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateDeviceType(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Called on payload commit */
+  onSave(payload: IDeviceTypeCreateRequest): void {
+    this.save(payload);
+  }
 
-    // Handle successful commit.
-    onCommitted: function (result) {
-      this.$children[0].closeDialog()
-      this.$emit('deviceTypeUpdated')
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceType): void {
+    this.$emit("deviceTypeUpdated", payload);
   }
 }
 </script>

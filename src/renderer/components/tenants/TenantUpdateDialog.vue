@@ -1,63 +1,73 @@
 <template>
-  <div>
-    <tenant-dialog ref="dialog" title="Edit Tenant" width="700"
-      createLabel="Update" cancelLabel="Cancel" @payload="onCommit">
-    </tenant-dialog>
-  </div>
+  <tenant-dialog
+    ref="dialog"
+    title="Edit Tenant"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import TenantDialog from './TenantDialog'
-import {_getTenant, _updateTenant} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import {
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import TenantDialog from "./TenantDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import {
+  ITenant,
+  ITenantCreateRequest,
+  ITenantResponseFormat
+} from "sitewhere-rest-api";
+import { getTenant, updateTenant } from "../../rest/sitewhere-tenants-api";
 
+@Component({
   components: {
     TenantDialog
-  },
+  }
+})
+export default class TenantUpdateDialog extends EditDialogComponent<
+  ITenant,
+  ITenantCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<ITenant>;
+  }>;
 
-  props: ['tenantToken'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<ITenant> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
-    },
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<ITenant> {
+    let format: ITenantResponseFormat = {};
+    return getTenant(this.$store, identifier, format);
+  }
 
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getTenant(this.$store, this.tenantToken)
-        .then(function (response) {
-          component.onLoaded(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Save payload */
+  prepareSave(
+    original: ITenant,
+    updated: ITenantCreateRequest
+  ): AxiosPromise<ITenant> {
+    return updateTenant(this.$store, original.token, updated);
+  }
 
-    // Called after data is loaded.
-    onLoaded: function (response) {
-      this.getDialogComponent().load(response.data)
-      this.getDialogComponent().openDialog()
-    },
+  /** Called on payload commit */
+  onSave(payload: ITenant): void {
+    this.save(payload);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateTenant(this.$store, this.tenantToken, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
-    },
-
-    // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('tenantUpdated')
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ITenant): void {
+    this.$emit("tenantUpdated", payload);
   }
 }
 </script>

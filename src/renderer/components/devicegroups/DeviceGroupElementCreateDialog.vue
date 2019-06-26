@@ -1,22 +1,25 @@
 <template>
   <div>
-    <device-group-element-dialog ref="dialog"
-      title="Create Device Group Element" width="700"
-      createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
-    </device-group-element-dialog>
+    <device-group-element-dialog
+      ref="dialog"
+      title="Create Device Group Element"
+      width="700"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></device-group-element-dialog>
   </div>
 </template>
 
 <script>
-import FloatingActionButton from "../common/FloatingActionButton";
 import DeviceGroupElementDialog from "./DeviceGroupElementDialog";
-import { _addDeviceGroupElement } from "../../http/sitewhere-api-wrapper";
+
+import { addDeviceGroupElement } from "../../rest/sitewhere-device-groups-api";
 
 export default {
   data: () => ({}),
 
   components: {
-    FloatingActionButton,
     DeviceGroupElementDialog
   },
 
@@ -37,7 +40,7 @@ export default {
     // Handle payload commit.
     onCommit: function(payload) {
       var component = this;
-      _addDeviceGroupElement(this.$store, this.token, payload)
+      addDeviceGroupElement(this.$store, this.token, payload)
         .then(function(response) {
           component.onCommitted(response);
         })

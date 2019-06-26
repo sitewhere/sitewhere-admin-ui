@@ -1,82 +1,89 @@
 <template>
-  <div>
-    <v-layout row wrap v-if="assignments">
-      <v-flex xs12>
-        <no-results-panel v-if="assignments.length === 0"
-          text="No Assignments Found for Device">
-        </no-results-panel>
-        <assignment-list-panel :assignment="assignment"
-          v-for="(assignment, index) in assignments" :key="assignment.token"
-          @assignmentOpened="onOpenAssignment(assignment.token)"
-          @refresh="refresh" class="ma-2">
-        </assignment-list-panel>
-      </v-flex>
-    </v-layout>
-    <pager :results="results" @pagingUpdated="updatePaging"></pager>
-  </div>
+  <sw-list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading device assigments..."
+  >
+    <v-container class="pa-2" fluid grid-list-md fill-height>
+      <v-layout align-content-start row wrap>
+        <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+          <assignment-list-entry
+            :assignment="assignment"
+            @assignmentOpened="onOpenAssignment(assignment)"
+            @refresh="refresh"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </sw-list-tab>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import Pager from '../common/Pager'
-import NoResultsPanel from '../common/NoResultsPanel'
-import AssignmentListPanel from '../assignments/AssignmentListPanel'
-import {_listDeviceAssignmentHistory} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
-export default {
+import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
-  data: () => ({
-    results: null,
-    paging: null,
-    assignments: null
-  }),
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { listDeviceAssignmentHistory } from "../../rest/sitewhere-devices-api";
+import {
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+} from "sitewhere-rest-api";
 
-  props: ['device'],
-
+@Component({
   components: {
-    Pager,
-    NoResultsPanel,
-    AssignmentListPanel
-  },
+    AssignmentListEntry
+  }
+})
+export default class DeviceAssignmentHistory extends ListComponent<
+  IDeviceAssignment,
+  IDeviceAssignmentSearchCriteria,
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSearchResults
+> {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly deviceToken!: string;
 
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
-    },
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
+    let criteria: IDeviceAssignmentSearchCriteria = {};
+    criteria.deviceToken = this.deviceToken;
+    return criteria;
+  }
 
-    // Refresh list of assignments.
-    refresh: function () {
-      var component = this
-      var token = this.device.token
-      var paging = this.$data.paging.query
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceAssignmentResponseFormat {
+    let format: IDeviceAssignmentResponseFormat = {};
+    format.includeDevice = true;
+    format.includeCustomer = true;
+    format.includeArea = true;
+    format.includeAsset = true;
+    return format;
+  }
 
-      // Set search options.
-      let options = {}
-      options.includeDevice = true
-      options.includeCustomer = true
-      options.includeArea = true
-      options.includeAsset = true
+  /** Perform search */
+  performSearch(
+    criteria: IDeviceAssignmentSearchCriteria,
+    format: IDeviceAssignmentResponseFormat
+  ): AxiosPromise<IDeviceAssignmentSearchResults> {
+    return listDeviceAssignmentHistory(
+      this.$store,
+      this.deviceToken,
+      criteria,
+      format
+    );
+  }
 
-      _listDeviceAssignmentHistory(this.$store, token, options, paging)
-        .then(function (response) {
-          component.results = response.data
-          component.assignments = response.data.results
-        }).catch(function (e) {
-        })
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function (pageNumber) {
-      this.$data.pager.page = pageNumber
-      this.refresh()
-    },
-
-    // Called to open detail page for assignment.
-    onOpenAssignment: function (token) {
-      Utils.routeTo(this, '/assignments/' + token)
-    }
+  /** Open device assignment detail page */
+  onOpenAssignment(assignment: IDeviceAssignment) {
+    routeTo(this, "/assignments/" + assignment.token);
   }
 }
 </script>

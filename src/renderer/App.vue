@@ -16,6 +16,5 @@ export default {
 @import "~leaflet-draw/dist/leaflet.draw.css";
 @import "~highlight.js/styles/default.css";
 @import "~flatpickr/dist/flatpickr.css";
-@import "~element-ui/packages/theme-chalk/src/tree.scss";
 @import "~material-icons/iconfont/material-icons.css";
 </style>

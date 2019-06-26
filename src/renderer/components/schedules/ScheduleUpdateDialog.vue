@@ -1,65 +1,72 @@
 <template>
   <span>
-    <schedule-dialog ref="dialog" title="Edit Schedule" width="700"
-      createLabel="Update" cancelLabel="Cancel" @payload="onCommit">
-    </schedule-dialog>
+    <schedule-dialog
+      ref="dialog"
+      title="Edit Schedule"
+      width="700"
+      createLabel="Update"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></schedule-dialog>
   </span>
 </template>
 
 <script>
-import ScheduleDialog from './ScheduleDialog'
-import {_getSchedule, _updateSchedule} from '../../http/sitewhere-api-wrapper'
+import ScheduleDialog from "./ScheduleDialog";
+
+import {
+  getSchedule,
+  updateSchedule
+} from "../../rest/sitewhere-schedules-api";
 
 export default {
-
-  data: () => ({
-  }),
+  data: () => ({}),
 
   components: {
     ScheduleDialog
   },
 
-  props: ['token'],
+  props: ["token"],
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getSchedule(this.$store, this.token)
-        .then(function (response) {
-          component.onLoaded(response)
-        }).catch(function (e) {
+    onOpenDialog: function() {
+      var component = this;
+      getSchedule(this.$store, this.token)
+        .then(function(response) {
+          component.onLoaded(response);
         })
+        .catch(function(e) {});
     },
 
     // Called after data is loaded.
-    onLoaded: function (response) {
-      this.getDialogComponent().load(response.data)
-      this.getDialogComponent().openDialog()
+    onLoaded: function(response) {
+      this.getDialogComponent().load(response.data);
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateSchedule(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
+    onCommit: function(payload) {
+      var component = this;
+      updateSchedule(this.$store, this.token, payload)
+        .then(function(response) {
+          component.onCommitted(response);
         })
+        .catch(function(e) {});
     },
 
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('edited')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("edited");
     }
   }
-}
+};
 </script>
 
 <style scoped>

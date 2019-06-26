@@ -1,59 +1,76 @@
 <template>
-  <span>
-    <command-dialog title="Edit Device Command" width="600" resetOnOpen="true"
-      createLabel="Update" cancelLabel="Cancel" :deviceType="deviceType"
-      @payload="onCommit">
-    </command-dialog>
-  </span>
+  <command-dialog
+    ref="dialog"
+    title="Edit Command"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import CommandDialog from './CommandDialog'
-import {_getDeviceCommand, _updateDeviceCommand} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import {
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import CommandDialog from "./CommandDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import {
+  IDeviceCommand,
+  IDeviceCommandCreateRequest,
+  IDeviceCommandResponseFormat
+} from "sitewhere-rest-api";
+import {
+  getDeviceCommand,
+  updateDeviceCommand
+} from "../../rest/sitewhere-device-commands-api";
 
+@Component({
   components: {
     CommandDialog
-  },
+  }
+})
+export default class CommandUpdateDialog extends EditDialogComponent<
+  IDeviceCommand,
+  IDeviceCommandCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceCommand>;
+  }>;
 
-  props: ['token', 'deviceType'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceCommand> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getDeviceCommand(this.$store, this.token)
-        .then(function (response) {
-          component.onLoaded(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IDeviceCommand> {
+    let format: IDeviceCommandResponseFormat = { includeCustomerType: true };
+    return getDeviceCommand(this.$store, identifier, format);
+  }
 
-    // Called after data is loaded.
-    onLoaded: function (response) {
-      this.$children[0].load(response.data)
-      this.$children[0].openDialog()
-    },
+  /** Save payload */
+  prepareSave(
+    original: IDeviceCommand,
+    updated: IDeviceCommandCreateRequest
+  ): AxiosPromise<IDeviceCommand> {
+    return updateDeviceCommand(this.$store, original.token, updated);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateDeviceCommand(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Called on payload commit */
+  onSave(payload: IDeviceCommandCreateRequest): void {
+    this.save(payload);
+  }
 
-    // Handle successful commit.
-    onCommitted: function (result) {
-      this.$children[0].closeDialog()
-      this.$emit('edited')
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceCommand): void {
+    this.$emit("commandUpdated", payload);
   }
 }
 </script>

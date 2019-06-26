@@ -1,217 +1,195 @@
 <template>
-  <div>
-    <navigation-page v-if="area" icon="map" :title="area.name"
-      loadingMessage="Loading area ..." :loaded="loaded">
-      <div slot="content">
-        <area-detail-header :area="area">
-        </area-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-item key="areas" href="#areas">
-              Subareas
-            </v-tabs-item>
-            <v-tabs-item key="assignments" href="#assignments">
-              Assigned Devices
-            </v-tabs-item>
-            <v-tabs-item key="locations" href="#locations">
-              Locations
-            </v-tabs-item>
-            <v-tabs-item key="measurements" href="#measurements">
-              Measurements
-            </v-tabs-item>
-            <v-tabs-item key="alerts" href="#alerts">
-              Alerts
-            </v-tabs-item>
-            <v-tabs-item key="zones" href="#zones">
-              Zones
-            </v-tabs-item>
-            <v-tabs-slider></v-tabs-slider>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="areas" id="areas">
-              <area-contained-areas ref="subareas" :area="area"></area-contained-areas>
-            </v-tabs-content>
-            <v-tabs-content key="assignments" id="assignments">
-              <area-assignments :area="area"></area-assignments>
-            </v-tabs-content>
-            <v-tabs-content key="locations" id="locations">
-              <area-location-events :area="area"></area-location-events>
-            </v-tabs-content>
-            <v-tabs-content key="measurements" id="measurements">
-              <area-measurement-events :area="area"></area-measurement-events>
-            </v-tabs-content>
-            <v-tabs-content key="alerts" id="alerts">
-              <area-alert-events :area="area"></area-alert-events>
-            </v-tabs-content>
-            <v-tabs-content key="zones" id="zones">
-              <area-zones ref="zones" :area="area"></area-zones>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-        <area-create-dialog ref="areaCreate" :parentArea="area" @areaAdded="onSubareaAdded"/>
-        <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded"/>
-      </div>
-      <div slot="actions">
-        <navigation-action-button v-if="parentArea" icon="arrow-circle-up" 
-          tooltip="Up One Level" @action="onUpOneLevel">
-        </navigation-action-button>
-        <navigation-action-button icon="map" tooltip="Add Subarea"
-          @action="onAddSubarea">
-        </navigation-action-button>
-        <navigation-action-button icon="draw-polygon" tooltip="Add Zone"
-          @action="onAddZone">
-        </navigation-action-button>
-        <navigation-action-button icon="edit" tooltip="Edit Area"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Area"
-          @action="onDelete">
-        </navigation-action-button>
-      </div>
-    </navigation-page>
-    <area-update-dialog ref="edit" :token="token" :parentArea="parentArea"
-      @areaUpdated="onAreaUpdated">
-    </area-update-dialog>
-    <area-delete-dialog ref="delete" :token="token"
-      @areaDeleted="onAreaDeleted">
-    </area-delete-dialog>
-  </div>
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading area ..."
+    :loaded="loaded"
+    :record="area"
+  >
+    <template slot="header">
+      <area-detail-header :record="area"/>
+    </template>
+    <template slot="tabs">
+      <v-tab key="areas">Subareas</v-tab>
+      <v-tab key="assignments">Assigned Devices</v-tab>
+      <v-tab key="locations">Locations</v-tab>
+      <v-tab key="measurements">Measurements</v-tab>
+      <v-tab key="alerts">Alerts</v-tab>
+      <v-tab key="zones">Zones</v-tab>
+    </template>
+    <template slot="tab-items">
+      <area-subareas tabkey="areas" ref="subareas" :areaToken="token"/>
+      <area-assignments tabkey="assignments" :areaToken="token"/>
+      <area-location-events tabkey="locations" :areaToken="token"/>
+      <area-measurement-events tabkey="measurements" :areaToken="token"/>
+      <area-alert-events tabkey="alerts" :areaToken="token"/>
+      <area-zones ref="zones" tabkey="zones" :areaToken="token"/>
+    </template>
+    <template slot="dialogs">
+      <area-update-dialog
+        ref="edit"
+        :token="token"
+        :parentArea="parentArea"
+        @areaUpdated="onAreaUpdated"
+      ></area-update-dialog>
+      <area-delete-dialog ref="delete" :token="token" @areaDeleted="onAreaDeleted"></area-delete-dialog>
+      <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded"/>
+    </template>
+    <template slot="actions">
+      <up-button v-if="parentArea" tooltip="Up One Level" @action="onUpOneLevel"/>
+      <area-button tooltip="Add Subarea" @action="onAddSubarea"/>
+      <zone-button tooltip="Add Zone" @action="onAddZone"/>
+      <edit-button tooltip="Edit Area" @action="onEdit"/>
+      <delete-button tooltip="Delete Area" @action="onDelete"/>
+    </template>
+  </sw-detail-page>
 </template>
 
-<script>
-import Utils from "../common/Utils";
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import AreaDetailHeader from "./AreaDetailHeader";
-import AreaContainedAreas from "./AreaContainedAreas";
-import AreaAssignments from "./AreaAssignments";
-import AreaLocationEvents from "./AreaLocationEvents";
-import AreaMeasurementEvents from "./AreaMeasurementEvents";
-import AreaAlertEvents from "./AreaAlertEvents";
-import AreaZones from "./AreaZones";
-import AreaCreateDialog from "./AreaCreateDialog";
-import AreaUpdateDialog from "./AreaUpdateDialog";
-import AreaDeleteDialog from "./AreaDeleteDialog";
-import ZoneCreateDialog from "./ZoneCreateDialog";
+<script lang="ts">
+import {
+  Component,
+  DetailComponent,
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
-import { _getArea } from "../../http/sitewhere-api-wrapper";
+import AreaDetailHeader from "./AreaDetailHeader.vue";
+import AreaSubareas from "./AreaSubareas.vue";
+import AreaAssignments from "./AreaAssignments.vue";
+import AreaLocationEvents from "./AreaLocationEvents.vue";
+import AreaMeasurementEvents from "./AreaMeasurementEvents.vue";
+import AreaAlertEvents from "./AreaAlertEvents.vue";
+import AreaZones from "./AreaZones.vue";
+import AreaCreateDialog from "./AreaCreateDialog.vue";
+import AreaUpdateDialog from "./AreaUpdateDialog.vue";
+import AreaDeleteDialog from "./AreaDeleteDialog.vue";
+import ZoneCreateDialog from "./ZoneCreateDialog.vue";
+import UpButton from "../common/navbuttons/UpButton.vue";
+import AreaButton from "../common/navbuttons/AreaButton.vue";
+import ZoneButton from "../common/navbuttons/ZoneButton.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-export default {
-  data: () => ({
-    token: null,
-    parentArea: null,
-    area: null,
-    active: null,
-    loaded: false
-  }),
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { getArea } from "../../rest/sitewhere-areas-api";
+import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
 
+@Component({
   components: {
-    Utils,
-    NavigationPage,
-    NavigationActionButton,
     AreaDetailHeader,
-    AreaContainedAreas,
+    AreaSubareas,
     AreaAssignments,
     AreaLocationEvents,
     AreaMeasurementEvents,
     AreaAlertEvents,
     AreaZones,
     AreaCreateDialog,
-    AreaDeleteDialog,
     AreaUpdateDialog,
-    ZoneCreateDialog
-  },
+    AreaDeleteDialog,
+    ZoneCreateDialog,
+    UpButton,
+    AreaButton,
+    ZoneButton,
+    EditButton,
+    DeleteButton
+  }
+})
+export default class AreaDetail extends DetailComponent<IArea> {
+  parentArea: IArea | null = null;
 
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
+  // References.
+  $refs!: Refs<{
+    edit: AreaUpdateDialog;
+    delete: DialogComponent<IArea>;
+  }>;
 
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
+  /** Record as area */
+  get area(): IArea | null {
+    return this.record;
+  }
 
-  methods: {
-    // Display area with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Called to refresh area data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Area;
+  }
 
-      // Load area information.
-      _getArea(this.$store, token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onAreaLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Called after ara data is loaded.
-    onAreaLoaded: function(data) {
-      this.$data.parentArea = data.parentArea;
-      this.$data.area = data;
-      var section = {
-        id: "areas",
-        title: "Areas",
-        icon: "map",
-        route: "/admin/areas/" + data.token,
-        longTitle: "Manage Area: " + data.name
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Called to open area edit dialog.
-    onEdit: function() {
-      this.$refs["edit"].onOpenDialog();
-    },
-    // Called to add a subarea.
-    onAddSubarea: function() {
-      this.$refs["areaCreate"].onOpenDialog();
-    },
-    // Called after subarea added.
-    onSubareaAdded: function() {
-      this.$data.active = "areas";
-      this.$refs["subareas"].refresh();
-    },
-    // Called to add a zone.
-    onAddZone: function() {
-      this.$refs["zoneCreate"].onOpenDialog();
-    },
-    // Called after zone added.
-    onZoneAdded: function() {
-      this.$data.active = "zones";
-      this.$refs["zones"].refresh();
-    },
-    // Called when area is updated.
-    onAreaUpdated: function() {
-      this.refresh();
-    },
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called when area is deleted.
-    onAreaDeleted: function() {
-      Utils.routeTo(this, "/areas");
-    },
-    // Move up one level in the area hierarchy.
-    onUpOneLevel: function() {
-      Utils.routeTo(this, "/areas/" + this.parentArea.token);
-    },
-    // Called when a zone is added.
-    onZoneAdded: function() {
-      this.refresh();
+  /** Get page title */
+  get title(): string {
+    return this.area ? this.area.name : "";
+  }
+
+  /** Load record */
+  loadRecord(token: string): AxiosPromise<IArea> {
+    let format: IAreaResponseFormat = {
+      includeAreaType: true
+    };
+    return getArea(this.$store, token, format);
+  }
+
+  // Called after data is loaded.
+  afterRecordLoaded(area: IArea) {
+    this.parentArea = (area as any).parentArea;
+    var section: INavigationSection = {
+      id: "areas",
+      title: "Areas",
+      icon: NavigationIcon.Area,
+      route: "/admin/areas/" + area.token,
+      longTitle: "Manage Area: " + area.name
+    };
+    this.$store.commit("currentSection", section);
+  }
+
+  // Called to open area edit dialog.
+  onEdit() {
+    if (this.token) {
+      this.$refs.edit.open(this.token);
     }
   }
-};
-</script>
 
-<style scoped>
-</style>
+  // Called to add a subarea.
+  onAddSubarea() {
+    (this.$refs["areaCreate"] as any).onOpenDialog();
+  }
+  // Called after subarea added.
+  onSubareaAdded() {
+    this.$data.active = "areas";
+    (this.$refs["subareas"] as any).refresh();
+  }
+
+  // Called to add a zone.
+  onAddZone() {
+    (this.$refs["zoneCreate"] as any).onOpenDialog();
+  }
+
+  // Called after zone added.
+  onZoneAdded() {
+    this.$data.active = "zones";
+    (this.$refs["zones"] as any).refresh();
+    this.refresh();
+  }
+
+  // Called when area is updated.
+  onAreaUpdated() {
+    this.refresh();
+  }
+
+  onDelete() {
+    (this.$refs["delete"] as any).showDeleteDialog();
+  }
+
+  // Called when area is deleted.
+  onAreaDeleted() {
+    routeTo(this, "/areas");
+  }
+
+  // Move up one level in the area hierarchy.
+  onUpOneLevel() {
+    if (this.parentArea) {
+      routeTo(this, "/areas/" + this.parentArea.token);
+    }
+  }
+}
+</script>

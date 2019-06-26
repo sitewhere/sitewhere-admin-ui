@@ -1,96 +1,84 @@
 <template>
-  <base-dialog title="Tenant Engine Runtime State" width="600"
-    :visible="dialogVisible" :hideCreate="true" cancelLabel="Close"
-    :error="error" @cancelClicked="onCancelClicked">
-    <v-tabs v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-item key="components" href="#components">
-          Components
-        </v-tabs-item>
-        <v-tabs-slider></v-tabs-slider>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <v-tabs-content key="components" id="components">
-          <v-card flat>
-            <v-card-text>
-              <el-tree class="component-tree" ref="tree" default-expand-all
-                node-key="componentId" :data="treeData" :props="treeProps"
-                :expand-on-click-node="false" @node-click="handleNodeClick">
-                <span slot-scope="{ node, data }">
-                  <component-status-icon class="mr-1" :status="data.status">
-                  </component-status-icon>
-                  <span>
-                    {{ data.componentName }} ({{ data.status }})
-                  </span>
-                </span>
-              </el-tree>
-            </v-card-text>
-          </v-card>
-          <v-card class="ma-3" v-if="errorItemSelected" raised>
-            <v-card-text>
-              <div v-for="message in selected.errorStack" :key="message">
-                {{ message }}
-              </div>
-            </v-card-text>
-          </v-card>
-          <v-card class="ma-3" v-else raised>
-            <v-card-text>
-              Click components with errors to display details here...
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-      </v-tabs-items>
-    </v-tabs>
-  </base-dialog>
+  <sw-base-dialog
+    ref="dialog"
+    :icon="icon"
+    title="Tenant Engine Runtime State"
+    width="600"
+    :loaded="loaded"
+    :visible="dialogVisible"
+    :hideCreate="true"
+    cancelLabel="Close"
+    @cancelClicked="onCancelClicked"
+  >
+    <template slot="tabs">
+      <v-tab key="components">Components</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="components">
+        <v-card flat>
+          <v-card-text>
+            <v-treeview
+              ref="tree"
+              selectable
+              :items="treeData"
+              item-children="childComponentStates"
+              item-key="componentId"
+              item-text="componentName"
+              v-model="items"
+            />
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
+    </template>
+  </sw-base-dialog>
 </template>
 
-<script>
-import BaseDialog from '../common/BaseDialog'
-import ComponentStatusIcon from './ComponentStatusIcon'
+<script lang="ts">
+import { Component, Prop, DialogComponent } from "sitewhere-ide-common";
+import { NavigationIcon } from "../../libraries/constants";
 
-export default {
+import ComponentStatusIcon from "./ComponentStatusIcon.vue";
+import { ITenant, ITenantEngineState } from "sitewhere-rest-api";
+import { ILifecycleComponentState } from "../../../../../sitewhere-rest-api/src";
 
-  data: () => ({
-    active: null,
-    menu: null,
-    selected: null,
-    treeProps: {
-      children: 'childComponentStates',
-      label: 'componentName'
-    },
-    error: null
-  }),
-
+@Component({
   components: {
-    BaseDialog,
     ComponentStatusIcon
-  },
+  }
+})
+export default class TenantEngineComponentsDialog extends DialogComponent<
+  ITenant
+> {
+  @Prop() readonly tenantState!: ITenantEngineState;
 
-  props: ['tenantState', 'dialogVisible'],
+  items: string[] = [];
+  selected: ILifecycleComponentState | null = null;
 
-  computed: {
-    treeData: function () {
-      return [this.tenantState.componentState]
-    },
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Tenant;
+  }
 
-    errorItemSelected: function () {
-      let selected = this.$data.selected
-      if (selected && (selected.status === 'LifecycleError')) {
-        return true
-      }
-      return false
+  /** Points to root of component state hierarchy */
+  get treeData(): ILifecycleComponentState[] {
+    return this.tenantState.childComponentStates;
+  }
+
+  get errorItemSelected() {
+    let selected = this.$data.selected;
+    if (selected && selected.status === "LifecycleError") {
+      return true;
     }
-  },
+    return false;
+  }
 
-  methods: {
-    onCancelClicked: function () {
-      this.$emit('closeClicked')
-    },
+  onCancelClicked() {
+    this.$emit("closeClicked");
+  }
 
-    /** Handle tree node clicked */
-    handleNodeClick: function (node) {
-      this.$data.selected = node
-    }
+  /** Handle tree node clicked */
+  handleNodeClick(state: ILifecycleComponentState) {
+    this.selected = state;
   }
 }
 </script>

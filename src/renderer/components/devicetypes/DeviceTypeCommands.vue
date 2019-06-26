@@ -1,67 +1,90 @@
 <template>
-  <div>
-    <v-layout row wrap v-if="namespaces">
-      <v-flex xs12>
-        <no-results-panel v-if="namespaces.length === 0"
-          text="No Commands Found for Device Specification">
-        </no-results-panel>
-        <div v-if="namespaces.length > 0">
-          <namespace-panel :namespace="namespace" :deviceType="deviceType"
-            @commandDeleted="onCommandDeleted" @commandUpdated="onCommandUpdated"
-            v-for="namespace in namespaces" :key="namespace.value">
-          </namespace-panel>
-        </div>
+  <sw-list-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading device commands..."
+    :results="results"
+  >
+    <sw-list-layout>
+      <v-flex xs12 v-for="command in matches" :key="command.token">
+        <command-panel :command="command" @delete="onDeleteCommand" @edit="onEditCommand"/>
       </v-flex>
-    </v-layout>
-  </div>
+    </sw-list-layout>
+    <template slot="dialogs">
+      <command-update-dialog ref="edit" @commandUpdated="refresh"/>
+    </template>
+  </sw-list-tab>
 </template>
 
-<script>
-import NoResultsPanel from '../common/NoResultsPanel'
-import NamespacePanel from '../commands/NamespacePanel'
-import {_listDeviceCommandsByNamespace} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
 
-export default {
+import NoResultsPanel from "../common/NoResultsPanel.vue";
+import CommandPanel from "../commands/CommandPanel.vue";
+import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
 
-  data: () => ({
-    namespaces: null
-  }),
+import { AxiosPromise } from "axios";
+import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
+import {
+  IDeviceCommand,
+  IDeviceCommandSearchCriteria,
+  IDeviceCommandResponseFormat,
+  IDeviceCommandSearchResults
+} from "sitewhere-rest-api";
 
-  props: ['deviceType'],
-
+@Component({
   components: {
     NoResultsPanel,
-    NamespacePanel
-  },
-
-  created: function () {
-    this.refresh()
-  },
-
-  methods: {
-    // Refresh list of assignments.
-    refresh: function () {
-      var component = this
-      let options = {
-        deviceTypeToken: this.deviceType.token
-      }
-      _listDeviceCommandsByNamespace(this.$store, options)
-        .then(function (response) {
-          component.namespaces = response.data.results
-        }).catch(function (e) {
-        })
-    },
-
-    // Called after a command has been deleted.
-    onCommandDeleted: function () {
-      this.refresh()
-    },
-
-    // Called after a command has been updated.
-    onCommandUpdated: function () {
-      this.refresh()
-    }
+    CommandPanel,
+    CommandUpdateDialog
   }
+})
+export default class DeviceTypeCommands extends ListComponent<
+  IDeviceCommand,
+  IDeviceCommandSearchCriteria,
+  IDeviceCommandResponseFormat,
+  IDeviceCommandSearchResults
+> {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly deviceTypeToken!: string;
+
+  // References.
+  $refs!: Refs<{
+    edit: CommandUpdateDialog;
+  }>;
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDeviceCommandSearchCriteria {
+    let criteria: IDeviceCommandSearchCriteria = {};
+    criteria.deviceTypeToken = this.deviceTypeToken;
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceCommandResponseFormat {
+    let format: IDeviceCommandResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    criteria: IDeviceCommandSearchCriteria,
+    format: IDeviceCommandResponseFormat
+  ): AxiosPromise<IDeviceCommandSearchResults> {
+    return listDeviceCommands(this.$store, criteria, format);
+  }
+
+  /** Edit an existing command */
+  onEditCommand(command: IDeviceCommand) {
+    console.log("Edit command");
+    this.$refs.edit.open(command.token);
+  }
+
+  /** Delete an existing command */
+  onDeleteCommand(command: IDeviceCommand) {}
 }
 </script>
 

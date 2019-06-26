@@ -1,108 +1,114 @@
 <template>
-  <navigation-page icon="car" title="Assets"
-    loadingMessage="Loading assets ..." :loaded="loaded">
-    <div v-if="assets" slot="content">
-      <v-container fluid grid-list-md style="background-color: #f5f5f5;">
-        <v-layout row wrap>
-           <v-flex xs6 v-for="(asset) in assets" :key="asset.token">
-            <asset-list-entry :asset="asset" @assetOpened="onOpenAsset">
-            </asset-list-entry>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <pager :results="results" :pageSizes="pageSizes"
-        @pagingUpdated="updatePaging">
-      </pager>
-      <asset-create-dialog ref="add" @assetAdded="onAssetAdded"/>
-    </div>
-    <div slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Asset"
-        @action="onAddAsset">
-      </navigation-action-button>
-    </div>
-  </navigation-page>
+  <sw-list-page
+    :icon="icon"
+    title="Assets"
+    loadingMessage="Loading assets ..."
+    :loaded="loaded"
+    :results="results"
+    :pageSizes="pageSizes"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <sw-list-layout>
+      <v-flex xs6 v-for="(asset) in matches" :key="asset.token">
+        <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
+      </v-flex>
+    </sw-list-layout>
+    <template slot="dialogs">
+      <asset-create-dialog ref="add" @assetAdded="refresh"/>
+    </template>
+    <template slot="actions">
+      <sw-navigation-action-button icon="plus" tooltip="Add Asset" @action="onAddAsset"/>
+    </template>
+  </sw-list-page>
 </template>
 
-<script>
-import Utils from "../common/Utils";
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import AssetListEntry from "./AssetListEntry";
-import AssetCreateDialog from "./AssetCreateDialog";
-import { _listAssets } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  ListComponent,
+  IPageSizes,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    assets: [],
-    pageSizes: [
-      {
-        text: "20",
-        value: 20
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ],
-    loaded: false
-  }),
+import AssetListEntry from "./AssetListEntry.vue";
+import AssetCreateDialog from "./AssetCreateDialog.vue";
 
+import { NavigationIcon } from "../../libraries/constants";
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { listAssets } from "../../rest/sitewhere-assets-api";
+import {
+  IAsset,
+  IAssetSearchCriteria,
+  IAssetResponseFormat,
+  IAssetSearchResults
+} from "sitewhere-rest-api";
+
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
     AssetListEntry,
     AssetCreateDialog
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
-    },
-
-    // Refresh data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var paging = this.$data.paging.query;
-      var component = this;
-      var options = {};
-      _listAssets(this.$store, options, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.$data.assets = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called on open.
-    onOpenAsset: function(asset) {
-      Utils.routeTo(this, "/assets/" + asset.token);
-    },
-
-    // Called to open dialog.
-    onAddAsset: function() {
-      this.$refs.add.onOpenDialog();
-    },
-
-    // Called on add.
-    onAssetAdded: function() {
-      this.refresh();
-    }
   }
-};
-</script>
+})
+export default class AssetsList extends ListComponent<
+  IAsset,
+  IAssetSearchCriteria,
+  IAssetResponseFormat,
+  IAssetSearchResults
+> {
+  $refs!: Refs<{
+    add: AssetCreateDialog;
+  }>;
 
-<style scoped>
-</style>
+  pageSizes: IPageSizes = [
+    {
+      text: "20",
+      value: 20
+    },
+    {
+      text: "50",
+      value: 50
+    },
+    {
+      text: "100",
+      value: 100
+    }
+  ];
+
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Asset;
+  }
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IAssetSearchCriteria {
+    let criteria: IAssetSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IAssetResponseFormat {
+    let format: IAssetResponseFormat = {};
+    format.includeAssetType = true;
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    criteria: IAssetSearchCriteria,
+    format: IAssetResponseFormat
+  ): AxiosPromise<IAssetSearchResults> {
+    return listAssets(this.$store, criteria, format);
+  }
+
+  // Called on open.
+  onOpenAsset(asset: IAsset) {
+    routeTo(this, "/assets/" + asset.token);
+  }
+
+  // Called to open dialog.
+  onAddAsset() {
+    this.$refs.add.open();
+  }
+}
+</script>

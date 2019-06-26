@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover color="white">
+  <sw-list-entry>
     <v-container @click="onCustomerTypeClicked">
       <v-layout row>
         <v-flex xs2>
@@ -15,28 +15,24 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-card>
+  </sw-list-entry>
 </template>
 
-<script>
-import Utils from "../common/Utils";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import { ICustomerType } from "sitewhere-rest-api";
 
-  components: {
-    Utils
-  },
+@Component({})
+export default class DeviceTypeSelector extends Vue {
+  @Prop() readonly customerType!: ICustomerType;
 
-  props: ["customerType", "customerTypes"],
-
-  methods: {
-    // Callen when card is clicked.
-    onCustomerTypeClicked: function() {
-      Utils.routeTo(this, "/customertypes/" + this.customerType.token);
-    }
+  // Handle customer type clicked.
+  onCustomerTypeClicked() {
+    this.$emit("openCustomerType", this.customerType);
   }
-};
+}
 </script>
 
 <style scoped>

@@ -1,64 +1,64 @@
 <template>
-  <navigation-header-panel v-if="group" :imageUrl="group.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="200px">
-    <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="group.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
-        <span>{{ group.name }}</span>
-      </header-field>
-      <header-field label="Description">
-        <span>{{ group.description }}</span>
-      </header-field>
-      <header-field label="Image URL">
-        <span>{{ group.imageUrl }}</span>
-      </header-field>
-      <header-field label="Roles">
-        <span>{{ rolesView }}</span>
-      </header-field>
-    </span>
-  </navigation-header-panel>
+  <sw-navigation-header-panel v-if="deviceGroup" :imageUrl="imageUrl" height="200px">
+    <template slot="content">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="deviceGroup.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-header-field label="Name">
+        <span>{{ deviceGroup.name }}</span>
+      </sw-header-field>
+      <sw-header-field label="Description">
+        <span>{{ deviceGroup.description }}</span>
+      </sw-header-field>
+      <sw-header-field label="Image URL">
+        <span>{{ deviceGroup.imageUrl }}</span>
+      </sw-header-field>
+      <sw-header-field label="Roles">
+        <span>{{ rolesList }}</span>
+      </sw-header-field>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import ClipboardCopyField from '../common/ClipboardCopyField'
-import HeaderField from '../common/HeaderField'
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { IDeviceGroup } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-export default {
-
-  data: function () {
-    return {
-    }
-  },
-
+@Component({
   components: {
-    NavigationHeaderPanel,
-    ClipboardCopyField,
-    HeaderField
-  },
+    AuthenticatedImage
+  }
+})
+export default class DeviceDetailHeader extends HeaderComponent<IDeviceGroup> {
+  // Reference record as device group.
+  get deviceGroup(): IDeviceGroup {
+    return this.record;
+  }
 
-  props: ['group'],
+  // Get token.
+  get token(): string {
+    return this.deviceGroup ? this.deviceGroup.token : "";
+  }
 
-  computed: {
-    rolesView: function () {
-      return this.group.roles.join(', ')
-    },
-    // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'devicegroups/' + this.group.token + '/label/qrcode'
-    }
-  },
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.deviceGroup ? this.deviceGroup.imageUrl : "";
+  }
 
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
-    }
+  // Get URL for QR code.
+  get qrCodeUrl(): string {
+    return this.deviceGroup
+      ? "devicegroups/" + this.token + "/label/qrcode"
+      : "";
+  }
+
+  // Get list of roles for group.
+  get rolesList(): string {
+    return this.deviceGroup ? this.deviceGroup.roles.join(", ") : "";
   }
 }
 </script>

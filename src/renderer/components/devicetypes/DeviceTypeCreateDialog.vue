@@ -1,60 +1,64 @@
 <template>
-  <div>
-    <device-type-dialog ref="dialog" title="Create Device Type"
-      width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </device-type-dialog>
-  </div>
+  <device-type-dialog
+    ref="dialog"
+    title="Create Device Type"
+    width="600"
+    resetOnOpen="true"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import DeviceTypeDialog from "./DeviceTypeDialog";
-import { _createDeviceType } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import DeviceTypeDialog from "./DeviceTypeDialog.vue";
 
+import { AxiosPromise } from "axios";
+import { IDeviceType, IDeviceTypeCreateRequest } from "sitewhere-rest-api";
+import { createDeviceType } from "../../rest/sitewhere-device-types-api";
+
+@Component({
   components: {
-    FloatingActionButton,
     DeviceTypeDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      _createDeviceType(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("deviceTypeAdded");
-    }
   }
-};
+})
+export default class DeviceTypeCreateDialog extends CreateDialogComponent<
+  IDeviceType,
+  IDeviceTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceType>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceType> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceTypeCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IDeviceTypeCreateRequest): AxiosPromise<IDeviceType> {
+    return createDeviceType(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceType): void {
+    this.$emit("deviceTypeAdded", payload);
+  }
+}
 </script>
 
 <style scoped>
-.add-button {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-}
 </style>

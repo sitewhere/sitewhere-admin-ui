@@ -1,65 +1,58 @@
 <template>
-  <navigation-header-panel v-if="deviceType" :imageUrl="deviceType.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="220px">
-    <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="deviceType.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
+  <sw-navigation-header-panel v-if="deviceType" :imageUrl="imageUrl" height="220px">
+    <template slot="content">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="deviceType.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-header-field label="Name">
         <span>{{ deviceType.name }}</span>
-      </header-field>
-      <header-field label="Description">
+      </sw-header-field>
+      <sw-header-field label="Description">
         <span>{{ deviceType.description }}</span>
-      </header-field>
-      <header-field label="Image URL">
+      </sw-header-field>
+      <sw-header-field label="Image URL">
         <span>{{ deviceType.imageUrl }}</span>
-      </header-field>
-      <header-field label="Container Policy">
+      </sw-header-field>
+      <sw-header-field label="Container Policy">
         <span>{{ deviceType.containerPolicy }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(deviceType.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(deviceType.updatedDate) }}</span>
-      </header-field>
-    </span>
-  </navigation-header-panel>
+      </sw-header-field>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { IDeviceType } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-export default {
-
-  data: () => ({
-  }),
-
-  props: ['deviceType'],
-
+@Component({
   components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    ClipboardCopyField
-  },
+    AuthenticatedImage
+  }
+})
+export default class DeviceDetailHeader extends HeaderComponent<IDeviceType> {
+  // Reference record as device type.
+  get deviceType(): IDeviceType {
+    return this.record;
+  }
 
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'devicetypes/' + this.deviceType.token + '/label/qrcode'
-    }
-  },
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.deviceType ? this.deviceType.imageUrl : "";
+  }
 
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
-    }
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "devicetypes/" + this.deviceType.token + "/label/qrcode";
   }
 }
 </script>

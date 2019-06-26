@@ -1,67 +1,68 @@
 <template>
-  <navigation-header-panel v-if="area" :imageUrl="area.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="200px">
-    <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="area.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
-      </header-field>
-      <linked-header-field label="Area Type" :text="area.areaType.name"
-        :url="'/areatypes/' + area.areaType.token">
-      </linked-header-field>
-      <header-field label="Name">
+  <sw-navigation-header-panel v-if="area" :imageUrl="imageUrl" height="200px">
+    <template slot="content">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="area.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-linked-header-field
+        label="Area Type"
+        :text="area.areaType.name"
+        :url="'/areatypes/' + area.areaType.token"
+      />
+      <sw-header-field label="Name">
         <span>{{ area.name }}</span>
-      </header-field>
-      <header-field label="Description">
+      </sw-header-field>
+      <sw-header-field label="Description">
         <span>{{ area.description }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(area.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(area.updatedDate) }}</span>
-      </header-field>
-    </span>
-  </navigation-header-panel>
+      </sw-header-field>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import LinkedHeaderField from '../common/LinkedHeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
 
-export default {
+import { formatDate } from "../common/Utils";
+import { IArea } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-  data: () => ({
-  }),
-
-  props: ['area'],
-
+@Component({
   components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    LinkedHeaderField,
-    ClipboardCopyField
-  },
+    AuthenticatedImage
+  }
+})
+export default class AreaDetailHeader extends HeaderComponent<IArea> {
+  // Reference record as area.
+  get area(): IArea {
+    return this.record;
+  }
 
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'areas/' + this.area.token + '/label/qrcode'
-    }
-  },
+  // Token.
+  get token(): string {
+    return this.area ? this.area.token : "";
+  }
 
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
-    }
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.area ? this.area.imageUrl : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "areas/" + this.token + "/label/qrcode";
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date);
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -1,53 +1,62 @@
 <template>
-  <div>
-    <user-dialog ref="dialog" title="Create User"
-      width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </user-dialog>
-  </div>
+  <user-dialog
+    ref="dialog"
+    title="Create User"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import UserDialog from "./UserDialog";
-import { _createUser } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import UserDialog from "./UserDialog.vue";
 
+import { AxiosPromise } from "axios";
+import { IUser, IUserCreateRequest } from "sitewhere-rest-api";
+import { createUser } from "../../rest/sitewhere-users-api";
+
+@Component({
   components: {
     UserDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      console.log(payload);
-      var component = this;
-      _createUser(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("userAdded");
-    }
   }
-};
+})
+export default class UserCreateDialog extends CreateDialogComponent<
+  IUser,
+  IUserCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IUser>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IUser> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IUserCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IUserCreateRequest): AxiosPromise<IUser> {
+    return createUser(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IUser): void {
+    this.$emit("userAdded", payload);
+  }
+}
 </script>
 
 <style scoped>

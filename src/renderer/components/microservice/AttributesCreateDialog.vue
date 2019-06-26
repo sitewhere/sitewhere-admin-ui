@@ -1,52 +1,77 @@
 <template>
-  <attributes-dialog ref="dialog" :title="componentName"
-    width="600" createLabel="Create" cancelLabel="Cancel"
-    @payload="onCommit" :context="context" :groups="groups"
-    :identifier="identifier" :tenantToken="tenantToken">
-  </attributes-dialog>
+  <attributes-dialog
+    ref="dialog"
+    :title="componentName"
+    width="900"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    :context="context"
+    :groups="groups"
+    :identifier="identifier"
+    :tenantToken="tenantToken"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import AttributesDialog from './AttributesDialog'
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import {
+  IConfiguredAttributeGroup,
+  IConfigurationContext,
+  AttributeValues
+} from "./ConfigurationModel";
 
-  data: () => ({
-  }),
+import AttributesDialog from "./AttributesDialog.vue";
 
+@Component({
   components: {
     AttributesDialog
-  },
+  }
+})
+export default class AttributesCreateDialog extends CreateDialogComponent<
+  AttributeValues,
+  AttributeValues
+> {
+  @Prop() readonly context!: IConfigurationContext;
+  @Prop({ default: [] }) readonly groups!: IConfiguredAttributeGroup[];
+  @Prop() readonly identifier!: string;
+  @Prop() readonly tenantToken!: string;
 
-  props: ['context', 'groups', 'identifier', 'tenantToken'],
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<any>;
+  }>;
 
-  computed: {
-    componentName: function () {
-      return (this.context)
-        ? 'Create New ' + this.context.model.name : 'Create New Component'
-    }
-  },
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<any> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
-    },
+  /** Component name shown in title */
+  get componentName() {
+    return this.context ? this.context.model.name : "Component";
+  }
 
-    // Response to open dialog request.
-    onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
-    },
+  /** Called on payload commit */
+  onCommit(payload: AttributeValues): void {
+    this.commit(payload);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('componentAdded', payload)
-    }
+  /** Implemented in subclasses to save payload */
+  save(payload: AttributeValues): AttributeValues {
+    return payload;
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: AttributeValues): void {
+    this.$emit("attributesSaved", payload);
   }
 }
 </script>
-
-<style scoped>
-</style>

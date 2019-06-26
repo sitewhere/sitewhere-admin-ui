@@ -1,24 +1,30 @@
 <template>
   <span>
-    <scripts-dialog ref="dialog" title="Create Script" width="600" resetOnOpen="true"
-      :identifier="identifier" createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
-    </scripts-dialog>
+    <scripts-dialog
+      ref="dialog"
+      title="Create Script"
+      width="600"
+      resetOnOpen="true"
+      :identifier="identifier"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></scripts-dialog>
   </span>
 </template>
 
 <script>
-import ScriptsDialog from './ScriptsDialog'
+import ScriptsDialog from "./ScriptsDialog";
+
 import {
-  _createGlobalScript,
-  _createTenantScript
-} from '../../http/sitewhere-api-wrapper'
+  createGlobalScript,
+  createTenantScript
+} from "../../rest/sitewhere-scripting-api";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['identifier', 'tenantToken'],
+  props: ["identifier", "tenantToken"],
 
   components: {
     ScriptsDialog
@@ -26,41 +32,46 @@ export default {
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
+    onOpenDialog: function() {
+      this.getDialogComponent().reset();
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
+    onCommit: function(payload) {
+      var component = this;
       if (!this.tenantToken) {
-        _createGlobalScript(this.$store, this.identifier, payload)
-          .then(function (response) {
-            component.onCommitted(payload, response)
-          }).catch(function (e) {
+        createGlobalScript(this.$store, this.identifier, payload)
+          .then(function(response) {
+            component.onCommitted(payload, response);
           })
+          .catch(function(e) {});
       } else {
-        _createTenantScript(this.$store, this.identifier, this.tenantToken, payload)
-          .then(function (response) {
-            component.onCommitted(payload, response)
-          }).catch(function (e) {
+        createTenantScript(
+          this.$store,
+          this.identifier,
+          this.tenantToken,
+          payload
+        )
+          .then(function(response) {
+            component.onCommitted(payload, response);
           })
+          .catch(function(e) {});
       }
     },
 
     // Handle successful commit.
-    onCommitted: function (payload, response) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('scriptAdded', payload.id)
+    onCommitted: function(payload, response) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("scriptAdded", payload.id);
     }
   }
-}
+};
 </script>
 
 <style scoped>

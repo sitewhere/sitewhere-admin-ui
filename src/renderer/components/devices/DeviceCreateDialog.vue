@@ -1,59 +1,63 @@
 <template>
-  <div>
-    <device-dialog ref="dialog" title="Create Device" width="700" createLabel="Create"
-      cancelLabel="Cancel" @payload="onCommit">
-    </device-dialog>
-  </div>
+  <device-dialog
+    ref="dialog"
+    title="Create Device"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import DeviceDialog from "./DeviceDialog";
-import { _createDevice } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import DeviceDialog from "./DeviceDialog.vue";
 
+import { AxiosPromise } from "axios";
+import { IDevice, IDeviceCreateRequest } from "sitewhere-rest-api";
+import { createDevice } from "../../rest/sitewhere-devices-api";
+
+@Component({
   components: {
-    FloatingActionButton,
     DeviceDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      _createDevice(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("deviceAdded");
-    }
   }
-};
+})
+export default class DeviceCreateDialog extends CreateDialogComponent<
+  IDevice,
+  IDeviceCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDevice>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDevice> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IDeviceCreateRequest): AxiosPromise<IDevice> {
+    return createDevice(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDevice): void {
+    this.$emit("deviceAdded", payload);
+  }
+}
 </script>
 
 <style scoped>
-.add-button {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-}
 </style>

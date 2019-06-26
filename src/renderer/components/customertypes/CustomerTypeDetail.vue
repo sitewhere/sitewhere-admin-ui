@@ -1,195 +1,138 @@
 <template>
-  <div>
-    <navigation-page v-if="customerType" icon="cog"
-      :title="customerType.name" loadingMessage="Loading customer type ..."
-      :loaded="loaded">
-      <div v-if="customerType" slot="content">
-        <customer-type-detail-header :customerType="customerType"
-          :customerTypes="customerTypes"
-          @customerTypeDeleted="onCustomerTypeDeleted"
-          @customerTypeUpdated="onCustomerTypeUpdated">
-        </customer-type-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-item key="instances" href="#instances">
-              Customers of Type
-            </v-tabs-item>
-            <v-tabs-slider></v-tabs-slider>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="instances" id="instances">
-              <v-container fluid grid-list-md v-if="customers">
-                <v-layout row wrap>
-                  <v-flex xs6 v-for="(customer) in customers"
-                    :key="customer.token">
-                    <customer-list-entry :customer="customer"
-                      @openCustomer="onOpenCustomer">
-                    </customer-list-entry>
-                 </v-flex>
-                </v-layout>
-              </v-container>
-              <pager :results="results" @pagingUpdated="updatePaging">
-                <no-results-panel slot="noresults"
-                  text="No Customers of This Type Found">
-                </no-results-panel>
-              </pager>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Customer Type"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Customer Type"
-          @action="onDelete">
-        </navigation-action-button>
-      </div>
-    </navigation-page>
-    <customer-type-update-dialog ref="edit" :token="token"
-      :customerTypes="customerTypes"
-      @customerTypeUpdated="onCustomerTypeUpdated">
-    </customer-type-update-dialog>
-    <customer-type-delete-dialog ref="delete" :token="token"
-      @customerTypeDeleted="onCustomerTypeDeleted">
-    </customer-type-delete-dialog>
-  </div>
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading customer type ..."
+    :loaded="loaded"
+    :record="customerType"
+  >
+    <template slot="header">
+      <customer-type-detail-header
+        :record="customerType"
+        @customerTypeDeleted="onCustomerTypeDeleted"
+        @customerTypeUpdated="onCustomerTypeUpdated"
+      />
+    </template>
+    <template slot="tabs">
+      <v-tab key="instances">Customers of Type</v-tab>
+    </template>
+    <template slot="tab-items">
+      <customer-type-customers key="instances" :customerTypeToken="token"/>
+    </template>
+    <template slot="dialogs">
+      <customer-type-update-dialog
+        ref="edit"
+        :token="token"
+        @customerTypeUpdated="onCustomerTypeUpdated"
+      />
+      <customer-type-delete-dialog
+        ref="delete"
+        :token="token"
+        @customerTypeDeleted="onCustomerTypeDeleted"
+      />
+    </template>
+    <template slot="actions">
+      <edit-button tooltip="Edit Customer Type" @action="onEdit"/>
+      <delete-button tooltip="Delete Customer Type" @action="onDelete"/>
+    </template>
+  </sw-detail-page>
 </template>
 
-<script>
-import Utils from "../common/Utils";
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader";
-import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog";
-import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog";
-import CustomerListEntry from "../customers/CustomerListEntry";
+<script lang="ts">
 import {
-  _getCustomerType,
-  _listCustomerTypes,
-  _listCustomers
-} from "../../http/sitewhere-api-wrapper";
+  Component,
+  DetailComponent,
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    token: null,
-    customerType: null,
-    customerTypes: [],
-    results: null,
-    customers: [],
-    paging: null,
-    active: null,
-    loaded: false
-  }),
+import NoResultsPanel from "../common/NoResultsPanel.vue";
+import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader.vue";
+import CustomerTypeCustomers from "./CustomerTypeCustomers.vue";
+import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog.vue";
+import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog.vue";
+import CustomerListEntry from "../customers/CustomerListEntry.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
+import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
+
+@Component({
   components: {
-    Pager,
     NoResultsPanel,
-    NavigationPage,
-    NavigationActionButton,
     CustomerTypeDetailHeader,
+    CustomerTypeCustomers,
     CustomerListEntry,
     CustomerTypeDeleteDialog,
-    CustomerTypeUpdateDialog
-  },
+    CustomerTypeUpdateDialog,
+    EditButton,
+    DeleteButton
+  }
+})
+export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
+  // References.
+  $refs!: Refs<{
+    edit: CustomerTypeUpdateDialog;
+    delete: DialogComponent<ICustomerType>;
+  }>;
 
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
+  get customerType(): ICustomerType | null {
+    return this.record;
+  }
 
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.CustomerType;
+  }
 
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refreshCustomers();
-    },
-    // Display area with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Called to refresh area data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
+  get title(): string {
+    return this.customerType ? this.customerType.name : "";
+  }
 
-      // Load customer type information.
-      _getCustomerType(this.$store, token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onDataLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-      _listCustomerTypes(this.$store, false, "page=1&pageSize=0")
-        .then(function(response) {
-          component.$data.customerTypes = response.data.results;
-        })
-        .catch(function(e) {});
+  /** Load record */
+  loadRecord(token: string): AxiosPromise<ICustomerType> {
+    let format: ICustomerTypeResponseFormat = {};
+    return getCustomerType(this.$store, token, format);
+  }
 
-      this.refreshCustomers();
-    },
-    refreshCustomers: function() {
-      var component = this;
+  // Called after data is loaded.
+  afterRecordLoaded(customerType: ICustomerType) {
+    var section: INavigationSection = {
+      id: "customertypes",
+      title: "Customer Types",
+      icon: "cog",
+      route: "/admin/customertypes/" + customerType.token,
+      longTitle: "Manage Customer Type: " + customerType.name
+    };
+    this.$store.commit("currentSection", section);
+  }
 
-      // Search options.
-      let options = {};
-      options.rootOnly = false;
-      options.customerTypeToken = this.$data.token;
-      options.includeCustomerType = false;
-      options.includeAssignments = false;
-
-      _listCustomers(this.$store, options, this.$data.paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.customers = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-    // Called after data is loaded.
-    onDataLoaded: function(customerType) {
-      this.$data.customerType = customerType;
-      var section = {
-        id: "customertypes",
-        title: "Customer Types",
-        icon: "cog",
-        route: "/admin/customertypes/" + customerType.token,
-        longTitle: "Manage Customer Type: " + customerType.name
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Called to open customer type edit dialog.
-    onEdit: function() {
-      this.$refs["edit"].onOpenDialog();
-    },
-    // Called when customer type is updated.
-    onCustomerTypeUpdated: function() {
-      this.refresh();
-    },
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called when customer type is deleted.
-    onCustomerTypeDeleted: function() {
-      Utils.routeTo(this, "/customertypes");
-    },
-    // Called to open a customer.
-    onOpenCustomer: function(customer) {
-      Utils.routeTo(this, "/customers/" + customer.token);
+  // Called to open customer type edit dialog.
+  onEdit() {
+    if (this.token) {
+      this.$refs.edit.open(this.token);
     }
   }
-};
+
+  // Called when customer type is updated.
+  onCustomerTypeUpdated() {
+    this.refresh();
+  }
+
+  onDelete() {
+    (this.$refs["delete"] as any).showDeleteDialog();
+  }
+
+  // Called when customer type is deleted.
+  onCustomerTypeDeleted() {
+    routeTo(this, "/customertypes");
+  }
+}
 </script>
 
 <style scoped>

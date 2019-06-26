@@ -1,95 +1,94 @@
 <template>
   <div>
-    <v-card class="pa-2">
-      <v-card>
-        <v-card-text>
-          <span v-if="scripts && scripts.length > 0">
-            <v-menu offset-y>
-              <v-btn v-if="selectedScript" outline color="primary" dark slot="activator">
-                Script:<span style="color: #333; margin-left: 10px;">{{ selectedScript.name }}</span>
-              </v-btn>
-              <v-btn v-else outline color="primary" dark slot="activator">
-                Click to Select Script
-              </v-btn>
-              <v-list dense two-line>
-                <template v-for="script in scripts">
-                  <v-list-tile v-bind:key="script.id"
-                    @click="onScriptClicked(script)">
-                    <v-list-tile-content>
-                      <v-list-tile-title class="subheading" v-html="script.name"></v-list-tile-title>
-                      <v-list-tile-sub-title v-html="script.description"></v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <v-divider v-bind:key="'div_' + script.name"></v-divider>
-                </template>
-              </v-list>
-            </v-menu>
-            <v-menu v-if="selectedScript" offset-y>
-              <v-btn outline color="primary" dark slot="activator">
-                Version:<span style="color: #333; margin-left: 10px;">{{ selectedVersion.versionId }}</span>
-              </v-btn>
-              <v-list dense two-line>
-                <template v-for="version in versions">
-                  <v-list-tile v-bind:key="version.versionId"
-                    @click="onVersionClicked(version)">
-                    <v-list-tile-content>
-                      <v-list-tile-title v-if="selectedScript.activeVersion === version.versionId" class="subheading">
-                        <strong>{{ formatDate(version.createdDate) }} (Active)</strong>
-                      </v-list-tile-title>
-                      <v-list-tile-title v-else class="subheading">
-                        {{ formatDate(version.createdDate) }}
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title v-html="version.comment"></v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <v-divider v-bind:key="'div_' + version.versionId"></v-divider>
-                </template>
-              </v-list>
-            </v-menu>
-          </span>
-          <span v-else class="subheading">
-            No scripts have been configured.
-          </span>
-          <v-tooltip top>
-            <v-btn dark color="primary"
-              @click="onScriptCreate" slot="activator">
-              <font-awesome-icon class="mr-2" icon="plus" size="lg"/>
-              Create
-            </v-btn>
-            <span>Create Script</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <v-btn dark color="green darken-2" @click="refresh"
-              slot="activator">
-              <font-awesome-icon class="mr-2" icon="sync" size="lg"/>
-              Refresh
-            </v-btn>
-            <span>Refresh Scripts</span>
-          </v-tooltip>
-        </v-card-text>
-      </v-card>
+    <v-card flat v-if="scripts && scripts.length > 0">
+      <v-menu offset-y>
+        <v-btn v-if="selectedScript" outline color="primary" dark slot="activator">
+          Script:
+          <span style="color: #333; margin-left: 10px;">{{ selectedScript.name }}</span>
+        </v-btn>
+        <v-btn v-else outline color="primary" dark slot="activator">Click to Select Script</v-btn>
+        <v-list dense two-line>
+          <template v-for="script in scripts">
+            <v-list-tile v-bind:key="script.id" @click="onScriptClicked(script)">
+              <v-list-tile-content>
+                <v-list-tile-title class="subheading" v-html="script.name"></v-list-tile-title>
+                <v-list-tile-sub-title v-html="script.description"></v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-divider v-bind:key="'div_' + script.name"></v-divider>
+          </template>
+        </v-list>
+      </v-menu>
+      <v-menu v-if="selectedScript" offset-y>
+        <v-btn outline color="primary" dark slot="activator">
+          Version:
+          <span style="color: #333; margin-left: 10px;">{{ selectedVersion.versionId }}</span>
+        </v-btn>
+        <v-list dense two-line>
+          <template v-for="version in versions">
+            <v-list-tile v-bind:key="version.versionId" @click="onVersionClicked(version)">
+              <v-list-tile-content>
+                <v-list-tile-title
+                  v-if="selectedScript.activeVersion === version.versionId"
+                  class="subheading"
+                >
+                  <strong>{{ formatDate(version.createdDate) }} (Active)</strong>
+                </v-list-tile-title>
+                <v-list-tile-title v-else class="subheading">{{ formatDate(version.createdDate) }}</v-list-tile-title>
+                <v-list-tile-sub-title v-html="version.comment"></v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-divider v-bind:key="'div_' + version.versionId"></v-divider>
+          </template>
+        </v-list>
+      </v-menu>
     </v-card>
-    <scripts-content-editor :script="selectedScript"
-      :version="selectedVersion" :identifier="identifier" :tenantToken="tenantToken"
-      @saved="onContentSaved" @cloned="onVersionCloned" @activated="onVersionActivated">
-    </scripts-content-editor>
-    <v-snackbar :timeout="1500" success v-model="showMessage">{{ message }}
+    <v-card flat v-else class="subheading">
+      <v-card-text>No scripts have been configured.</v-card-text>
+    </v-card>
+    <v-tooltip top>
+      <v-btn dark color="primary" @click="onScriptCreate" slot="activator">
+        <font-awesome-icon class="mr-2" icon="plus" size="lg"/>Create
+      </v-btn>
+      <span>Create Script</span>
+    </v-tooltip>
+    <v-tooltip top>
+      <v-btn dark color="green darken-2" @click="refresh" slot="activator">
+        <font-awesome-icon class="mr-2" icon="sync" size="lg"/>Refresh
+      </v-btn>
+      <span>Refresh Scripts</span>
+    </v-tooltip>
+    <scripts-content-editor
+      :script="selectedScript"
+      :version="selectedVersion"
+      :identifier="identifier"
+      :tenantToken="tenantToken"
+      @saved="onContentSaved"
+      @cloned="onVersionCloned"
+      @activated="onVersionActivated"
+    ></scripts-content-editor>
+    <v-snackbar :timeout="1500" success v-model="showMessage">
+      {{ message }}
       <v-btn dark flat @click.native="showMessage = false">Close</v-btn>
     </v-snackbar>
-    <scripts-create-dialog ref="create" :identifier="identifier" 
-      :tenantToken="tenantToken" @scriptAdded="onScriptAdded">
-    </scripts-create-dialog>
+    <scripts-create-dialog
+      ref="create"
+      :identifier="identifier"
+      :tenantToken="tenantToken"
+      @scriptAdded="onScriptAdded"
+    ></scripts-create-dialog>
   </div>
 </template>
 
 <script>
-import Utils from "../common/Utils";
 import ScriptsContentEditor from "./ScriptsContentEditor";
 import ScriptsCreateDialog from "./ScriptsCreateDialog";
+
+import { formatDate } from "../common/Utils";
 import {
-  _listGlobalScriptMetadata,
-  _listTenantScriptMetadata
-} from "../../http/sitewhere-api-wrapper";
+  listGlobalScriptMetadata,
+  listTenantScriptMetadata
+} from "../../rest/sitewhere-scripting-api";
 
 export default {
   data: () => ({
@@ -119,7 +118,7 @@ export default {
     refresh: function() {
       var component = this;
       if (!this.tenantToken) {
-        _listGlobalScriptMetadata(this.$store, this.identifier)
+        listGlobalScriptMetadata(this.$store, this.identifier)
           .then(function(response) {
             let scripts = response.data;
             let scriptId = component.$data.scriptAfterRefresh;
@@ -135,11 +134,7 @@ export default {
           })
           .catch(function(e) {});
       } else {
-        _listTenantScriptMetadata(
-          this.$store,
-          this.identifier,
-          this.tenantToken
-        )
+        listTenantScriptMetadata(this.$store, this.identifier, this.tenantToken)
           .then(function(response) {
             let scripts = response.data;
             let scriptId = component.$data.scriptAfterRefresh;
@@ -218,11 +213,6 @@ export default {
     displaySnackbarMessage: function(message) {
       this.$data.message = message;
       this.$data.showMessage = true;
-    },
-
-    // Format date.
-    formatDate: function(date) {
-      return Utils.formatDate(date);
     }
   }
 };

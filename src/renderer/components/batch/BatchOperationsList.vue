@@ -1,171 +1,171 @@
 <template>
-  <div>
-    <navigation-page icon="list-alt" title="Manage Batch Operations"
-      loadingMessage="Loading batch operations ..." :loaded="loaded">
-      <div slot="content">
-        <v-layout row wrap v-if="operations">
-          <v-flex xs12>
-            <no-results-panel v-if="operations.length === 0"
-              text="No Batch Operations Found">
-            </no-results-panel>
-            <v-data-table v-if="operations.length > 0" class="elevation-2 pa-0"
-              :headers="headers" :items="operations"
-              :hide-actions="true" no-data-text="No Batch Operations Found">
-              <template slot="items" slot-scope="props">
-                <td width="15%" :title="props.item.operationType">
-                  {{ props.item.operationType }}
-                </td>
-                <td width="15%" :title="props.item.processingStatus">
-                  {{ props.item.processingStatus }}
-                </td>
-                <td width="15%" style="white-space: nowrap"
-                  :title="utils.formatDate(props.item.createdDate)">
-                  {{ utils.formatDate(props.item.createdDate) }}
-                </td>
-                <td width="20%" style="white-space: nowrap"
-                  :title="utils.formatDate(props.item.processingStartedDate)">
-                  {{ utils.formatDate(props.item.processingStartedDate) }}
-                </td>
-                <td width="20%" style="white-space: nowrap"
-                  :title="utils.formatDate(props.item.processingEndedDate)">
-                  {{ utils.formatDate(props.item.processingEndedDate) }}
-                </td>
-                <td width="10%" title="View Batch Operation">
-                  <v-tooltip left>
-                    <v-btn dark icon class="green darken-2" slot="activator"
-                      @click.stop="openBatchOperation(props.item.token)">
-                      <font-awesome-icon class="ma-1 navbutton" icon="arrow-right" size="lg"/>
-                    </v-btn>
-                    <span>Batch Operation Detail</span>
-                  </v-tooltip>
-                </td>
-              </template>
-            </v-data-table>
-          </v-flex>
-        </v-layout>
-        <pager :pageSizes="pageSizes" :results="results"
-          @pagingUpdated="updatePaging">
-        </pager>
-      </div>
-    </navigation-page>
-  </div>
+  <sw-list-page
+    :icon="icon"
+    title="Batch Operations"
+    loadingMessage="Loading batch operations ..."
+    :loaded="loaded"
+    :results="results"
+    @pagingUpdated="onPagingUpdated"
+  >
+    <v-flex xs12>
+      <v-data-table
+        :headers="headers"
+        :items="matches"
+        :hide-actions="true"
+        no-data-text="No Batch Operations Found"
+      >
+        <template slot="items" slot-scope="props">
+          <td width="15%" :title="props.item.operationType">{{ props.item.operationType }}</td>
+          <td width="15%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
+          <td
+            width="15%"
+            style="white-space: nowrap"
+            :title="formatDate(props.item.createdDate)"
+          >{{ formatDate(props.item.createdDate) }}</td>
+          <td
+            width="20%"
+            style="white-space: nowrap"
+            :title="formatDate(props.item.processingStartedDate)"
+          >{{ formatDate(props.item.processingStartedDate) }}</td>
+          <td
+            width="20%"
+            style="white-space: nowrap"
+            :title="formatDate(props.item.processingEndedDate)"
+          >{{ formatDate(props.item.processingEndedDate) }}</td>
+          <td width="10%" title="View Batch Operation">
+            <v-tooltip left>
+              <v-btn
+                dark
+                icon
+                class="green darken-2"
+                slot="activator"
+                @click.stop="openBatchOperation(props.item.token)"
+              >
+                <font-awesome-icon class="ma-1 navbutton" icon="arrow-right" size="lg"/>
+              </v-btn>
+              <span>Batch Operation Detail</span>
+            </v-tooltip>
+          </td>
+        </template>
+      </v-data-table>
+    </v-flex>
+  </sw-list-page>
 </template>
 
-<script>
-import Utils from "../common/Utils";
-import NavigationPage from "../common/NavigationPage";
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import { _listBatchOperations } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    operations: null,
-    headers: [
-      {
-        align: "left",
-        sortable: false,
-        text: "Operation",
-        value: "operation"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Status",
-        value: "status"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Created",
-        value: "created"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Processing Started",
-        value: "started"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Processing Finished",
-        value: "finished"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "",
-        value: "open"
-      }
-    ],
-    pageSizes: [
-      {
-        text: "25",
-        value: 25
-      },
-      {
-        text: "50",
-        value: 50
-      },
-      {
-        text: "100",
-        value: 100
-      }
-    ],
-    loaded: false
-  }),
+import { NavigationIcon } from "../../libraries/constants";
+import { formatDate, routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { listBatchOperations } from "../../rest/sitewhere-batch-operations-api";
+import {
+  IBatchOperation,
+  IBatchOperationSearchCriteria,
+  IBatchOperationResponseFormat,
+  IBatchOperationSearchResults
+} from "sitewhere-rest-api";
 
-  components: {
-    NavigationPage,
-    Pager,
-    NoResultsPanel
-  },
-
-  computed: {
-    // Accessor for utility functions.
-    utils: function() {
-      return Utils;
+@Component({})
+export default class BatchOperationsList extends ListComponent<
+  IBatchOperation,
+  IBatchOperationSearchCriteria,
+  IBatchOperationResponseFormat,
+  IBatchOperationSearchResults
+> {
+  headers: ITableHeaders = [
+    {
+      align: "left",
+      sortable: false,
+      text: "Operation",
+      value: "operation"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Status",
+      value: "status"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Created",
+      value: "created"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Processing Started",
+      value: "started"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Processing Finished",
+      value: "finished"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "",
+      value: "open"
     }
-  },
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
+  ];
+  pageSizes: IPageSizes = [
+    {
+      text: "25",
+      value: 25
     },
-
-    // Refresh list.
-    refresh: function() {
-      this.$data.loaded = false;
-      var component = this;
-      var paging = this.$data.paging.query;
-      _listBatchOperations(this.$store, paging)
-        .then(function(response) {
-          component.loaded = true;
-          component.results = response.data;
-          component.operations = response.data.results;
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
+    {
+      text: "50",
+      value: 50
     },
-
-    // Called when page number is updated.
-    onPageUpdated: function(pageNumber) {
-      this.$data.pager.page = pageNumber;
-      this.refresh();
-    },
-
-    // Open detail page for batch operation.
-    openBatchOperation: function(token) {
-      Utils.routeTo(this, "/batch/" + token);
+    {
+      text: "100",
+      value: 100
     }
+  ];
+
+  /** Get page icon */
+  get icon(): NavigationIcon {
+    return NavigationIcon.BatchOperation;
   }
-};
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IBatchOperationSearchCriteria {
+    let criteria: IBatchOperationSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IBatchOperationResponseFormat {
+    let format: IBatchOperationResponseFormat = {};
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    criteria: IBatchOperationSearchCriteria,
+    format: IBatchOperationResponseFormat
+  ): AxiosPromise<IBatchOperationSearchResults> {
+    return listBatchOperations(this.$store, criteria, format);
+  }
+
+  // Open detail page for batch operation.
+  openBatchOperation(token: string) {
+    routeTo(this, "/batch/" + token);
+  }
+
+  // Format a date.
+  formatDate(date: Date) {
+    formatDate(date);
+  }
+}
 </script>
 
 <style scoped>

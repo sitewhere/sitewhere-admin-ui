@@ -1,227 +1,104 @@
 <template>
-  <div>
-    <base-dialog :title="title" :width="width" :visible="dialogVisible"
-      :createLabel="createLabel" :cancelLabel="cancelLabel" :error="error"
-      @createClicked="onCreateClicked" @cancelClicked="onCancelClicked"
-      :hideButtons="true">
-      <v-stepper v-model="step">
-        <v-stepper-header>
-          <v-stepper-step step="1" :complete="step > 1">Device</v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step step="2" :complete="step > 3">Device Type</v-stepper-step>
-          <v-divider></v-divider>
-          <v-stepper-step step="3">Metadata<small>Optional</small></v-stepper-step>
-        </v-stepper-header>
-        <v-stepper-content step="1">
-          <v-card flat>
-            <v-card-text>
-              <v-container fluid>
-                <v-layout row wrap>
-                  <v-flex xs12>
-                    <v-text-field required class="mt-1" label="Token"
-                      v-model="devToken" prepend-icon="info"></v-text-field>
-                    <div class="verror">
-                      <span v-if="!$v.devToken.required && $v.$dirty">Device token is required.</span>
-                      <span v-if="!$v.devToken.validToken && $v.$dirty">Device token is not valid.</span>
-                    </div>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-text-field class="mt-1" multi-line label="Comments"
-                      v-model="devComments" prepend-icon="subject">
-                    </v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-          </v-card>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn flat @click.native="onCancelClicked">{{ cancelLabel }}</v-btn>
-            <v-btn color="primary" :disabled="!firstPageComplete" flat
-              @click="step = 2">Choose Device Type
-              <v-icon light>keyboard_arrow_right</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-stepper-content>
-        <v-stepper-content step="2">
-          <device-type-chooser
-            chosenText="Device will implement the device type below."
-            notChosenText="Choose a device type that will be implemented by the device:"
-            v-model="devDeviceTypeToken"
-            @deviceTypeUpdated="onDeviceTypeUpdated">
-          </device-type-chooser>
-          <v-card-actions>
-            <v-btn color="primary" flat @click="step = 1">
-              <v-icon light>keyboard_arrow_left</v-icon>
-              Back
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn flat @click="onCancelClicked">{{ cancelLabel }}</v-btn>
-            <v-btn color="primary" flat :disabled="!secondPageComplete"
-              @click="onCreateClicked">{{ createLabel }}</v-btn>
-            <v-btn color="primary" flat :disabled="!secondPageComplete"
-              @click="step = 3">Add Metadata
-              <v-icon light>keyboard_arrow_right</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-stepper-content>
-        <v-stepper-content step="3">
-          <metadata-panel class="mb-3" :metadata="metadata"
-            @itemDeleted="onMetadataDeleted" @itemAdded="onMetadataAdded"/>
-            <v-card-actions>
-              <v-btn color="primary" flat @click.native="step = 2">
-                <v-icon light>keyboard_arrow_left</v-icon>
-                Back
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn flat @click="onCancelClicked">{{ cancelLabel }}</v-btn>
-              <v-btn color="primary" flat :disabled="!secondPageComplete"
-                @click="onCreateClicked">{{ createLabel }}</v-btn>
-            </v-card-actions>
-        </v-stepper-content>
-      </v-stepper>
-    </base-dialog>
-  </div>
+  <sw-base-dialog
+    ref="dialog"
+    :icon="icon"
+    :title="title"
+    :width="width"
+    :loaded="loaded"
+    :visible="dialogVisible"
+    :createLabel="createLabel"
+    :cancelLabel="cancelLabel"
+    @createClicked="onCreateClicked"
+    @cancelClicked="onCancelClicked"
+  >
+    <template slot="tabs">
+      <v-tab key="details">Details</v-tab>
+      <v-tab key="metadata">Metadata</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="details">
+        <device-detail-fields ref="details"/>
+      </v-tab-item>
+      <v-tab-item key="metadata">
+        <sw-metadata-panel ref="metadata"/>
+      </v-tab-item>
+    </template>
+  </sw-base-dialog>
 </template>
 
-<script>
-import Utils from "../common/Utils";
-import BaseDialog from "../common/BaseDialog";
-import MetadataPanel from "../common/MetadataPanel";
-import DeviceTypeChooser from "../devicetypes/DeviceTypeChooser";
-import { required, helpers } from "vuelidate/lib/validators";
+<script lang="ts">
+import {
+  Component,
+  DialogComponent,
+  DialogSection,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
+import { NavigationIcon } from "../../libraries/constants";
 
-const validToken = helpers.regex('validToken', /^[a-zA-Z0-9-_]+$/);
+import DeviceDetailFields from "./DeviceDetailFields.vue";
+import { IDevice } from "sitewhere-rest-api";
 
-export default {
-
-  data: () => ({
-    step: null,
-    dialogVisible: false,
-    devToken: null,
-    devComments: null,
-    devDeviceTypeToken: null,
-    metadata: [],
-    assetModules: [],
-    error: null
-  }),
-
-  validations: {
-    devToken: {
-      required,
-      validToken
-    }
-  },
-
+@Component({
   components: {
-    BaseDialog,
-    MetadataPanel,
-    DeviceTypeChooser
-  },
+    DeviceDetailFields
+  }
+})
+export default class DeviceDialog extends DialogComponent<IDevice> {
+  // References.
+  $refs!: Refs<{
+    dialog: ITabbedComponent;
+    details: DialogSection;
+    metadata: DialogSection;
+  }>;
 
-  props: ["title", "width", "createLabel", "cancelLabel"],
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Device;
+  }
 
-  computed: {
-    // Indicates if first page fields are filled in.
-    firstPageComplete: function () {
-      this.$v.$touch();
-      return (!this.$v.devToken.$invalid);
-    },
+  // Generate payload from UI.
+  generatePayload() {
+    let payload: any = {};
+    Object.assign(
+      payload,
+      this.$refs.details.save(),
+      this.$refs.metadata.save()
+    );
+    return payload;
+  }
 
-    // Indicates if second page is complete.
-    secondPageComplete: function () {
-      return this.firstPageComplete && (this.$data.devDeviceTypeToken != null);
+  // Reset dialog contents.
+  reset() {
+    if (this.$refs.details) {
+      this.$refs.details.reset();
     }
-  },
-
-  methods: {
-    // Generate payload from UI.
-    generatePayload: function () {
-      var payload = {};
-      payload.token = this.$data.devToken;
-      payload.comments = this.$data.devComments;
-      payload.deviceTypeToken = this.$data.devDeviceTypeToken;
-      payload.metadata = Utils.arrayToMetadata(this.$data.metadata);
-      return payload;
-    },
-
-    // Reset dialog contents.
-    reset: function () {
-      this.$data.devToken = null;
-      this.$data.devComments = null;
-      this.$data.devDeviceTypeToken = null;
-      this.$data.metadata = [];
-      this.$data.step = 1;
-      this.$data.error = null;
-      this.$v.$reset();
-    },
-
-    // Load dialog from a given payload.
-    load: function (payload) {
-      this.reset();
-
-      if (payload) {
-        this.$data.devToken = payload.token;
-        this.$data.devComments = payload.comments;
-        this.$data.devDeviceTypeToken = payload.deviceType.token;
-        this.$data.metadata = Utils.metadataToArray(payload.metadata);
-      }
-    },
-
-    // Called to open the dialog.
-    openDialog: function () {
-      this.$data.dialogVisible = true;
-    },
-
-    // Called to open the dialog.
-    closeDialog: function () {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called to show an error message.
-    showError: function (error) {
-      this.$data.error = error;
-    },
-
-    // Called after create button is clicked.
-    onCreateClicked: function (e) {
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
-      }
-      var payload = this.generatePayload();
-      this.$emit("payload", payload);
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function (e) {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called when device type choice is updated.
-    onDeviceTypeUpdated: function (deviceType) {
-      if (deviceType) {
-        this.$data.devDeviceTypeToken = deviceType.token;
-      } else {
-        this.$data.devDeviceTypeToken = null;
-      }
-    },
-
-    // Called when a metadata entry has been deleted.
-    onMetadataDeleted: function (name) {
-      var metadata = this.$data.metadata;
-      for (var i = 0; i < metadata.length; i++) {
-        if (metadata[i].name === name) {
-          metadata.splice(i, 1);
-        }
-      }
-    },
-
-    // Called when a metadata entry has been added.
-    onMetadataAdded: function (entry) {
-      var metadata = this.$data.metadata;
-      metadata.push(entry);
+    if (this.$refs.metadata) {
+      this.$refs.metadata.reset();
     }
+    this.$refs.dialog.setActiveTab("details");
+  }
+
+  // Load dialog from a given payload.
+  load(payload: IDevice) {
+    this.reset();
+    if (this.$refs.details) {
+      this.$refs.details.load(payload);
+    }
+    if (this.$refs.metadata) {
+      this.$refs.metadata.load(payload);
+    }
+  }
+
+  // Called after create button is clicked.
+  onCreateClicked(e: any) {
+    if (!this.$refs.details.validate()) {
+      this.$refs.dialog.setActiveTab("details");
+      return;
+    }
+
+    var payload = this.generatePayload();
+    this.$emit("payload", payload);
   }
 }
 </script>

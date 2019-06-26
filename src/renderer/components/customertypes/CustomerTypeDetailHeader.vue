@@ -1,59 +1,58 @@
 <template>
-  <navigation-header-panel v-if="customerType" :icon="customerType.icon"
-    :qrCodeUrl="qrCodeUrl" height="200px">
-    <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="customerType.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
+  <sw-navigation-header-panel v-if="customerType" :icon="icon" height="200px">
+    <template slot="content">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="customerType.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-header-field label="Name">
         <span>{{ customerType.name }}</span>
-      </header-field>
-      <header-field label="Description">
+      </sw-header-field>
+      <sw-header-field label="Description">
         <span>{{ customerType.description }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(customerType.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(customerType.updatedDate) }}</span>
-      </header-field>
-    </span>
-  </navigation-header-panel>
+      </sw-header-field>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { ICustomerType } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-export default {
-
-  data: () => ({
-  }),
-
-  props: ['customerType', 'customerTypes'],
-
+@Component({
   components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    ClipboardCopyField
-  },
+    AuthenticatedImage
+  }
+})
+export default class CustomerTypeDetailHeader extends HeaderComponent<
+  ICustomerType
+> {
+  // Reference record as customer type.
+  get customerType(): ICustomerType {
+    return this.record;
+  }
 
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'customertypes/' + this.customerType.token + '/label/qrcode'
-    }
-  },
+  // Token.
+  get token(): string {
+    return this.customerType ? this.customerType.token : "";
+  }
 
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
-    }
+  get icon(): string {
+    return this.customerType ? this.customerType.icon : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "customertypes/" + this.token + "/label/qrcode";
   }
 }
 </script>

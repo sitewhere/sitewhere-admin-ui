@@ -1,75 +1,77 @@
 <template>
-  <navigation-header-panel v-if="device" :imageUrl="device.deviceType.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="190px">
-    <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="device.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
-      </header-field>
-      <linked-header-field label="Device Type"
+  <sw-navigation-header-panel v-if="device" :imageUrl="imageUrl" height="190px">
+    <template slot="content">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="device.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-linked-header-field
+        label="Device Type"
         :text="device.deviceType.name"
-        :url="'/devicetypes/' + device.deviceType.token">
-      </linked-header-field>
-      <linked-header-field v-if="device.assignment.asset" label="Assigned Asset"
+        :url="'/devicetypes/' + device.deviceType.token"
+      />
+      <sw-linked-header-field
+        v-if="device.assignment.asset"
+        label="Assigned Asset"
         :text="device.assignment.asset.name"
-        :url="'/assets/' + device.assignment.asset.token">
-      </linked-header-field>
-      <linked-header-field v-if="device.assignment.area" label="Assigned Area"
+        :url="'/assets/' + device.assignment.asset.token"
+      />
+      <sw-linked-header-field
+        v-if="device.assignment.area"
+        label="Assigned Area"
         :text="device.assignment.area.name"
-        :url="'/areas/' + device.assignment.area.token">
-      </linked-header-field>
-      <header-field v-else label="Assignment">
+        :url="'/areas/' + device.assignment.area.token"
+      />
+      <sw-header-field v-else label="Assignment">
         <span>Device is not assigned</span>
-      </header-field>
-      <header-field label="Comments">
+      </sw-header-field>
+      <sw-header-field label="Comments">
         <span>{{ device.comments }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(device.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(device.updatedDate) }}</span>
-      </header-field>
-    </span>
-  </navigation-header-panel>
+      </sw-header-field>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import ClipboardCopyField from '../common/ClipboardCopyField'
-import HeaderField from '../common/HeaderField'
-import LinkedHeaderField from '../common/LinkedHeaderField'
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { IDevice, IDeviceType } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-export default {
-
-  data: () => ({
-  }),
-
-  props: ['device'],
-
+@Component({
   components: {
-    NavigationHeaderPanel,
-    ClipboardCopyField,
-    HeaderField,
-    LinkedHeaderField
-  },
+    AuthenticatedImage
+  }
+})
+export default class DeviceDetailHeader extends HeaderComponent<IDevice> {
+  // Reference record as device.
+  get device(): IDevice {
+    return this.record;
+  }
 
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'devices/' + this.device.token + '/label/qrcode'
-    }
-  },
+  // Get device type.
+  get deviceType(): IDeviceType {
+    return this.device ? (this.device as any).deviceType : "";
+  }
 
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
-    }
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.deviceType ? this.deviceType.imageUrl : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "devices/" + this.device.token + "/label/qrcode";
   }
 }
 </script>
 
 <style scoped>
+</style>

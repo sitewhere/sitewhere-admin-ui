@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover>
+  <sw-list-entry>
     <v-container fluid @click="onAssetClicked">
       <v-layout row>
         <v-flex xs2>
@@ -15,39 +15,37 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-card>
+  </sw-list-entry>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import { Component, Prop } from "sitewhere-ide-common";
+import Vue from "vue";
 
-  props: ["asset"],
+import { IStyle } from "../common/Style";
+import { IAsset } from "sitewhere-rest-api";
 
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.asset.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee",
-        height: "60px",
-        width: "60px"
-      };
-    }
-  },
+@Component({})
+export default class AssetListEntry extends Vue {
+  @Prop() readonly asset!: IAsset;
 
-  methods: {
-    // Handle asset clicked.
-    onAssetClicked: function() {
-      this.$emit("assetOpened", this.asset);
-    }
+  // Compute style of logo.
+  get logoStyle(): IStyle {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.asset.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee",
+      height: "60px",
+      width: "60px"
+    };
   }
-};
-</script>
 
-<style scoped>
-</style>
+  // Handle asset clicked.
+  onAssetClicked() {
+    this.$emit("assetOpened", this.asset);
+  }
+}
+</script>

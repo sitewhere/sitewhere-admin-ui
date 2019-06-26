@@ -1,45 +1,40 @@
 <template>
-  <v-card flat hover class="white pa-2">
+  <sw-list-entry class="pa-2">
     <v-card-text class="deviceType" @click="onOpenDeviceType">
       <div class="type-logo" :style="logoStyle"></div>
       <div class="type-name">{{deviceType.name}}</div>
       <div class="type-desc">{{deviceType.description}}</div>
     </v-card-text>
-  </v-card>
+  </sw-list-entry>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import { Component, Prop } from "sitewhere-ide-common";
+import Vue from "vue";
 
-  props: ["deviceType"],
+import { IDeviceType } from "sitewhere-rest-api";
 
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.deviceType.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee"
-      };
-    }
-  },
+@Component({})
+export default class DeviceTypeListEntry extends Vue {
+  @Prop() readonly deviceType!: IDeviceType;
 
-  methods: {
-    // Called when a device type is clicked.
-    onOpenDeviceType: function() {
-      var tenant = this.$store.getters.selectedTenant;
-      if (tenant) {
-        this.$router.push(
-          "/tenants/" + tenant.token + "/devicetypes/" + this.deviceType.token
-        );
-      }
-    }
+  // Compute style of logo.
+  get logoStyle() {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.deviceType.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee"
+    };
   }
-};
+
+  // Called when a device type is clicked.
+  onOpenDeviceType() {
+    this.$emit("deviceTypeOpened", this.deviceType);
+  }
+}
 </script>
 
 <style scoped>

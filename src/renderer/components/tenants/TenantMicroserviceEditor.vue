@@ -1,156 +1,210 @@
 <template>
-  <navigation-page v-if="tenant" icon="microchip"
-    title="Manage Tenant Microservice"
-    loadingMessage="Loading tenant engine configuration ..." :loaded="loaded">
-    <div slot="content">
-      <tenant-runtimes-block :identifier="identifier"
-        :tenantToken="tenantToken">
-      </tenant-runtimes-block>
-      <unsaved-updates-warning class="mb-3" :unsaved="dirty"
-        @save="onSaveConfiguration" @revert="onRevertConfiguration">
-      </unsaved-updates-warning>
-      <microservice-editor :config="config" :configModel="configModel"
-        :identifier="identifier" :tenantToken="tenantToken"
-        @dirty="onConfigurationUpdated">
-      </microservice-editor>
-    </div>
-    <div slot="actions">
-      <navigation-action-button icon="arrow-left"
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading microservice configuration ..."
+    :loaded="loaded"
+    :record="tenant"
+  >
+    <template slot="header">
+      <unsaved-updates-warning
+        class="mb-3"
+        :unsaved="dirty"
+        @save="onSaveConfiguration"
+        @revert="onRevertConfiguration"
+      />
+    </template>
+    <template slot="tabs">
+      <v-tab key="configuration">Configuration</v-tab>
+      <v-tab key="scripts">Scripts</v-tab>
+      <v-tab key="runtime">Runtime</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="configuration">
+        <microservice-editor
+          :configuration="configuration"
+          :configurationModel="configurationModel"
+          :identifier="identifier"
+          :tenantToken="tenantToken"
+          @dirty="onConfigurationUpdated"
+        />
+      </v-tab-item>
+      <v-tab-item key="scripts">
+        <scripts-manager :identifier="identifier"/>
+      </v-tab-item>
+      <v-tab-item key="runtime">
+        <tenant-runtimes-block class="ma-1" :identifier="identifier" :tenantToken="tenantToken"/>
+      </v-tab-item>
+    </template>
+    <template slot="actions">
+      <sw-navigation-action-button
+        icon="arrow-left"
         tooltip="Back To Tenant Microservices"
-        @action="onBackToList">
-      </navigation-action-button>
-    </div>
-  </navigation-page>
+        @action="onBackToList"
+      />
+    </template>
+  </sw-detail-page>
 </template>
 
-<script>
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import TenantRuntimesBlock from "./TenantRuntimesBlock";
-import MicroserviceEditor from "../microservice/MicroserviceEditor";
-import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning";
+<script lang="ts">
+import Vue from "vue";
+
+import TenantRuntimesBlock from "./TenantRuntimesBlock.vue";
+import MicroserviceEditor from "../microservice/MicroserviceEditor.vue";
+import UnsavedUpdatesWarning from "../microservice/UnsavedUpdatesWarning.vue";
+import ScriptsManager from "../microservice/ScriptsManager.vue";
+
+import { NavigationIcon } from "../../libraries/constants";
+import { handleError } from "../common/Utils";
+import { Component, WithRoute } from "sitewhere-ide-common";
+import { AxiosResponse } from "axios";
 import {
-  _getTenant,
-  _getConfigurationModel,
-  _getTenantConfiguration,
-  _updateTenantConfiguration
-} from "../../http/sitewhere-api-wrapper";
+  getConfigurationModel,
+  getTenantConfiguration,
+  updateTenantConfiguration
+} from "../../rest/sitewhere-instance-api";
+import {
+  IConfigurationModel,
+  IElementContent,
+  ITenant,
+  ITenantResponseFormat
+} from "sitewhere-rest-api";
+import { getTenant } from "../../rest/sitewhere-tenants-api";
 
-export default {
-  data: () => ({
-    tenantToken: null,
-    identifier: null,
-    tenant: null,
-    config: null,
-    configModel: null,
-    dirty: false,
-    loaded: false
-  }),
-
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
     TenantRuntimesBlock,
     MicroserviceEditor,
-    UnsavedUpdatesWarning
-  },
+    UnsavedUpdatesWarning,
+    ScriptsManager
+  }
+})
+export default class TenantMicroserviceEditor extends Vue implements WithRoute {
+  tenantToken: string | null = null;
+  identifier: string | null = null;
+  configuration: IElementContent | null = null;
+  configurationModel: IConfigurationModel | null = null;
+  tenant: ITenant | null = null;
+  dirty: boolean = false;
+  loaded: boolean = false;
 
-  created: function() {
-    this.$data.tenantToken = this.$route.params.tenantToken;
-    this.$data.identifier = this.$route.params.identifier;
+  created() {
+    this.tenantToken = this.$route.params.token;
+    this.identifier = this.$route.params.identifier;
     this.refresh();
-  },
+  }
 
-  methods: {
-    // Called to refresh data.
-    refresh: function() {
-      this.$data.loaded = false;
+  /** Get icon shown in title bar */
+  get icon() {
+    return NavigationIcon.Tenant;
+  }
 
-      // Load tenant data.
-      this.refreshTenant();
+  /** Get title shown in title bar */
+  get title() {
+    return this.configurationModel
+      ? this.configurationModel.microserviceDetails.name +
+          " Microservice Configuration"
+      : "Tenant Microservice Configuration";
+  }
 
-      // Load configuration data.
-      var component = this;
-      _getConfigurationModel(this.$store, this.$data.identifier)
-        .then(function(response) {
-          component.$data.configModel = response.data;
-          var microservice = response.data.microserviceDetails;
-          var section = {
-            id: "tenants",
-            title: "Manage Microservice",
-            icon: "layer-group",
-            route:
-              "/tenants/" +
-              component.$data.tenantToken +
-              "/" +
-              microservice.identifier,
-            longTitle: "Manage Tenant Microservice: " + microservice.name
-          };
-          component.loaded = true;
-          component.$store.commit("currentSection", section);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-      _getTenantConfiguration(
-        this.$store,
-        this.$data.tenantToken,
-        this.$data.identifier
-      )
-        .then(function(response) {
-          component.$data.config = response.data;
-        })
-        .catch(function(e) {});
-    },
+  /** Refresh all data */
+  async refresh() {
+    this.loaded = false;
+    await Promise.all([
+      this.refreshModel(),
+      this.refreshConfiguration(),
+      this.refreshTenant()
+    ]);
+    this.loaded = true;
+  }
 
-    // Refresh only tenant information.
-    refreshTenant: function() {
-      var component = this;
-      _getTenant(this.$store, this.$data.tenantToken, true)
-        .then(function(response) {
-          component.onLoaded(response.data);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onLoaded: function(tenant) {
-      this.$data.tenant = tenant;
-      this.$store.commit("selectedTenant", tenant);
-    },
-
-    // Called when configuration is changed.
-    onConfigurationUpdated: function() {
-      this.$data.dirty = true;
-    },
-
-    // Called when configuration is to be saved.
-    onSaveConfiguration: function() {
-      var component = this;
-      _updateTenantConfiguration(
-        this.$store,
-        this.$data.tenantToken,
-        this.$data.identifier,
-        this.$data.config
-      )
-        .then(function(response) {
-          component.$data.dirty = false;
-        })
-        .catch(function(e) {});
-    },
-
-    // Called when configuration is to be reverted.
-    onRevertConfiguration: function() {
-      this.refresh();
-      this.$data.dirty = false;
-    },
-
-    // Navigate back to microservices list.
-    onBackToList: function() {
-      this.$router.push("/system/tenants/" + this.$data.tenantToken);
+  /** Refresh configuration model */
+  async refreshModel() {
+    if (this.identifier) {
+      try {
+        let response: AxiosResponse<
+          IConfigurationModel
+        > = await getConfigurationModel(this.$store, this.identifier);
+        this.configurationModel = response.data;
+      } catch (err) {
+        handleError(err);
+      }
     }
   }
-};
+
+  /** Refresh configuration data */
+  async refreshConfiguration() {
+    if (this.identifier && this.tenantToken) {
+      try {
+        let configResponse: AxiosResponse<
+          IElementContent
+        > = await getTenantConfiguration(
+          this.$store,
+          this.identifier,
+          this.tenantToken
+        );
+        this.configuration = configResponse.data;
+        this.loaded = true;
+      } catch (err) {
+        handleError(err);
+      }
+    }
+  }
+
+  // Called to refresh tenant information.
+  async refreshTenant() {
+    if (this.identifier && this.tenantToken) {
+      try {
+        let format: ITenantResponseFormat = {};
+        let response: AxiosResponse<ITenant> = await getTenant(
+          this.$store,
+          this.tenantToken,
+          format
+        );
+        this.tenant = response.data;
+        this.$store.commit("selectedTenant", this.tenant);
+      } catch (err) {
+        handleError(err);
+      }
+    }
+  }
+
+  // Called when configuration is changed.
+  onConfigurationUpdated() {
+    this.dirty = true;
+  }
+
+  // Called when configuration is to be saved.
+  onSaveConfiguration() {
+    var component = this;
+    if (this.configuration && this.identifier && this.tenantToken) {
+      updateTenantConfiguration(
+        this.$store,
+        this.identifier,
+        this.tenantToken,
+        this.configuration
+      )
+        .then(function(response: AxiosResponse<void>) {
+          component.dirty = false;
+        })
+        .catch(function(e) {
+          console.log(e);
+        });
+    }
+  }
+
+  // Called when configuration is to be reverted.
+  onRevertConfiguration() {
+    this.refreshConfiguration();
+    this.loaded = false;
+    this.dirty = false;
+  }
+
+  // Navigate back to microservices list.
+  onBackToList() {
+    this.$router.push("/system/tenants/" + this.tenantToken);
+  }
+}
 </script>
 
 <style>

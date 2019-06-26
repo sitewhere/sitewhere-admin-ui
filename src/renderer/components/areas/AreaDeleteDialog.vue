@@ -1,54 +1,42 @@
 <template>
   <span>
-    <delete-dialog title="Delete Area" width="400" :error="error"
-      @delete="onDeleteConfirmed">
-      <v-card-text>
-        Are you sure you want to delete this area?
-      </v-card-text>
-    </delete-dialog>
+    <sw-delete-dialog title="Delete Area" width="400" :error="error" @delete="onDeleteConfirmed">
+      <v-card-text>Are you sure you want to delete this area?</v-card-text>
+    </sw-delete-dialog>
   </span>
 </template>
 
 <script>
-import DeleteDialog from '../common/DeleteDialog'
-import {_deleteArea} from '../../http/sitewhere-api-wrapper'
+import { deleteArea } from "../../rest/sitewhere-areas-api";
 
 export default {
-
   data: () => ({
     error: null
   }),
 
-  props: ['token'],
-
-  components: {
-    DeleteDialog
-  },
+  props: ["token"],
 
   methods: {
     // Show delete dialog.
-    showDeleteDialog: function () {
-      this.$children[0].openDialog()
+    showDeleteDialog: function() {
+      this.$children[0].openDialog();
     },
 
     // Perform delete.
-    onDeleteConfirmed: function () {
-      var component = this
-      _deleteArea(this.$store, this.token, true)
-        .then(function (response) {
-          component.onDeleted(response)
-        }).catch(function (e) {
+    onDeleteConfirmed: function() {
+      var component = this;
+      deleteArea(this.$store, this.token, true)
+        .then(function(response) {
+          component.onDeleted(response);
         })
+        .catch(function(e) {});
     },
 
     // Handle successful delete.
-    onDeleted: function (result) {
-      this.$children[0].closeDialog()
-      this.$emit('areaDeleted')
+    onDeleted: function(result) {
+      this.$children[0].closeDialog();
+      this.$emit("areaDeleted");
     }
   }
-}
+};
 </script>
-
-<style scoped>
-</style>

@@ -1,49 +1,39 @@
 <template>
   <v-list-tile>
     <v-icon class="grey--text mr-2">storage</v-icon>
-    <v-list-tile-content>
-      {{ deviceSlot.name }} ({{ fullPath }})
-    </v-list-tile-content>
+    <v-list-tile-content>{{ deviceSlot.name }} ({{ fullPath }})</v-list-tile-content>
     <v-list-tile-action>
-      <span>
-        <device-slot-delete-dialog :deviceSlot="deviceSlot"
-          @deviceSlotDeleted="onDeviceSlotDeleted">
-        </device-slot-delete-dialog>
-      </span>
+      <v-icon @click="onDeleteDeviceSlot">{{deleteIcon}}</v-icon>
     </v-list-tile-action>
   </v-list-tile>
 </template>
 
-<script>
-import DeviceSlotDeleteDialog from './DeviceSlotDeleteDialog'
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 
-export default {
+import { NavigationIcon } from "../../libraries/constants";
 
-  data: () => ({
-  }),
+import { IDeviceSlot } from "sitewhere-rest-api";
 
-  props: ['deviceSlot', 'parentPath'],
+@Component({})
+export default class DeviceSlotListEntry extends Vue {
+  @Prop() readonly deviceSlot!: IDeviceSlot;
+  @Prop() readonly unitPath!: string;
 
-  components: {
-    DeviceSlotDeleteDialog
-  },
+  /** Full path to unit */
+  get fullPath(): string {
+    return this.unitPath + this.deviceSlot.path;
+  }
 
-  computed: {
-    // Full path for slot.
-    fullPath: function () {
-      if (this.parentPath) {
-        return this.parentPath + '/' + this.deviceSlot.path
-      }
-      return '/' + this.deviceSlot.path
-    }
-  },
+  /** Icon for delete */
+  get deleteIcon(): NavigationIcon {
+    return NavigationIcon.Delete;
+  }
 
-  methods: {
-    // Called when slot is deleted.
-    onDeviceSlotDeleted: function (slot) {
-      console.log('slot delete in list entry')
-      this.$emit('deviceSlotDeleted', slot)
-    }
+  /** Emit message to delete device slot */
+  onDeleteDeviceSlot() {
+    this.$emit("deleteDeviceSlot", this.unitPath, this.deviceSlot.path);
   }
 }
 </script>

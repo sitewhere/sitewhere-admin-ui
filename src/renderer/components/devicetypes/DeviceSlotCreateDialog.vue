@@ -1,60 +1,60 @@
 <template>
-  <span>
-    <device-slot-dialog ref="dialog" style="display: none;"
-      title="Create Device Slot" width="600" createLabel="Create"
-      cancelLabel="Cancel" mode='create' @payload="onCommit">
-    </device-slot-dialog>
-    <v-btn class="ma-0" dark icon v-tooltip:left="{ html: 'Add Device Slot' }"
-      @click.native.stop="onOpenDialog">
-      <v-icon class="black--text">add</v-icon>
-    </v-btn>
-  </span>
+  <device-slot-dialog
+    ref="dialog"
+    title="Create Device Slot"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import lodash from 'lodash'
-import DeviceSlotDialog from './DeviceSlotDialog'
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import DeviceSlotDialog from "./DeviceSlotDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import { IDeviceType, IDeviceTypeCreateRequest } from "sitewhere-rest-api";
+import { createDeviceType } from "../../rest/sitewhere-device-types-api";
 
+@Component({
   components: {
     DeviceSlotDialog
-  },
+  }
+})
+export default class DeviceSlotCreateDialog extends CreateDialogComponent<
+  IDeviceType,
+  IDeviceTypeCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceType>;
+  }>;
 
-  props: ['deviceUnit'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceType> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
-    },
+  /** Called on payload commit */
+  onCommit(payload: IDeviceTypeCreateRequest): void {
+    this.commit(payload);
+  }
 
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
-    },
+  /** Implemented in subclasses to save payload */
+  save(payload: IDeviceTypeCreateRequest): AxiosPromise<IDeviceType> {
+    return createDeviceType(this.$store, payload);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      let match = lodash.find(this.deviceUnit.deviceSlots, {'path': payload.path})
-      if (match) {
-        this.getDialogComponent().showError({
-          'message': 'A slot with that path already exists.'
-        })
-      } else {
-        this.onCommitted(payload)
-      }
-    },
-
-    // Handle successful commit.
-    onCommitted: function (payload) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('deviceSlotAdded', payload)
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceType): void {
+    this.$emit("deviceSlotAdded", payload);
   }
 }
 </script>

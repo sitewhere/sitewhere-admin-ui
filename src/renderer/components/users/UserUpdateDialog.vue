@@ -1,63 +1,73 @@
 <template>
-  <span>
-    <user-dialog ref="dialog" title="Edit User" width="700"
-      createLabel="Update" cancelLabel="Cancel" @payload="onCommit">
-    </user-dialog>
-  </span>
+  <user-dialog
+    ref="dialog"
+    title="Update User"
+    :loaded="loaded"
+    createLabel="Update"
+    cancelLabel="Cancel"
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import UserDialog from './UserDialog'
-import {_getUser, _updateUser} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import {
+  Component,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
+import UserDialog from "./UserDialog.vue";
 
-  data: () => ({
-  }),
+import { AxiosPromise } from "axios";
+import {
+  IUser,
+  IUserCreateRequest,
+  IUserResponseFormat
+} from "sitewhere-rest-api";
+import { getUser, updateUser } from "../../rest/sitewhere-users-api";
 
+@Component({
   components: {
     UserDialog
-  },
+  }
+})
+export default class UserUpdateDialog extends EditDialogComponent<
+  IUser,
+  IUserCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IUser>;
+  }>;
 
-  props: ['username'],
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IUser> {
+    return this.$refs.dialog;
+  }
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
-    },
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IUser> {
+    let format: IUserResponseFormat = {};
+    return getUser(this.$store, identifier, format);
+  }
 
-    // Send event to open dialog.
-    onOpenDialog: function () {
-      var component = this
-      _getUser(this.$store, this.username)
-        .then(function (response) {
-          component.onLoaded(response)
-        }).catch(function (e) {
-        })
-    },
+  /** Save payload */
+  prepareSave(
+    original: IUser,
+    updated: IUserCreateRequest
+  ): AxiosPromise<IUser> {
+    return updateUser(this.$store, original.username, updated);
+  }
 
-    // Called after data is loaded.
-    onLoaded: function (response) {
-      this.getDialogComponent().load(response.data)
-      this.getDialogComponent().openDialog()
-    },
+  /** Called on payload commit */
+  onSave(payload: IUserCreateRequest): void {
+    this.save(payload);
+  }
 
-    // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _updateUser(this.$store, this.username, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
-        })
-    },
-
-    // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('edited')
-    }
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IUser): void {
+    this.$emit("userUpdated", payload);
   }
 }
 </script>

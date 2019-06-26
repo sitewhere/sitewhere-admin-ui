@@ -1,178 +1,131 @@
 <template>
-  <div>
-    <navigation-page v-if="assetType" icon="cog" :title="assetType.name"
-      loadingMessage="Loading asset type ..." :loaded="loaded">
-      <div slot="content">
-        <asset-type-detail-header v-if="assetType" :assetType="assetType"
-          @assetTypeDeleted="onAssetTypeDeleted"
-          @assetTypeUpdated="onAssetTypeUpdated">
-        </asset-type-detail-header>
-        <v-tabs v-model="active">
-          <v-tabs-bar dark color="primary">
-            <v-tabs-item key="assets" href="#assets">
-              Assets
-            </v-tabs-item>
-            <v-tabs-slider></v-tabs-slider>
-          </v-tabs-bar>
-          <v-tabs-items>
-            <v-tabs-content key="assets" id="assets">
-              <v-container fluid grid-list-md v-if="assets">
-                <v-layout row wrap>
-                  <v-flex xs6 v-for="(asset) in assets" :key="asset.token">
-                    <asset-list-entry :asset="asset" @assetOpened="onOpenAsset">
-                    </asset-list-entry>
-                 </v-flex>
-                </v-layout>
-              </v-container>
-              <pager :results="results" @pagingUpdated="updatePaging">
-                <no-results-panel slot="noresults"
-                  text="No Assets of This Type Found">
-                </no-results-panel>
-              </pager>
-            </v-tabs-content>
-          </v-tabs-items>
-        </v-tabs>
-      </div>
-      <div slot="actions">
-        <navigation-action-button icon="edit" tooltip="Edit Asset Type"
-          @action="onEdit">
-        </navigation-action-button>
-        <navigation-action-button icon="times" tooltip="Delete Asset Type"
-          @action="onDelete">
-        </navigation-action-button>
-      </div>
-    </navigation-page>
-    <asset-type-update-dialog ref="update"
-      :token="assetType.token" @assetTypeUpdated="onAssetTypeUpdated">
-    </asset-type-update-dialog>
-    <asset-type-delete-dialog ref="delete"
-      :token="assetType.token" @assetTypeDeleted="onAssetTypeDeleted">
-    </asset-type-delete-dialog>
-  </div>
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
+    loadingMessage="Loading asset type ..."
+    :loaded="loaded"
+    :record="assetType"
+  >
+    <template slot="header">
+      <asset-type-detail-header
+        v-if="assetType"
+        :record="assetType"
+        @assetTypeDeleted="onAssetTypeDeleted"
+        @assetTypeUpdated="onAssetTypeUpdated"
+      />
+    </template>
+    <template slot="tabs">
+      <v-tab key="assets">Assets</v-tab>
+    </template>
+    <template slot="tab-items">
+      <asset-type-assets tabkey="assets" ref="assets" :assetTypeToken="token"/>
+    </template>
+    <template slot="dialogs">
+      <asset-type-update-dialog ref="edit" :token="token" @assetTypeUpdated="onAssetTypeUpdated"/>
+      <asset-type-delete-dialog ref="delete" :token="token" @assetTypeDeleted="onAssetTypeDeleted"/>
+    </template>
+    <template slot="actions">
+      <edit-button tooltip="Edit Asset Type" @action="onEdit"/>
+      <delete-button tooltip="Delete Asset Type" @action="onDelete"/>
+    </template>
+  </sw-detail-page>
 </template>
 
-<script>
-import Utils from "../common/Utils";
-import NavigationPage from "../common/NavigationPage";
-import NavigationActionButton from "../common/NavigationActionButton";
-import Pager from "../common/Pager";
-import NoResultsPanel from "../common/NoResultsPanel";
-import AssetTypeDetailHeader from "./AssetTypeDetailHeader";
-import AssetTypeDeleteDialog from "./AssetTypeDeleteDialog";
-import AssetTypeUpdateDialog from "./AssetTypeUpdateDialog";
-import AssetListEntry from "../assets/AssetListEntry";
-import { _getAssetType, _listAssets } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  DetailComponent,
+  DialogComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    token: null,
-    assetType: null,
-    assets: null,
-    paging: null,
-    results: null,
-    active: null,
-    loaded: false
-  }),
+import AssetTypeDetailHeader from "./AssetTypeDetailHeader.vue";
+import AssetTypeAssets from "./AssetTypeAssets.vue";
+import AssetTypeDeleteDialog from "./AssetTypeDeleteDialog.vue";
+import AssetTypeUpdateDialog from "./AssetTypeUpdateDialog.vue";
+import AssetListEntry from "../assets/AssetListEntry.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { routeTo } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
+import { getAssetType } from "../../rest/sitewhere-asset-types-api";
+import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
+
+@Component({
   components: {
-    NavigationPage,
-    NavigationActionButton,
-    Pager,
-    NoResultsPanel,
     AssetTypeDetailHeader,
+    AssetTypeAssets,
     AssetListEntry,
     AssetTypeDeleteDialog,
-    AssetTypeUpdateDialog
-  },
+    AssetTypeUpdateDialog,
+    EditButton,
+    DeleteButton
+  }
+})
+export default class AssetTypeDetail extends DetailComponent<IAssetType> {
+  // References.
+  $refs!: Refs<{
+    edit: AssetTypeUpdateDialog;
+    delete: DialogComponent<IAssetType>;
+  }>;
 
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
+  /** Record as asset type */
+  get assetType(): IAssetType | null {
+    return this.record;
+  }
 
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.AssetType;
+  }
 
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refreshAssets();
-    },
-    // Display asset type with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Called to refresh asset type data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
+  /** Get page title */
+  get title(): string {
+    return this.assetType ? this.assetType.name : "";
+  }
 
-      // Load area information.
-      _getAssetType(this.$store, token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onDataLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-    // Refresh list of assets for type.
-    refreshAssets: function() {
-      var component = this;
-      var paging = this.$data.paging.query;
+  /** Load record */
+  loadRecord(token: string): AxiosPromise<IAssetType> {
+    let format: IAssetTypeResponseFormat = {
+      includeContainedAreaTypes: false
+    };
+    return getAssetType(this.$store, token, format);
+  }
 
-      // Query for assets with this asset type.
-      let options = {};
-      options.assetTypeToken = this.$data.token;
+  // Called after data is loaded.
+  afterRecordLoaded(assetType: IAssetType) {
+    var section: INavigationSection = {
+      id: "assettypes",
+      title: "Asset Types",
+      icon: NavigationIcon.AssetType,
+      route: "/admin/assettypes/" + assetType.token,
+      longTitle: "Manage Asset Type: " + assetType.name
+    };
+    this.$store.commit("currentSection", section);
+  }
 
-      _listAssets(this.$store, options, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.$data.assets = response.data.results;
-        })
-        .catch(function(e) {});
-    },
-    // Called after data is loaded.
-    onDataLoaded: function(assetType) {
-      this.$data.assetType = assetType;
-      var section = {
-        id: "assettypes",
-        title: "Asset Types",
-        icon: "cog",
-        route: "/admin/assettypes/" + assetType.token,
-        longTitle: "Manage Asset Type: " + assetType.name
-      };
-      this.$store.commit("currentSection", section);
-    },
-    // Called to open edit dialog.
-    onEdit: function() {
-      this.$refs["update"].onOpenDialog();
-    },
-    // Called when asset type is updated.
-    onAssetTypeUpdated: function() {
-      this.refresh();
-    },
-    onDelete: function() {
-      this.$refs["delete"].showDeleteDialog();
-    },
-    // Called when asset type is deleted.
-    onAssetTypeDeleted: function() {
-      Utils.routeTo(this, "/assettypes");
-    },
-    // Open clicked asset.
-    onOpenAsset: function(asset) {
-      Utils.routeTo(this, "/assets/" + asset.token);
+  // Called to open edit dialog.
+  onEdit() {
+    if (this.token) {
+      this.$refs.edit.open(this.token);
     }
   }
-};
-</script>
 
-<style scoped>
-</style>
+  // Called when asset type is updated.
+  onAssetTypeUpdated() {
+    this.refresh();
+  }
+
+  onDelete() {
+    (this.$refs["delete"] as any).showDeleteDialog();
+  }
+
+  // Called when asset type is deleted.
+  onAssetTypeDeleted() {
+    routeTo(this, "/assettypes");
+  }
+}
+</script>

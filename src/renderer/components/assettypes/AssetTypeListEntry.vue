@@ -1,5 +1,5 @@
 <template>
-  <v-card flat hover>
+  <sw-list-entry>
     <v-container fluid @click="onAssetTypeClicked">
       <v-layout row>
         <v-flex xs3>
@@ -15,44 +15,39 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-card>
+  </sw-list-entry>
 </template>
 
-<script>
-import Utils from "../common/Utils";
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import { IAssetType } from "sitewhere-rest-api";
+import { IStyle } from "../common/Style";
 
-  components: {
-    Utils
-  },
+@Component({})
+export default class AssetTypeListEntry extends Vue {
+  @Prop() readonly assetType!: IAssetType;
 
-  props: ["assetType"],
-
-  computed: {
-    // Compute style of logo.
-    logoStyle: function() {
-      return {
-        "background-color": "#fff",
-        "background-image": "url(" + this.assetType.imageUrl + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%",
-        border: "1px solid #eee",
-        height: "120px",
-        width: "100px"
-      };
-    }
-  },
-
-  methods: {
-    // Callen when card is clicked.
-    onAssetTypeClicked: function() {
-      Utils.routeTo(this, "/assettypes/" + this.assetType.token);
-    }
+  // Compute style of logo.
+  get logoStyle(): IStyle {
+    return {
+      "background-color": "#fff",
+      "background-image": "url(" + this.assetType.imageUrl + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%",
+      border: "1px solid #eee",
+      height: "120px",
+      width: "100px"
+    };
   }
-};
+
+  // Callen when card is clicked.
+  onAssetTypeClicked() {
+    this.$emit("assetTypeOpened", this.assetType);
+  }
+}
 </script>
 
 <style scoped>

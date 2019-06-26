@@ -1,132 +1,84 @@
 <template>
   <v-app v-if="user">
-    <error-banner :error="error"></error-banner>
-    <v-progress-linear v-if="loading" class="call-progress pa-0 ma-0">
-    </v-progress-linear>
-    <v-navigation-drawer dark fixed mini-variant.sync="false"
-      v-model="drawer" app>
-      <v-list>
-        <v-list-tile tag="div">
-          <img src="https://s3.amazonaws.com/sitewhere-demo/sitewhere-white.png"
-            style="height: 40px;" />
-        </v-list-tile>
-      </v-list>
-      <v-divider></v-divider>
-      <navigation :sections="sections" @sectionSelected="onSectionClicked">
-      </navigation>
-    </v-navigation-drawer>
-    <v-toolbar fixed class="grey darken-3" dark app>
-      <v-toolbar-side-icon class="grey--text" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <font-awesome-icon :icon="section.icon" size="lg" />
-      <v-toolbar-title class="subheading">{{ section.longTitle }}</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-menu bottom right offset-y>
+    <sw-in-app-system-bar style="-webkit-app-region: drag"/>
+    <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
+      <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
+        <div class="sitewhere-logo"/>
+      </v-toolbar>
+      <sw-navigation :sections="sections" @sectionSelected="onSectionClicked"/>
+      <v-menu class="current-user-block" top right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
-          <font-awesome-icon icon="user" class="mr-2" />
+          <font-awesome-icon icon="user" class="mr-2"/>
           {{ fullname }}
         </v-btn>
         <v-list>
           <v-list-tile @click="onUserAction(action)" v-for="action in userActions" :key="action.id">
-            <font-awesome-icon :icon="action.icon" class="mr-2" />
+            <font-awesome-icon :icon="action.icon" class="mr-2"/>
             <v-list-tile-title v-text="action.title"></v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-menu>
-    </v-toolbar>
+    </v-navigation-drawer>
     <v-content>
-      <router-view></router-view>
+      <v-container class="pa-0" fluid fill-height>
+        <v-layout>
+          <v-flex fill-height>
+            <router-view></router-view>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-content>
-    <!--
-    <v-footer fixed dark class="pa-1">Copyright 2017 <strong>SiteWhere LLC</strong></v-footer>
-    -->
+    <sw-in-app-footer/>
   </v-app>
 </template>
 
-<script>
-import Navigation from "./common/Navigation";
-import ErrorBanner from "./common/ErrorBanner";
-import { _getJwt } from "../http/sitewhere-api-wrapper";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
-  data: () => ({
-    drawer: true,
-    tenantId: null,
-    sections: [
-      {
-        id: "tenants",
-        title: "Manage Tenants",
-        icon: "layer-group",
-        route: "system/tenants",
-        longTitle: "Manage System Tenants",
-        requireAll: ["ADMINISTER_TENANTS"]
-      },
-      {
-        id: "users",
-        title: "Manage Users",
-        icon: "users",
-        route: "system/users",
-        longTitle: "Manage System Users",
-        requireAll: ["ADMINISTER_USERS"]
-      },
-      {
-        id: "global",
-        title: "Global Microservices",
-        icon: "globe",
-        route: "system/microservices",
-        longTitle: "Manage Global microservices",
-        requireAll: ["ADMINISTER_TENANTS"]
-      }
-    ],
-    userActions: [
-      {
-        id: "logout",
-        title: "Log Out",
-        icon: "power-off"
-      }
-    ],
-    right: null
-  }),
+import { handleError } from "./common/Utils";
+import { AxiosResponse } from "axios";
+import { getJwt } from "../rest/sitewhere-api-wrapper";
+import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
+import { NavigationIcon } from "../libraries/constants";
 
-  components: {
-    Navigation,
-    ErrorBanner
-  },
-
-  computed: {
-    // Get loggied in user.
-    user: function() {
-      return this.$store.getters.user;
+@Component({})
+export default class SystemAdministration extends Vue {
+  drawer: boolean = true;
+  sections: INavigationSection[] = [
+    {
+      id: "tenants",
+      title: "Manage Tenants",
+      icon: NavigationIcon.Tenant,
+      route: "system/tenants",
+      longTitle: "Manage System Tenants",
+      requireAll: ["ADMINISTER_TENANTS"]
     },
-    // Get currently selected section.
-    section: function() {
-      return this.$store.getters.currentSection;
+    {
+      id: "users",
+      title: "Manage Users",
+      icon: NavigationIcon.User,
+      route: "system/users",
+      longTitle: "Manage System Users",
+      requireAll: ["ADMINISTER_USERS"]
     },
-    fullname: function() {
-      var user = this.$store.getters.user;
-      if (user) {
-        var first = this.$store.getters.user.firstName;
-        var last = this.$store.getters.user.lastName;
-        if (last.length > 1) {
-          return first + " " + last;
-        } else {
-          return first;
-        }
-      }
-      return "Not Logged In";
-    },
-
-    // Get global loading indicator.
-    loading: function() {
-      return this.$store.getters.loading;
-    },
-
-    // Get global error indicator.
-    error: function() {
-      return this.$store.getters.error;
+    {
+      id: "global",
+      title: "Global Microservices",
+      icon: NavigationIcon.Global,
+      route: "system/microservices",
+      longTitle: "Manage Global microservices",
+      requireAll: ["ADMINISTER_TENANTS"]
     }
-  },
+  ];
+  userActions: IAction[] = [
+    {
+      id: "logout",
+      title: "Log Out",
+      icon: "power-off"
+    }
+  ];
 
-  created: function() {
+  created() {
     // Set up JWT auto-refresh.
     this.refreshJwt();
 
@@ -138,52 +90,94 @@ export default {
       return;
     }
     this.onSectionClicked(this.$data.sections[0]);
-  },
+  }
 
-  methods: {
-    // Called when a section is clicked.
-    onSectionClicked: function(section) {
-      this.$store.commit("currentSection", section);
-      this.$router.push("/" + section.route);
-    },
-    onUserAction: function(action) {
-      if (action.id === "logout") {
-        this.onLogOut();
+  // Get logged in user.
+  get user() {
+    return this.$store.getters.user;
+  }
+
+  // Get currently selected section.
+  get section() {
+    return this.$store.getters.currentSection;
+  }
+
+  // Get user full name.
+  get fullname() {
+    var user = this.$store.getters.user;
+    if (user) {
+      var first = this.$store.getters.user.firstName;
+      var last = this.$store.getters.user.lastName;
+      if (last.length > 1) {
+        return first + " " + last;
+      } else {
+        return first;
       }
-    },
-    // Called when user requests log out.
-    onLogOut: function() {
-      console.log("Logging out!");
-      this.$store.commit("logOut");
-      this.$router.push("/");
-    },
+    }
+    return "Not Logged In";
+  }
 
-    // Set up timer for reloading JWT.
-    refreshJwt: function() {
-      var component = this;
-      _getJwt(this.$store)
-        .then(function(response) {
-          console.log("Refreshed JWT.");
-          var jwt = response.headers["x-sitewhere-jwt"];
-          component.$store.commit("jwt", jwt);
-          setTimeout(function() {
-            component.refreshJwt();
-          }, 1000 * 60 * 5);
-        })
-        .catch(function(e) {
-          console.log("Could not update JWT.");
-          console.log(e);
-          component.onLogOut();
-        });
+  // Get global loading indicator.
+  get loading() {
+    return this.$store.getters.loading;
+  }
+
+  // Get global error indicator.
+  get error() {
+    return this.$store.getters.error;
+  }
+
+  // Called when a section is clicked.
+  onSectionClicked(section: INavigationSection) {
+    this.$store.commit("currentSection", section);
+    this.$router.push("/" + section.route);
+  }
+
+  onUserAction(action: IAction) {
+    if (action.id === "logout") {
+      this.onLogOut();
     }
   }
-};
+
+  // Called when user requests log out.
+  onLogOut() {
+    this.$store.commit("logOut");
+    this.$router.push("/");
+  }
+
+  // Set up timer for reloading JWT.
+  async refreshJwt() {
+    var component = this;
+    try {
+      let response: AxiosResponse<any> = await getJwt(this.$store);
+      console.log("Refreshed JWT.");
+      var jwt = response.headers["x-sitewhere-jwt"];
+      this.$store.commit("jwt", jwt);
+      setTimeout(function() {
+        component.refreshJwt();
+      }, 1000 * 60 * 5);
+    } catch (err) {
+      handleError(err);
+      console.log("Could not update JWT.");
+      component.onLogOut();
+    }
+  }
+}
 </script>
 
 <style scoped>
-.call-progress {
-  position: fixed;
-  height: 100px;
-  z-index: 1000;
+.current-user-block {
+  position: absolute;
+  bottom: 40px;
+}
+.sitewhere-logo {
+  position: absolute;
+  top: 5px;
+  left: 17px;
+  right: 5px;
+  bottom: 5px;
+  background-image: url("../assets/sitewhere-small.png");
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 </style>

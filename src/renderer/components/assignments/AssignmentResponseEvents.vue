@@ -1,124 +1,91 @@
 <template>
-  <div>
-    <v-layout row wrap v-if="alerts">
-      <v-flex xs12>
-        <no-results-panel v-if="alerts.length === 0"
-          text="No Command Response Events Found for Assignment">
-        </no-results-panel>
-        <v-data-table v-if="alerts.length > 0" class="elevation-2 pa-0"
-          :headers="headers" :items="alerts" :hide-actions="true"
-          :total-items="0">
-          <template slot="items" slot-scope="props">
-            <td width="20%" :title="props.item.originatingEventId">
-              {{ props.item.originatingEventId }}
-            </td>
-            <td width="30%" :title="props.item.response">
-              {{ props.item.response }}
-            </td>
-            <td width="10%" style="white-space: nowrap" :title="utils.formatDate(props.item.eventDate)">
-              {{ utils.formatDate(props.item.eventDate) }}
-            </td>
-            <td width="10%" style="white-space: nowrap" :title="utils.formatDate(props.item.receivedDate)">
-              {{ utils.formatDate(props.item.receivedDate) }}
-            </td>
-          </template>
-        </v-data-table>
-      </v-flex>
-    </v-layout>
-    <pager :pageSizes="pageSizes" :results="results" @pagingUpdated="updatePaging"></pager>
-  </div>
+  <sw-data-table-tab
+    :tabkey="tabkey"
+    :loaded="loaded"
+    :headers="headers"
+    :results="results"
+    :pageSizes="pageSizes"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading assignment command responses ..."
+  >
+    <template slot="items" slot-scope="props">
+      <td width="20%" :title="props.item.originatingEventId">{{ props.item.originatingEventId }}</td>
+      <td width="30%" :title="props.item.response">{{ props.item.response }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.eventDate)"
+      >{{ formatDate(props.item.eventDate) }}</td>
+      <td
+        width="10%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.receivedDate)"
+      >{{ formatDate(props.item.receivedDate) }}</td>
+    </template>
+  </sw-data-table-tab>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import Pager from '../common/Pager'
-import NoResultsPanel from '../common/NoResultsPanel'
-import {_listCommandResponsesForAssignment} from '../../http/sitewhere-api-wrapper'
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
-export default {
+import { AxiosPromise } from "axios";
+import { listCommandResponsesForAssignment } from "../../rest/sitewhere-device-assignments-api";
+import { formatDate } from "../common/Utils";
+import { EventPageSizes, ResponseHeaders } from "../../libraries/constants";
+import {
+  IDeviceCommandResponse,
+  IDeviceCommandResponseResponseFormat,
+  IDeviceCommandResponseSearchResults,
+  IDateRangeSearchCriteria
+} from "sitewhere-rest-api";
 
-  data: () => ({
-    results: null,
-    paging: null,
-    alerts: null,
-    headers: [
-      {
-        align: 'left',
-        sortable: false,
-        text: 'Originating Event Id',
-        value: 'oeid'
-      }, {
-        align: 'left',
-        sortable: false,
-        text: 'Response',
-        value: 'response'
-      }, {
-        align: 'left',
-        sortable: false,
-        text: 'Event Date',
-        value: 'event'
-      }, {
-        align: 'left',
-        sortable: false,
-        text: 'Received Date',
-        value: 'received'
-      }
-    ],
-    pageSizes: [
-      {
-        text: '25',
-        value: 25
-      }, {
-        text: '50',
-        value: 50
-      }, {
-        text: '100',
-        value: 100
-      }
-    ]
-  }),
+@Component({})
+export default class AssignmentResponseEvents extends ListComponent<
+  IDeviceCommandResponse,
+  IDateRangeSearchCriteria,
+  IDeviceCommandResponseResponseFormat,
+  IDeviceCommandResponseSearchResults
+> {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly token!: string;
 
-  props: ['token'],
+  pageSizes: IPageSizes = EventPageSizes;
+  headers: ITableHeaders = ResponseHeaders;
 
-  components: {
-    Pager,
-    NoResultsPanel
-  },
+  /** Build search criteria for list */
+  buildSearchCriteria(): IDateRangeSearchCriteria {
+    let criteria: IDateRangeSearchCriteria = {};
+    return criteria;
+  }
 
-  computed: {
-    // Accessor for utility functions.
-    utils: function () {
-      return Utils
-    }
-  },
+  /** Build response format for list */
+  buildResponseFormat(): IDeviceCommandResponseResponseFormat {
+    let format: IDeviceCommandResponseResponseFormat = {};
+    return format;
+  }
 
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function (paging) {
-      this.$data.paging = paging
-      this.refresh()
-    },
+  /** Perform search */
+  performSearch(
+    criteria: IDateRangeSearchCriteria,
+    format: IDeviceCommandResponseResponseFormat
+  ): AxiosPromise<IDeviceCommandResponseSearchResults> {
+    return listCommandResponsesForAssignment(
+      this.$store,
+      this.token,
+      criteria,
+      format
+    );
+  }
 
-    // Refresh list of assignments.
-    refresh: function () {
-      var component = this
-      var query = this.$data.paging.query
-      _listCommandResponsesForAssignment(this.$store, this.token, query)
-        .then(function (response) {
-          component.results = response.data
-          component.alerts = response.data.results
-        }).catch(function (e) {
-        })
-    },
-
-    // Called when page number is updated.
-    onPageUpdated: function (pageNumber) {
-      this.$data.pager.page = pageNumber
-      this.refresh()
-    }
+  /** Make function available to template */
+  formatDate(date: Date) {
+    return formatDate(date);
   }
 }
 </script>
-
-<style scoped>
-</style>

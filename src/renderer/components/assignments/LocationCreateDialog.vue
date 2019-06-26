@@ -1,21 +1,25 @@
 <template>
   <div>
-    <location-dialog ref="dialog" title="Create Location Event" width="600"
-      createLabel="Create" cancelLabel="Cancel" @payload="onCommit">
-    </location-dialog>
+    <location-dialog
+      ref="dialog"
+      title="Create Location Event"
+      width="600"
+      createLabel="Create"
+      cancelLabel="Cancel"
+      @payload="onCommit"
+    ></location-dialog>
   </div>
 </template>
 
 <script>
-import LocationDialog from './LocationDialog'
-import {_createLocationForAssignment} from '../../http/sitewhere-api-wrapper'
+import LocationDialog from "./LocationDialog";
+
+import { createLocationForAssignment } from "../../rest/sitewhere-device-assignments-api";
 
 export default {
+  data: () => ({}),
 
-  data: () => ({
-  }),
-
-  props: ['token'],
+  props: ["token"],
 
   components: {
     LocationDialog
@@ -23,39 +27,36 @@ export default {
 
   methods: {
     // Get handle to nested dialog component.
-    getDialogComponent: function () {
-      return this.$refs['dialog']
+    getDialogComponent: function() {
+      return this.$refs["dialog"];
     },
 
     // Loads the component from a json payload.
-    load: function (payload) {
-      this.getDialogComponent().load(payload)
+    load: function(payload) {
+      this.getDialogComponent().load(payload);
     },
 
     // Send event to open dialog.
-    onOpenDialog: function () {
-      this.getDialogComponent().reset()
-      this.getDialogComponent().openDialog()
+    onOpenDialog: function() {
+      this.getDialogComponent().reset();
+      this.getDialogComponent().openDialog();
     },
 
     // Handle payload commit.
-    onCommit: function (payload) {
-      var component = this
-      _createLocationForAssignment(this.$store, this.token, payload)
-        .then(function (response) {
-          component.onCommitted(response)
-        }).catch(function (e) {
+    onCommit: function(payload) {
+      var component = this;
+      createLocationForAssignment(this.$store, this.token, payload)
+        .then(function(response) {
+          component.onCommitted(response);
         })
+        .catch(function(e) {});
     },
 
     // Handle successful commit.
-    onCommitted: function (result) {
-      this.getDialogComponent().closeDialog()
-      this.$emit('locationAdded')
+    onCommitted: function(result) {
+      this.getDialogComponent().closeDialog();
+      this.$emit("locationAdded");
     }
   }
-}
+};
 </script>
-
-<style scoped>
-</style>

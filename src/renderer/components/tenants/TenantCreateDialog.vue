@@ -1,58 +1,62 @@
 <template>
-  <div>
-    <tenant-dialog ref="dialog" title="Create Tenant"
-      width="600" resetOnOpen="true" createLabel="Create" cancelLabel="Cancel"
-      @payload="onCommit">
-    </tenant-dialog>
-    <!-- <floating-action-button label="Add Tenant" icon="plus"
-      @action="onOpenDialog">
-    </floating-action-button> -->
-  </div>
+  <tenant-dialog
+    ref="dialog"
+    title="Create Tenant"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import FloatingActionButton from "../common/FloatingActionButton";
-import TenantDialog from "./TenantDialog";
-import { _createTenant } from "../../http/sitewhere-api-wrapper";
+<script lang="ts">
+import {
+  Component,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-export default {
-  data: () => ({}),
+import TenantDialog from "./TenantDialog.vue";
 
+import { AxiosPromise } from "axios";
+import { ITenant, ITenantCreateRequest } from "sitewhere-rest-api";
+import { createTenant } from "../../rest/sitewhere-tenants-api";
+
+@Component({
   components: {
-    FloatingActionButton,
     TenantDialog
-  },
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      console.log(payload);
-      var component = this;
-      _createTenant(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("tenantAdded");
-    }
   }
-};
+})
+export default class TenantCreateDialog extends CreateDialogComponent<
+  ITenant,
+  ITenantCreateRequest
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<ITenant>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<ITenant> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: ITenantCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: ITenantCreateRequest): AxiosPromise<ITenant> {
+    return createTenant(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: ITenant): void {
+    this.$emit("tenantAdded", payload);
+  }
+}
 </script>
 
 <style scoped>

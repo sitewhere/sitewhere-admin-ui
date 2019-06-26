@@ -1,40 +1,42 @@
 <template>
-  <v-tabs-content :id="attributeGroup.uid">
-    <v-card>
-      <v-card-text class="subheading pa-0 pl-2">
-        <v-container fluid>
-          <attribute-field-panel v-for="attribute in attributeGroup.attributes"
-            :key="attribute.name" :attribute="attribute" :identifier="identifier"
-            :tenantToken="tenantToken" :readOnly="readOnly"
-            @attributeUpdated="onAttributeUpdated">
-          </attribute-field-panel>
-        </v-container>
-      </v-card-text>
-    </v-card>
-  </v-tabs-content>
+  <v-container fluid>
+    <attribute-field-panel
+      class="mb-2"
+      v-for="attribute in attributeGroup.attributes"
+      :key="attribute.name"
+      :attribute="attribute"
+      :identifier="identifier"
+      :tenantToken="tenantToken"
+      :readOnly="readOnly"
+      @attributeUpdated="onAttributeUpdated"
+    />
+  </v-container>
 </template>
 
-<script>
-import AttributeFieldPanel from './AttributeFieldPanel'
+<script lang="ts">
+import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 
-export default {
+import {
+  IConfiguredAttributeGroup,
+  IAttributeUpdate
+} from "./ConfigurationModel";
 
-  data: () => ({
-  }),
+import AttributeFieldPanel from "./AttributeFieldPanel.vue";
 
-  props: ['attributeGroup', 'readOnly', 'identifier', 'tenantToken'],
-
+@Component({
   components: {
     AttributeFieldPanel
-  },
+  }
+})
+export default class AttributeGroupPanel extends Vue {
+  @Prop() readonly attributeGroup!: IConfiguredAttributeGroup;
+  @Prop({ default: false }) readonly readOnly!: boolean;
+  @Prop() readonly identifier!: string;
+  @Prop() readonly tenantToken!: string;
 
-  methods: {
-    onAttributeUpdated: function (updated) {
-      this.$emit('attributeUpdated', updated)
-    }
+  onAttributeUpdated(updated: IAttributeUpdate) {
+    this.$emit("attributeUpdated", updated);
   }
 }
 </script>
-
-<style scoped>
-</style>

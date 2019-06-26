@@ -1,102 +1,68 @@
 <template>
-  <navigation-header-panel v-if="asset" :imageUrl="asset.imageUrl"
-    :qrCodeUrl="qrCodeUrl" height="190px">
-    <span slot="content">
-      <header-field label="Token">
-        <clipboard-copy-field :field="asset.token"
-          message="Token copied to clipboard">
-        </clipboard-copy-field>
-      </header-field>
-      <header-field label="Name">
+  <sw-navigation-header-panel v-if="asset" :imageUrl="imageUrl" height="200px">
+    <template slot="content">
+      <sw-header-field label="Token">
+        <sw-clipboard-copy-field :field="asset.token" message="Token copied to clipboard"/>
+      </sw-header-field>
+      <sw-header-field label="Name">
         <span>{{ asset.name }}</span>
-      </header-field>
-      <linked-header-field label="Asset Type"
+      </sw-header-field>
+      <sw-linked-header-field
+        label="Asset Type"
         :text="asset.assetType.name"
-        :url="'/assettypes/' + asset.assetType.token">
-      </linked-header-field>
-      <header-field label="Image URL">
+        :url="'/assettypes/' + asset.assetType.token"
+      />
+      <sw-header-field label="Image URL">
         <span>{{ asset.imageUrl }}</span>
-      </header-field>
-      <header-field label="Created">
+      </sw-header-field>
+      <sw-header-field label="Created">
         <span>{{ formatDate(asset.createdDate) }}</span>
-      </header-field>
-      <header-field label="Updated">
+      </sw-header-field>
+      <sw-header-field label="Updated">
         <span>{{ formatDate(asset.updatedDate) }}</span>
-      </header-field>
-    </span>
-  </navigation-header-panel>
+      </sw-header-field>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl"/>
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-import Utils from '../common/Utils'
-import NavigationHeaderPanel from '../common/NavigationHeaderPanel'
-import HeaderField from '../common/HeaderField'
-import LinkedHeaderField from '../common/LinkedHeaderField'
-import ClipboardCopyField from '../common/ClipboardCopyField'
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
 
-export default {
+import { formatDate } from "../common/Utils";
+import { IAsset } from "sitewhere-rest-api";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-  data: () => ({
-  }),
-
-  props: ['asset'],
-
+@Component({
   components: {
-    NavigationHeaderPanel,
-    HeaderField,
-    LinkedHeaderField,
-    ClipboardCopyField
-  },
+    AuthenticatedImage
+  }
+})
+export default class AssetDetailHeader extends HeaderComponent<IAsset> {
+  // Reference record as area.
+  get asset(): IAsset {
+    return this.record;
+  }
 
-  computed: {
-    // Compute QR code URL.
-    qrCodeUrl: function () {
-      return 'assets/' + this.asset.token + '/label/qrcode'
-    }
-  },
+  // Token.
+  get token(): string {
+    return this.asset ? this.asset.token : "";
+  }
 
-  methods: {
-    // Format date.
-    formatDate: function (date) {
-      return Utils.formatDate(date)
-    }
+  // Get URL for image.
+  get imageUrl(): string {
+    return this.asset ? this.asset.imageUrl : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl() {
+    return "assets/" + this.token + "/label/qrcode";
+  }
+
+  formatDate(date: Date) {
+    return formatDate(date);
   }
 }
 </script>
-
-<style scoped>
-.asset {
-  min-height: 200px;
-  min-width: 920px;
-  overflow-y: hidden;
-}
-
-.asset-logo {
-  position: absolute;
-  top: 10px;
-  left: 7px;
-  bottom: 7px;
-  width: 180px;
-}
-
-.asset-qrcode {
-  position: absolute;
-  top: 10px;
-  right: 7px;
-  bottom: 7px;
-  width: 180px;
-}
-
-.asset-headers {
-  position: absolute;
-  top: 20px;
-  left: 200px;
-  right: 200px;
-}
-
-.options-menu {
-  position: absolute;
-  top: 10px;
-  right: 190px;
-}
-</style>
