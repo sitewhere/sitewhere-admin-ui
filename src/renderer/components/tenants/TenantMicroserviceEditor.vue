@@ -20,18 +20,15 @@
       <v-tab key="runtime">Runtime</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="configuration">
-        <microservice-editor
-          :configuration="configuration"
-          :configurationModel="configurationModel"
-          :identifier="identifier"
-          :tenantToken="tenantToken"
-          @dirty="onConfigurationUpdated"
-        />
-      </v-tab-item>
-      <v-tab-item key="scripts">
-        <scripts-manager :identifier="identifier"/>
-      </v-tab-item>
+      <microservice-editor
+        tabkey="configuration"
+        :configuration="configuration"
+        :configurationModel="configurationModel"
+        :identifier="identifier"
+        :tenantToken="tenantToken"
+        @dirty="onConfigurationUpdated"
+      />
+      <scripts-manager tabkey="scripts" :identifier="identifier"/>
       <v-tab-item key="runtime">
         <tenant-runtimes-block class="ma-1" :identifier="identifier" :tenantToken="tenantToken"/>
       </v-tab-item>

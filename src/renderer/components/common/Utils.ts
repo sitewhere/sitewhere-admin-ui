@@ -1,4 +1,6 @@
 import moment from "moment";
+import { IAlertMessage } from "./ApplicationModel";
+import Vue from "vue";
 
 /**
  * Common error handler.
@@ -6,6 +8,20 @@ import moment from "moment";
  */
 export function handleError(err: Error): void {
   console.log(err);
+}
+
+/**
+ * Show informational message in snackbar.
+ * @param component
+ * @param message
+ */
+export function showMessage(component: Vue, message: string): IAlertMessage {
+  let alert: IAlertMessage = {
+    message: message,
+    type: "info"
+  };
+  component.$store.commit("message", alert);
+  return alert;
 }
 
 /**
