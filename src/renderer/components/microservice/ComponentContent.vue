@@ -1,5 +1,5 @@
 <template>
-  <div v-if="content">
+  <v-card flat v-if="content">
     <v-card-text class="pa-0" v-for="contextElement in content.elements" :key="contextElement.id">
       <element-placeholder
         v-if="!contextElement.hasContent"
@@ -30,7 +30,7 @@
       </v-toolbar>
     </v-card-text>
     <element-delete-dialog ref="delete" :content="content" @deleted="onDeleteComponent"/>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts">

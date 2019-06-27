@@ -28,7 +28,8 @@ export enum NavigationIcon {
   Edit = "create",
   Delete = "delete_forever",
   Filter = "filter_list",
-  Up = "arrow_upward"
+  Up = "arrow_upward",
+  Script = "description"
 }
 
 // Page sizes shown for event list pages.

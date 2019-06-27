@@ -3,6 +3,7 @@ import Vuex, { StoreOptions } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import { IUser, ITenant } from "sitewhere-rest-api";
 import { INavigationSection } from "sitewhere-ide-common";
+import { IAlertMessage } from "../components/common/ApplicationModel";
 
 Vue.use(Vuex);
 
@@ -22,6 +23,7 @@ export interface SiteWhereUiSettings {
   currentSection?: INavigationSection;
   loading?: boolean;
   error?: boolean;
+  message?: IAlertMessage;
 }
 
 const store: StoreOptions<SiteWhereUiSettings> = {
@@ -38,13 +40,15 @@ const store: StoreOptions<SiteWhereUiSettings> = {
     selectedTenant: undefined,
     currentSection: undefined,
     loading: false,
-    error: undefined
+    error: undefined,
+    message: undefined
   },
   mutations: {
     // Set server protocol.
     protocol(state, protocol) {
       state.protocol = protocol;
     },
+
     // Set server hostname.
     server(state, server) {
       state.server = server;
@@ -105,6 +109,11 @@ const store: StoreOptions<SiteWhereUiSettings> = {
       state.error = error;
     },
 
+    // Set alert message.
+    message(state, message) {
+      state.message = message;
+    },
+
     // Log out of the application.
     logOut(state) {
       state.user = undefined;
@@ -113,6 +122,7 @@ const store: StoreOptions<SiteWhereUiSettings> = {
       state.selectedTenant = undefined;
       state.currentSection = undefined;
       state.error = undefined;
+      state.message = undefined;
     }
   },
 
@@ -159,6 +169,10 @@ const store: StoreOptions<SiteWhereUiSettings> = {
 
     error: state => {
       return state.error;
+    },
+
+    message: state => {
+      return state.message;
     }
   }
 };

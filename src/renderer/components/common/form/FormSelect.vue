@@ -12,6 +12,7 @@
       :chips="chips"
       :prepend-icon="icon"
       placeholder=" "
+      @change="onSelectionChanged"
     />
     <div class="verror">
       <slot/>
@@ -42,6 +43,10 @@ export default class FormSelect extends Vue {
 
   set wrapped(updated: string) {
     this.$emit("input", updated);
+  }
+
+  onSelectionChanged(selection: any) {
+    this.$emit("change", selection);
   }
 }
 </script>

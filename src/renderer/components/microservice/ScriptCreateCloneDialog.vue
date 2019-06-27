@@ -1,7 +1,7 @@
 <template>
-  <scripts-dialog
+  <script-clone-dialog
     ref="dialog"
-    title="Create Script"
+    title="Clone Script"
     width="700"
     resetOnOpen="true"
     :identifier="identifier"
@@ -20,10 +20,10 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import ScriptsDialog from "./ScriptsDialog.vue";
+import ScriptCloneDialog from "./ScriptCloneDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { IScriptCreateRequest, IScriptMetadata } from "sitewhere-rest-api";
+import { IScriptVersion } from "sitewhere-rest-api";
 import { createDevice } from "../../rest/sitewhere-devices-api";
 import {
   createGlobalScript,
@@ -32,12 +32,12 @@ import {
 
 @Component({
   components: {
-    ScriptsDialog
+    ScriptCloneDialog
   }
 })
-export default class ScriptsCreateDialog extends CreateDialogComponent<
-  IScriptMetadata,
-  IScriptCreateRequest
+export default class ScriptCreateCloneDialog extends CreateDialogComponent<
+  IScriptVersion,
+  IScriptVersion
 > {
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
@@ -48,33 +48,23 @@ export default class ScriptsCreateDialog extends CreateDialogComponent<
   }>;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IScriptMetadata> {
+  getDialog(): DialogComponent<IScriptVersion> {
     return this.$refs.dialog;
   }
 
   /** Called on payload commit */
-  onCommit(payload: IScriptCreateRequest): void {
+  onCommit(payload: IScriptVersion): void {
     this.commit(payload);
   }
 
   /** Implemented in subclasses to save payload */
-  save(payload: IScriptCreateRequest): AxiosPromise<IScriptMetadata> {
-    var component = this;
-    if (!this.tenantToken) {
-      return createGlobalScript(this.$store, this.identifier, payload);
-    } else {
-      return createTenantScript(
-        this.$store,
-        this.identifier,
-        this.tenantToken,
-        payload
-      );
-    }
+  save(payload: IScriptVersion): IScriptVersion {
+    return payload;
   }
 
   /** Implemented in subclasses for after-save */
-  afterSave(payload: IScriptMetadata): void {
-    this.$emit("scriptAdded", payload.id);
+  afterSave(payload: IScriptVersion): void {
+    this.$emit("save", payload);
   }
 }
 </script>

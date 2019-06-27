@@ -1,31 +1,45 @@
 <template>
   <div>
-    <v-breadcrumbs divider="/" class="pb-0 mb-0">
-      <v-breadcrumbs-item v-for="bcContext in contextStack" :key="bcContext.model.localName">
-        <v-btn
-          small
-          flat
-          @click="onPopToContext(bcContext)"
-          class="pa-0 ma-0"
-          style="font-size: 8pt;"
-        >{{ bcContext.model.name }}</v-btn>
-      </v-breadcrumbs-item>
-    </v-breadcrumbs>
-    <v-card flat class="mb-3" v-if="context">
-      <v-toolbar flat dark dense card class="primary">
-        <font-awesome-icon :icon="context.model.icon" size="lg"/>
-        <v-toolbar-title class="white--text">{{context.model.name}}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon class="ml-0" v-if="contextStack.length > 1" @click="onPopContext">
-          <font-awesome-icon icon="arrow-up" size="lg"/>
-        </v-btn>
-        <v-btn icon class="ml-0" v-if="context.model.attributes" @click="onConfigureCurrent">
-          <font-awesome-icon icon="cog" size="lg"/>
-        </v-btn>
-      </v-toolbar>
+    <v-card flat v-if="context">
+      <condensed-toolbar :title="context.model.name">
+        <template slot="icon">
+          <font-awesome-icon :icon="context.model.icon" size="lg"/>
+        </template>
+        <v-tooltip left>
+          <v-icon
+            v-if="contextStack.length > 1"
+            @click="onPopContext"
+            small
+            class="mr-2"
+            slot="activator"
+          >arrow_upward</v-icon>
+          <span>Up One Level</span>
+        </v-tooltip>
+        <v-tooltip left>
+          <v-icon
+            v-if="context.model.attributes"
+            @click="onConfigureCurrent"
+            small
+            slot="activator"
+          >settings</v-icon>
+          <span>Configure</span>
+        </v-tooltip>
+      </condensed-toolbar>
+      <v-card flat color="grey lighten-3">
+        <v-breadcrumbs divider="/" class="pb-0 mb-0 pt-0 mt-0">
+          <v-breadcrumbs-item v-for="bcContext in contextStack" :key="bcContext.model.localName">
+            <v-btn
+              small
+              flat
+              @click="onPopToContext(bcContext)"
+              class="pa-0 ma-0"
+              style="font-size: 8pt;"
+            >{{ bcContext.model.name }}</v-btn>
+          </v-breadcrumbs-item>
+        </v-breadcrumbs>
+      </v-card>
       <v-card-text>
-        <div class="subheading mb-3" v-html="context.model.description"/>
-        <v-divider/>
+        <div class="subheading" v-html="context.model.description"/>
         <slot/>
       </v-card-text>
     </v-card>
@@ -37,7 +51,13 @@ import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 import { IConfigurationContext } from "./ConfigurationModel";
 
-@Component({})
+import CondensedToolbar from "../common/CondensedToolbar.vue";
+
+@Component({
+  components: {
+    CondensedToolbar
+  }
+})
 export default class MicroserviceBanner extends Vue {
   @Prop() readonly context!: IConfigurationContext;
   @Prop() readonly contextStack!: IConfigurationContext[];

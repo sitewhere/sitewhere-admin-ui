@@ -1,14 +1,18 @@
 <template>
-  <span>
+  <sw-content-tab :tabkey="tabkey" :loaded="loaded" loadingMessage="Loading...">
+    <template slot="header">
+      <microservice-banner
+        :context="context"
+        :contextStack="contextStack"
+        @popContext="onPopContext"
+        @popToContext="onPopToContext"
+        @configureCurrent="onOpenUpdateDialog"
+      />
+      <v-divider/>
+    </template>
     <!-- Banner shown above microservice content -->
-    <microservice-banner
-      :context="context"
-      :contextStack="contextStack"
-      @popContext="onPopContext"
-      @popToContext="onPopToContext"
-      @configureCurrent="onOpenUpdateDialog"
-    >
-      <!-- Attributes -->
+    <!-- Attributes -->
+    <v-card flat>
       <v-tabs v-model="active" v-if="groups.length > 0">
         <v-tab v-for="group in groups" :key="group.name">{{ group.name }}</v-tab>
         <slot name="tab-items"/>
@@ -21,31 +25,33 @@
           />
         </v-tab-item>
       </v-tabs>
-      <!-- Elements -->
-      <component-content
-        :content="content"
-        @addComponent="onAddComponent"
-        @pushContext="onPushChildContext"
-        @deleteComponent="onDeleteComponent"
+    </v-card>
+    <!-- Elements -->
+    <component-content
+      :content="content"
+      @addComponent="onAddComponent"
+      @pushContext="onPushChildContext"
+      @deleteComponent="onDeleteComponent"
+    />
+    <template slot="dialogs">
+      <attributes-create-dialog
+        ref="create"
+        :context="editingContext"
+        :groups="editingGroups"
+        :identifier="identifier"
+        :tenantToken="tenantToken"
+        @attributesSaved="onCommitAddedComponent"
       />
-    </microservice-banner>
-    <attributes-create-dialog
-      ref="create"
-      :context="editingContext"
-      :groups="editingGroups"
-      :identifier="identifier"
-      :tenantToken="tenantToken"
-      @attributesSaved="onCommitAddedComponent"
-    />
-    <attributes-update-dialog
-      ref="update"
-      :context="editingContext"
-      :groups="editingGroups"
-      :identifier="identifier"
-      :tenantToken="tenantToken"
-      @attributesSaved="onAttributesUpdated"
-    />
-  </span>
+      <attributes-update-dialog
+        ref="update"
+        :context="editingContext"
+        :groups="editingGroups"
+        :identifier="identifier"
+        :tenantToken="tenantToken"
+        @attributesSaved="onAttributesUpdated"
+      />
+    </template>
+  </sw-content-tab>
 </template>
 
 <script lang="ts">
@@ -80,6 +86,7 @@ import { IElementContent, IConfigurationModel } from "sitewhere-rest-api";
   }
 })
 export default class MicroserviceEditor extends Vue {
+  @Prop() readonly tabkey!: string;
   @Prop() readonly configuration!: IElementContent;
   @Prop() readonly configurationModel!: IConfigurationModel;
   @Prop() readonly identifier!: string;
@@ -92,6 +99,7 @@ export default class MicroserviceEditor extends Vue {
   editingGroups: IConfiguredAttributeGroup[] = [];
   active: string | null = null;
   dirty: boolean = false;
+  loaded: boolean = true;
 
   // References.
   $refs!: Refs<{

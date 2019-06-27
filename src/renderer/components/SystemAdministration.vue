@@ -29,6 +29,7 @@
       </v-container>
     </v-content>
     <sw-in-app-footer/>
+    <notifications/>
   </v-app>
 </template>
 
@@ -40,9 +41,15 @@ import { AxiosResponse } from "axios";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
 import { NavigationIcon } from "../libraries/constants";
+import Notifications from "./common/Notifications.vue";
 
-@Component({})
+@Component({
+  components: {
+    Notifications
+  }
+})
 export default class SystemAdministration extends Vue {
+  showMessage: boolean = true;
   drawer: boolean = true;
   sections: INavigationSection[] = [
     {

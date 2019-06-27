@@ -37,10 +37,10 @@ export function getScriptTemplateContent(
   store: Store<SiteWhereUiSettings>,
   identifier: string,
   templateId: string
-): Promise<AxiosResponse<IScriptTemplate>> {
+): Promise<AxiosResponse<string>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
-    IScriptTemplate
+    string
   > = SiteWhere.API.Scripting.getScriptTemplateContent(
     axios,
     identifier,

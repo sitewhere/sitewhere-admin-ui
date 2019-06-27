@@ -11,18 +11,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <template slot="tabs">
-      <v-tab key="details">Details</v-tab>
-      <v-tab key="content">Content</v-tab>
-    </template>
-    <template slot="tab-items">
-      <v-tab-item key="details">
-        <script-detail-fields ref="details"/>
-      </v-tab-item>
-      <v-tab-item key="content">
-        <script-content-fields :identifier="identifier" ref="content"/>
-      </v-tab-item>
-    </template>
+    <script-clone-fields ref="details"/>
   </sw-base-dialog>
 </template>
 
@@ -37,19 +26,15 @@ import {
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 
-import ScriptDetailFields from "./ScriptDetailFields.vue";
-import ScriptContentFields from "./ScriptContentFields.vue";
-import { IScriptCreateRequest } from "sitewhere-rest-api";
+import ScriptCloneFields from "./ScriptCloneFields.vue";
+import { IScriptVersion } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    ScriptDetailFields,
-    ScriptContentFields
+    ScriptCloneFields
   }
 })
-export default class ScriptsDialog extends DialogComponent<
-  IScriptCreateRequest
-> {
+export default class ScriptsDialog extends DialogComponent<IScriptVersion> {
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;
@@ -59,23 +44,18 @@ export default class ScriptsDialog extends DialogComponent<
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
-    details: ScriptDetailFields;
-    content: ScriptContentFields;
+    details: ScriptCloneFields;
   }>;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
-    return NavigationIcon.DeviceType;
+    return NavigationIcon.Script;
   }
 
   // Generate payload from UI.
   generatePayload() {
     let payload: any = {};
-    Object.assign(
-      payload,
-      this.$refs.details.save(),
-      this.$refs.content.save()
-    );
+    Object.assign(payload, this.$refs.details.save());
     return payload;
   }
 
@@ -84,20 +64,14 @@ export default class ScriptsDialog extends DialogComponent<
     if (this.$refs.details) {
       this.$refs.details.reset();
     }
-    if (this.$refs.content) {
-      this.$refs.content.reset();
-    }
     this.$refs.dialog.setActiveTab("details");
   }
 
   // Load dialog from a given payload.
-  load(payload: IScriptCreateRequest) {
+  load(payload: IScriptVersion) {
     this.reset();
     if (this.$refs.details) {
       this.$refs.details.load(payload);
-    }
-    if (this.$refs.content) {
-      this.$refs.content.load(payload);
     }
   }
 
@@ -108,13 +82,7 @@ export default class ScriptsDialog extends DialogComponent<
       return;
     }
 
-    if (!this.$refs.content.validate()) {
-      this.$refs.dialog.setActiveTab("content");
-      return;
-    }
-
     var payload = this.generatePayload();
-    console.log("Before payload emit:", this);
     this.$emit("payload", payload);
   }
 }
