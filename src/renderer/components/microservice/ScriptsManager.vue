@@ -21,29 +21,15 @@
             </template>
             <v-menu v-if="selectedScript" offset-y class="mr-3" max-width="400">
               <v-btn color="primary" dark slot="activator">
+                <v-icon small class="mr-1" :color="versionColor">{{ versionIcon }}</v-icon>
                 <span class="white--text">{{ formatDate(selectedVersion.createdDate) }}</span>
                 <v-icon small>expand_more</v-icon>
               </v-btn>
-              <v-list dense two-line>
-                <template v-for="version in versions">
-                  <v-list-tile v-bind:key="version.versionId" @click="onVersionClicked(version)">
-                    <v-list-tile-content>
-                      <v-list-tile-title
-                        v-if="selectedScript.activeVersion === version.versionId"
-                        class="subheading"
-                      >
-                        <strong>{{ formatDate(version.createdDate) }} (Active)</strong>
-                      </v-list-tile-title>
-                      <v-list-tile-title
-                        v-else
-                        class="subheading"
-                      >{{ formatDate(version.createdDate) }}</v-list-tile-title>
-                      <v-list-tile-sub-title v-html="version.comment"></v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <v-divider v-bind:key="'div_' + version.versionId"></v-divider>
-                </template>
-              </v-list>
+              <script-version-list
+                :versions="versions"
+                :selectedScript="selectedScript"
+                @selected="onVersionSelected"
+              />
             </v-menu>
             <v-tooltip left>
               <v-icon @click="onActivate" small class="mr-2" slot="activator">play_circle_outline</v-icon>
@@ -116,6 +102,7 @@ import Vue from "vue";
 import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
 
 import CondensedToolbar from "../common/CondensedToolbar.vue";
+import ScriptVersionList, { isVersionActive } from "./ScriptVersionList.vue";
 import ScriptsContentEditor from "./ScriptsContentEditor.vue";
 import ScriptsCreateDialog from "./ScriptsCreateDialog.vue";
 import ScriptCreateCloneDialog from "./ScriptCreateCloneDialog.vue";
@@ -139,6 +126,7 @@ import { IScriptMetadata, IScriptVersion } from "sitewhere-rest-api";
 @Component({
   components: {
     CondensedToolbar,
+    ScriptVersionList,
     ScriptsContentEditor,
     ScriptsCreateDialog,
     ScriptCreateCloneDialog
@@ -234,7 +222,7 @@ export default class ScriptsManager extends Vue {
   }
 
   /** Called when a version is clicked */
-  onVersionClicked(version: IScriptVersion) {
+  onVersionSelected(version: IScriptVersion) {
     this.selectedVersion = version;
   }
 
@@ -370,6 +358,20 @@ export default class ScriptsManager extends Vue {
       return this.selectedScript.id + "." + this.selectedScript.type;
     }
     return null;
+  }
+
+  /** Get icon indicating whether current version is active */
+  get versionIcon(): string {
+    return isVersionActive(this.selectedScript, this.selectedVersion)
+      ? "check_circle"
+      : "power_settings_new";
+  }
+
+  /** Get icon indicating whether current version is active */
+  get versionColor(): string {
+    return isVersionActive(this.selectedScript, this.selectedVersion)
+      ? "#6c6"
+      : "#ccc";
   }
 
   /** Make function available to template */
