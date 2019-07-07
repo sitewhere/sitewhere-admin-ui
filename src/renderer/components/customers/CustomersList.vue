@@ -13,10 +13,10 @@
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <customer-create-dialog ref="add" @customerAdded="onCustomerAdded"/>
+      <customer-create-dialog ref="add" @customerAdded="onCustomerAdded" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Add Customer" @action="onAddCustomer"/>
+      <add-button tooltip="Add Customer" @action="onAddCustomer" />
     </template>
   </sw-list-page>
 </template>

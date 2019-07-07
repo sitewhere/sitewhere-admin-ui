@@ -58,6 +58,3 @@ export default class CustomerTypeCreateDialog extends CreateDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

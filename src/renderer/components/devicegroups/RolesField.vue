@@ -38,7 +38,7 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "sitewhere-ide-common";
 
 @Component
-export default class Pager extends Vue {
+export default class RolesField extends Vue {
   @Prop() readonly value!: string[];
   @Prop() readonly icon!: string;
 

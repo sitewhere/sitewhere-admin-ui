@@ -50,7 +50,7 @@ import { IAssetType } from "sitewhere-rest-api";
     BrandingPanel
   }
 })
-export default class DeviceTypeDialog extends DialogComponent<IAssetType> {
+export default class AssetTypeDialog extends DialogComponent<IAssetType> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;

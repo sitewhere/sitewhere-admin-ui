@@ -71,6 +71,13 @@ export default class TenantAdministration extends Vue {
           longTitle: "Manage Devices"
         },
         {
+          id: "assignments",
+          title: "Device Assignments",
+          icon: NavigationIcon.DeviceAssignment,
+          route: "assignments",
+          longTitle: "Manage Assignments"
+        },
+        {
           id: "groups",
           title: "Device Groups",
           icon: NavigationIcon.DeviceGroup,

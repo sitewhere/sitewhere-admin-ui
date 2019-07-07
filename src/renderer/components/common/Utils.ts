@@ -153,3 +153,39 @@ export function routeToDevice(component: any, token: string) {
 export function pagingForAllResults() {
   return "page=1&pageSize=0";
 }
+
+/** Generate a unique id */
+export function generateUniqueId(): string {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let r = crypto.getRandomValues(new Uint8Array(1))[0] % 16 | 0;
+    let v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+/**
+ * Move an element in an array from one index to another.
+ * @param arr
+ * @param old_index
+ * @param new_index
+ */
+export function arrayMove(
+  arr: any[],
+  old_index: number,
+  new_index: number
+): any[] {
+  while (old_index < 0) {
+    old_index += arr.length;
+  }
+  while (new_index < 0) {
+    new_index += arr.length;
+  }
+  if (new_index >= arr.length) {
+    var k = new_index - arr.length;
+    while (k-- + 1) {
+      arr.push(undefined);
+    }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  return arr;
+}

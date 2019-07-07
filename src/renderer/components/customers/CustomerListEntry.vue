@@ -25,7 +25,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 import { ICustomer } from "sitewhere-rest-api";
 
 @Component({})
-export default class DeviceTypeSelector extends Vue {
+export default class CustomerListEntry extends Vue {
   @Prop() readonly customer!: ICustomer;
 
   // Compute style of logo.

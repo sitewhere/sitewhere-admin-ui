@@ -58,7 +58,7 @@ import {
     AssetUpdateDialog
   }
 })
-export default class AreaDetail extends DetailComponent<IAsset> {
+export default class AssetDetail extends DetailComponent<IAsset> {
   // References.
   $refs!: Refs<{
     edit: AssetUpdateDialog;

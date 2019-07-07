@@ -97,6 +97,3 @@ export default class CustomerTypesList extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

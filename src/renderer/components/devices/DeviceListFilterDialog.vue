@@ -105,149 +105,111 @@
   </sw-base-dialog>
 </template>
 
-<script>
-import { BaseDialog } from "sitewhere-ide-components";
-import AreaChooser from "../areas/AreaChooser";
-import DeviceTypeChooser from "../devicetypes/DeviceTypeChooser";
-import DeviceGroupChooser from "../devicegroups/DeviceGroupChooser";
+<script lang="ts">
+import { Component, Prop, Watch } from "sitewhere-ide-common";
+import Vue from "vue";
 
-export default {
-  data: () => ({
-    active: null,
-    menu: null,
-    areaFilter: null,
-    deviceTypeFilter: null,
-    deviceTypeToken: null,
-    deviceGroupFilter: null,
-    createdDateFilter: "all",
-    createdAfter: null,
-    areaChosenText:
-      "Search results will be limited to devices assigned to the area below.",
-    areaNotChosenText:
-      "Choose an area from the list below to limit search results to devices assigned to the given area.",
-    deviceTypeChosenText:
-      "Search results will be limited to devices implementing the device type below.",
-    deviceTypeNotChosenText:
-      "Choose a device type from the list below to limit search results to devices implementing the device type.",
-    groupChosenText:
-      "Search results will be limited to devices in the device group below.",
-    groupNotChosenText:
-      "Choose a device group from the list below to limit search results to devices in that group.",
-    createdDateRanges: [
-      {
-        text: "Devices created at any time",
-        value: "all"
-      },
-      {
-        text: "Devices created in the last hour",
-        value: "hour"
-      },
-      {
-        text: "Devices created in the last day",
-        value: "day"
-      },
-      {
-        text: "Devices created in the last week",
-        value: "week"
-      },
-      {
-        text: "Devices created after a given date",
-        value: "after"
-      }
-    ],
-    dialogVisible: false,
-    error: null
-  }),
+import { IDeviceSearchCriteria } from "sitewhere-rest-api";
 
-  components: {
-    AreaChooser,
-    DeviceTypeChooser,
-    DeviceGroupChooser
-  },
+@Component({})
+export default class DeviceListFilterDialog extends Vue {
+  @Prop() readonly filter!: any;
 
-  props: ["filter"],
+  active: string | null = null;
+  menu: string | null = null;
 
-  watch: {
-    filter: function(value) {
-      this.load(value);
+  areaFilter?: string;
+  deviceTypeFilter?: string;
+  deviceGroupFilter?: string;
+  createdDateFilter: string = "all";
+  createdAfter: string | null = null;
+
+  deviceTypeChosenText: string =
+    "Search results will be limited to devices implementing the device type below.";
+  deviceTypeNotChosenText: string =
+    "Choose a device type from the list below to limit search results to devices implementing the device type.";
+  groupChosenText: string =
+    "Search results will be limited to devices in the device group below.";
+  groupNotChosenText: string =
+    "Choose a device group from the list below to limit search results to devices in that group.";
+
+  createdDateRanges: {}[] = [
+    {
+      text: "Devices created at any time",
+      value: "all"
+    },
+    {
+      text: "Devices created in the last hour",
+      value: "hour"
+    },
+    {
+      text: "Devices created in the last day",
+      value: "day"
+    },
+    {
+      text: "Devices created in the last week",
+      value: "week"
+    },
+    {
+      text: "Devices created after a given date",
+      value: "after"
     }
-  },
+  ];
 
-  methods: {
-    // Called when area filter is updated.
-    onAreaUpdated: function(area) {
-      this.$data.areaFilter = area;
-    },
+  dialogVisible: boolean = false;
+  error: boolean = false;
 
-    // Called when deviceType filter is updated.
-    onDeviceTypeUpdated: function(deviceType) {
-      this.$data.deviceTypeFilter = deviceType;
-    },
+  @Watch("filter", { immediate: true })
+  onFilterChanged(updated: IDeviceSearchCriteria) {
+    this.load(updated);
+  }
 
-    // Called when device group filter is updated.
-    onGroupUpdated: function(group) {
-      this.$data.deviceGroupFilter = group;
-    },
+  /** Called when area filter is updated */
+  onAreaUpdated(token: string) {
+    this.areaFilter = token;
+  }
 
-    // Called when 'created after' date is updated.
-    onCreatedAfterUpdated: function(date) {
-      console.log(date);
-    },
+  /** Called when deviceType filter is updated */
+  onDeviceTypeUpdated(token: string) {
+    this.deviceTypeFilter = token;
+  }
 
-    // Generate payload from UI.
-    generatePayload: function() {
-      var payload = {};
-      payload.areaFilter = this.$data.areaFilter;
-      payload.deviceTypeFilter = this.$data.deviceTypeFilter;
-      payload.deviceGroupFilter = this.$data.deviceGroupFilter;
-      return payload;
-    },
+  /** Called when device group filter is updated */
+  onDeviceGroupUpdated(token: string) {
+    this.deviceGroupFilter = token;
+  }
 
-    // Reset dialog contents.
-    reset: function(e) {
-      this.$data.active = "area";
-    },
+  // Called when 'created after' date is updated.
+  onCreatedAfterUpdated(date: any) {
+    console.log(date);
+  }
 
-    // Load dialog from a given payload.
-    load: function(payload) {
-      this.reset();
-      if (payload) {
-        this.$data.areaFilter = payload.areaFilter;
-        this.$data.deviceTypeFilter = payload.deviceTypeFilter;
-        this.$data.deviceGroupFilter = payload.deviceGroupFilter;
-      }
-    },
+  // Generate payload from UI.
+  generatePayload(): IDeviceSearchCriteria {
+    var criteria: IDeviceSearchCriteria = {};
+    criteria.areaToken = this.areaFilter;
+    criteria.deviceTypeToken = this.$data.deviceTypeFilter;
+    return criteria;
+  }
 
-    // Called to open the dialog.
-    openDialog: function() {
-      this.reset();
-      this.$data.dialogVisible = true;
-    },
-
-    // Called to open the dialog.
-    closeDialog: function() {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called to show an error message.
-    showError: function(error) {
-      this.$data.error = error;
-    },
-
-    // Called after filter update button is clicked.
-    onFilterUpdateClicked: function(e) {
-      var payload = this.generatePayload();
-      this.$emit("filter", payload);
-      this.closeDialog();
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function(e) {
-      this.$data.dialogVisible = false;
+  // Load dialog from a given payload.
+  load(payload: IDeviceSearchCriteria) {
+    if (payload) {
+      this.$data.areaFilter = payload.areaToken;
+      this.$data.deviceTypeFilter = payload.deviceTypeToken;
+      this.$data.deviceGroupFilter = payload.areaToken;
     }
   }
-};
-</script>
 
-<style scoped>
-</style>
+  // Called after filter update button is clicked.
+  onFilterUpdateClicked(e: any) {
+    var payload = this.generatePayload();
+    this.$emit("filter", payload);
+  }
+
+  // Called after cancel button is clicked.
+  onCancelClicked(e: any) {
+    this.$data.dialogVisible = false;
+  }
+}
+</script>

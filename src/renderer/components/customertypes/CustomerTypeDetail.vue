@@ -17,7 +17,7 @@
       <v-tab key="instances">Customers of Type</v-tab>
     </template>
     <template slot="tab-items">
-      <customer-type-customers key="instances" :customerTypeToken="token"/>
+      <customer-type-customers key="instances" :customerTypeToken="token" />
     </template>
     <template slot="dialogs">
       <customer-type-update-dialog
@@ -32,8 +32,8 @@
       />
     </template>
     <template slot="actions">
-      <edit-button tooltip="Edit Customer Type" @action="onEdit"/>
-      <delete-button tooltip="Delete Customer Type" @action="onDelete"/>
+      <edit-button tooltip="Edit Customer Type" @action="onEdit" />
+      <delete-button tooltip="Delete Customer Type" @action="onDelete" />
     </template>
   </sw-detail-page>
 </template>
@@ -52,7 +52,6 @@ import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader.vue";
 import CustomerTypeCustomers from "./CustomerTypeCustomers.vue";
 import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog.vue";
 import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog.vue";
-import CustomerListEntry from "../customers/CustomerListEntry.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
@@ -67,7 +66,6 @@ import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
     NoResultsPanel,
     CustomerTypeDetailHeader,
     CustomerTypeCustomers,
-    CustomerListEntry,
     CustomerTypeDeleteDialog,
     CustomerTypeUpdateDialog,
     EditButton,
@@ -134,6 +132,3 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
   }
 }
 </script>
-
-<style scoped>
-</style>

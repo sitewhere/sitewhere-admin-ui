@@ -65,6 +65,3 @@ export default class CustomerTypeSelector extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

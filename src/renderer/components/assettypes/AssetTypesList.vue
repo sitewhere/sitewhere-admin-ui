@@ -50,7 +50,7 @@ import {
     AddButton
   }
 })
-export default class AreasList extends ListComponent<
+export default class AssetTypesList extends ListComponent<
   IAssetType,
   IAssetTypeSearchCriteria,
   IAssetTypeResponseFormat,

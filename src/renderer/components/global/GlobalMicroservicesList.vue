@@ -71,6 +71,3 @@ export default class GlobalMicroservicesList extends DetailComponent<
   }
 }
 </script>
-
-<style>
-</style>

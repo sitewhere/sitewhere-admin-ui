@@ -39,7 +39,7 @@ import AuthenticatedImage from "../common/AuthenticatedImage.vue";
     AuthenticatedImage
   }
 })
-export default class DeviceDetailHeader extends HeaderComponent<IDeviceType> {
+export default class DeviceTypeDetailHeader extends HeaderComponent<IDeviceType> {
   // Reference record as device type.
   get deviceType(): IDeviceType {
     return this.record;

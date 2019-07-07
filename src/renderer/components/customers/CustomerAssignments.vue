@@ -37,7 +37,7 @@ import {
     AssignmentListEntry
   }
 })
-export default class CustomerTypeCustomers extends ListComponent<
+export default class CustomerAssignments extends ListComponent<
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
@@ -77,6 +77,3 @@ export default class CustomerTypeCustomers extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

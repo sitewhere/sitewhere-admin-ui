@@ -33,7 +33,7 @@ import AuthenticatedImage from "../common/AuthenticatedImage.vue";
     AuthenticatedImage
   }
 })
-export default class DeviceDetailHeader extends HeaderComponent<IDeviceGroup> {
+export default class DeviceGroupDetailHeader extends HeaderComponent<IDeviceGroup> {
   // Reference record as device group.
   get deviceGroup(): IDeviceGroup {
     return this.record;

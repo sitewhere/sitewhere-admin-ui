@@ -38,7 +38,7 @@ import {
     AssignmentListEntry
   }
 })
-export default class AreaAssignments extends ListComponent<
+export default class AssetAssignments extends ListComponent<
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,

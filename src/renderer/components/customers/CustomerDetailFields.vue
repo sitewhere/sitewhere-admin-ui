@@ -113,6 +113,3 @@ export default class CustomerDetailFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

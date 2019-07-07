@@ -155,6 +155,3 @@ export default class GlobalMicroserviceEditor extends DetailComponent<
   }
 }
 </script>
-
-<style>
-</style>

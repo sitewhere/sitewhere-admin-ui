@@ -47,7 +47,7 @@ import {
 } from "sitewhere-rest-api";
 
 @Component({})
-export default class CustomerMeasurementEvents extends ListComponent<
+export default class CustomerAlertEvents extends ListComponent<
   IDeviceAlert,
   IDateRangeSearchCriteria,
   IDeviceAlertResponseFormat,
@@ -90,6 +90,3 @@ export default class CustomerMeasurementEvents extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

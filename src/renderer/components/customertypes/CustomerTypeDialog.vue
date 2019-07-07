@@ -128,6 +128,3 @@ export default class CustomerTypeDialog extends DialogComponent<ICustomerType> {
   }
 }
 </script>
-
-<style scoped>
-</style>

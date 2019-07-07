@@ -3,7 +3,7 @@ import Vuex, { StoreOptions } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import { IUser, ITenant } from "sitewhere-rest-api";
 import { INavigationSection } from "sitewhere-ide-common";
-import { IAlertMessage } from "../components/common/ApplicationModel";
+import { IAlertMessage, IRemotes } from "../components/common/ApplicationModel";
 
 Vue.use(Vuex);
 
@@ -11,6 +11,7 @@ Vue.use(Vuex);
  * SiteWhere user interface settings in store.
  */
 export interface SiteWhereUiSettings {
+  remotes: IRemotes;
   protocol?: string;
   server?: string;
   port?: number;
@@ -29,9 +30,18 @@ export interface SiteWhereUiSettings {
 const store: StoreOptions<SiteWhereUiSettings> = {
   plugins: [createPersistedState()],
   state: {
-    protocol: "http",
-    server: "localhost",
-    port: 8080,
+    remotes: {
+      default: "local",
+      connections: [
+        {
+          id: "local",
+          name: "Local Instance",
+          protocol: "http",
+          host: "localhost",
+          port: 80
+        }
+      ]
+    },
     jwt: undefined,
     user: undefined,
     authToken: undefined,
@@ -44,19 +54,9 @@ const store: StoreOptions<SiteWhereUiSettings> = {
     message: undefined
   },
   mutations: {
-    // Set server protocol.
-    protocol(state, protocol) {
-      state.protocol = protocol;
-    },
-
-    // Set server hostname.
-    server(state, server) {
-      state.server = server;
-    },
-
-    // Set server port.
-    port(state, port) {
-      state.port = port;
+    // Set list of remote connections.
+    remotes(state, remotes) {
+      state.remotes = remotes;
     },
 
     // Set current JWT.
@@ -127,16 +127,8 @@ const store: StoreOptions<SiteWhereUiSettings> = {
   },
 
   getters: {
-    protocol: state => {
-      return state.protocol;
-    },
-
-    server: state => {
-      return state.server;
-    },
-
-    port: state => {
-      return state.port;
+    remotes: state => {
+      return state.remotes;
     },
 
     jwt: state => {

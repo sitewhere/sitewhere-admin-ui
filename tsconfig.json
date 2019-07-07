@@ -6,7 +6,6 @@
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
-    "isolatedModules": true,
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noEmitOnError": false,

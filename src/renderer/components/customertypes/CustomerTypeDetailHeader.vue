@@ -56,6 +56,3 @@ export default class CustomerTypeDetailHeader extends HeaderComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

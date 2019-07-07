@@ -11,7 +11,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <script-clone-fields ref="details"/>
+    <script-clone-fields ref="details" />
   </sw-base-dialog>
 </template>
 
@@ -20,7 +20,6 @@ import {
   Component,
   Prop,
   DialogComponent,
-  DialogSection,
   ITabbedComponent,
   Refs
 } from "sitewhere-ide-common";

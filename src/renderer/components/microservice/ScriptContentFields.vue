@@ -65,7 +65,6 @@ export default class ScriptContentFields extends DialogSection {
 
   /** Load list of script templates */
   async loadTemplates() {
-    var component = this;
     let response: AxiosResponse<IScriptTemplate[]> = await listScriptTemplates(
       this.$store,
       this.identifier

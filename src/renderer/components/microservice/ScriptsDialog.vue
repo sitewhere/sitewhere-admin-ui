@@ -17,10 +17,10 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <script-detail-fields ref="details"/>
+        <script-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="content">
-        <script-content-fields :identifier="identifier" ref="content"/>
+        <script-content-fields :identifier="identifier" ref="content" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -31,7 +31,6 @@ import {
   Component,
   Prop,
   DialogComponent,
-  DialogSection,
   ITabbedComponent,
   Refs
 } from "sitewhere-ide-common";

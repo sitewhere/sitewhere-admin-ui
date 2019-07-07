@@ -8,7 +8,7 @@
     v-model="wrapped"
     icon="settings"
   >
-    <slot/>
+    <slot />
   </form-select>
 </template>
 
@@ -65,6 +65,3 @@ export default class DeviceTypeSelector extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

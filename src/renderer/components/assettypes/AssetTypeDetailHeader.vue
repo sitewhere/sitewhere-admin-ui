@@ -35,7 +35,7 @@ import AuthenticatedImage from "../common/AuthenticatedImage.vue";
     AuthenticatedImage
   }
 })
-export default class AreaTypeDetailHeader extends HeaderComponent<IAssetType> {
+export default class AssetTypeDetailHeader extends HeaderComponent<IAssetType> {
   // Reference record as asset type.
   get assetType(): IAssetType {
     return this.record;

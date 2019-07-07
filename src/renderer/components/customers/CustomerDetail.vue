@@ -178,6 +178,3 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -25,7 +25,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 import { ICustomerType } from "sitewhere-rest-api";
 
 @Component({})
-export default class DeviceTypeSelector extends Vue {
+export default class CustomerTypeListEntry extends Vue {
   @Prop() readonly customerType!: ICustomerType;
 
   // Handle customer type clicked.

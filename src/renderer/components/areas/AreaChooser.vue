@@ -5,7 +5,7 @@
       <v-list two-line>
         <v-list-tile avatar :key="area.token">
           <v-list-tile-avatar>
-            <img :src="area.imageUrl">
+            <img :src="area.imageUrl" />
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-html="area.name"></v-list-tile-title>
@@ -23,9 +23,9 @@
       <v-card-text>{{ notChosenText }}</v-card-text>
       <v-list v-if="areas" class="area-list" two-line>
         <template v-for="area in areas">
-          <v-list-tile avatar :key="area.token" @click.stop="onAreaChosen(area, true)">
+          <v-list-tile avatar :key="area.token" @click="onAreaChosen(area, true)">
             <v-list-tile-avatar>
-              <img :src="area.imageUrl">
+              <img :src="area.imageUrl" />
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title v-html="area.name"></v-list-tile-title>
@@ -38,70 +38,83 @@
   </div>
 </template>
 
-<script>
-import Lodash from "lodash";
+<script lang="ts">
+import { Component, Prop, Watch } from "sitewhere-ide-common";
+import Vue from "vue";
+
+import { AxiosResponse } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
+import {
+  IArea,
+  IAreaSearchResults,
+  IAreaResponseFormat,
+  IAreaSearchCriteria
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    area: null,
-    areas: []
-  }),
+@Component({})
+export default class AreaChooser extends Vue {
+  @Prop() readonly value!: string;
+  @Prop() readonly chosenText!: string;
+  @Prop() readonly notChosenText!: string;
 
-  props: ["value", "chosenText", "notChosenText"],
+  area: IArea | null = null;
+  areas: IArea[] = [];
 
-  // Initially load list of all sites.
-  created: function() {
-    var component = this;
+  /** Initially load all areas */
+  created() {
+    this.refresh();
+  }
 
-    listAreas(component.$store, {}, "page=1&pageSize=0")
-      .then(function(response) {
-        component.areas = response.data.results;
-        if (component.value) {
-          component.onValueUpdated(component.value);
-        }
-      })
-      .catch(function(e) {});
-  },
-
-  watch: {
-    value: {
-      immediate: true,
-      handler(newVal, oldVal) {
-        this.onValueUpdated(newVal);
-      }
-    }
-  },
-
-  methods: {
-    // Called when token is updated.
-    onValueUpdated: function(token) {
-      let area = Lodash.find(this.areas, { token: token });
-      if (area) {
-        this.onAreaChosen(area, false);
-      } else {
-        this.onAreaRemoved(false);
-      }
-    },
-    // Called whenan area is chosen.
-    onAreaChosen: function(area, emit) {
-      this.$data.area = area;
-      if (emit) {
-        this.$emit("input", area.token);
-        this.$emit("areaUpdated", area);
-      }
-    },
-
-    // Allow another area to be chosen.
-    onAreaRemoved: function(emit) {
-      this.$data.area = null;
-      if (emit) {
-        this.$emit("input", null);
-        this.$emit("areaUpdated", null);
-      }
+  /** Refresh areas list */
+  async refresh() {
+    let format: IAreaResponseFormat = {};
+    let criteria: IAreaSearchCriteria = {};
+    let response: AxiosResponse<IAreaSearchResults> = await listAreas(
+      this.$store,
+      criteria,
+      format
+    );
+    this.areas = response.data.results;
+    if (this.value) {
+      this.onValueUpdated(this.value);
     }
   }
-};
+
+  @Watch("value", { immediate: true })
+  onValueChanged(updated: string) {
+    this.onValueUpdated(updated);
+  }
+
+  /** Called to update choice based on token */
+  onValueUpdated(token: string) {
+    let found: boolean = false;
+    this.areas.forEach(area => {
+      if (area.token === token) {
+        found = true;
+        this.onAreaChosen(area, false);
+      }
+    });
+    if (!found) {
+      this.onAreaRemoved(false);
+    }
+  }
+
+  /** Called when an area is chosen */
+  onAreaChosen(area: IArea, emit: boolean) {
+    this.area = area;
+    if (emit) {
+      this.$emit("input", area.token);
+    }
+  }
+
+  /** Remove area selection */
+  onAreaRemoved(emit: boolean) {
+    this.area = null;
+    if (emit) {
+      this.$emit("input", null);
+    }
+  }
+}
 </script>
 
 <style scoped>

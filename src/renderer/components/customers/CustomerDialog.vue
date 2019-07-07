@@ -18,13 +18,13 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <customer-detail-fields ref="details"/>
+        <customer-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="branding">
-        <branding-panel ref="branding"/>
+        <branding-panel ref="branding" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -122,6 +122,3 @@ export default class CustomerDialog extends DialogComponent<ICustomer> {
   }
 }
 </script>
-
-<style scoped>
-</style>

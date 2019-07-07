@@ -19,6 +19,7 @@ import AreaTypesList from "@/components/areatypes/AreaTypesList.vue";
 import AreaTypeDetail from "@/components/areatypes/AreaTypeDetail.vue";
 import AreasList from "@/components/areas/AreasList.vue";
 import AreaDetail from "@/components/areas/AreaDetail.vue";
+import AssignmentsList from "@/components/assignments/AssignmentsList.vue";
 import AssignmentDetail from "@/components/assignments/AssignmentDetail.vue";
 import AssignmentEmulator from "@/components/assignments/AssignmentEmulator.vue";
 import DeviceTypesList from "@/components/devicetypes/DeviceTypesList.vue";
@@ -112,6 +113,10 @@ const routes = <Array<RouteConfig>>[
       {
         path: "areas/:token",
         component: AreaDetail
+      },
+      {
+        path: "assignments",
+        component: AssignmentsList
       },
       {
         path: "assignments/:token",

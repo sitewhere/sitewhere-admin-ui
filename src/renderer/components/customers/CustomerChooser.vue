@@ -5,14 +5,14 @@
       <v-list two-line>
         <v-list-tile avatar :key="customer.token">
           <v-list-tile-avatar>
-            <img :src="customer.imageUrl">
+            <img :src="customer.imageUrl" />
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title v-html="customer.name"></v-list-tile-title>
             <v-list-tile-sub-title v-html="customer.description"></v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
-            <v-btn icon ripple @click.stop="onCustomerRemoved(true)">
+            <v-btn icon ripple @click="onCustomerRemoved(true)">
               <v-icon class="grey--text">remove_circle</v-icon>
             </v-btn>
           </v-list-tile-action>
@@ -21,11 +21,11 @@
     </div>
     <div v-else>
       <v-card-text>{{ notChosenText }}</v-card-text>
-      <v-list v-if="customers" class="customer-list" two-line>
+      <v-list v-if="customers" class="item-list" two-line>
         <template v-for="customer in customers">
-          <v-list-tile avatar :key="customer.token" @click.stop="onCustomerChosen(customer, true)">
+          <v-list-tile avatar :key="customer.token" @click="onCustomerChosen(customer, true)">
             <v-list-tile-avatar>
-              <img :src="customer.imageUrl">
+              <img :src="customer.imageUrl" />
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title v-html="customer.name"></v-list-tile-title>
@@ -38,72 +38,87 @@
   </div>
 </template>
 
-<script>
-import Lodash from "lodash";
+<script lang="ts">
+import { Component, Prop, Watch } from "sitewhere-ide-common";
+import Vue from "vue";
 
+import { AxiosResponse } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
+import {
+  ICustomer,
+  ICustomerSearchResults,
+  ICustomerResponseFormat,
+  ICustomerSearchCriteria
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    customer: null,
-    customers: []
-  }),
+@Component({})
+export default class CustomerChooser extends Vue {
+  @Prop() readonly value!: string;
+  @Prop() readonly chosenText!: string;
+  @Prop() readonly notChosenText!: string;
 
-  props: ["selected", "selectedToken", "chosenText", "notChosenText"],
+  item: ICustomer | null = null;
+  items: ICustomer[] = [];
 
-  // Initially load list of all sites.
-  created: function() {
-    var component = this;
-    listCustomers(this.$store, false, true)
-      .then(function(response) {
-        component.customers = response.data.results;
-        if (component.selected) {
-          component.onCustomerChosen(component.selected);
-        }
-      })
-      .catch(function(e) {});
-  },
+  /** Initially load all */
+  created() {
+    this.refresh();
+  }
 
-  watch: {
-    selected: function(value) {
-      if (value) {
-        this.onCustomerChosen(value, false);
-      } else {
-        this.onCustomerRemoved(false);
-      }
-    },
-    selectedToken: function(value) {
-      let customer = Lodash.find(this.customers, { token: value });
-      if (customer) {
-        this.onCustomerChosen(customer, false);
-      } else {
-        this.onCustomerRemoved(false);
-      }
-    }
-  },
-
-  methods: {
-    // Called when a customer is chosen.
-    onCustomerChosen: function(customer, emit) {
-      this.$data.customer = customer;
-      if (emit) {
-        this.$emit("customerUpdated", customer);
-      }
-    },
-
-    // Allow another customer to be chosen.
-    onCustomerRemoved: function(emit) {
-      this.$data.customer = null;
-      if (emit) {
-        this.$emit("customerUpdated", null);
-      }
+  /** Refresh list */
+  async refresh() {
+    let format: ICustomerResponseFormat = {};
+    let criteria: ICustomerSearchCriteria = {};
+    let response: AxiosResponse<ICustomerSearchResults> = await listCustomers(
+      this.$store,
+      criteria,
+      format
+    );
+    this.items = response.data.results;
+    if (this.value) {
+      this.onValueUpdated(this.value);
     }
   }
-};
+
+  @Watch("value", { immediate: true })
+  onValueChanged(updated: string) {
+    this.onValueUpdated(updated);
+  }
+
+  /** Called to update choice based on token */
+  onValueUpdated(token: string) {
+    let found: boolean = false;
+    this.items.forEach(item => {
+      if (item.token === token) {
+        found = true;
+        this.onItemChosen(item, false);
+      }
+    });
+    if (!found) {
+      this.onItemRemoved(false);
+    }
+  }
+
+  /** Called when item is chosen */
+  onItemChosen(item: ICustomer, emit: boolean) {
+    this.item = item;
+    if (emit) {
+      this.$emit("input", item.token);
+    }
+  }
+
+  /** Remove item selection */
+  onItemRemoved(emit: boolean) {
+    this.item = null;
+    if (emit) {
+      this.$emit("input", null);
+    }
+  }
+}
 </script>
 
 <style scoped>
-.customer-list {
+.item-list {
   max-height: 300px;
   overflow-y: auto;
 }
