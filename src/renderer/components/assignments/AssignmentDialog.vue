@@ -1,6 +1,7 @@
 <template>
   <sw-base-dialog
     ref="dialog"
+    v-if="device"
     :icon="icon"
     :title="title"
     :width="width"
@@ -46,7 +47,7 @@ import {
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 
-import DialogHeader from "../common/DialogHeader.vue";
+import DialogHeader from "../common/dialog/DialogHeader.vue";
 import AssignmentCustomerFields from "./AssignmentCustomerFields.vue";
 import AssignmentAreaFields from "./AssignmentAreaFields.vue";
 import AssignmentAssetFields from "./AssignmentAssetFields.vue";

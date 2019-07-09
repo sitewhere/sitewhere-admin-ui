@@ -10,16 +10,17 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(device) in matches" :key="device.token">
-        <device-list-entry :device="device" @assign="onAssignDevice" @open="onOpenDevice"></device-list-entry>
+        <device-list-entry :device="device" @assign="onAssignDevice" @open="onOpenDevice" />
       </v-flex>
     </sw-list-layout>
     <template slot="filters">
-      <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
+      <device-list-filter-bar ref="filters" :criteria="filter" @clear="onClearFilterCriteria" />
     </template>
     <template slot="dialogs">
       <device-create-dialog ref="add" @deviceAdded="onDeviceAdded" />
       <assignment-create-dialog ref="assign" :device="selected" @created="onAssignmentCreated" />
-      <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
+      <batch-command-create-dialog ref="batch" :filter="filter" />
+      <device-list-filter-dialog ref="filter" @payload="onDeviceFilterUpdated" />
     </template>
     <template slot="actions">
       <add-button tooltip="Add Device" @action="onAddDevice" />
@@ -43,6 +44,7 @@ import {
 
 import DeviceListEntry from "./DeviceListEntry.vue";
 import DeviceListFilterBar from "./DeviceListFilterBar.vue";
+import DeviceListFilterDialog from "./DeviceListFilterDialog.vue";
 import DeviceCreateDialog from "./DeviceCreateDialog.vue";
 import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog.vue";
 import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
@@ -65,6 +67,7 @@ import {
   components: {
     DeviceListEntry,
     DeviceListFilterBar,
+    DeviceListFilterDialog,
     DeviceCreateDialog,
     AssignmentCreateDialog,
     BatchCommandCreateDialog,
@@ -82,10 +85,11 @@ export default class DevicesList extends ListComponent<
   $refs!: Refs<{
     add: DeviceCreateDialog;
     assign: AssignmentCreateDialog;
+    filter: DeviceListFilterDialog;
   }>;
 
   selected: IDevice | null = null;
-  filter: {} = {};
+  filter: IDeviceSearchCriteria = {};
   pageSizes: IPageSizes = [
     {
       text: "20",
@@ -108,8 +112,7 @@ export default class DevicesList extends ListComponent<
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceSearchCriteria {
-    let criteria: IDeviceSearchCriteria = {};
-    return criteria;
+    return this.filter;
   }
 
   /** Build response format for list */
@@ -130,12 +133,20 @@ export default class DevicesList extends ListComponent<
 
   /** Called to show filter criteria dialog */
   onShowFilterCriteria() {
-    (this.$refs.filters as any).showFilterCriteriaDialog();
+    this.$refs.filter.openDialog();
+  }
+
+  /** Clears the filter criteria */
+  onClearFilterCriteria() {
+    this.filter = {};
+    this.$refs.filter.reset();
+    this.refresh();
   }
 
   /** Called when filter criteria are updated */
-  onFilterUpdated(filter: any) {
-    this.$data.filter = filter;
+  onDeviceFilterUpdated(filter: IDeviceSearchCriteria) {
+    this.$refs.filter.closeDialog();
+    this.filter = filter;
     this.refresh();
   }
 
