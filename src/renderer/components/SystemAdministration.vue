@@ -1,19 +1,19 @@
 <template>
   <v-app v-if="user">
-    <sw-in-app-system-bar style="-webkit-app-region: drag"/>
+    <sw-in-app-system-bar style="-webkit-app-region: drag" />
     <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
-        <div class="sitewhere-logo"/>
+        <div class="sitewhere-logo" />
       </v-toolbar>
-      <sw-navigation :sections="sections" @sectionSelected="onSectionClicked"/>
+      <sw-navigation :sections="sections" @sectionSelected="onSectionClicked" />
       <v-menu class="current-user-block" top right offset-y>
         <v-btn class="grey darken-1 white--text" slot="activator">
-          <font-awesome-icon icon="user" class="mr-2"/>
+          <font-awesome-icon icon="user" class="mr-2" />
           {{ fullname }}
         </v-btn>
         <v-list>
           <v-list-tile @click="onUserAction(action)" v-for="action in userActions" :key="action.id">
-            <font-awesome-icon :icon="action.icon" class="mr-2"/>
+            <font-awesome-icon :icon="action.icon" class="mr-2" />
             <v-list-tile-title v-text="action.title"></v-list-tile-title>
           </v-list-tile>
         </v-list>
@@ -28,8 +28,8 @@
         </v-layout>
       </v-container>
     </v-content>
-    <sw-in-app-footer/>
-    <notifications/>
+    <sw-in-app-footer />
+    <notifications />
   </v-app>
 </template>
 
@@ -41,6 +41,7 @@ import { AxiosResponse } from "axios";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
 import { NavigationIcon } from "../libraries/constants";
+
 import Notifications from "./common/Notifications.vue";
 
 @Component({

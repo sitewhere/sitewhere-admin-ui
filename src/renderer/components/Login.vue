@@ -69,7 +69,7 @@
                 </div>
               </v-flex>
               <v-flex xs11>
-                <remotes-dropdown :remotes="remotes" />
+                <remotes-dropdown :remotes="remotes" @selected="onConnectionUpdated" />
               </v-flex>
               <v-flex xs1>
                 <v-icon class="pt-2 pl-3 blue--grey text--darken-2" @click="onEditRemotes">edit</v-icon>
@@ -142,7 +142,7 @@ import { GoogleAnalytics } from "../libraries/google-analytics";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { getUser } from "../rest/sitewhere-users-api";
 import { IUser, IUserResponseFormat } from "sitewhere-rest-api";
-import { IRemotes } from "./common/ApplicationModel";
+import { IRemotes, IRemoteConnection } from "./common/ApplicationModel";
 
 // Discord logo and tooltip.
 const discordSvgContent: string =
@@ -185,16 +185,6 @@ export default class Login extends Vue {
   error: string | null = null;
   username: string = "";
   password: string = "";
-  protocols: { text: string; value: string }[] = [
-    {
-      text: "http",
-      value: "http"
-    },
-    {
-      text: "https",
-      value: "https"
-    }
-  ];
   loggingIn: boolean = false;
   settings: {} | null = null;
   discordSvgContent: string = discordSvgContent;
@@ -205,6 +195,7 @@ export default class Login extends Vue {
   githubTitle: string = githubTitle;
   twitterSvgContent: string = twitterSvgContent;
   twitterTitle: string = twitterTitle;
+  connection: IRemoteConnection | null = null;
 
   // References.
   $refs!: Refs<{
@@ -294,6 +285,15 @@ export default class Login extends Vue {
   onRemotesUpdated(updated: IRemotes) {
     this.$store.commit("remotes", updated);
     this.$refs.remotes.closeDialog();
+  }
+
+  /** Called when connection selection is updated */
+  onConnectionUpdated(connection: IRemoteConnection) {
+    console.log("connection updated", connection);
+    this.connection = connection;
+    this.$store.commit("protocol", connection.protocol);
+    this.$store.commit("server", connection.host);
+    this.$store.commit("port", connection.port);
   }
 
   openWebTools() {

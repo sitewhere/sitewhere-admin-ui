@@ -9,14 +9,14 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
-        <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
+        <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
+      <area-create-dialog ref="add" @areaAdded="onAreaAdded" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Add Area" @action="onAddArea"/>
+      <add-button tooltip="Add Area" @action="onAddArea" />
     </template>
   </sw-list-page>
 </template>
@@ -84,17 +84,17 @@ export default class AreasList extends ListComponent<
     return listAreas(this.$store, criteria, format);
   }
 
-  // Called to open an area.
+  /** Called to open an area */
   onOpenArea(area: IArea) {
     routeTo(this, "/areas/" + area.token);
   }
 
-  // Called to open dialog.
+  /** Called to open dialog */
   onAddArea() {
     this.$refs.add.open();
   }
 
-  // Called when a new area is added.
+  /** Called when a new area is added */
   onAreaAdded() {
     this.refresh();
   }

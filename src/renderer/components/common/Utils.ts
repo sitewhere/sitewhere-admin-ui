@@ -134,7 +134,11 @@ export function isAuthForAll(component: any, list: string[]): boolean {
 export function routeTo(component: any, url: string): void {
   var tenant = component.$store.getters.selectedTenant;
   if (tenant) {
-    component.$router.push("/tenants/" + tenant.token + url);
+    let route: string = "/tenants/" + tenant.token + url;
+    console.log("route to", route);
+    component.$router.push(route);
+  } else {
+    console.log("tenant was not set");
   }
 }
 

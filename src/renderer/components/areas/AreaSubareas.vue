@@ -7,11 +7,11 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
-        <area-list-entry :area="area" @openArea="onOpenArea"/>
+        <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <area-create-dialog @areaAdded="refresh"/>
+      <area-create-dialog @areaAdded="refresh" />
     </template>
   </sw-list-tab>
 </template>
@@ -73,7 +73,7 @@ export default class AreaSubareas extends ListComponent<
 
   // Called to open an area.
   onOpenArea(area: IArea) {
-    routeTo(this, "/areas/" + this.areaToken);
+    routeTo(this, "/areas/" + area.token);
   }
 }
 </script>

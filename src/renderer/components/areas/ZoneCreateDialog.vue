@@ -1,62 +1,66 @@
 <template>
-  <span>
-    <zone-dialog
-      :area="area"
-      title="Create Zone"
-      width="600"
-      ref="dialog"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      mode="create"
-      @payload="onCommit"
-    ></zone-dialog>
-  </span>
+  <zone-dialog
+    :area="area"
+    title="Create Zone"
+    width="700"
+    ref="dialog"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    mode="create"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import ZoneDialog from "./ZoneDialog";
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
+import ZoneDialog from "./ZoneDialog.vue";
+
+import { AxiosPromise } from "axios";
+import { IZone, IZoneCreateRequest, IArea } from "sitewhere-rest-api";
 import { createZone } from "../../rest/sitewhere-zones-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     ZoneDialog
-  },
-
-  props: ["area"],
-
-  methods: {
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.$refs["dialog"].reset();
-      this.$refs["dialog"].openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      createZone(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.$children[0].closeDialog();
-      this.$emit("zoneAdded");
-    }
   }
-};
-</script>
+})
+export default class ZoneCreateDialog extends CreateDialogComponent<
+  IZone,
+  IZoneCreateRequest
+> {
+  @Prop() readonly area!: IArea;
 
-<style scoped>
-.add-button {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IZone>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IZone> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IZoneCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(payload: IZoneCreateRequest): AxiosPromise<IZone> {
+    payload.areaToken = this.area.token;
+    return createZone(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IZone): void {
+    this.$emit("zoneAdded", payload);
+  }
 }
-</style>
+</script>

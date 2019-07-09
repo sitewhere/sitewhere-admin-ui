@@ -10,29 +10,25 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(device) in matches" :key="device.token">
-        <device-list-entry
-          :device="device"
-          @assignDevice="onAssignDevice"
-          @deviceOpened="onOpenDevice"
-        ></device-list-entry>
+        <device-list-entry :device="device" @assign="onAssignDevice" @open="onOpenDevice"></device-list-entry>
       </v-flex>
     </sw-list-layout>
     <template slot="filters">
       <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
     </template>
     <template slot="dialogs">
-      <device-create-dialog ref="add" @deviceAdded="onDeviceAdded"/>
-      <assignment-create-dialog ref="assign" @assignmentCreated="onAssignmentCreated"></assignment-create-dialog>
+      <device-create-dialog ref="add" @deviceAdded="onDeviceAdded" />
+      <assignment-create-dialog ref="assign" :device="selected" @created="onAssignmentCreated" />
       <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
     </template>
     <template slot="actions">
-      <add-button tooltip="Add Device" @action="onAddDevice"/>
+      <add-button tooltip="Add Device" @action="onAddDevice" />
       <device-command-button
         v-if="filter.deviceType"
         tooltip="Execute Batch Command"
         @action="onBatchCommandInvocation"
       />
-      <filter-button tooltip="Filter Device List" @action="onShowFilterCriteria"/>
+      <filter-button tooltip="Filter Device List" @action="onShowFilterCriteria" />
     </template>
   </sw-list-page>
 </template>
@@ -85,8 +81,10 @@ export default class DevicesList extends ListComponent<
 > {
   $refs!: Refs<{
     add: DeviceCreateDialog;
+    assign: AssignmentCreateDialog;
   }>;
 
+  selected: IDevice | null = null;
   filter: {} = {};
   pageSizes: IPageSizes = [
     {
@@ -130,50 +128,46 @@ export default class DevicesList extends ListComponent<
     return listDevices(this.$store, criteria, format);
   }
 
-  // Called to show filter criteria dialog.
+  /** Called to show filter criteria dialog */
   onShowFilterCriteria() {
     (this.$refs.filters as any).showFilterCriteriaDialog();
   }
 
-  // Called when filter criteria are updated.
+  /** Called when filter criteria are updated */
   onFilterUpdated(filter: any) {
     this.$data.filter = filter;
     this.refresh();
   }
 
-  // Open device assignment dialog.
+  /** Open device assignment dialog */
   onAssignDevice(device: IDevice) {
-    // let assignDialog = this.$refs["assign"];
-    // assignDialog.deviceToken = device.token;
-    // assignDialog.onOpenDialog();
+    this.selected = device;
+    this.$refs.assign.open();
   }
 
-  // Called after new assignment is created.
+  /** Called after new assignment is created */
   onAssignmentCreated() {
     this.refresh();
   }
 
-  // Called when a new device is added.
+  /** Called when a new device is added */
   onDeviceAdded() {
     this.refresh();
   }
 
-  // Called to open detail page for device.
+  /** Called to open detail page for device */
   onOpenDevice(device: IDevice) {
     routeTo(this, "/devices/" + device.token);
   }
 
-  // Called to open dialog.
+  /** Called to open dialog */
   onAddDevice() {
     this.$refs.add.open();
   }
 
-  // Called to invoke a batch command.
+  /** Called to invoke a batch command */
   onBatchCommandInvocation() {
     (this.$refs.batch as any).onOpenDialog();
   }
 }
 </script>
-
-<style scoped>
-</style>

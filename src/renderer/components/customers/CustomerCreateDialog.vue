@@ -11,6 +11,7 @@
 <script lang="ts">
 import {
   Component,
+  Prop,
   CreateDialogComponent,
   DialogComponent,
   Refs
@@ -31,6 +32,8 @@ export default class CustomerCreateDialog extends CreateDialogComponent<
   ICustomer,
   ICustomerCreateRequest
 > {
+  @Prop() readonly parentCustomer!: ICustomer;
+
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<ICustomer>;
@@ -48,6 +51,9 @@ export default class CustomerCreateDialog extends CreateDialogComponent<
 
   /** Implemented in subclasses to save payload */
   save(payload: ICustomerCreateRequest): AxiosPromise<ICustomer> {
+    if (this.parentCustomer) {
+      payload.parentToken = this.parentCustomer.token;
+    }
     return createCustomer(this.$store, payload);
   }
 

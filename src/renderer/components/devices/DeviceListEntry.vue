@@ -12,8 +12,8 @@
       ></div>
       <div v-else-if="!assignment" class="device-assign-button">
         <v-tooltip top>
-          <v-btn dark icon class="blue ml-0" @click.stop="onAssignDevice" slot="activator">
-            <font-awesome-icon icon="tag" size="lg"/>
+          <v-btn dark icon class="blue" @click.stop="onAssignDevice" slot="activator">
+            <v-icon>link</v-icon>
           </v-btn>
           <span>Assign Device</span>
         </v-tooltip>
@@ -64,12 +64,12 @@ export default class DeviceListEntry extends Vue {
 
   // Called when a device is clicked.
   onOpenDevice() {
-    this.$emit("deviceOpened", this.device);
+    this.$emit("open", this.device);
   }
 
   // Open device assignment dialog.
   onAssignDevice() {
-    this.$emit("assignDevice", this.device);
+    this.$emit("assign", this.device);
   }
 }
 </script>

@@ -3,9 +3,9 @@
     <v-container @click="onAreaClicked">
       <v-layout row>
         <v-flex xs3>
-          <v-card-media>
+          <v-responsive>
             <div :style="logoStyle"></div>
-          </v-card-media>
+          </v-responsive>
         </v-flex>
         <v-flex xs9>
           <div>
@@ -44,7 +44,7 @@ export default class AreaListEntry extends Vue {
 
   // Handle area clicked.
   onAreaClicked() {
-    this.$emit("openArea", this.area);
+    this.$emit("open", this.area);
   }
 }
 </script>

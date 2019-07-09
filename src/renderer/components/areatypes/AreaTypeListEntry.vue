@@ -4,7 +4,7 @@
       <v-layout row>
         <v-flex xs2>
           <v-card-media class="pt-2 pl-1">
-            <font-awesome-icon class="grey--text" :icon="areaType.icon" size="3x"/>
+            <font-awesome-icon class="grey--text" :icon="areaType.icon" size="3x" />
           </v-card-media>
         </v-flex>
         <v-flex xs10>
@@ -30,7 +30,7 @@ export default class AreaTypeListEntry extends Vue {
 
   // Callen when clicked.
   onAreaTypeClicked() {
-    this.$emit("openAreaType", this.areaType);
+    this.$emit("open", this.areaType);
   }
 }
 </script>

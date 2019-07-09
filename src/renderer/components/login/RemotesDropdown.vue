@@ -1,5 +1,5 @@
 <template>
-  <v-select v-model="selected" :items="connections" @change="onConnectionSelected" solo>
+  <v-select v-model="selected" :items="connections" solo>
     <template slot="selection" slot-scope="data">
       <v-icon small class="pr-2">router</v-icon>
       {{ getNameAndUrl(data.item) }}
@@ -37,12 +37,13 @@ export default class RemotesDropdown extends Vue {
     });
   }
 
-  getNameAndUrl(connection: IRemoteConnection): string {
-    return `${connection.name} (${connection.protocol}://${connection.host}:${connection.port})`;
+  @Watch("selected", { immediate: true })
+  onSelectionChanged(updated: IRemoteConnection) {
+    this.$emit("selected", updated);
   }
 
-  onConnectionSelected(connection: IRemoteConnection) {
-    console.log("selected", connection.id);
+  getNameAndUrl(connection: IRemoteConnection): string {
+    return `${connection.name} (${connection.protocol}://${connection.host}:${connection.port})`;
   }
 }
 </script>

@@ -9,7 +9,7 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
-        <area-list-entry :area="area"></area-list-entry>
+        <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
   </sw-list-tab>
@@ -21,6 +21,7 @@ import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 import AreaListEntry from "../areas/AreaListEntry.vue";
 
 import { AxiosPromise } from "axios";
+import { routeTo } from "../common/Utils";
 import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,
@@ -63,6 +64,11 @@ export default class AreaTypeAreas extends ListComponent<
     format: IAreaResponseFormat
   ): AxiosPromise<IAreaSearchResults> {
     return listAreas(this.$store, criteria, format);
+  }
+
+  /** Called to open an area */
+  onOpenArea(area: IArea) {
+    routeTo(this, "/areas/" + area.token);
   }
 }
 </script>

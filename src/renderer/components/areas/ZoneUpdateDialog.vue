@@ -4,12 +4,12 @@
     :area="area"
     style="display: none;"
     title="Update Zone"
-    width="600"
+    width="700"
     createLabel="Update"
     cancelLabel="Cancel"
     mode="update"
     @payload="onCommit"
-  ></zone-dialog>
+  />
 </template>
 
 <script>

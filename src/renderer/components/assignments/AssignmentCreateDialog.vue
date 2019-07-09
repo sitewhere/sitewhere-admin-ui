@@ -1,56 +1,70 @@
 <template>
-  <div>
-    <assignment-dialog
-      ref="dialog"
-      title="Create Device Assignment"
-      width="700"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-      :deviceToken="deviceToken"
-    ></assignment-dialog>
-  </div>
+  <assignment-dialog
+    ref="dialog"
+    title="Create Device Assignment"
+    :device="device"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import AssignmentDialog from "./AssignmentDialog";
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
+import AssignmentDialog from "./AssignmentDialog.vue";
+
+import { AxiosPromise } from "axios";
+import {
+  IDeviceAssignment,
+  IDeviceAssignmentCreateRequest,
+  IDevice
+} from "sitewhere-rest-api";
 import { createDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     AssignmentDialog
-  },
-
-  props: ["deviceToken"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-    // Handle payload commit.
-    onCommit: function(payload) {
-      console.log(payload);
-      var component = this;
-      createDeviceAssignment(this.$store, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("assignmentCreated");
-    }
   }
-};
+})
+export default class AssignmentCreateDialog extends CreateDialogComponent<
+  IDeviceAssignment,
+  IDeviceAssignmentCreateRequest
+> {
+  @Prop() readonly device!: IDevice;
+
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceAssignment>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceAssignment> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceAssignmentCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(
+    payload: IDeviceAssignmentCreateRequest
+  ): AxiosPromise<IDeviceAssignment> {
+    if (this.device) {
+      payload.deviceToken = this.device.token;
+    }
+    return createDeviceAssignment(this.$store, payload);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceAssignment): void {}
+}
 </script>

@@ -9,11 +9,12 @@
   >
     <sw-list-layout>
       <v-flex xs12 v-for="command in matches" :key="command.token">
-        <command-panel :command="command" @delete="onDeleteCommand" @edit="onEditCommand"/>
+        <command-panel :command="command" @delete="onDeleteCommand" @edit="onEditCommand" />
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <command-update-dialog ref="edit" @commandUpdated="refresh"/>
+      <command-update-dialog ref="edit" @updated="refresh" />
+      <command-delete-dialog ref="delete" @deleted="refresh" />
     </template>
   </sw-list-tab>
 </template>
@@ -24,6 +25,7 @@ import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import CommandPanel from "../commands/CommandPanel.vue";
 import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
+import CommandDeleteDialog from "../commands/CommandDeleteDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
@@ -38,7 +40,8 @@ import {
   components: {
     NoResultsPanel,
     CommandPanel,
-    CommandUpdateDialog
+    CommandUpdateDialog,
+    CommandDeleteDialog
   }
 })
 export default class DeviceTypeCommands extends ListComponent<
@@ -54,6 +57,7 @@ export default class DeviceTypeCommands extends ListComponent<
   // References.
   $refs!: Refs<{
     edit: CommandUpdateDialog;
+    delete: CommandDeleteDialog;
   }>;
 
   /** Build search criteria for list */
@@ -79,12 +83,13 @@ export default class DeviceTypeCommands extends ListComponent<
 
   /** Edit an existing command */
   onEditCommand(command: IDeviceCommand) {
-    console.log("Edit command");
     this.$refs.edit.open(command.token);
   }
 
   /** Delete an existing command */
-  onDeleteCommand(command: IDeviceCommand) {}
+  onDeleteCommand(command: IDeviceCommand) {
+    this.$refs.delete.open(command.token);
+  }
 }
 </script>
 

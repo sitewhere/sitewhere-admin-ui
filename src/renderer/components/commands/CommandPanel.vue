@@ -1,11 +1,11 @@
 <template>
   <sw-list-entry class="pa-2">
-    <v-list-tile avatar @click="onUpdateCommand">
+    <v-list-tile avatar>
       <v-list-tile-content>
-        <command-html :command="command"/>
+        <command-html :command="command" />
       </v-list-tile-content>
       <v-list-tile-action>
-        <actions-block @edit="onUpdateCommand" @delete="onDeleteCommand"/>
+        <actions-block @edit="onUpdateCommand" @delete="onDeleteCommand" />
       </v-list-tile-action>
     </v-list-tile>
   </sw-list-entry>

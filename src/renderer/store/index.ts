@@ -59,6 +59,21 @@ const store: StoreOptions<SiteWhereUiSettings> = {
       state.remotes = remotes;
     },
 
+    // Set protocol.
+    protocol(state, protocol) {
+      state.protocol = protocol;
+    },
+
+    // Set server.
+    server(state, server) {
+      state.server = server;
+    },
+
+    // Set port.
+    port(state, port) {
+      state.port = port;
+    },
+
     // Set current JWT.
     jwt(state, jwt) {
       state.jwt = jwt;
@@ -129,6 +144,18 @@ const store: StoreOptions<SiteWhereUiSettings> = {
   getters: {
     remotes: state => {
       return state.remotes;
+    },
+
+    protocol: state => {
+      return state.protocol;
+    },
+
+    server: state => {
+      return state.server;
+    },
+
+    port: state => {
+      return state.port;
     },
 
     jwt: state => {

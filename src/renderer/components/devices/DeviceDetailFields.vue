@@ -95,6 +95,3 @@ export default class DeviceDetailFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

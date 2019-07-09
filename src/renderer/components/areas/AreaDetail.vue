@@ -7,7 +7,7 @@
     :record="area"
   >
     <template slot="header">
-      <area-detail-header :record="area"/>
+      <area-detail-header :record="area" />
     </template>
     <template slot="tabs">
       <v-tab key="areas">Subareas</v-tab>
@@ -18,29 +18,30 @@
       <v-tab key="zones">Zones</v-tab>
     </template>
     <template slot="tab-items">
-      <area-subareas tabkey="areas" ref="subareas" :areaToken="token"/>
-      <area-assignments tabkey="assignments" :areaToken="token"/>
-      <area-location-events tabkey="locations" :areaToken="token"/>
-      <area-measurement-events tabkey="measurements" :areaToken="token"/>
-      <area-alert-events tabkey="alerts" :areaToken="token"/>
-      <area-zones ref="zones" tabkey="zones" :areaToken="token"/>
+      <area-subareas tabkey="areas" ref="subareas" :areaToken="token" />
+      <area-assignments tabkey="assignments" :areaToken="token" />
+      <area-location-events tabkey="locations" :areaToken="token" />
+      <area-measurement-events tabkey="measurements" :areaToken="token" />
+      <area-alert-events tabkey="alerts" :areaToken="token" />
+      <area-zones ref="zones" tabkey="zones" :areaToken="token" />
     </template>
     <template slot="dialogs">
+      <area-create-dialog ref="create" :parentArea="area" @created="onSubareaAdded" />
       <area-update-dialog
         ref="edit"
         :token="token"
-        :parentArea="parentArea"
+        :parentArea="area"
         @areaUpdated="onAreaUpdated"
-      ></area-update-dialog>
-      <area-delete-dialog ref="delete" :token="token" @areaDeleted="onAreaDeleted"></area-delete-dialog>
-      <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded"/>
+      />
+      <area-delete-dialog ref="delete" :token="token" @deleted="afterAreaDeleted" />
+      <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded" />
     </template>
     <template slot="actions">
-      <up-button v-if="parentArea" tooltip="Up One Level" @action="onUpOneLevel"/>
-      <area-button tooltip="Add Subarea" @action="onAddSubarea"/>
-      <zone-button tooltip="Add Zone" @action="onAddZone"/>
-      <edit-button tooltip="Edit Area" @action="onEdit"/>
-      <delete-button tooltip="Delete Area" @action="onDelete"/>
+      <up-button v-if="parentArea" tooltip="Up One Level" @action="onUpOneLevel" />
+      <area-button tooltip="Add Subarea" @action="onAddSubarea" />
+      <zone-button tooltip="Add Zone" @action="onAddZone" />
+      <edit-button tooltip="Edit Area" @action="onEdit" />
+      <delete-button tooltip="Delete Area" @action="onDelete" />
     </template>
   </sw-detail-page>
 </template>
@@ -71,6 +72,7 @@ import ZoneButton from "../common/navbuttons/ZoneButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { Route } from "vue-router";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
@@ -102,8 +104,12 @@ export default class AreaDetail extends DetailComponent<IArea> {
 
   // References.
   $refs!: Refs<{
+    create: AreaCreateDialog;
     edit: AreaUpdateDialog;
-    delete: DialogComponent<IArea>;
+    delete: AreaDeleteDialog;
+    subareas: AreaSubareas;
+    zoneCreate: ZoneCreateDialog;
+    zones: AreaZones;
   }>;
 
   /** Record as area */
@@ -119,6 +125,12 @@ export default class AreaDetail extends DetailComponent<IArea> {
   /** Get page title */
   get title(): string {
     return this.area ? this.area.name : "";
+  }
+
+  /** Called when component is reused */
+  beforeRouteUpdate(to: Route, from: Route, next: any) {
+    this.display(to.params.token);
+    next();
   }
 
   /** Load record */
@@ -149,39 +161,41 @@ export default class AreaDetail extends DetailComponent<IArea> {
     }
   }
 
-  // Called to add a subarea.
+  /** Called to add a subarea */
   onAddSubarea() {
-    (this.$refs["areaCreate"] as any).onOpenDialog();
+    this.$refs.create.open();
   }
-  // Called after subarea added.
+
+  /** Called after subarea added */
   onSubareaAdded() {
-    this.$data.active = "areas";
-    (this.$refs["subareas"] as any).refresh();
+    this.$refs.subareas.refresh();
   }
 
-  // Called to add a zone.
+  /** Called to add a zone */
   onAddZone() {
-    (this.$refs["zoneCreate"] as any).onOpenDialog();
+    this.$refs.zoneCreate.open();
   }
 
-  // Called after zone added.
+  /** Called after zone added */
   onZoneAdded() {
-    this.$data.active = "zones";
-    (this.$refs["zones"] as any).refresh();
+    this.$refs.zones.refresh();
     this.refresh();
   }
 
-  // Called when area is updated.
+  /** Called when area is updated */
   onAreaUpdated() {
     this.refresh();
   }
 
+  /** Called to open the delete dialog */
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    if (this.token) {
+      this.$refs.delete.open(this.token);
+    }
   }
 
-  // Called when area is deleted.
-  onAreaDeleted() {
+  /** Called when area is deleted */
+  afterAreaDeleted() {
     routeTo(this, "/areas");
   }
 
