@@ -1,5 +1,6 @@
 import moment from "moment";
 import { IAlertMessage } from "./ApplicationModel";
+import { AxiosResponse } from "axios";
 import Vue from "vue";
 
 /**
@@ -165,6 +166,13 @@ export function generateUniqueId(): string {
     let v = c === "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
+}
+
+/** Type guard to differentiate between responses */
+export function isAxiosResponse(
+  response: AxiosResponse | any
+): response is AxiosResponse {
+  return (<AxiosResponse>response).data !== undefined;
 }
 
 /**
