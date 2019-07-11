@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pa-0">
     <v-layout class="pl-2 pr-2 pt-0 pb-0" row wrap>
-      <slot/>
+      <slot />
     </v-layout>
   </v-container>
 </template>

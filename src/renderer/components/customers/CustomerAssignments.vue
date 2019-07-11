@@ -49,7 +49,7 @@ export default class CustomerAssignments extends ListComponent<
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
     let criteria: IDeviceAssignmentSearchCriteria = {};
-    criteria.customerToken = this.customerToken;
+    criteria.customerTokens = [this.customerToken];
     return criteria;
   }
 

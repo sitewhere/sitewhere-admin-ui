@@ -26,7 +26,6 @@
 <script lang="ts">
 import {
   Component,
-  Prop,
   DialogComponent,
   DialogSection,
   ITabbedComponent,
@@ -45,7 +44,7 @@ import { IDeviceSearchCriteria } from "sitewhere-rest-api";
     DeviceListFilterDeviceTypeFields
   }
 })
-export default class AssignmentDialog extends DialogComponent<
+export default class DeviceListFilterDialog extends DialogComponent<
   IDeviceSearchCriteria
 > {
   // References.
