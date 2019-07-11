@@ -54,7 +54,7 @@ export default class DeviceAssignmentHistory extends ListComponent<
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
     let criteria: IDeviceAssignmentSearchCriteria = {};
-    criteria.deviceToken = this.deviceToken;
+    criteria.deviceTokens = [this.deviceToken];
     return criteria;
   }
 

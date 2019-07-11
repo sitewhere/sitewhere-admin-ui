@@ -6,17 +6,17 @@ import { AxiosPromise, AxiosResponse } from "axios";
 import { IBrandedEntity } from "sitewhere-rest-api";
 
 /**
- * Base class for filter chip components.
+ * Base class for multiple filter chip components.
  */
 @Component
-export class FilterChipComponent<T extends IBrandedEntity> extends Vue {
-  @Prop() readonly token!: string;
+export class MultifilterChipComponent<T extends IBrandedEntity> extends Vue {
+  @Prop() readonly tokens!: string[];
   @Prop() readonly tooltip!: string;
 
   record: T | null = null;
 
-  @Watch("token", { immediate: true })
-  onSelectionUpdated(updated: string) {
+  @Watch("tokens", { immediate: true })
+  onSelectionUpdated(updated: string[]) {
     this.refresh();
   }
 
@@ -35,11 +35,20 @@ export class FilterChipComponent<T extends IBrandedEntity> extends Vue {
   /** Refresh record content based on token */
   async refresh() {
     try {
-      let response: AxiosResponse<T> | T = await this.load();
-      this.record = this.isAxiosResponse(response) ? response.data : response;
+      if (this.token) {
+        let response: AxiosResponse<T> | T = await this.load();
+        this.record = this.isAxiosResponse(response) ? response.data : response;
+      } else {
+        this.record = null;
+      }
     } catch (err) {
       handleError(err);
     }
+  }
+
+  /** Token which will be displayed */
+  get token(): string | null {
+    return this.tokens && this.tokens.length > 0 ? this.tokens[0] : null;
   }
 
   /** Get image information */
@@ -49,11 +58,19 @@ export class FilterChipComponent<T extends IBrandedEntity> extends Vue {
 
   /** Get label information */
   get label() {
-    return this.record ? (this.record as any).name : null;
+    if (this.record) {
+      let name = (this.record as any).name;
+      if (this.tokens.length === 1) {
+        return name;
+      } else if (this.tokens.length > 1) {
+        return `${name} and ${this.tokens.length - 1} more`;
+      }
+    }
+    return null;
   }
 
   /** Called when close button is clicked */
   onFilterClosed() {
-    this.$emit("closed", this.token);
+    this.$emit("closed", this.tokens);
   }
 }

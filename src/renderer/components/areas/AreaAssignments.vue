@@ -49,7 +49,7 @@ export default class AreaAssignments extends ListComponent<
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
     let criteria: IDeviceAssignmentSearchCriteria = {};
-    criteria.areaToken = this.areaToken;
+    criteria.areaTokens = [this.areaToken];
     return criteria;
   }
 

@@ -10,22 +10,23 @@
   >
     <sw-list-layout>
       <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
-        <assignment-list-entry :assignment="assignment" @assignmentOpened="onOpenAssignment"/>
+        <assignment-list-entry :assignment="assignment" @assignmentOpened="onOpenAssignment" />
       </v-flex>
     </sw-list-layout>
     <template slot="filters">
-      <!--
-      <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
-      -->
+      <assignment-list-filter-bar
+        ref="filters"
+        :criteria="filter"
+        @update="onUpdateFilterCriteria"
+        @clear="onClearFilterCriteria"
+      />
     </template>
     <template slot="dialogs">
-      <!--
-      <assignment-create-dialog ref="assign" @assignmentCreated="onAssignmentCreated"></assignment-create-dialog>
-      -->
+      <assignment-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Create Assignment"/>
-      <filter-button tooltip="Filter Device List"/>
+      <add-button tooltip="Create Assignment" />
+      <filter-button tooltip="Filter Device Assignment List" @action="onShowFilterCriteria" />
     </template>
   </sw-list-page>
 </template>
@@ -39,14 +40,16 @@ import {
 } from "sitewhere-ide-common";
 
 import AssignmentListEntry from "./AssignmentListEntry.vue";
+import AssignmentListFilterBar from "./AssignmentListFilterBar.vue";
 import AssignmentCreateDialog from "./AssignmentCreateDialog.vue";
+import AssignmentListFilterDialog from "./AssignmentListFilterDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
 import FilterButton from "../common/navbuttons/FilterButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
-import { listDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
+import { searchDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
 import {
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
@@ -57,7 +60,9 @@ import {
 @Component({
   components: {
     AssignmentListEntry,
+    AssignmentListFilterBar,
     AssignmentCreateDialog,
+    AssignmentListFilterDialog,
     AddButton,
     FilterButton
   }
@@ -68,9 +73,11 @@ export default class AssignmentsList extends ListComponent<
   IDeviceAssignmentResponseFormat,
   IDeviceAssignmentSearchResults
 > {
-  $refs!: Refs<{}>;
+  $refs!: Refs<{
+    filter: AssignmentListFilterDialog;
+  }>;
 
-  filter: {} = {};
+  filter: IDeviceAssignmentSearchCriteria = {};
   pageSizes: IPageSizes = [
     {
       text: "20",
@@ -93,8 +100,7 @@ export default class AssignmentsList extends ListComponent<
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
-    let criteria: IDeviceAssignmentSearchCriteria = {};
-    return criteria;
+    return this.filter;
   }
 
   /** Build response format for list */
@@ -110,11 +116,34 @@ export default class AssignmentsList extends ListComponent<
     criteria: IDeviceAssignmentSearchCriteria,
     format: IDeviceAssignmentResponseFormat
   ): AxiosPromise<IDeviceAssignmentSearchResults> {
-    return listDeviceAssignments(this.$store, criteria, format);
+    return searchDeviceAssignments(this.$store, criteria, format);
   }
 
-  // Called to show filter criteria dialog.
-  onShowFilterCriteria() {}
+  /** Called to show filter criteria dialog */
+  onShowFilterCriteria() {
+    this.$refs.filter.load(this.filter);
+    this.$refs.filter.openDialog();
+  }
+
+  /** Update filter criteria */
+  onUpdateFilterCriteria(updated: IDeviceAssignmentSearchCriteria) {
+    this.filter = updated;
+    this.refresh();
+  }
+
+  /** Clears the filter criteria */
+  onClearFilterCriteria() {
+    this.filter = {};
+    this.$refs.filter.reset();
+    this.refresh();
+  }
+
+  /** Called when filter criteria are updated */
+  onFilterUpdated(filter: IDeviceAssignmentSearchCriteria) {
+    this.$refs.filter.closeDialog();
+    this.filter = filter;
+    this.refresh();
+  }
 
   /** Open device assignment detail page */
   onOpenAssignment(assignment: IDeviceAssignment) {
@@ -122,6 +151,3 @@ export default class AssignmentsList extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

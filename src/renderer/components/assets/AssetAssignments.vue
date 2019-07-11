@@ -51,7 +51,7 @@ export default class AssetAssignments extends ListComponent<
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
     let criteria: IDeviceAssignmentSearchCriteria = {};
-    criteria.assetToken = this.assetToken;
+    criteria.assetTokens = [this.assetToken];
     return criteria;
   }
 

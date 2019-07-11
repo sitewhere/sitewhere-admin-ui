@@ -1,5 +1,6 @@
 <template>
   <filter-chip
+    v-if="token"
     type="devicetype"
     :token="token"
     :imageUrl="image"
@@ -15,7 +16,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 import FilterChip from "../common/search/FilterChip.vue";
 
 import { AxiosPromise } from "axios";
-import { FilterChipComponent } from "../common/search/FilterChipComponent";
+import { MultifilterChipComponent } from "../common/search/MultifilterChipComponent";
 
 import { IDeviceType, IDeviceTypeResponseFormat } from "sitewhere-rest-api";
 import { getDeviceType } from "../../rest/sitewhere-device-types-api";
@@ -25,13 +26,13 @@ import { getDeviceType } from "../../rest/sitewhere-device-types-api";
     FilterChip
   }
 })
-export default class DeviceTypeFilterChip extends FilterChipComponent<
+export default class DeviceTypeMultifilterChip extends MultifilterChipComponent<
   IDeviceType
 > {
   /** Return method to load record */
   load(): AxiosPromise<IDeviceType> {
     let format: IDeviceTypeResponseFormat = {};
-    return getDeviceType(this.$store, this.token, format);
+    return getDeviceType(this.$store, this.tokens[0], format);
   }
 }
 </script>

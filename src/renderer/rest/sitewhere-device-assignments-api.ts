@@ -6,6 +6,7 @@ import { createCoreApiCall, loaderWrapper } from "./sitewhere-api-wrapper";
 import {
   IDeviceAssignmentCreateRequest,
   IDeviceAssignment,
+  IDeviceAssignmentSimpleCriteria,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
   IDeviceAssignmentSearchResults,
@@ -73,13 +74,35 @@ export function getDeviceAssignment(
  */
 export function listDeviceAssignments(
   store: Store<SiteWhereUiSettings>,
-  criteria: IDeviceAssignmentSearchCriteria,
+  criteria: IDeviceAssignmentSimpleCriteria,
   format: IDeviceAssignmentResponseFormat
 ): Promise<AxiosResponse<IDeviceAssignmentSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceAssignmentSearchResults
   > = SiteWhere.API.DeviceAssignments.listDeviceAssignments(
+    axios,
+    criteria,
+    format
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Search device assignments that match criteria.
+ * @param store
+ * @param criteria
+ * @param format
+ */
+export function searchDeviceAssignments(
+  store: Store<SiteWhereUiSettings>,
+  criteria: IDeviceAssignmentSearchCriteria,
+  format: IDeviceAssignmentResponseFormat
+): Promise<AxiosResponse<IDeviceAssignmentSearchResults>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceAssignmentSearchResults
+  > = SiteWhere.API.DeviceAssignments.searchDeviceAssignments(
     axios,
     criteria,
     format

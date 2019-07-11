@@ -20,7 +20,7 @@
       <device-create-dialog ref="add" @deviceAdded="onDeviceAdded" />
       <assignment-create-dialog ref="assign" :device="selected" @created="onAssignmentCreated" />
       <batch-command-create-dialog ref="batch" :filter="filter" />
-      <device-list-filter-dialog ref="filter" @payload="onDeviceFilterUpdated" />
+      <device-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
     </template>
     <template slot="actions">
       <add-button tooltip="Add Device" @action="onAddDevice" />
@@ -144,7 +144,7 @@ export default class DevicesList extends ListComponent<
   }
 
   /** Called when filter criteria are updated */
-  onDeviceFilterUpdated(filter: IDeviceSearchCriteria) {
+  onFilterUpdated(filter: IDeviceSearchCriteria) {
     this.$refs.filter.closeDialog();
     this.filter = filter;
     this.refresh();
