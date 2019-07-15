@@ -1,48 +1,58 @@
 <template>
   <sw-delete-dialog
-    title="Delete Device Status"
+    ref="dialog"
+    title="Delete Status"
     width="400"
-    :error="error"
-    @delete="onDeleteConfirmed"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
   >
-    <v-card-text>Are you sure you want to delete this device status?</v-card-text>
+    <v-card-text>{{ message }}</v-card-text>
   </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteDeviceStatus } from "../../rest/sitewhere-device-statuses-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent, Prop } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import { IDeviceStatus, IDeviceStatusResponseFormat } from "sitewhere-rest-api";
+import {
+  getDeviceStatus,
+  deleteDeviceStatus
+} from "../../rest/sitewhere-device-types-api";
 
-  props: ["deviceType", "status"],
+@Component({})
+export default class DeviceStatusDeleteDialog extends DeleteDialogComponent<
+  IDeviceStatus
+> {
+  @Prop() readonly deviceTypeToken!: string;
 
-  methods: {
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.$children[0].openDialog();
-    },
+  message: string | null = null;
 
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteDeviceStatus(this.$store, this.deviceType.token, this.code)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.$children[0].closeDialog();
-      this.$emit("statusDeleted");
-    }
+  /** Load payload */
+  prepareLoad(token: string): AxiosPromise<IDeviceStatus> {
+    let format: IDeviceStatusResponseFormat = {};
+    return getDeviceStatus(this.$store, this.deviceTypeToken, token, format);
   }
-};
-</script>
 
-<style scoped>
-</style>
+  /** Called after record is loaded */
+  afterLoad(status: IDeviceStatus): void {
+    this.message = `Are you sure you want to delete '${status.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(command: IDeviceStatus): AxiosPromise<IDeviceStatus> {
+    return deleteDeviceStatus(this.$store, this.deviceTypeToken, command.token);
+  }
+
+  /** Called after create button is clicked */
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  /** Called after cancel button is clicked */
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
+</script>

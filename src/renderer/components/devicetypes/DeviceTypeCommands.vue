@@ -13,8 +13,8 @@
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <command-update-dialog ref="edit" @updated="refresh" />
-      <command-delete-dialog ref="delete" @deleted="refresh" />
+      <command-update-dialog ref="edit" :deviceTypeToken="deviceTypeToken" @updated="refresh" />
+      <command-delete-dialog ref="delete" :deviceTypeToken="deviceTypeToken" @deleted="refresh" />
     </template>
   </sw-list-tab>
 </template>

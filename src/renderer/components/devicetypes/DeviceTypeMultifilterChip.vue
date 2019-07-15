@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component } from "sitewhere-ide-common";
 
 import FilterChip from "../common/search/FilterChip.vue";
 

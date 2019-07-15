@@ -12,6 +12,7 @@
 <script lang="ts">
 import {
   Component,
+  Prop,
   EditDialogComponent,
   DialogComponent,
   Refs
@@ -28,7 +29,7 @@ import {
 import {
   getDeviceStatus,
   updateDeviceStatus
-} from "../../rest/sitewhere-device-statuses-api";
+} from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {
@@ -39,6 +40,8 @@ export default class DeviceStatusUpdateDialog extends EditDialogComponent<
   IDeviceStatus,
   IDeviceStatusCreateRequest
 > {
+  @Prop() readonly deviceTypeToken!: string;
+
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<IDeviceStatus>;
@@ -50,9 +53,9 @@ export default class DeviceStatusUpdateDialog extends EditDialogComponent<
   }
 
   /** Load payload */
-  prepareLoad(identifier: string): AxiosPromise<IDeviceStatus> {
+  prepareLoad(token: string): AxiosPromise<IDeviceStatus> {
     let format: IDeviceStatusResponseFormat = {};
-    return getDeviceStatus(this.$store, identifier, format);
+    return getDeviceStatus(this.$store, this.deviceTypeToken, token, format);
   }
 
   /** Save payload */
@@ -60,7 +63,12 @@ export default class DeviceStatusUpdateDialog extends EditDialogComponent<
     original: IDeviceStatus,
     updated: IDeviceStatusCreateRequest
   ): AxiosPromise<IDeviceStatus> {
-    return updateDeviceStatus(this.$store, original.token, updated);
+    return updateDeviceStatus(
+      this.$store,
+      this.deviceTypeToken,
+      original.token,
+      updated
+    );
   }
 
   /** Called on payload commit */
@@ -69,9 +77,7 @@ export default class DeviceStatusUpdateDialog extends EditDialogComponent<
   }
 
   /** Implemented in subclasses for after-save */
-  afterSave(payload: IDeviceStatus): void {
-    this.$emit("deviceStatusUpdated", payload);
-  }
+  afterSave(payload: IDeviceStatus): void {}
 }
 </script>
 

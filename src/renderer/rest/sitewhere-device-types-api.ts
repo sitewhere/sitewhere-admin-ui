@@ -8,7 +8,13 @@ import {
   IDeviceType,
   IDeviceTypeSearchCriteria,
   IDeviceTypeResponseFormat,
-  IDeviceTypeSearchResults
+  IDeviceTypeSearchResults,
+  IDeviceCommandCreateRequest,
+  IDeviceCommand,
+  IDeviceCommandResponseFormat,
+  IDeviceStatusCreateRequest,
+  IDeviceStatus,
+  IDeviceStatusResponseFormat
 } from "sitewhere-rest-api";
 
 /**
@@ -96,5 +102,193 @@ export function deleteDeviceType(
   let api: AxiosPromise<
     IDeviceType
   > = SiteWhere.API.DeviceTypes.deleteDeviceType(axios, token);
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Create new device command.
+ * @param store
+ * @param deviceTypeToken
+ * @param request
+ */
+export function createDeviceCommand(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  request: IDeviceCommandCreateRequest
+): Promise<AxiosResponse<IDeviceCommand>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceCommand
+  > = SiteWhere.API.DeviceTypes.createDeviceCommand(
+    axios,
+    deviceTypeToken,
+    request
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Get device command by token.
+ * @param store
+ * @param deviceTypeToken
+ * @param commandToken
+ * @param format
+ */
+export function getDeviceCommand(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  commandToken: string,
+  format: IDeviceCommandResponseFormat
+): Promise<AxiosResponse<IDeviceCommand>> {
+  let axios = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceCommand
+  > = SiteWhere.API.DeviceTypes.getDeviceCommand(
+    axios,
+    deviceTypeToken,
+    commandToken,
+    format
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Update an existing device command.
+ * @param store
+ * @param deviceTypeToken
+ * @param commandToken
+ * @param request
+ */
+export function updateDeviceCommand(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  commandToken: string,
+  request: IDeviceCommandCreateRequest
+): Promise<AxiosResponse<IDeviceCommand>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceCommand
+  > = SiteWhere.API.DeviceTypes.updateDeviceCommand(
+    axios,
+    deviceTypeToken,
+    commandToken,
+    request
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Delete an existing device command.
+ * @param store
+ * @param deviceTypeToken
+ * @param commandToken
+ */
+export function deleteDeviceCommand(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  commandToken: string
+): Promise<AxiosResponse<IDeviceCommand>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceCommand
+  > = SiteWhere.API.DeviceTypes.deleteDeviceCommand(
+    axios,
+    deviceTypeToken,
+    commandToken
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Create a new device status.
+ * @param store
+ * @param deviceTypeToken
+ * @param request
+ */
+export function createDeviceStatus(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  request: IDeviceStatusCreateRequest
+): Promise<AxiosResponse<IDeviceStatus>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceStatus
+  > = SiteWhere.API.DeviceTypes.createDeviceStatus(
+    axios,
+    deviceTypeToken,
+    request
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Update an existing device status.
+ * @param store
+ * @param deviceTypeToken
+ * @param statusToken
+ * @param format
+ */
+export function getDeviceStatus(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  statusToken: string,
+  format: IDeviceStatusResponseFormat
+): Promise<AxiosResponse<IDeviceStatus>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceStatus
+  > = SiteWhere.API.DeviceTypes.getDeviceStatus(
+    axios,
+    deviceTypeToken,
+    statusToken,
+    format
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Update an existing device status.
+ * @param store
+ * @param deviceTypeToken
+ * @param statusToken
+ * @param request
+ */
+export function updateDeviceStatus(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  statusToken: string,
+  request: IDeviceStatusCreateRequest
+): Promise<AxiosResponse<IDeviceStatus>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceStatus
+  > = SiteWhere.API.DeviceTypes.updateDeviceStatus(
+    axios,
+    deviceTypeToken,
+    statusToken,
+    request
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Delete an existing device status.
+ * @param store
+ * @param deviceTypeToken
+ * @param statusToken
+ */
+export function deleteDeviceStatus(
+  store: Store<SiteWhereUiSettings>,
+  deviceTypeToken: string,
+  statusToken: string
+): Promise<AxiosResponse<IDeviceStatus>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IDeviceStatus
+  > = SiteWhere.API.DeviceTypes.deleteDeviceStatus(
+    axios,
+    deviceTypeToken,
+    statusToken
+  );
   return loaderWrapper(store, api);
 }

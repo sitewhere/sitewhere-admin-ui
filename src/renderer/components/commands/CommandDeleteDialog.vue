@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
+import { Component, DeleteDialogComponent, Prop } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import {
@@ -22,18 +22,20 @@ import {
 import {
   getDeviceCommand,
   deleteDeviceCommand
-} from "../../rest/sitewhere-device-commands-api";
+} from "../../rest/sitewhere-device-types-api";
 
 @Component({})
 export default class CommandDeleteDialog extends DeleteDialogComponent<
   IDeviceCommand
 > {
+  @Prop() readonly deviceTypeToken!: string;
+
   message: string | null = null;
 
   /** Load payload */
-  prepareLoad(identifier: string): AxiosPromise<IDeviceCommand> {
+  prepareLoad(token: string): AxiosPromise<IDeviceCommand> {
     let format: IDeviceCommandResponseFormat = {};
-    return getDeviceCommand(this.$store, identifier, format);
+    return getDeviceCommand(this.$store, this.deviceTypeToken, token, format);
   }
 
   /** Called after record is loaded */
@@ -43,7 +45,11 @@ export default class CommandDeleteDialog extends DeleteDialogComponent<
 
   /** Load payload */
   prepareDelete(command: IDeviceCommand): AxiosPromise<IDeviceCommand> {
-    return deleteDeviceCommand(this.$store, command.token);
+    return deleteDeviceCommand(
+      this.$store,
+      this.deviceTypeToken,
+      command.token
+    );
   }
 
   /** Called after create button is clicked */

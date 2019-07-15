@@ -1,7 +1,7 @@
 <template>
   <sw-list-entry>
     <v-toolbar flat dark dense card @click="onEditStatus" :style="cardStyle">
-      <font-awesome-icon :icon="icon" size="lg"/>
+      <font-awesome-icon :icon="icon" size="lg" />
       <v-toolbar-title :style="textStyle">{{ name }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-tooltip top>
@@ -72,6 +72,3 @@ export default class DeviceTypeListEntry extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>
