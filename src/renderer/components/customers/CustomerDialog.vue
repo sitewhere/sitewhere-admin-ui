@@ -87,7 +87,7 @@ export default class CustomerDialog extends DialogComponent<ICustomer> {
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -107,12 +107,12 @@ export default class CustomerDialog extends DialogComponent<ICustomer> {
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
     if (!this.$refs.branding.validate()) {
-      this.$refs.dialog.setActiveTab("branding");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
 

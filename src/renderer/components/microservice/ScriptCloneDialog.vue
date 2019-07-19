@@ -63,7 +63,7 @@ export default class ScriptsDialog extends DialogComponent<IScriptVersion> {
     if (this.$refs.details) {
       this.$refs.details.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -77,7 +77,7 @@ export default class ScriptsDialog extends DialogComponent<IScriptVersion> {
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 

@@ -18,13 +18,13 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <command-detail-fields ref="details"/>
+        <command-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="parameters">
-        <parameters-panel ref="parameters"/>
+        <parameters-panel ref="parameters" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -92,7 +92,7 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -112,12 +112,12 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
     if (!this.$refs.parameters.validate()) {
-      this.$refs.dialog.setActiveTab("parameters");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
 
@@ -127,6 +127,3 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
   }
 }
 </script>
-
-<style scoped>
-</style>

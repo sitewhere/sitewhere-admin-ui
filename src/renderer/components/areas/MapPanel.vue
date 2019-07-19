@@ -1,53 +1,69 @@
 <template>
-  <div>
-    <div :style="{ 'height': height, 'width': '100%' }">
+  <div style="position: relative;">
+    <div v-if="visible" :style="{ 'height': height, 'width': '100%' }">
       <v-map :zoom="13" :center="[47.413220, -1.219482]" style="z-index: 1;" ref="map"></v-map>
     </div>
+    <sw-loading-overlay v-if="!mapReady" loadingMessage="Loading map..." />
   </div>
 </template>
 
-<script>
-import L from "leaflet";
+<script lang="ts">
+import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
+import Vue from "vue";
 
-export default {
-  data: () => ({}),
+import { Map, Layer, TileLayer } from "leaflet";
 
-  props: ["height"],
+@Component({})
+export default class MapPanel extends Vue {
+  @Prop() readonly height!: number;
+  @Prop({ default: false }) readonly visible!: boolean;
 
-  // Called when DOM is mounted.
-  mounted: function() {
+  mapReady: boolean = false;
+
+  // References.
+  $refs!: Refs<{
+    map: any;
+  }>;
+
+  @Watch("visible")
+  async onVisibilityUpdated(updated: boolean) {
+    while (this.getMap() == null) {
+      await this.sleep(100);
+    }
     this.resetMap();
-    this.invalidateMap();
-  },
+  }
 
-  methods: {
-    // Access the Leaflet map directly.
-    getMap: function() {
-      return this.$refs.map.mapObject;
-    },
+  /** Sleep asynchronously */
+  sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
-    // Invalid map size to force redraw.
-    invalidateMap: function() {
-      this.getMap().invalidateSize();
-    },
+  /** Access the Leaflet map directly */
+  getMap(): Map | null {
+    return this.$refs.map ? this.$refs.map.mapObject : null;
+  }
 
-    // Reset map.
-    resetMap: function() {
-      var map = this.getMap();
-
+  /** Reset map */
+  resetMap() {
+    var map: Map | null = this.getMap();
+    if (map) {
       // Remove layers.
-      map.eachLayer(function(layer) {
-        map.removeLayer(layer);
+      map.eachLayer(function(layer: Layer) {
+        if (map) {
+          map.removeLayer(layer);
+        }
       });
 
       // Add tile layer for open street map.
       var osmUrl = "http://{s}.tile.osm.org/{z}/{x}/{y}.png";
-      var osm = new L.TileLayer(osmUrl, {
+      var osm = new TileLayer(osmUrl, {
         maxZoom: 20
       });
-      osm.addTo(this.getMap());
-      this.$emit("resetMap");
+      osm.addTo(map);
+      map.invalidateSize();
+      this.mapReady = true;
+      this.$emit("ready");
     }
   }
-};
+}
 </script>

@@ -82,6 +82,3 @@ export default class CommandUpdateDialog extends EditDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

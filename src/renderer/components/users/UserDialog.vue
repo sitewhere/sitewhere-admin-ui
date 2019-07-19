@@ -18,13 +18,13 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <user-detail-fields ref="details"/>
+        <user-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="permissions">
-        <user-permissions ref="permissions"/>
+        <user-permissions ref="permissions" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -87,7 +87,7 @@ export default class UserDialog extends DialogComponent<IUser> {
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -107,12 +107,12 @@ export default class UserDialog extends DialogComponent<IUser> {
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
     if (!this.$refs.permissions.validate()) {
-      this.$refs.dialog.setActiveTab("permissions");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
 
@@ -122,6 +122,3 @@ export default class UserDialog extends DialogComponent<IUser> {
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -19,16 +19,16 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <area-type-detail-fields ref="details"/>
+        <area-type-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="content">
-        <area-types-multiselect ref="content"/>
+        <area-types-multiselect ref="content" />
       </v-tab-item>
       <v-tab-item key="branding">
-        <branding-panel ref="branding"/>
+        <branding-panel ref="branding" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -93,7 +93,7 @@ export default class AreaTypeDialog extends DialogComponent<IAreaType> {
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -113,12 +113,12 @@ export default class AreaTypeDialog extends DialogComponent<IAreaType> {
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
     if (!this.$refs.branding.validate()) {
-      this.$refs.dialog.setActiveTab("branding");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
 

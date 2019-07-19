@@ -109,7 +109,7 @@ export default class AssignmentDialog extends DialogComponent<
       this.$refs.metadata.reset();
     }
     if (this.$refs.dialog) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
     }
   }
 
@@ -133,15 +133,15 @@ export default class AssignmentDialog extends DialogComponent<
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.customer.validate()) {
-      this.$refs.dialog.setActiveTab("customer");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
     if (!this.$refs.area.validate()) {
-      this.$refs.dialog.setActiveTab("area");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
     if (!this.$refs.asset.validate()) {
-      this.$refs.dialog.setActiveTab("asset");
+      this.$refs.dialog.setActiveTab(2);
       return;
     }
 
