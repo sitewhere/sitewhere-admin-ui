@@ -7,7 +7,7 @@
     :record="customer"
   >
     <template slot="header">
-      <customer-detail-header :record="customer"/>
+      <customer-detail-header :record="customer" />
     </template>
     <template slot="tabs">
       <v-tab key="customers">Subcustomers</v-tab>
@@ -17,11 +17,11 @@
       <v-tab key="alerts">Alerts</v-tab>
     </template>
     <template slot="tab-items">
-      <customer-subcustomers tabkey="customers" ref="customers" :customer="customer"/>
-      <customer-assignments tabkey="assignments" :customerToken="token"/>
-      <customer-location-events tabkey="locations" :customerToken="token"/>
-      <customer-measurement-events tabkey="measurements" :customerToken="token"/>
-      <customer-alert-events tabkey="alerts" :customerToken="token"/>
+      <customer-subcustomers tabkey="customers" ref="customers" :customer="customer" />
+      <customer-assignments tabkey="assignments" :customerToken="token" />
+      <customer-location-events tabkey="locations" :customerToken="token" />
+      <customer-measurement-events tabkey="measurements" :customerToken="token" />
+      <customer-alert-events tabkey="alerts" :customerToken="token" />
     </template>
     <template slot="dialogs">
       <customer-create-dialog
@@ -35,18 +35,13 @@
         :parentCustomer="parentCustomer"
         @customerUpdated="onCustomerUpdated"
       />
-      <customer-delete-dialog ref="delete" :token="token" @customerDeleted="onCustomerDeleted"/>
+      <customer-delete-dialog ref="delete" :token="token" @customerDeleted="onCustomerDeleted" />
     </template>
     <template slot="actions">
-      <v-tooltip left v-if="parentCustomer">
-        <v-btn icon slot="activator" @click="onUpOneLevel">
-          <font-awesome-icon icon="arrow-circle-up" size="lg"/>
-        </v-btn>
-        <span>Up One Level</span>
-      </v-tooltip>
-      <customer-button tooltip="Add Subcustomer" @action="onAddSubcustomer"/>
-      <edit-button tooltip="Edit Customer" @action="onEdit"/>
-      <delete-button tooltip="Delete Customer" @action="onDelete"/>
+      <up-button v-if="parentCustomer" tooltip="Up One Level" @action="onUpOneLevel" />
+      <customer-button tooltip="Add Subcustomer" @action="onAddSubcustomer" />
+      <edit-button tooltip="Edit Customer" @action="onEdit" />
+      <delete-button tooltip="Delete Customer" @action="onDelete" />
     </template>
   </sw-detail-page>
 </template>
@@ -68,9 +63,11 @@ import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 import CustomerUpdateDialog from "./CustomerUpdateDialog.vue";
 import CustomerDeleteDialog from "./CustomerDeleteDialog.vue";
 import CustomerButton from "../common/navbuttons/CustomerButton.vue";
+import UpButton from "../common/navbuttons/UpButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { Route } from "vue-router";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
@@ -90,6 +87,7 @@ import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
     CustomerDeleteDialog,
     CustomerUpdateDialog,
     CustomerButton,
+    UpButton,
     EditButton,
     DeleteButton
   }
@@ -116,6 +114,12 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   /** Get page title */
   get title(): string {
     return this.customer ? this.customer.name : "";
+  }
+
+  /** Called when component is reused */
+  beforeRouteUpdate(to: Route, from: Route, next: any) {
+    this.display(to.params.token);
+    next();
   }
 
   /** Load record */
