@@ -58,8 +58,6 @@ export default class AreaBoundsPanel extends DialogSection {
 
   /** Initialize map */
   onInitializeMap() {
-    console.log("initializing map");
-
     var component = this;
     let map: Map | null = this.getMap();
     if (map) {
@@ -99,7 +97,6 @@ export default class AreaBoundsPanel extends DialogSection {
   /** Load form data from an object */
   load(input: any): void {
     this.bounds = input.bounds;
-    console.log("loaded from bounds", this.bounds);
   }
 
   /** Save form data to an object */
@@ -254,7 +251,11 @@ export default class AreaBoundsPanel extends DialogSection {
 
   /** Edit existing bounds layer */
   editBoundsLayer(e: any) {
-    console.log("bounds edit", e);
+    if (this.boundsLayer) {
+      this.bounds = MapUtils.leafletToSwBounds(
+        this.boundsLayer.getLatLngs()[0]
+      );
+    }
   }
 
   /** Remove existing bounds layer */
