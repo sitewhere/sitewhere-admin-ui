@@ -38,7 +38,6 @@
 <script lang="ts">
 import {
   Component,
-  Watch,
   DialogComponent,
   DialogSection,
   ITabbedComponent,

@@ -1,5 +1,8 @@
 <template>
-  <sw-navigation-header-panel v-if="device" :imageUrl="imageUrl" height="190px">
+  <sw-navigation-header-panel v-if="device" height="190px">
+    <template slot="left">
+      <device-detail-header-image :device="device" />
+    </template>
     <template slot="content">
       <sw-header-field label="Token">
         <sw-clipboard-copy-field :field="device.token" message="Token copied to clipboard" />
@@ -28,11 +31,14 @@
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { IDevice, IDeviceType } from "sitewhere-rest-api";
+
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
+import DeviceDetailHeaderImage from "./DeviceDetailHeaderImage.vue";
 
 @Component({
   components: {
-    AuthenticatedImage
+    AuthenticatedImage,
+    DeviceDetailHeaderImage
   }
 })
 export default class DeviceDetailHeader extends HeaderComponent<IDevice> {

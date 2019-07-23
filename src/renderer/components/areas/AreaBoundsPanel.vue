@@ -1,55 +1,66 @@
 <template>
   <div>
-    <v-divider />
-    <map-panel height="450px" ref="map" :visible="showMap" @ready="onInitializeMap" />
-    <v-divider />
+    <map-with-zone-overlay-panel
+      style="height: 450px; border: 1px solid #ddd;"
+      ref="map"
+      :areaToken="areaToken"
+      :visible="showMap"
+      @ready="onInitializeMap"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import Leaflet, {
-  Component,
-  Watch,
-  Refs,
-  DialogSection
-} from "sitewhere-ide-common";
-import Vue from "vue";
+import { Component, Watch, Refs, DialogSection } from "sitewhere-ide-common";
 
-import MapPanel from "./MapPanel.vue";
-import MapUtils from "./MapUtils";
+import MapWithZoneOverlayPanel from "./MapWithZoneOverlayPanel.vue";
+import {
+  swToLeafletBounds,
+  leafletToSwBounds,
+  enableMapDrawing,
+  enableMapEditing
+} from "./MapUtils";
+
 import {
   LatLng,
   LatLngBounds,
   Polygon,
-  Map,
+  Map as LeafletMap,
   Control,
   Draw,
   FeatureGroup,
-  latLngBounds as GetLatLongBounds,
-  latLng as GetLatLong
+  latLngBounds as GetLatLongBounds
 } from "leaflet";
-import XXX from "leaflet-draw"; // eslint-disable-line no-unused-vars
+import XXX from "leaflet-draw";
 
-import { ILocation } from "sitewhere-rest-api";
+import {
+  ILocation,
+  IAreaCreateRequest,
+  IZoneCreateRequest
+} from "sitewhere-rest-api";
 
 @Component({
   components: {
-    MapPanel
+    MapWithZoneOverlayPanel
   }
 })
 export default class AreaBoundsPanel extends DialogSection {
   // References.
   $refs!: Refs<{
-    map: MapPanel;
+    map: MapWithZoneOverlayPanel;
   }>;
 
   showMap: boolean = false;
+  areaToken: string | undefined = undefined;
   bounds: ILocation[] = [];
   editControl: Control.Draw | null = null;
   boundsLayer: Polygon | null = null;
   borderColor: string = "#446644";
   fillColor: string = "#779977";
   fillOpacity: number = 0.3;
+
+  // Prevent unused warning.
+  xxx: any = XXX;
 
   /** Make map visible */
   makeMapVisible() {
@@ -59,7 +70,7 @@ export default class AreaBoundsPanel extends DialogSection {
   /** Initialize map */
   onInitializeMap() {
     var component = this;
-    let map: Map | null = this.getMap();
+    let map: LeafletMap | null = this.getMap();
     if (map) {
       // Remove and add event handlers.
       map.off(Draw.Event.DRAWSTART).on(Draw.Event.DRAWSTART, function(e) {
@@ -83,6 +94,13 @@ export default class AreaBoundsPanel extends DialogSection {
 
   /** Reset section content */
   reset(): void {
+    // Refresh zones.
+    if (this.$refs.map) {
+      this.$refs.map.refresh();
+    }
+
+    // Reset fields.
+    this.areaToken = undefined;
     this.bounds = [];
     this.borderColor = "#446644";
     this.fillColor = "#779977";
@@ -95,7 +113,8 @@ export default class AreaBoundsPanel extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: any): void {
+  load(input: IAreaCreateRequest): void {
+    this.areaToken = input.token;
     this.bounds = input.bounds;
   }
 
@@ -107,30 +126,25 @@ export default class AreaBoundsPanel extends DialogSection {
   }
 
   /** Access the Leaflet map directly */
-  getMap(): Map | null {
+  getMap(): LeafletMap | null {
     return this.$refs.map ? this.$refs.map.getMap() : null;
   }
 
   @Watch("bounds")
   onBoundsSet(updated: ILocation[]) {
-    let map: Map | null = this.getMap();
+    let map: LeafletMap | null = this.getMap();
     if (map) {
       if (this.boundsLayer) {
-        console.log("removing bounds layer");
         this.removeBoundsLayer();
       }
 
       if (updated && updated.length > 0) {
-        console.log("adding new bounds layer for", updated);
-        let latLongs: LatLng[] = MapUtils.swToLeafletBounds(updated);
+        let latLongs: LatLng[] = swToLeafletBounds(updated);
         let lBounds: LatLngBounds = GetLatLongBounds(latLongs);
         if (latLongs && latLongs.length > 0) {
           var polygon = new Polygon(latLongs, {
-            color: this.borderColor,
             opacity: 1,
-            weight: 3,
-            fillColor: this.fillColor,
-            fillOpacity: this.fillOpacity
+            weight: 3
           });
           polygon.setStyle({ color: this.borderColor });
           polygon.setStyle({ fillColor: this.fillColor });
@@ -150,95 +164,17 @@ export default class AreaBoundsPanel extends DialogSection {
       }
 
       if (this.boundsLayer) {
-        this.enableMapEditing();
+        this.editControl = enableMapEditing(map, this.boundsLayer);
       } else {
-        this.enableMapDrawing();
-      }
-    }
-  }
-
-  /** Get drawing options based on UI settings */
-  getDrawOptions(): Control.DrawOptions {
-    return {
-      polyline: false,
-      circle: false,
-      marker: false,
-      circlemarker: false,
-      polygon: {
-        shapeOptions: {
-          color: this.borderColor,
-          opacity: 1,
+        let zone: IZoneCreateRequest = {
+          areaToken: "",
+          name: "",
+          bounds: [],
+          borderColor: this.borderColor,
           fillColor: this.fillColor,
-          fillOpacity: this.fillOpacity
-        }
-      },
-      rectangle: {
-        shapeOptions: {
-          color: this.borderColor,
-          opacity: 1,
-          fillColor: this.fillColor,
-          fillOpacity: this.fillOpacity
-        }
-      }
-    };
-  }
-
-  /** Get editing options based on UI settings */
-  getEditOptions(): Control.DrawOptions {
-    return {
-      polyline: false,
-      circle: false,
-      marker: false,
-      circlemarker: false,
-      polygon: false,
-      rectangle: false
-    };
-  }
-
-  /** Enables drawing features on map */
-  enableMapDrawing() {
-    let map: Map | null = this.getMap();
-    if (map) {
-      var options: Control.DrawConstructorOptions = {
-        position: "topright"
-      };
-      options.draw = this.getDrawOptions();
-
-      var drawControl = new Control.Draw(options);
-      map.addControl(drawControl);
-      this.editControl = drawControl;
-    }
-  }
-
-  /** Enables editing features on map */
-  enableMapEditing() {
-    let map: Map | null = this.getMap();
-    if (map) {
-      if (this.boundsLayer) {
-        var editFeatures = new FeatureGroup();
-        editFeatures.addLayer(this.boundsLayer);
-        map.addLayer(editFeatures);
-        editFeatures.bringToFront();
-
-        var options: Control.DrawConstructorOptions = {
-          position: "topright",
-          edit: {
-            featureGroup: editFeatures,
-            remove: true
-          }
+          opacity: this.fillOpacity
         };
-        options.draw = this.getEditOptions();
-
-        var drawControl = new Control.Draw(options);
-        map.addControl(drawControl);
-        this.editControl = drawControl;
-
-        var bounds: LatLngBounds = this.boundsLayer.getBounds();
-        if (!this.boundsLayer.isEmpty()) {
-          map.fitBounds(bounds, {
-            padding: [0, 0]
-          });
-        }
+        this.editControl = enableMapDrawing(map, zone);
       }
     }
   }
@@ -246,21 +182,19 @@ export default class AreaBoundsPanel extends DialogSection {
   /** Add new bounds layer */
   addBoundsLayer(e: any) {
     let boundsLayer: Polygon = e.layer;
-    this.bounds = MapUtils.leafletToSwBounds(boundsLayer.getLatLngs()[0]);
+    this.bounds = leafletToSwBounds(boundsLayer.getLatLngs()[0]);
   }
 
   /** Edit existing bounds layer */
   editBoundsLayer(e: any) {
     if (this.boundsLayer) {
-      this.bounds = MapUtils.leafletToSwBounds(
-        this.boundsLayer.getLatLngs()[0]
-      );
+      this.bounds = leafletToSwBounds(this.boundsLayer.getLatLngs()[0]);
     }
   }
 
   /** Remove existing bounds layer */
   removeBoundsLayer() {
-    let map: Map | null = this.getMap();
+    let map: LeafletMap | null = this.getMap();
     if (this.boundsLayer && map) {
       map.removeLayer(this.boundsLayer);
       this.boundsLayer = null;

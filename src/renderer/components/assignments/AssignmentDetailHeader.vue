@@ -1,41 +1,37 @@
 <template>
   <sw-navigation-header-panel v-if="assignment" :imageUrl="imageUrl" height="220px">
+    <template slot="left">
+      <assignment-detail-header-image :assignment="assignment" />
+    </template>
     <template slot="content">
-      <sw-header-field label="Assignment token">
-        <sw-clipboard-copy-field
-          :field="assignment.token"
-          message="Assignment token copied to clipboard"
+      <sw-navigation-header-fields>
+        <sw-header-field label="Assignment token">
+          <sw-clipboard-copy-field
+            :field="assignment.token"
+            message="Assignment token copied to clipboard"
+          />
+        </sw-header-field>
+        <sw-linked-header-field
+          label="Assigned device"
+          :text="assignment.device.deviceType.name"
+          :url="'/devices/' + assignment.device.token"
         />
-      </sw-header-field>
-      <sw-linked-header-field
-        v-if="assignment.asset"
-        label="Assigned asset"
-        :text="assignment.assetName"
-        :url="'/assets/' + assignment.asset.token"
-      />
-      <sw-header-field v-else label="Assigned asset">
-        <span>No asset assigned</span>
-      </sw-header-field>
-      <sw-linked-header-field
-        label="Assigned device"
-        :text="assignment.device.deviceType.name"
-        :url="'/devices/' + assignment.device.token"
-      />
-      <sw-header-field label="Created date">
-        <span>{{ formatDate(assignment.createdDate) }}</span>
-      </sw-header-field>
-      <sw-header-field label="Last updated date">
-        <span>{{ formatDate(assignment.updatedDate) }}</span>
-      </sw-header-field>
-      <sw-header-field label="Active date">
-        <span>{{ formatDate(assignment.activeDate) }}</span>
-      </sw-header-field>
-      <sw-header-field label="Released date">
-        <span>{{ formatDate(assignment.releasedDate) }}</span>
-      </sw-header-field>
+        <sw-header-field label="Created date">
+          <span>{{ formatDate(assignment.createdDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Last updated date">
+          <span>{{ formatDate(assignment.updatedDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Active date">
+          <span>{{ formatDate(assignment.activeDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Released date">
+          <span>{{ formatDate(assignment.releasedDate) }}</span>
+        </sw-header-field>
+      </sw-navigation-header-fields>
     </template>
     <template slot="right">
-      <authenticated-image :url="qrCodeUrl"/>
+      <authenticated-image :url="qrCodeUrl" />
     </template>
   </sw-navigation-header-panel>
 </template>
@@ -46,10 +42,12 @@ import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { formatDate } from "../common/Utils";
 import { IDeviceAssignment } from "sitewhere-rest-api";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
+import AssignmentDetailHeaderImage from "./AssignmentDetailHeaderImage.vue";
 
 @Component({
   components: {
-    AuthenticatedImage
+    AuthenticatedImage,
+    AssignmentDetailHeaderImage
   }
 })
 export default class AssignmentDetailHeader extends HeaderComponent<

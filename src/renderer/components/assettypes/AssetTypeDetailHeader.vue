@@ -1,24 +1,29 @@
 <template>
-  <sw-navigation-header-panel v-if="assetType" :imageUrl="assetType.imageUrl" height="190px">
+  <sw-navigation-header-panel v-if="assetType" height="190px">
+    <template slot="left">
+      <sw-header-branding-panel :entity="assetType" />
+    </template>
     <template slot="content">
-      <sw-header-field label="Token">
-        <sw-clipboard-copy-field :field="assetType.token" message="Token copied to clipboard"/>
-      </sw-header-field>
-      <sw-header-field label="Name">
-        <span>{{ assetType.name }}</span>
-      </sw-header-field>
-      <sw-header-field label="Description">
-        <span>{{ assetType.description }}</span>
-      </sw-header-field>
-      <sw-header-field label="Created">
-        <span>{{ formatDate(assetType.createdDate) }}</span>
-      </sw-header-field>
-      <sw-header-field label="Updated">
-        <span>{{ formatDate(assetType.updatedDate) }}</span>
-      </sw-header-field>
+      <sw-navigation-header-fields>
+        <sw-header-field label="Token">
+          <sw-clipboard-copy-field :field="assetType.token" message="Token copied to clipboard" />
+        </sw-header-field>
+        <sw-header-field label="Name">
+          <span>{{ assetType.name }}</span>
+        </sw-header-field>
+        <sw-header-field label="Description">
+          <span>{{ assetType.description }}</span>
+        </sw-header-field>
+        <sw-header-field label="Created">
+          <span>{{ formatDate(assetType.createdDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Updated">
+          <span>{{ formatDate(assetType.updatedDate) }}</span>
+        </sw-header-field>
+      </sw-navigation-header-fields>
     </template>
     <template slot="right">
-      <authenticated-image :url="qrCodeUrl"/>
+      <authenticated-image :url="qrCodeUrl" />
     </template>
   </sw-navigation-header-panel>
 </template>
@@ -26,9 +31,10 @@
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
+
 import { formatDate } from "../common/Utils";
 import { IAssetType } from "sitewhere-rest-api";
-import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
 @Component({
   components: {

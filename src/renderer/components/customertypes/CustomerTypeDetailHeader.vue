@@ -1,24 +1,29 @@
 <template>
   <sw-navigation-header-panel v-if="customerType" :icon="icon" height="200px">
+    <template slot="left">
+      <sw-header-branding-panel :entity="customerType" />
+    </template>
     <template slot="content">
-      <sw-header-field label="Token">
-        <sw-clipboard-copy-field :field="customerType.token" message="Token copied to clipboard"/>
-      </sw-header-field>
-      <sw-header-field label="Name">
-        <span>{{ customerType.name }}</span>
-      </sw-header-field>
-      <sw-header-field label="Description">
-        <span>{{ customerType.description }}</span>
-      </sw-header-field>
-      <sw-header-field label="Created">
-        <span>{{ formatDate(customerType.createdDate) }}</span>
-      </sw-header-field>
-      <sw-header-field label="Updated">
-        <span>{{ formatDate(customerType.updatedDate) }}</span>
-      </sw-header-field>
+      <sw-navigation-header-fields>
+        <sw-header-field label="Token">
+          <sw-clipboard-copy-field :field="customerType.token" message="Token copied to clipboard" />
+        </sw-header-field>
+        <sw-header-field label="Name">
+          <span>{{ customerType.name }}</span>
+        </sw-header-field>
+        <sw-header-field label="Description">
+          <span>{{ customerType.description }}</span>
+        </sw-header-field>
+        <sw-header-field label="Created">
+          <span>{{ formatDate(customerType.createdDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Updated">
+          <span>{{ formatDate(customerType.updatedDate) }}</span>
+        </sw-header-field>
+      </sw-navigation-header-fields>
     </template>
     <template slot="right">
-      <authenticated-image :url="qrCodeUrl"/>
+      <authenticated-image :url="qrCodeUrl" />
     </template>
   </sw-navigation-header-panel>
 </template>

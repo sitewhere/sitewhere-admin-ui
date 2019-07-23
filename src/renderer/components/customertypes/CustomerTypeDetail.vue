@@ -55,6 +55,7 @@ import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { Route } from "vue-router";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
@@ -90,6 +91,12 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
 
   get title(): string {
     return this.customerType ? this.customerType.name : "";
+  }
+
+  /** Called when component is reused */
+  beforeRouteUpdate(to: Route, from: Route, next: any) {
+    this.display(to.params.token);
+    next();
   }
 
   /** Load record */

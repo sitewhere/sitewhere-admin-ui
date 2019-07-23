@@ -71,7 +71,7 @@ export default class DeviceListFilterDialog extends DialogComponent<
       this.$refs.devicetype.reset();
     }
     if (this.$refs.dialog) {
-      this.$refs.dialog.setActiveTab("devicetype");
+      this.$refs.dialog.setActiveTab(0);
     }
   }
 
@@ -86,7 +86,7 @@ export default class DeviceListFilterDialog extends DialogComponent<
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.devicetype.validate()) {
-      this.$refs.dialog.setActiveTab("devicetype");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 

@@ -1,29 +1,34 @@
 <template>
   <sw-navigation-header-panel v-if="asset" :imageUrl="imageUrl" height="200px">
+    <template slot="left">
+      <sw-header-branding-panel :entity="asset" />
+    </template>
     <template slot="content">
-      <sw-header-field label="Token">
-        <sw-clipboard-copy-field :field="asset.token" message="Token copied to clipboard"/>
-      </sw-header-field>
-      <sw-header-field label="Name">
-        <span>{{ asset.name }}</span>
-      </sw-header-field>
-      <sw-linked-header-field
-        label="Asset Type"
-        :text="asset.assetType.name"
-        :url="'/assettypes/' + asset.assetType.token"
-      />
-      <sw-header-field label="Image URL">
-        <span>{{ asset.imageUrl }}</span>
-      </sw-header-field>
-      <sw-header-field label="Created">
-        <span>{{ formatDate(asset.createdDate) }}</span>
-      </sw-header-field>
-      <sw-header-field label="Updated">
-        <span>{{ formatDate(asset.updatedDate) }}</span>
-      </sw-header-field>
+      <sw-navigation-header-fields>
+        <sw-header-field label="Token">
+          <sw-clipboard-copy-field :field="asset.token" message="Token copied to clipboard" />
+        </sw-header-field>
+        <sw-header-field label="Name">
+          <span>{{ asset.name }}</span>
+        </sw-header-field>
+        <sw-linked-header-field
+          label="Asset Type"
+          :text="asset.assetType.name"
+          :url="'/assettypes/' + asset.assetType.token"
+        />
+        <sw-header-field label="Image URL">
+          <span>{{ asset.imageUrl }}</span>
+        </sw-header-field>
+        <sw-header-field label="Created">
+          <span>{{ formatDate(asset.createdDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Updated">
+          <span>{{ formatDate(asset.updatedDate) }}</span>
+        </sw-header-field>
+      </sw-navigation-header-fields>
     </template>
     <template slot="right">
-      <authenticated-image :url="qrCodeUrl"/>
+      <authenticated-image :url="qrCodeUrl" />
     </template>
   </sw-navigation-header-panel>
 </template>
@@ -49,11 +54,6 @@ export default class AssetDetailHeader extends HeaderComponent<IAsset> {
   // Token.
   get token(): string {
     return this.asset ? this.asset.token : "";
-  }
-
-  // Get URL for image.
-  get imageUrl(): string {
-    return this.asset ? this.asset.imageUrl : "";
   }
 
   // Get URL for QR code.

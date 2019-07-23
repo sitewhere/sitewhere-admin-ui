@@ -17,7 +17,7 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <zone-detail-fields :area="area" ref="details" />
+        <zone-detail-fields :area="area" :mapVisible="mapVisible" ref="details" />
       </v-tab-item>
       <v-tab-item key="metadata">
         <sw-metadata-panel ref="metadata" />
@@ -48,6 +48,8 @@ import { IZone, IArea } from "sitewhere-rest-api";
 export default class ZoneDialog extends DialogComponent<IZone> {
   @Prop() readonly area!: IArea;
 
+  mapVisible: boolean = false;
+
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
@@ -73,13 +75,14 @@ export default class ZoneDialog extends DialogComponent<IZone> {
 
   /** Reset dialog contents */
   reset() {
+    this.mapVisible = true;
     if (this.$refs.details) {
       this.$refs.details.reset();
     }
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   /** Load dialog from a given payload */
@@ -96,7 +99,7 @@ export default class ZoneDialog extends DialogComponent<IZone> {
   /** Called after create button is clicked */
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 

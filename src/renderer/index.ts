@@ -43,8 +43,11 @@ Vue.component("v-marker", Vue2Leaflet.Marker);
 
 // BEGIN HACK to get around problems with Leaflet issues.
 import L from "leaflet";
+import D from "leaflet-draw";
 
-delete L.Icon.Default.prototype._getIconUrl;
+console.log(D);
+
+//delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -61,6 +64,7 @@ function customize(prototype: any) {
   options.touchIcon = options.icon;
 }
 // END HACK.
+
 require("./assets/sitewhere.css");
 
 Vue.config.productionTip = false;

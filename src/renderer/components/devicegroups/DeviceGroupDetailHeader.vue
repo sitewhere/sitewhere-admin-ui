@@ -1,8 +1,11 @@
 <template>
-  <sw-navigation-header-panel v-if="deviceGroup" :imageUrl="imageUrl" height="200px">
+  <sw-navigation-header-panel v-if="deviceGroup" height="200px">
+    <template slot="left">
+      <sw-header-branding-panel :entity="deviceGroup" />
+    </template>
     <template slot="content">
       <sw-header-field label="Token">
-        <sw-clipboard-copy-field :field="deviceGroup.token" message="Token copied to clipboard"/>
+        <sw-clipboard-copy-field :field="deviceGroup.token" message="Token copied to clipboard" />
       </sw-header-field>
       <sw-header-field label="Name">
         <span>{{ deviceGroup.name }}</span>
@@ -18,7 +21,7 @@
       </sw-header-field>
     </template>
     <template slot="right">
-      <authenticated-image :url="qrCodeUrl"/>
+      <authenticated-image :url="qrCodeUrl" />
     </template>
   </sw-navigation-header-panel>
 </template>
@@ -33,7 +36,9 @@ import AuthenticatedImage from "../common/AuthenticatedImage.vue";
     AuthenticatedImage
   }
 })
-export default class DeviceGroupDetailHeader extends HeaderComponent<IDeviceGroup> {
+export default class DeviceGroupDetailHeader extends HeaderComponent<
+  IDeviceGroup
+> {
   // Reference record as device group.
   get deviceGroup(): IDeviceGroup {
     return this.record;
@@ -42,11 +47,6 @@ export default class DeviceGroupDetailHeader extends HeaderComponent<IDeviceGrou
   // Get token.
   get token(): string {
     return this.deviceGroup ? this.deviceGroup.token : "";
-  }
-
-  // Get URL for image.
-  get imageUrl(): string {
-    return this.deviceGroup ? this.deviceGroup.imageUrl : "";
   }
 
   // Get URL for QR code.
@@ -62,6 +62,3 @@ export default class DeviceGroupDetailHeader extends HeaderComponent<IDeviceGrou
   }
 }
 </script>
-
-<style scoped>
-</style>

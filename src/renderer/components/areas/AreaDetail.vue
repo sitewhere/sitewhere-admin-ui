@@ -23,7 +23,7 @@
       <area-location-events tabkey="locations" :areaToken="token" />
       <area-measurement-events tabkey="measurements" :areaToken="token" />
       <area-alert-events tabkey="alerts" :areaToken="token" />
-      <area-zones ref="zones" tabkey="zones" :areaToken="token" />
+      <area-zones ref="zones" tabkey="zones" :area="area" />
     </template>
     <template slot="dialogs">
       <area-create-dialog ref="create" :parentArea="area" @created="onSubareaAdded" />

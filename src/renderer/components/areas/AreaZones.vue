@@ -33,11 +33,15 @@
         :title="formatDate(props.item.updatedDate)"
       >{{ formatDate(props.item.updatedDate) }}</td>
       <td width="1%" style="white-space: nowrap" title="Edit/Delete">
-        <actions-block @edited="onZoneUpdated" @deleted="onZoneDeleted">
-          <zone-update-dialog slot="edit" :token="props.item.token"/>
-          <zone-delete-dialog slot="delete" :token="props.item.token"/>
-        </actions-block>
+        <actions-block
+          @edit="onEditZone(props.item.token)"
+          @delete="onDeleteZone(props.item.token)"
+        />
       </td>
+    </template>
+    <template slot="dialogs">
+      <zone-update-dialog ref="update" :area="area" />
+      <zone-delete-dialog ref="delete" />
     </template>
   </sw-data-table-tab>
 </template>
@@ -48,7 +52,8 @@ import {
   Prop,
   ListComponent,
   IPageSizes,
-  ITableHeaders
+  ITableHeaders,
+  Refs
 } from "sitewhere-ide-common";
 
 import ActionsBlock from "../common/ActionsBlock.vue";
@@ -59,6 +64,7 @@ import { AxiosPromise } from "axios";
 import { formatDate } from "../common/Utils";
 import { listZones } from "../../rest/sitewhere-zones-api";
 import {
+  IArea,
   IZone,
   IZoneSearchCriteria,
   IZoneResponseFormat,
@@ -80,7 +86,13 @@ export default class AreaZones extends ListComponent<
 > {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
-  @Prop() readonly areaToken!: string;
+  @Prop() readonly area!: IArea;
+
+  // References.
+  $refs!: Refs<{
+    update: ZoneUpdateDialog;
+    delete: ZoneDeleteDialog;
+  }>;
 
   pageSizes: IPageSizes = [
     {
@@ -133,7 +145,7 @@ export default class AreaZones extends ListComponent<
   /** Build search criteria for list */
   buildSearchCriteria(): IZoneSearchCriteria {
     let criteria: IZoneSearchCriteria = {};
-    criteria.areaToken = this.areaToken;
+    criteria.areaToken = this.area.token;
     return criteria;
   }
 
@@ -156,13 +168,23 @@ export default class AreaZones extends ListComponent<
     return formatDate(date);
   }
 
-  // Called when a zone is deleted.
-  onZoneDeleted() {
+  /** Called to open zone update dialog */
+  onEditZone(token: string) {
+    this.$refs.update.open(token);
+  }
+
+  /** Called when a zone is updated */
+  onZoneUpdated() {
     this.refresh();
   }
 
-  // Called when a zone is updated.
-  onZoneUpdated() {
+  /** Called to open zone delete dialog */
+  onDeleteZone(token: string) {
+    this.$refs.delete.open(token);
+  }
+
+  /** Called when a zone is deleted */
+  onZoneDeleted() {
     this.refresh();
   }
 }

@@ -1,7 +1,7 @@
 <template>
-  <div style="position: relative;">
-    <div v-if="visible" :style="{ 'height': height, 'width': '100%' }">
-      <v-map :zoom="13" :center="[47.413220, -1.219482]" style="z-index: 1;" ref="map"></v-map>
+  <div class="flex-rows">
+    <div v-if="visible" class="map-content">
+      <v-map :zoom="zoom" :center="center" style="z-index: 1;" ref="map"></v-map>
     </div>
     <sw-loading-overlay v-if="!mapReady" loadingMessage="Loading map..." />
   </div>
@@ -11,12 +11,18 @@
 import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import { Map, Layer, TileLayer } from "leaflet";
+import { Map as LeafletMap, Layer, TileLayer } from "leaflet";
 
 @Component({})
 export default class MapPanel extends Vue {
-  @Prop() readonly height!: number;
   @Prop({ default: false }) readonly visible!: boolean;
+  @Prop({
+    default: function() {
+      return [47.41322, -1.219482];
+    }
+  })
+  readonly center!: number[];
+  @Prop({ default: 13 }) readonly zoom!: number;
 
   mapReady: boolean = false;
 
@@ -39,13 +45,13 @@ export default class MapPanel extends Vue {
   }
 
   /** Access the Leaflet map directly */
-  getMap(): Map | null {
+  getMap(): LeafletMap | null {
     return this.$refs.map ? this.$refs.map.mapObject : null;
   }
 
   /** Reset map */
   resetMap() {
-    var map: Map | null = this.getMap();
+    var map: LeafletMap | null = this.getMap();
     if (map) {
       // Remove layers.
       map.eachLayer(function(layer: Layer) {
@@ -67,3 +73,16 @@ export default class MapPanel extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.flex-rows {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.map-content {
+  flex: 1;
+  overflow-y: hidden;
+}
+</style>
