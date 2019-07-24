@@ -45,17 +45,17 @@ function getDrawOptions(zone: IZoneCreateRequest): Control.DrawOptions {
     polygon: {
       shapeOptions: {
         color: zone.borderColor,
-        opacity: 1,
+        opacity: zone.borderOpacity,
         fillColor: zone.fillColor,
-        fillOpacity: zone.opacity
+        fillOpacity: zone.fillOpacity
       }
     },
     rectangle: {
       shapeOptions: {
         color: zone.borderColor,
-        opacity: 1,
+        opacity: zone.borderOpacity,
         fillColor: zone.fillColor,
-        fillOpacity: zone.opacity
+        fillOpacity: zone.fillOpacity
       }
     }
   };

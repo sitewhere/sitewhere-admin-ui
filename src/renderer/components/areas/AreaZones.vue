@@ -41,7 +41,7 @@
     </template>
     <template slot="dialogs">
       <zone-update-dialog ref="update" :area="area" />
-      <zone-delete-dialog ref="delete" />
+      <zone-delete-dialog ref="delete" @deleted="refresh" />
     </template>
   </sw-data-table-tab>
 </template>

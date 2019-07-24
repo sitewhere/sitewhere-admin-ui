@@ -28,16 +28,11 @@ import {
   Map as LeafletMap,
   Control,
   Draw,
-  FeatureGroup,
   latLngBounds as GetLatLongBounds
 } from "leaflet";
 import XXX from "leaflet-draw";
 
-import {
-  ILocation,
-  IAreaCreateRequest,
-  IZoneCreateRequest
-} from "sitewhere-rest-api";
+import { ILocation, IArea, IZoneCreateRequest } from "sitewhere-rest-api";
 
 @Component({
   components: {
@@ -56,6 +51,7 @@ export default class AreaBoundsPanel extends DialogSection {
   editControl: Control.Draw | null = null;
   boundsLayer: Polygon | null = null;
   borderColor: string = "#446644";
+  borderOpacity: number = 0.8;
   fillColor: string = "#779977";
   fillOpacity: number = 0.3;
 
@@ -113,7 +109,7 @@ export default class AreaBoundsPanel extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: IAreaCreateRequest): void {
+  load(input: IArea): void {
     this.areaToken = input.token;
     this.bounds = input.bounds;
   }
@@ -171,8 +167,9 @@ export default class AreaBoundsPanel extends DialogSection {
           name: "",
           bounds: [],
           borderColor: this.borderColor,
+          borderOpacity: this.borderOpacity,
           fillColor: this.fillColor,
-          opacity: this.fillOpacity
+          fillOpacity: this.fillOpacity
         };
         this.editControl = enableMapDrawing(map, zone);
       }

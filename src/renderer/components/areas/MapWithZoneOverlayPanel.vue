@@ -72,48 +72,54 @@ export default class MapWithZoneOverlayPanel extends Vue {
 
   /** Load layers for area zones */
   async loadZoneLayers() {
-    if (!this.areaToken) {
-      console.log("no area token. skipping zones.");
-      return;
-    }
+    let map: LeafletMap | null = this.getMap();
+    if (map) {
+      // Remove existing zone overlay.
+      if (this.zonesGroup) {
+        map.removeLayer(this.zonesGroup);
+      }
 
-    let criteria: IZoneSearchCriteria = {
-      areaToken: this.areaToken
-    };
-    let format: IZoneResponseFormat = {};
-    let response: AxiosResponse<IZoneSearchResults> = await listZones(
-      this.$store,
-      criteria,
-      format
-    );
-    this.addZonesToFeatureGroup(response.data.results);
+      if (!this.areaToken) {
+        return;
+      }
+
+      let criteria: IZoneSearchCriteria = {
+        areaToken: this.areaToken
+      };
+      let format: IZoneResponseFormat = {};
+      let response: AxiosResponse<IZoneSearchResults> = await listZones(
+        this.$store,
+        criteria,
+        format
+      );
+      this.addZonesToFeatureGroup(map, response.data.results);
+    }
   }
 
   /** Add zone layers to a feature group */
-  addZonesToFeatureGroup(zones: IZone[]) {
-    let map: LeafletMap | null = this.getMap();
-    if (map) {
-      this.zonesGroup = new FeatureGroup();
-      map.addLayer(this.zonesGroup);
+  addZonesToFeatureGroup(map: LeafletMap, zones: IZone[]) {
+    this.zonesGroup = new FeatureGroup();
+    map.addLayer(this.zonesGroup);
 
-      // Add newest last.
-      zones.reverse();
+    // Add newest last.
+    zones.reverse();
 
-      zones.forEach(zone => {
-        if (this.ignoreZoneTokens.indexOf(zone.token) === -1) {
-          var polygon = this.createPolygonForZone(zone);
-          if (this.zonesGroup) {
-            this.zonesGroup.addLayer(polygon);
-          }
+    zones.forEach(zone => {
+      if (this.ignoreZoneTokens.indexOf(zone.token) === -1) {
+        var polygon = this.createPolygonForZone(zone);
+        if (this.zonesGroup) {
+          this.zonesGroup.addLayer(polygon);
         }
-      });
-
-      if (this.zoomToZones) {
-        let zoneBounds: LatLngBounds = this.zonesGroup.getBounds();
-        map.fitBounds(zoneBounds, {
-          padding: [10, 10]
-        });
+      } else {
+        console.log("ignored zone", zone.token);
       }
+    });
+
+    if (this.zoomToZones) {
+      let zoneBounds: LatLngBounds = this.zonesGroup.getBounds();
+      map.fitBounds(zoneBounds, {
+        padding: [10, 10]
+      });
     }
   }
 
@@ -122,10 +128,10 @@ export default class MapWithZoneOverlayPanel extends Vue {
     var latLngs = swToLeafletBounds(zone.bounds);
     var polygon = new Polygon(latLngs, {
       color: zone.borderColor,
-      opacity: 1,
+      opacity: zone.borderOpacity,
       weight: 3,
       fillColor: zone.fillColor,
-      fillOpacity: zone.opacity
+      fillOpacity: zone.fillOpacity
     });
     return polygon;
   }

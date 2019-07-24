@@ -15,7 +15,7 @@
 import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
-import { IZone, IZoneResponseFormat } from "sitewhere-rest-api";
+import { IZone } from "sitewhere-rest-api";
 import { getZone, deleteZone } from "../../rest/sitewhere-zones-api";
 
 @Component({})

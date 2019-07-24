@@ -22,12 +22,7 @@ import {
 import ZoneDialog from "./ZoneDialog.vue";
 
 import { AxiosPromise } from "axios";
-import {
-  IArea,
-  IZone,
-  IZoneCreateRequest,
-  IZoneResponseFormat
-} from "sitewhere-rest-api";
+import { IArea, IZone, IZoneCreateRequest } from "sitewhere-rest-api";
 import { getZone, updateZone } from "../../rest/sitewhere-zones-api";
 
 @Component({
@@ -53,7 +48,6 @@ export default class ZoneUpdateDialog extends EditDialogComponent<
 
   /** Load payload */
   prepareLoad(identifier: string): AxiosPromise<IZone> {
-    let format: IZoneResponseFormat = { includeAreaType: true };
     return getZone(this.$store, identifier);
   }
 
