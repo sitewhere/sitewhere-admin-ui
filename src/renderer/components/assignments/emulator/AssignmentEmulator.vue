@@ -26,36 +26,38 @@
       </div>
     </template>
     <template slot="dialogs">
+      <location-create-dialog ref="location" :assignment="assignment" @created="onLocationAdded" />
       <alert-create-dialog ref="alert" :assignment="assignment" @created="onAlertAdded" />
-      <!--
-      <location-create-dialog ref="locationCreate" :token="token" @locationAdded="onLocationAdded"></location-create-dialog>
-      <measurements-create-dialog
-        ref="mxCreate"
-        :token="token"
-        @locationAdded="onMeasurementsAdded"
-      ></measurements-create-dialog>
-      -->
+      <measurement-create-dialog
+        ref="measurement"
+        :assignment="assignment"
+        @created="onMeasurementAdded"
+      />
     </template>
     <template slot="actions">
       <sw-navigation-action-button
-        icon="exclamation-triangle"
+        icon="warning"
+        :material="true"
         tooltip="Add Alert"
         @action="onAddAlertClicked"
       />
       <sw-navigation-action-button
-        icon="crosshairs"
+        icon="room"
+        :material="true"
         tooltip="Add Location"
         @action="onEnterAddLocationMode"
       />
       <sw-navigation-action-button
-        icon="crosshairs"
-        tooltip="Pan to Last Location"
-        @action="onPanToLastLocation"
+        icon="assessment"
+        :material="true"
+        tooltip="Add Measurement"
+        @action="onAddMeasurementClicked"
       />
       <sw-navigation-action-button
-        icon="thermometer-full"
-        tooltip="Add Measurements"
-        @action="onAddMeasurementsClicked"
+        icon="cached"
+        :material="true"
+        tooltip="Refresh Locations"
+        @action="onRefreshLocations"
       />
     </template>
   </sw-detail-page>
@@ -72,14 +74,14 @@ import {
 import AssignmentListEntry from "../AssignmentListEntry.vue";
 import AssignmentEmulatorMap from "./AssignmentEmulatorMap.vue";
 
+import LocationCreateDialog from "./LocationCreateDialog.vue";
 import AlertCreateDialog from "./AlertCreateDialog.vue";
-// import LocationCreateDialog from "./LocationCreateDialog.vue";
-// import MeasurementsCreateDialog from "./MeasurementsCreateDialog.vue";
+import MeasurementCreateDialog from "./MeasurementCreateDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../../libraries/constants";
 import { getDeviceAssignment } from "../../../rest/sitewhere-device-assignments-api";
-import { Map as LeafletMap } from "leaflet";
+import { Map as LeafletMap, LatLng } from "leaflet";
 import {
   IDeviceAssignment,
   IDeviceAssignmentResponseFormat
@@ -89,7 +91,9 @@ import {
   components: {
     AssignmentListEntry,
     AssignmentEmulatorMap,
-    AlertCreateDialog
+    LocationCreateDialog,
+    AlertCreateDialog,
+    MeasurementCreateDialog
   }
 })
 export default class AssignmentEmulator extends DetailComponent<
@@ -98,8 +102,8 @@ export default class AssignmentEmulator extends DetailComponent<
   // References.
   $refs!: Refs<{
     map: AssignmentEmulatorMap;
-    location: any;
-    measurement: any;
+    location: LocationCreateDialog;
+    measurement: MeasurementCreateDialog;
     alert: AlertCreateDialog;
   }>;
 
@@ -145,24 +149,6 @@ export default class AssignmentEmulator extends DetailComponent<
     this.$store.commit("currentSection", section);
   }
 
-  onLocationClicked() {}
-
-  /** Called to open alert create dialog */
-  onAddAlertClicked() {
-    this.$refs.alert.open();
-  }
-
-  /** Called after alert is added */
-  onAlertAdded() {}
-
-  onPanToLastLocation() {}
-
-  /** Called when map is clicked */
-  onMapClicked(e: any) {
-    this.onExitAddLocationMode();
-    this.$emit("location", e);
-  }
-
   /** Enter mode where next click adds a location */
   onEnterAddLocationMode() {
     this.addLocationMode = true;
@@ -184,8 +170,51 @@ export default class AssignmentEmulator extends DetailComponent<
     }
   }
 
+  /** Called when a location is clicked */
+  onLocationClicked(e: any) {
+    let chosen: LatLng = e.latlng;
+    let location: {} = {
+      latitude: chosen.lat,
+      longitude: chosen.lng,
+      elevation: 0
+    };
+    this.$refs.location.loadAndOpen(location as any);
+  }
+
+  /** Called after a location has been added */
+  onLocationAdded() {
+    let component = this;
+    setTimeout(function() {
+      component.$refs.map.refreshLocations(false);
+    }, 500);
+  }
+
+  /** Called to open alert create dialog */
+  onAddAlertClicked() {
+    this.$refs.alert.open();
+  }
+
+  /** Called after alert is added */
+  onAlertAdded() {}
+
+  /** Refresh location data */
+  onRefreshLocations() {
+    this.$refs.map.refreshLocations();
+  }
+
+  /** Called when map is clicked */
+  onMapClicked(e: any) {
+    this.onExitAddLocationMode();
+    this.onLocationClicked(e);
+  }
+
   /** Called when measurement add is clicked */
-  onAddMeasurementsClicked() {}
+  onAddMeasurementClicked() {
+    this.$refs.measurement.open();
+  }
+
+  /** Called after measurement is added */
+  onMeasurementAdded() {}
 
   /** Style for overlay container */
   get overlayStyle() {

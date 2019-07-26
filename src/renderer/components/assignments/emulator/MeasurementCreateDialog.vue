@@ -1,7 +1,7 @@
 <template>
-  <location-dialog
+  <measurement-dialog
     ref="dialog"
-    title="Create Location"
+    title="Create Measurement"
     createLabel="Create"
     cancelLabel="Cancel"
     @payload="onCommit"
@@ -17,45 +17,47 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import LocationDialog from "./LocationDialog.vue";
+import MeasurementDialog from "./MeasurementDialog.vue";
 
 import { AxiosPromise } from "axios";
 import {
   IDeviceAssignment,
-  IDeviceLocation,
-  IDeviceLocationCreateRequest
+  IDeviceMeasurement,
+  IDeviceMeasurementCreateRequest
 } from "sitewhere-rest-api";
-import { createLocationForAssignment } from "../../../rest/sitewhere-device-assignments-api";
+import { createMeasurementsForAssignment } from "../../../rest/sitewhere-device-assignments-api";
 
 @Component({
   components: {
-    LocationDialog
+    MeasurementDialog
   }
 })
-export default class AlertCreateDialog extends CreateDialogComponent<
-  IDeviceLocation,
-  IDeviceLocationCreateRequest
+export default class MeasurementCreateDialog extends CreateDialogComponent<
+  IDeviceMeasurement,
+  IDeviceMeasurementCreateRequest
 > {
   @Prop() readonly assignment!: IDeviceAssignment;
 
   // References.
   $refs!: Refs<{
-    dialog: DialogComponent<IDeviceLocation>;
+    dialog: DialogComponent<IDeviceMeasurement>;
   }>;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IDeviceLocation> {
+  getDialog(): DialogComponent<IDeviceMeasurement> {
     return this.$refs.dialog;
   }
 
   /** Called on payload commit */
-  onCommit(payload: IDeviceLocationCreateRequest): void {
+  onCommit(payload: IDeviceMeasurementCreateRequest): void {
     this.commit(payload);
   }
 
   /** Implemented in subclasses to save payload */
-  save(payload: IDeviceLocationCreateRequest): AxiosPromise<IDeviceLocation> {
-    return createLocationForAssignment(
+  save(
+    payload: IDeviceMeasurementCreateRequest
+  ): AxiosPromise<IDeviceMeasurement> {
+    return createMeasurementsForAssignment(
       this.$store,
       this.assignment.token,
       payload
@@ -63,6 +65,6 @@ export default class AlertCreateDialog extends CreateDialogComponent<
   }
 
   /** Implemented in subclasses for after-save */
-  afterSave(payload: IDeviceLocation): void {}
+  afterSave(payload: IDeviceMeasurement): void {}
 }
 </script>
