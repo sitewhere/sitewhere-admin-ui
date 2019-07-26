@@ -13,13 +13,13 @@
 <script lang="ts">
 import { Component, Watch, Refs, DialogSection } from "sitewhere-ide-common";
 
-import MapWithZoneOverlayPanel from "./MapWithZoneOverlayPanel.vue";
+import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
 import {
   swToLeafletBounds,
   leafletToSwBounds,
   enableMapDrawing,
   enableMapEditing
-} from "./MapUtils";
+} from "../common/map/MapUtils";
 
 import {
   LatLng,

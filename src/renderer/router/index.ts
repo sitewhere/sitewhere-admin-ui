@@ -21,7 +21,7 @@ import AreasList from "@/components/areas/AreasList.vue";
 import AreaDetail from "@/components/areas/AreaDetail.vue";
 import AssignmentsList from "@/components/assignments/AssignmentsList.vue";
 import AssignmentDetail from "@/components/assignments/AssignmentDetail.vue";
-import AssignmentEmulator from "@/components/assignments/AssignmentEmulator.vue";
+import AssignmentEmulator from "@/components/assignments/emulator/AssignmentEmulator.vue";
 import DeviceTypesList from "@/components/devicetypes/DeviceTypesList.vue";
 import DeviceTypeDetail from "@/components/devicetypes/DeviceTypeDetail.vue";
 import DevicesList from "@/components/devices/DevicesList.vue";

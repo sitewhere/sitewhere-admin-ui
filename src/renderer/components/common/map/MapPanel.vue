@@ -1,7 +1,7 @@
 <template>
   <div class="flex-rows">
     <div v-if="visible" class="map-content">
-      <v-map :zoom="zoom" :center="center" style="z-index: 1;" ref="map"></v-map>
+      <v-map :zoom="zoom" :center="center" style="z-index: 1;" ref="map" />
     </div>
     <sw-loading-overlay v-if="!mapReady" loadingMessage="Loading map..." />
   </div>
@@ -31,12 +31,14 @@ export default class MapPanel extends Vue {
     map: any;
   }>;
 
-  @Watch("visible")
-  async onVisibilityUpdated(updated: boolean) {
-    while (this.getMap() == null) {
-      await this.sleep(100);
+  @Watch("visible", { immediate: true })
+  async onVisibilityUpdated(visible: boolean) {
+    if (visible) {
+      while (this.getMap() == null) {
+        await this.sleep(100);
+      }
+      this.resetMap();
     }
-    this.resetMap();
   }
 
   /** Sleep asynchronously */

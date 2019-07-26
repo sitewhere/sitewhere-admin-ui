@@ -72,13 +72,13 @@ import {
 
 import DialogForm from "../common/form/DialogForm.vue";
 
-import MapWithZoneOverlayPanel from "./MapWithZoneOverlayPanel.vue";
+import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
 import {
   swToLeafletBounds,
   leafletToSwBounds,
   enableMapDrawing,
   enableMapEditing
-} from "./MapUtils";
+} from "../common/map/MapUtils";
 
 import { required, helpers } from "vuelidate/lib/validators";
 import { ILocation, IArea, IZoneCreateRequest } from "sitewhere-rest-api";

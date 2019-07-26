@@ -1,5 +1,5 @@
 <template>
-  <map-panel ref="map" class="map-content" :visible="visible" @ready="onInitializeMap" />
+  <map-panel ref="map" :visible="visible" @ready="onInitializeMap" />
 </template>
 
 <script lang="ts">
@@ -17,7 +17,7 @@ import {
 } from "leaflet";
 
 import { AxiosResponse } from "axios";
-import { listZones } from "../../rest/sitewhere-zones-api";
+import { listZones } from "../../../rest/sitewhere-zones-api";
 import {
   IZone,
   IZoneSearchCriteria,
