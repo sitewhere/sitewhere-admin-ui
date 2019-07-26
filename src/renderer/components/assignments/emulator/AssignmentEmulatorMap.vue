@@ -60,7 +60,7 @@ export default class AssignmentEmulatorMap extends Vue {
   }
 
   /** Refresh list of locations */
-  async refreshLocations() {
+  async refreshLocations(fitAll: boolean = true) {
     let criteria: IDateRangeSearchCriteria = {};
     let format: IDeviceAssignmentResponseFormat = {};
     let response: AxiosResponse<
@@ -71,18 +71,17 @@ export default class AssignmentEmulatorMap extends Vue {
       criteria,
       format
     );
-    this.onLocationsLoaded(response.data.results);
+    this.onLocationsLoaded(response.data.results, fitAll);
   }
 
   /** Called after locations are loaded for assignment */
-  onLocationsLoaded(locations: IDeviceLocation[]) {
-    console.log("loaded locations", locations);
+  onLocationsLoaded(locations: IDeviceLocation[], fitAll: boolean = true) {
     this.locations = locations;
-    this.addLocationsLayer();
+    this.addLocationsLayer(fitAll);
   }
 
   /** Add layer that contains recent locations */
-  addLocationsLayer() {
+  addLocationsLayer(fitAll: boolean = true) {
     let lastLocation = null;
 
     // Add newest last.
@@ -109,7 +108,7 @@ export default class AssignmentEmulatorMap extends Vue {
     if (map) {
       // Create layer for markers and line.
       let group = featureGroup(markers).addTo(map);
-      if (latLngs.length > 0) {
+      if (latLngs.length > 1) {
         let line = polyline(latLngs, {
           stroke: true,
           color: "#005599",
@@ -121,11 +120,17 @@ export default class AssignmentEmulatorMap extends Vue {
       this.locationsLayer = group;
 
       this.lastLocation = lastLocation;
-      if (lastLocation) {
-        let locBounds: LatLngBounds = this.locationsLayer.getBounds();
-        map.fitBounds(locBounds, {
-          padding: [10, 10]
-        });
+      if (latLngs.length === 1) {
+        map.setZoom(13);
+        map.panTo(latLngs[0]);
+      } else if (lastLocation) {
+        if (fitAll) {
+          let locBounds: LatLngBounds = this.locationsLayer.getBounds();
+          map.fitBounds(locBounds, {
+            padding: [10, 10],
+            animate: false
+          });
+        }
         map.panTo(lastLocation);
       }
     }

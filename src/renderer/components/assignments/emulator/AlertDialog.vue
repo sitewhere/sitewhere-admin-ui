@@ -55,7 +55,7 @@ export default class AlertDialog extends DialogComponent<IDeviceAlert> {
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
-    return NavigationIcon.DeviceAssignment;
+    return NavigationIcon.Alert;
   }
 
   /** Generate payload from UI */

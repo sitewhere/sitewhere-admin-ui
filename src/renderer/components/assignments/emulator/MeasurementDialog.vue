@@ -18,7 +18,7 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <location-detail-fields ref="details" />
+        <measurement-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="metadata">
         <sw-metadata-panel ref="metadata" />
@@ -37,19 +37,21 @@ import {
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../../libraries/constants";
 
-import LocationDetailFields from "./LocationDetailFields.vue";
-import { IDeviceAlert } from "sitewhere-rest-api";
+import MeasurementDetailFields from "./MeasurementDetailFields.vue";
+import { IDeviceMeasurement } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    LocationDetailFields
+    MeasurementDetailFields
   }
 })
-export default class AlertDialog extends DialogComponent<IDeviceAlert> {
+export default class MeasurementDialog extends DialogComponent<
+  IDeviceMeasurement
+> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
-    details: LocationDetailFields;
+    details: MeasurementDetailFields;
     metadata: DialogSection;
   }>;
 
@@ -81,7 +83,7 @@ export default class AlertDialog extends DialogComponent<IDeviceAlert> {
   }
 
   /** Load dialog from a given payload */
-  load(payload: IDeviceAlert) {
+  load(payload: IDeviceMeasurement) {
     this.reset();
     if (this.$refs.details) {
       this.$refs.details.load(payload);
