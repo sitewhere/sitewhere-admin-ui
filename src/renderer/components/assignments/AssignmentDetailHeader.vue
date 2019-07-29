@@ -6,7 +6,7 @@
     <template slot="content">
       <sw-navigation-header-fields>
         <sw-header-field label="Assignment token">
-          <sw-clipboard-copy-field
+          <clipboard-copy-field
             :field="assignment.token"
             message="Assignment token copied to clipboard"
           />
@@ -41,11 +41,14 @@ import { Component, HeaderComponent } from "sitewhere-ide-common";
 
 import { formatDate } from "../common/Utils";
 import { IDeviceAssignment } from "sitewhere-rest-api";
+
+import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 import AssignmentDetailHeaderImage from "./AssignmentDetailHeaderImage.vue";
 
 @Component({
   components: {
+    ClipboardCopyField,
     AuthenticatedImage,
     AssignmentDetailHeaderImage
   }

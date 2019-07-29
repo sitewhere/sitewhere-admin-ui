@@ -1,23 +1,24 @@
 <template>
   <v-app v-if="tenant">
-    <sw-in-app-system-bar style="-webkit-app-region: drag"/>
+    <sw-in-app-system-bar style="-webkit-app-region: drag" />
     <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
-        <div class="tenant-logo" :style="tenantLogoStyle"/>
+        <div class="tenant-logo" :style="tenantLogoStyle" />
+        <v-spacer />
+        <v-tooltip bottom>
+          <v-btn class="ma-0" icon @click="onInstanceSettings" slot="activator">
+            <v-icon class="grey--text text--darken-1">settings</v-icon>
+          </v-btn>
+          <span>Instance Settings</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <v-btn class="ma-0" icon @click="onLogOut" slot="activator">
+            <v-icon class="grey--text text--darken-1">exit_to_app</v-icon>
+          </v-btn>
+          <span>Log Out</span>
+        </v-tooltip>
       </v-toolbar>
-      <sw-navigation :sections="sections" @sectionSelected="onSectionClicked"/>
-      <v-menu class="current-user-block" top right offset-y>
-        <v-btn class="grey darken-1 white--text" slot="activator">
-          <font-awesome-icon icon="user" class="mr-2"/>
-          {{ fullname }}
-        </v-btn>
-        <v-list>
-          <v-list-tile @click="onUserAction(action)" v-for="action in userActions" :key="action.id">
-            <font-awesome-icon :icon="action.icon" class="mr-2"/>
-            <v-list-tile-title v-text="action.title"></v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+      <sw-navigation :sections="sections" @sectionSelected="onSectionClicked" />
     </v-navigation-drawer>
     <v-content>
       <v-container class="pa-0" fluid fill-height>
@@ -28,7 +29,8 @@
         </v-layout>
       </v-container>
     </v-content>
-    <sw-in-app-footer/>
+    <sw-in-app-footer />
+    <notifications />
   </v-app>
 </template>
 
@@ -39,11 +41,18 @@ import { handleError } from "../common/Utils";
 import { AxiosResponse } from "axios";
 import { getJwt } from "../../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
+
+import Notifications from "../common/Notifications.vue";
 import { NavigationIcon } from "../../libraries/constants";
+
 import { ITenant, ITenantResponseFormat } from "sitewhere-rest-api";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
 
-@Component({})
+@Component({
+  components: {
+    Notifications
+  }
+})
 export default class TenantAdministration extends Vue {
   tenant!: ITenant;
   tenantToken!: string;
@@ -196,7 +205,6 @@ export default class TenantAdministration extends Vue {
 
     // Verify that a tenant token was specified in the route.
     var tenantToken = this.$route.params.tenantToken;
-    console.log("Tenant token", tenantToken);
     if (!tenantToken) {
       this.onLogOut();
       return;
@@ -296,13 +304,9 @@ export default class TenantAdministration extends Vue {
     this.onSectionClicked(this.$data.sections[0]);
   }
 
-  /** Handle user action */
-  onUserAction(action: IAction) {
-    if (action.id === "logout") {
-      this.onLogOut();
-    } else if (action.id === "sysadmin") {
-      this.$router.push("/system");
-    }
+  /** Route to instance settings */
+  onInstanceSettings() {
+    this.$router.push("/system");
   }
 
   // Set up timer for reloading JWT.

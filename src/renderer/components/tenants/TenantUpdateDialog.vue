@@ -2,6 +2,7 @@
   <tenant-dialog
     ref="dialog"
     title="Edit Tenant"
+    width="650"
     :loaded="loaded"
     createLabel="Update"
     cancelLabel="Cancel"

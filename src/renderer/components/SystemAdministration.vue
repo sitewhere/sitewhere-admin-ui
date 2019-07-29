@@ -4,20 +4,15 @@
     <v-navigation-drawer fixed style="margin-top: 25px;" v-model="drawer" app>
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
         <div class="sitewhere-logo" />
+        <v-spacer />
+        <v-tooltip bottom>
+          <v-btn class="ma-0" icon @click="onLogOut" slot="activator">
+            <v-icon class="grey--text text--darken-1">exit_to_app</v-icon>
+          </v-btn>
+          <span>Log Out</span>
+        </v-tooltip>
       </v-toolbar>
       <sw-navigation :sections="sections" @sectionSelected="onSectionClicked" />
-      <v-menu class="current-user-block" top right offset-y>
-        <v-btn class="grey darken-1 white--text" slot="activator">
-          <font-awesome-icon icon="user" class="mr-2" />
-          {{ fullname }}
-        </v-btn>
-        <v-list>
-          <v-list-tile @click="onUserAction(action)" v-for="action in userActions" :key="action.id">
-            <font-awesome-icon :icon="action.icon" class="mr-2" />
-            <v-list-tile-title v-text="action.title"></v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
     </v-navigation-drawer>
     <v-content>
       <v-container class="pa-0" fluid fill-height>
@@ -76,13 +71,6 @@ export default class SystemAdministration extends Vue {
       route: "system/microservices",
       longTitle: "Manage Global microservices",
       requireAll: ["ADMINISTER_TENANTS"]
-    }
-  ];
-  userActions: IAction[] = [
-    {
-      id: "logout",
-      title: "Log Out",
-      icon: "power-off"
     }
   ];
 

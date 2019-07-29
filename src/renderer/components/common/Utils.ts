@@ -26,6 +26,20 @@ export function showMessage(component: Vue, message: string): IAlertMessage {
 }
 
 /**
+ * Show error message in snackbar.
+ * @param component
+ * @param message
+ */
+export function showError(component: Vue, message: string): IAlertMessage {
+  let alert: IAlertMessage = {
+    message: message,
+    type: "error"
+  };
+  component.$store.commit("message", alert);
+  return alert;
+}
+
+/**
  * Format date in YYYY-MM-DD H:mm:ss format. N/A for null.
  * @param date
  */

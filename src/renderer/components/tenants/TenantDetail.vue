@@ -7,23 +7,23 @@
     :record="tenant"
   >
     <template slot="header">
-      <tenant-detail-header :record="tenant"/>
+      <tenant-detail-header :record="tenant" />
     </template>
     <template slot="tabs">
       <v-tab key="microservices">Microservices</v-tab>
     </template>
     <template slot="tab-items">
       <v-tab-item key="microservices">
-        <microservice-list :topology="tenantTopology" @microserviceClicked="onMicroserviceClicked"/>
+        <microservice-list :topology="tenantTopology" @microserviceClicked="onMicroserviceClicked" />
       </v-tab-item>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit"/>
-      <sw-navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete"/>
+      <sw-navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit" />
+      <sw-navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <tenant-update-dialog ref="edit" :tenantToken="token" @tenantUpdated="onTenantEdited"/>
-      <tenant-delete-dialog ref="delete" :tenantToken="token" @tenantDeleted="onTenantDeleted"/>
+      <tenant-update-dialog ref="edit" :tenantToken="token" @tenantUpdated="onTenantEdited" />
+      <tenant-delete-dialog ref="delete" :tenantToken="token" @deleted="onTenantDeleted" />
     </template>
   </sw-detail-page>
 </template>
@@ -131,7 +131,7 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 
   // Called after tenant is edited.
   onTenantEdited() {
-    this.$emit("refresh");
+    this.refresh();
   }
 
   // Called to delete tenant.
