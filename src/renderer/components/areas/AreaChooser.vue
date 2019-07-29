@@ -1,5 +1,6 @@
 <template>
   <chooser
+    class="ma-0"
     :all="all"
     :chosenText="chosenText"
     :notChosenText="notChosenText"
