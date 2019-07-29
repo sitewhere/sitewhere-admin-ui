@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop } from "sitewhere-ide-common";
 import { showMessage, showError } from "../Utils";
 import Vue from "vue";
 

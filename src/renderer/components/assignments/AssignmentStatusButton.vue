@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs, DialogComponent } from "sitewhere-ide-common";
+import { Component, Prop, Refs } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import { AxiosResponse } from "axios";
