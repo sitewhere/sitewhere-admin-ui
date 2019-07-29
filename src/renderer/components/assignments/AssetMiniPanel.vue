@@ -36,24 +36,26 @@
   </div>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
+<script lang="ts">
+import { Component, Prop } from "sitewhere-ide-common";
+import Vue from "vue";
 
-  props: ["assignment"],
+import { IDeviceAssignment } from "sitewhere-rest-api";
 
-  methods: {
-    // Create background image style.
-    backgroundImageStyle: function(image) {
-      return {
-        "background-image": "url(" + image + ")",
-        "background-size": "contain",
-        "background-repeat": "no-repeat",
-        "background-position": "50% 50%"
-      };
-    }
+@Component({})
+export default class AssetMiniPanel extends Vue {
+  @Prop() readonly assignment!: IDeviceAssignment;
+
+  /** Create background image style */
+  backgroundImageStyle(image: string) {
+    return {
+      "background-image": "url(" + image + ")",
+      "background-size": "contain",
+      "background-repeat": "no-repeat",
+      "background-position": "50% 50%"
+    };
   }
-};
+}
 </script>
 
 <style scoped>

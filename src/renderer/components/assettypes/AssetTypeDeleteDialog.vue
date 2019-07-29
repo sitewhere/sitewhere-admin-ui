@@ -1,53 +1,57 @@
 <template>
-  <span>
-    <sw-delete-dialog
-      ref="dialog"
-      title="Delete Asset Type"
-      width="400"
-      :error="error"
-      @delete="onDeleteConfirmed"
-    >
-      <v-card-text>Are you sure you want to delete this asset type?</v-card-text>
-    </sw-delete-dialog>
-  </span>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Asset Type"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
+  </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteAssetType } from "../../rest/sitewhere-asset-types-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
 
-  props: ["token"],
+import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
+import {
+  getAssetType,
+  deleteAssetType
+} from "../../rest/sitewhere-asset-types-api";
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
+@Component({})
+export default class AssetTypeDeleteDialog extends DeleteDialogComponent<
+  IAssetType
+> {
+  message: string | null = null;
 
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.getDialogComponent().openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteAssetType(this.$store, this.token, true)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("assetTypeDeleted");
-    }
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IAssetType> {
+    let format: IAssetTypeResponseFormat = {};
+    return getAssetType(this.$store, identifier, format);
   }
-};
+
+  /** Called after record is loaded */
+  afterLoad(item: IAssetType): void {
+    this.message = `Are you sure you want to delete '${item.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(item: IAssetType): AxiosPromise<IAssetType> {
+    return deleteAssetType(this.$store, item.token);
+  }
+
+  // Called after create button is clicked.
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  // Called after cancel button is clicked.
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
 </script>

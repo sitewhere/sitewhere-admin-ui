@@ -22,7 +22,7 @@
         <area-type-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="content">
-        <area-types-multiselect ref="content" />
+        <area-type-multiselect ref="content" />
       </v-tab-item>
       <v-tab-item key="branding">
         <branding-panel ref="branding" />
@@ -45,14 +45,14 @@ import {
 import { NavigationIcon } from "../../libraries/constants";
 
 import AreaTypeDetailFields from "./AreaTypeDetailFields.vue";
-import AreaTypesMultiselect from "./AreaTypesMultiselect.vue";
+import AreaTypeMultiselect from "./AreaTypeMultiselect.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";
 import { IAreaType } from "sitewhere-rest-api";
 
 @Component({
   components: {
     AreaTypeDetailFields,
-    AreaTypesMultiselect,
+    AreaTypeMultiselect,
     BrandingPanel
   }
 })

@@ -28,6 +28,9 @@
         <sw-header-field label="Released date">
           <span>{{ formatDate(assignment.releasedDate) }}</span>
         </sw-header-field>
+        <sw-header-field label="Status">
+          <assignment-status-button :assignment="assignment" @updated="onStatusUpdated" />
+        </sw-header-field>
       </sw-navigation-header-fields>
     </template>
     <template slot="right">
@@ -45,12 +48,14 @@ import { IDeviceAssignment } from "sitewhere-rest-api";
 import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 import AssignmentDetailHeaderImage from "./AssignmentDetailHeaderImage.vue";
+import AssignmentStatusButton from "./AssignmentStatusButton.vue";
 
 @Component({
   components: {
     ClipboardCopyField,
     AuthenticatedImage,
-    AssignmentDetailHeaderImage
+    AssignmentDetailHeaderImage,
+    AssignmentStatusButton
   }
 })
 export default class AssignmentDetailHeader extends HeaderComponent<
@@ -76,6 +81,11 @@ export default class AssignmentDetailHeader extends HeaderComponent<
   // Get URL for QR code.
   get qrCodeUrl() {
     return "assignments/" + this.token + "/label/qrcode";
+  }
+
+  /** Signal that status was updated */
+  onStatusUpdated() {
+    this.$emit("statusUpdated");
   }
 
   formatDate(date: Date) {
