@@ -1,53 +1,56 @@
 <template>
-  <span>
-    <sw-delete-dialog
-      ref="dialog"
-      title="Delete Area Type"
-      width="400"
-      :error="error"
-      @delete="onDeleteConfirmed"
-    >
-      <v-card-text>Are you sure you want to delete this area type?</v-card-text>
-    </sw-delete-dialog>
-  </span>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Area Type"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
+  </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteAreaType } from "../../rest/sitewhere-area-types-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
+import {
+  getAreaType,
+  deleteAreaType
+} from "../../rest/sitewhere-area-types-api";
 
-  props: ["token"],
+@Component({})
+export default class AreaTypeDeleteDialog extends DeleteDialogComponent<
+  IAreaType
+> {
+  message: string | null = null;
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.getDialogComponent().openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteAreaType(this.$store, this.token, true)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("areaTypeDeleted");
-    }
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IAreaType> {
+    let format: IAreaTypeResponseFormat = {};
+    return getAreaType(this.$store, identifier, format);
   }
-};
+
+  /** Called after record is loaded */
+  afterLoad(item: IAreaType): void {
+    this.message = `Are you sure you want to delete '${item.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(area: IAreaType): AxiosPromise<IAreaType> {
+    return deleteAreaType(this.$store, area.token);
+  }
+
+  // Called after create button is clicked.
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  // Called after cancel button is clicked.
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
 </script>

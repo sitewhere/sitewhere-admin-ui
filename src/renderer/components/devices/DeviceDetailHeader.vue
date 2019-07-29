@@ -5,7 +5,7 @@
     </template>
     <template slot="content">
       <sw-header-field label="Token">
-        <sw-clipboard-copy-field :field="device.token" message="Token copied to clipboard" />
+        <clipboard-copy-field :field="device.token" message="Token copied to clipboard" />
       </sw-header-field>
       <sw-linked-header-field
         label="Device Type"
@@ -32,11 +32,13 @@
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { IDevice, IDeviceType } from "sitewhere-rest-api";
 
+import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 import DeviceDetailHeaderImage from "./DeviceDetailHeaderImage.vue";
 
 @Component({
   components: {
+    ClipboardCopyField,
     AuthenticatedImage,
     DeviceDetailHeaderImage
   }

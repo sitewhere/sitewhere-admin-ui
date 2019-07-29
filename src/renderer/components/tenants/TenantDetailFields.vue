@@ -7,6 +7,7 @@
         title="Unique token that identifies the tenant. Should be alpahanumeric with no spaces."
         label="Tenant token"
         icon="info"
+        class="mr-3"
       >
         <span v-if="!$v.token.required && $v.$dirty">Tenant token is required.</span>
         <span v-if="!$v.token.validToken && $v.$dirty">Tenant token is not valid.</span>
@@ -47,7 +48,7 @@
         icon="people"
       />
     </v-flex>
-    <v-flex xs12>
+    <v-flex xs6>
       <form-select
         required
         title="Template used for initial tenant configuration."
@@ -57,11 +58,12 @@
         item-text="name"
         item-value="id"
         icon="layers"
+        class="mr-3"
       >
         <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty">Tenant template is required.</span>
       </form-select>
     </v-flex>
-    <v-flex xs12>
+    <v-flex xs6>
       <form-select
         required
         title="Template for dataset initially loaded into tenant."

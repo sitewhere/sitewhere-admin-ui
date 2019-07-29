@@ -1,5 +1,15 @@
 <template>
+  <form-select-condensed
+    v-if="dense"
+    :items="deviceTypes"
+    :title="title || `Choose type of device`"
+    item-text="name"
+    item-value="token"
+    v-model="wrapped"
+    icon="settings"
+  />
   <form-select
+    v-else
     :items="deviceTypes"
     :title="title || `Choose type of device`"
     :label="label || `Device Type`"
@@ -17,6 +27,7 @@ import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
 import FormSelect from "../common/form/FormSelect.vue";
+import FormSelectCondensed from "../common/form/FormSelectCondensed.vue";
 
 import { handleError } from "../common/Utils";
 import { AxiosResponse } from "axios";
@@ -30,13 +41,15 @@ import {
 
 @Component({
   components: {
-    FormSelect
+    FormSelect,
+    FormSelectCondensed
   }
 })
 export default class DeviceTypeSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;
   @Prop(String) readonly label!: string;
+  @Prop({ default: false }) readonly dense!: boolean;
 
   deviceTypes: IDeviceType[] = [];
 

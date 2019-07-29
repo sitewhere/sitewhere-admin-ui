@@ -1,5 +1,15 @@
 <template>
+  <form-select-condensed
+    v-if="dense"
+    :items="items"
+    :title="title || `Choose area`"
+    item-text="name"
+    item-value="token"
+    v-model="wrapped"
+    icon="settings"
+  />
   <form-select
+    v-else
     :items="items"
     :title="title || `Choose area`"
     :label="label || `Area`"
@@ -17,6 +27,7 @@ import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
 import FormSelect from "../common/form/FormSelect.vue";
+import FormSelectCondensed from "../common/form/FormSelectCondensed.vue";
 
 import { handleError } from "../common/Utils";
 import { AxiosResponse } from "axios";
@@ -30,13 +41,15 @@ import {
 
 @Component({
   components: {
-    FormSelect
+    FormSelect,
+    FormSelectCondensed
   }
 })
 export default class AreaSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;
   @Prop(String) readonly label!: string;
+  @Prop({ default: false }) readonly dense!: boolean;
 
   items: IArea[] = [];
 

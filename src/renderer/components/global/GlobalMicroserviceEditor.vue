@@ -19,17 +19,14 @@
       <v-tab key="scripts">Scripts</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="configuration">
-        <microservice-editor
-          :config="configuration"
-          :configModel="configurationModel"
-          :identifier="identifier"
-          @dirty="onConfigurationUpdated"
-        />
-      </v-tab-item>
-      <v-tab-item key="scripts">
-        <scripts-manager :identifier="identifier"/>
-      </v-tab-item>
+      <microservice-editor
+        tabkey="configuration"
+        :configuration="configuration"
+        :configurationModel="configurationModel"
+        :identifier="identifier"
+        @dirty="onConfigurationUpdated"
+      />
+      <scripts-manager tabkey="scripts" :identifier="identifier" />
     </template>
     <template slot="actions">
       <sw-navigation-action-button

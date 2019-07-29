@@ -6,7 +6,7 @@
     <template slot="content">
       <sw-navigation-header-fields>
         <sw-header-field label="Token">
-          <sw-clipboard-copy-field :field="customerType.token" message="Token copied to clipboard" />
+          <clipboard-copy-field :field="customerType.token" message="Token copied to clipboard" />
         </sw-header-field>
         <sw-header-field label="Name">
           <span>{{ customerType.name }}</span>
@@ -31,10 +31,13 @@
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { ICustomerType } from "sitewhere-rest-api";
+
+import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
 @Component({
   components: {
+    ClipboardCopyField,
     AuthenticatedImage
   }
 })
