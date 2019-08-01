@@ -1,61 +1,63 @@
 <template>
-  <v-card flat>
-    <v-select
-      v-if="schedules"
-      :disabled="!enabled"
-      :style="{'opacity': enabled ? 1 : 0.3 }"
-      :items="schedules"
-      v-model="scheduleToken"
-      label="Schedule"
-      item-text="name"
-      item-value="token"
-      light
-      single-line
-      auto
-      prepend-icon="flash_on"
-      hide-details
-    ></v-select>
-  </v-card>
+  <chooser
+    class="ma-0"
+    :all="all"
+    :chosenText="chosenText"
+    :notChosenText="notChosenText"
+    :value="value"
+    @selected="onItemSelected"
+  />
 </template>
 
-<script>
-import { pagingForAllResults } from "../common/Utils";
+<script lang="ts">
+import { Component, Prop } from "sitewhere-ide-common";
+import Vue from "vue";
+
+import Chooser from "../common/form/Chooser.vue";
+
+import { AxiosResponse } from "axios";
 import { listSchedules } from "../../rest/sitewhere-schedules-api";
+import {
+  ISchedule,
+  IScheduleSearchResults,
+  IScheduleResponseFormat,
+  IScheduleSearchCriteria
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    scheduleToken: null,
-    schedules: null
-  }),
+@Component({
+  components: {
+    Chooser
+  }
+})
+export default class ScheduleChooser extends Vue {
+  @Prop() readonly value!: string;
+  @Prop() readonly chosenText!: string;
+  @Prop() readonly notChosenText!: string;
 
-  components: {},
+  selected: ISchedule | null = null;
+  all: ISchedule[] = [];
 
-  props: ["enabled"],
+  /** Initially load all items */
+  created() {
+    this.refresh();
+  }
 
-  watch: {
-    scheduleToken: function(value) {
-      this.$emit("scheduleUpdated", value);
-    }
-  },
+  /** Refresh items list */
+  async refresh() {
+    let format: IScheduleResponseFormat = {};
+    let criteria: IScheduleSearchCriteria = {};
+    let response: AxiosResponse<IScheduleSearchResults> = await listSchedules(
+      this.$store,
+      criteria,
+      format
+    );
+    this.all = response.data.results;
+  }
 
-  // Initially load list of all schedules.
-  created: function() {
-    var component = this;
-
-    // Search options.
-    let options = {};
-
-    let paging = pagingForAllResults();
-    listSchedules(this.$store, options, paging)
-      .then(function(response) {
-        component.schedules = response.data.results;
-      })
-      .catch(function(e) {});
-  },
-
-  methods: {}
-};
+  /** Called when an item is selected */
+  onItemSelected(item: ISchedule) {
+    this.selected = item;
+    this.$emit("input", item);
+  }
+}
 </script>
-
-<style scoped>
-</style>

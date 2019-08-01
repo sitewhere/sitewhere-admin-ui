@@ -19,13 +19,13 @@
     <template slot="dialogs">
       <device-create-dialog ref="add" @deviceAdded="onDeviceAdded" />
       <assignment-create-dialog ref="assign" :device="selected" @created="onAssignmentCreated" />
-      <batch-command-create-dialog ref="batch" :filter="filter" />
+      <invocation-by-device-criteria-create-dialog :filter="filter" ref="batch" />
       <device-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
     </template>
     <template slot="actions">
       <add-button tooltip="Add Device" @action="onAddDevice" />
       <device-command-button
-        v-if="filter.deviceType"
+        v-if="filter.deviceTypeToken"
         tooltip="Execute Batch Command"
         @action="onBatchCommandInvocation"
       />
@@ -47,7 +47,7 @@ import DeviceListFilterBar from "./DeviceListFilterBar.vue";
 import DeviceListFilterDialog from "./DeviceListFilterDialog.vue";
 import DeviceCreateDialog from "./DeviceCreateDialog.vue";
 import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog.vue";
-import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
+import InvocationByDeviceCriteriaCreateDialog from "../batch/InvocationByDeviceCriteriaCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
 import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
 import FilterButton from "../common/navbuttons/FilterButton.vue";
@@ -70,7 +70,7 @@ import {
     DeviceListFilterDialog,
     DeviceCreateDialog,
     AssignmentCreateDialog,
-    BatchCommandCreateDialog,
+    InvocationByDeviceCriteriaCreateDialog,
     AddButton,
     DeviceCommandButton,
     FilterButton
@@ -86,6 +86,7 @@ export default class DevicesList extends ListComponent<
     add: DeviceCreateDialog;
     assign: AssignmentCreateDialog;
     filter: DeviceListFilterDialog;
+    batch: InvocationByDeviceCriteriaCreateDialog;
   }>;
 
   selected: IDevice | null = null;
@@ -178,7 +179,7 @@ export default class DevicesList extends ListComponent<
 
   /** Called to invoke a batch command */
   onBatchCommandInvocation() {
-    (this.$refs.batch as any).onOpenDialog();
+    this.$refs.batch.open();
   }
 }
 </script>
