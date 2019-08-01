@@ -23,9 +23,15 @@
     </template>
     <template slot="dialogs">
       <assignment-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
+      <invocation-by-assignment-criteria-create-dialog :filter="filter" ref="batch" />
     </template>
     <template slot="actions">
       <add-button tooltip="Create Assignment" />
+      <device-command-button
+        v-if="hasOneDeviceType"
+        tooltip="Execute Batch Command"
+        @action="onBatchCommandInvocation"
+      />
       <filter-button tooltip="Filter Device Assignment List" @action="onShowFilterCriteria" />
     </template>
   </sw-list-page>
@@ -43,7 +49,9 @@ import AssignmentListEntry from "./AssignmentListEntry.vue";
 import AssignmentListFilterBar from "./AssignmentListFilterBar.vue";
 import AssignmentCreateDialog from "./AssignmentCreateDialog.vue";
 import AssignmentListFilterDialog from "./AssignmentListFilterDialog.vue";
+import InvocationByAssignmentCriteriaCreateDialog from "../batch/InvocationByAssignmentCriteriaCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
+import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
 import FilterButton from "../common/navbuttons/FilterButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
@@ -63,7 +71,9 @@ import {
     AssignmentListFilterBar,
     AssignmentCreateDialog,
     AssignmentListFilterDialog,
+    InvocationByAssignmentCriteriaCreateDialog,
     AddButton,
+    DeviceCommandButton,
     FilterButton
   }
 })
@@ -75,6 +85,7 @@ export default class AssignmentsList extends ListComponent<
 > {
   $refs!: Refs<{
     filter: AssignmentListFilterDialog;
+    batch: InvocationByAssignmentCriteriaCreateDialog;
   }>;
 
   filter: IDeviceAssignmentSearchCriteria = {};
@@ -96,6 +107,15 @@ export default class AssignmentsList extends ListComponent<
   /** Get page icon */
   get icon(): NavigationIcon {
     return NavigationIcon.DeviceAssignment;
+  }
+
+  /** Indicates filter with exactly one device type */
+  get hasOneDeviceType() {
+    return (
+      this.filter &&
+      this.filter.deviceTypeTokens &&
+      this.filter.deviceTypeTokens.length === 1
+    );
   }
 
   /** Build search criteria for list */
@@ -148,6 +168,11 @@ export default class AssignmentsList extends ListComponent<
   /** Open device assignment detail page */
   onOpenAssignment(assignment: IDeviceAssignment) {
     routeTo(this, "/assignments/" + assignment.token);
+  }
+
+  /** Called to invoke a batch command */
+  onBatchCommandInvocation() {
+    this.$refs.batch.open();
   }
 }
 </script>

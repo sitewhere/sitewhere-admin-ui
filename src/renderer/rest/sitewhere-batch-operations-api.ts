@@ -9,7 +9,8 @@ import {
   IBatchOperationResponseFormat,
   IBatchOperationElementResponseFormat,
   IBatchCommandInvocationRequest,
-  IBatchCommandForCriteriaRequest,
+  IInvocationByDeviceCriteriaRequest,
+  IInvocationByAssignmentCriteriaRequest,
   IBatchOperationSearchResults,
   IBatchElementSearchResults,
   ISearchCriteria
@@ -98,18 +99,37 @@ export function createBatchCommandInvocation(
 }
 
 /**
- * Create a batch operation based on criteria.
+ * Create command invocations based on device criteria.
  * @param store
  * @param request
  */
-export function createBatchCommandForCriteria(
+export function createInvocationsByDeviceCriteria(
   store: Store<SiteWhereUiSettings>,
-  request: IBatchCommandForCriteriaRequest
+  request: IInvocationByDeviceCriteriaRequest
 ): Promise<AxiosResponse<IBatchOperation>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IBatchOperation
-  > = SiteWhere.API.BatchOperations.createBatchCommandForCriteria(
+  > = SiteWhere.API.BatchOperations.createInvocationsByDeviceCriteria(
+    axios,
+    request
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Create command invocations based on assignment criteria.
+ * @param store
+ * @param request
+ */
+export function createInvocationsByAssignmentCriteria(
+  store: Store<SiteWhereUiSettings>,
+  request: IInvocationByAssignmentCriteriaRequest
+): Promise<AxiosResponse<IBatchOperation>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IBatchOperation
+  > = SiteWhere.API.BatchOperations.createInvocationsByAssignmentCriteria(
     axios,
     request
   );
