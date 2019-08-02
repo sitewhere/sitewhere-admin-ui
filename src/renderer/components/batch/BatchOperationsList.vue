@@ -18,7 +18,7 @@
           <td width="15%" :title="props.item.operationType">{{ props.item.operationType }}</td>
           <td width="15%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
           <td
-            width="15%"
+            width="20%"
             style="white-space: nowrap"
             :title="formatDate(props.item.createdDate)"
           >{{ formatDate(props.item.createdDate) }}</td>
@@ -34,15 +34,10 @@
           >{{ formatDate(props.item.processingEndedDate) }}</td>
           <td width="10%" title="View Batch Operation">
             <v-tooltip left>
-              <v-btn
-                dark
-                icon
-                class="green darken-2"
+              <v-icon
                 slot="activator"
                 @click.stop="openBatchOperation(props.item.token)"
-              >
-                <font-awesome-icon class="ma-1 navbutton" icon="arrow-right" size="lg"/>
-              </v-btn>
+              >navigate_next</v-icon>
               <span>Batch Operation Detail</span>
             </v-tooltip>
           </td>
@@ -163,10 +158,7 @@ export default class BatchOperationsList extends ListComponent<
 
   // Format a date.
   formatDate(date: Date) {
-    formatDate(date);
+    return formatDate(date);
   }
 }
 </script>
-
-<style scoped>
-</style>

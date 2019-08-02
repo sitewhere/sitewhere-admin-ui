@@ -4,21 +4,23 @@
       <sw-header-branding-panel :entity="deviceGroup" />
     </template>
     <template slot="content">
-      <sw-header-field label="Token">
-        <clipboard-copy-field :field="deviceGroup.token" message="Token copied to clipboard" />
-      </sw-header-field>
-      <sw-header-field label="Name">
-        <span>{{ deviceGroup.name }}</span>
-      </sw-header-field>
-      <sw-header-field label="Description">
-        <span>{{ deviceGroup.description }}</span>
-      </sw-header-field>
-      <sw-header-field label="Image URL">
-        <span>{{ deviceGroup.imageUrl }}</span>
-      </sw-header-field>
-      <sw-header-field label="Roles">
-        <span>{{ rolesList }}</span>
-      </sw-header-field>
+      <sw-navigation-header-fields>
+        <sw-header-field label="Token">
+          <clipboard-copy-field :field="deviceGroup.token" message="Token copied to clipboard" />
+        </sw-header-field>
+        <sw-header-field label="Name">
+          <span>{{ deviceGroup.name }}</span>
+        </sw-header-field>
+        <sw-header-field label="Description">
+          <span>{{ deviceGroup.description }}</span>
+        </sw-header-field>
+        <sw-header-field label="Image URL">
+          <span>{{ deviceGroup.imageUrl }}</span>
+        </sw-header-field>
+        <sw-header-field label="Roles">
+          <span>{{ rolesList }}</span>
+        </sw-header-field>
+      </sw-navigation-header-fields>
     </template>
     <template slot="right">
       <authenticated-image :url="qrCodeUrl" />

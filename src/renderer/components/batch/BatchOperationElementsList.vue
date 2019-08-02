@@ -1,114 +1,149 @@
 <template>
-  <div>
-    <no-results-panel
-      v-if="elements && elements.length === 0"
-      text="No Batch Operation Elements Found"
-    ></no-results-panel>
-    <v-data-table
-      v-if="elements && elements.length > 0"
-      class="elevation-2 pa-0"
-      :headers="headers"
-      :items="elements"
-      :hide-actions="true"
-      no-data-text="No Batch Operation Elements Found"
-    >
-      <template slot="items" slot-scope="props">
-        <td width="40%" :title="props.item.device.token">
-          <a
-            href="javascript: void(0)"
-            @click="onOpenDevice(props.item.device.token)"
-          >{{ props.item.device.token }}</a>
-        </td>
-        <td width="20%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
-        <td
-          width="20%"
-          style="white-space: nowrap"
-          :title="formatDate(props.item.processedDate)"
-        >{{ formatDate(props.item.processedDate) }}</td>
-        <td
-          width="20%"
-          style="white-space: nowrap"
-          :title="props.item.metadata.invocation"
-        >{{ props.item.metadata.invocation }}</td>
-      </template>
-    </v-data-table>
-    <sw-pager :results="results" @pagingUpdated="updatePaging"/>
-  </div>
+  <sw-data-table-tab
+    :tabkey="tabkey"
+    :id="id"
+    :loaded="loaded"
+    :headers="headers"
+    :results="results"
+    :pageSizes="pageSizes"
+    @pagingUpdated="onPagingUpdated"
+    loadingMessage="Loading batch elements ..."
+  >
+    <template slot="items" slot-scope="props">
+      <td
+        width="40%"
+        style="cursor: pointer;"
+        @click="onOpenDevice(props.item.device)"
+        :title="props.item.device.token"
+      >
+        <v-icon small class="grey--text">{{deviceIcon}}</v-icon>
+        {{ props.item.device.token }}
+      </td>
+      <td width="20%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
+      <td
+        width="20%"
+        style="white-space: nowrap"
+        :title="formatDate(props.item.processedDate)"
+      >{{ formatDate(props.item.processedDate) }}</td>
+      <td
+        width="20%"
+        style="white-space: nowrap"
+        :title="props.item.metadata.invocation"
+      >{{ props.item.metadata.invocation }}</td>
+    </template>
+    <template slot="dialogs"></template>
+  </sw-data-table-tab>
 </template>
 
-<script>
-import NoResultsPanel from "../common/NoResultsPanel";
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  ListComponent,
+  IPageSizes,
+  ITableHeaders
+} from "sitewhere-ide-common";
 
-import { formatDate, routeToDevice } from "../common/Utils";
+import { AxiosPromise } from "axios";
+import { formatDate, routeTo } from "../common/Utils";
+import { NavigationIcon } from "../../libraries/constants";
 import { listBatchOperationElements } from "../../rest/sitewhere-batch-operations-api";
+import {
+  IDevice,
+  IBatchOperation,
+  IBatchElement,
+  IBatchElementSearchCriteria,
+  IBatchElementResponseFormat,
+  IBatchElementSearchResults
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    results: null,
-    paging: null,
-    elements: null,
-    headers: [
-      {
-        align: "left",
-        sortable: false,
-        text: "Hardware Id",
-        value: "hwid"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Status",
-        value: "status"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Processed Date",
-        value: "processed"
-      },
-      {
-        align: "left",
-        sortable: false,
-        text: "Invocation Event",
-        value: "invocation"
-      }
-    ]
-  }),
+@Component({})
+export default class BatchOperationsElementsList extends ListComponent<
+  IBatchElement,
+  IBatchElementSearchCriteria,
+  IBatchElementResponseFormat,
+  IBatchElementSearchResults
+> {
+  @Prop() readonly tabkey!: string;
+  @Prop() readonly id!: string;
+  @Prop() readonly operation!: IBatchOperation;
 
-  components: {
-    NoResultsPanel
-  },
-
-  props: ["token"],
-
-  methods: {
-    // Update paging values and run query.
-    updatePaging: function(paging) {
-      this.$data.paging = paging;
-      this.refresh();
+  deviceIcon: NavigationIcon = NavigationIcon.Device;
+  pageSizes: IPageSizes = [
+    {
+      text: "25",
+      value: 25
     },
-    // Refresh list.
-    refresh: function() {
-      var component = this;
-      var paging = this.$data.paging.query;
-
-      let options = {};
-      options.includeDevice = true;
-
-      listBatchOperationElements(this.$store, this.token, options, paging)
-        .then(function(response) {
-          component.results = response.data;
-          component.elements = response.data.results;
-        })
-        .catch(function(e) {});
+    {
+      text: "50",
+      value: 50
     },
-    // Open device for the given token.
-    onOpenDevice: function(deviceToken) {
-      routeToDevice(this, deviceToken);
+    {
+      text: "100",
+      value: 100
     }
-  }
-};
-</script>
+  ];
 
-<style scoped>
-</style>
+  headers: ITableHeaders = [
+    {
+      align: "left",
+      sortable: false,
+      text: "Device Token",
+      value: "token"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Status",
+      value: "status"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Processed Date",
+      value: "processed"
+    },
+    {
+      align: "left",
+      sortable: false,
+      text: "Invocation Event",
+      value: "invocation"
+    }
+  ];
+
+  /** Build search criteria for list */
+  buildSearchCriteria(): IBatchElementSearchCriteria {
+    let criteria: IBatchElementSearchCriteria = {};
+    return criteria;
+  }
+
+  /** Build response format for list */
+  buildResponseFormat(): IBatchElementResponseFormat {
+    let format: IBatchElementResponseFormat = { includeDevice: true };
+    return format;
+  }
+
+  /** Perform search */
+  performSearch(
+    criteria: IBatchElementSearchCriteria,
+    format: IBatchElementResponseFormat
+  ): AxiosPromise<IBatchElementSearchResults> {
+    return listBatchOperationElements(
+      this.$store,
+      this.operation.token,
+      criteria,
+      format
+    );
+  }
+
+  /** Called to open detail page for device */
+  onOpenDevice(device: IDevice) {
+    routeTo(this, "/devices/" + device.token);
+  }
+
+  /** Make function available to template */
+  formatDate(date: Date) {
+    return formatDate(date);
+  }
+}
+</script>

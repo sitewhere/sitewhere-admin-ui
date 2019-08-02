@@ -47,7 +47,7 @@ export default class BatchCommandScheduleFields extends DialogSection {
 
   /** Load form data from an object */
   load(input: {}): void {
-    let scheduleToken: string = (input as any).scheduleToken;
+    this.scheduleToken = (input as any).scheduleToken;
   }
 
   /** Save form data to an object */

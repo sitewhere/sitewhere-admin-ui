@@ -42,9 +42,7 @@ import {
   IDeviceCommand,
   IDeviceCommandSearchCriteria,
   IDeviceCommandResponseFormat,
-  IDeviceCommandSearchResults,
-  IDeviceSearchCriteria,
-  IBatchCommandInvocationRequest
+  IDeviceCommandSearchResults
 } from "sitewhere-rest-api";
 
 @Component({

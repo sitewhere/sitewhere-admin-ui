@@ -7,7 +7,7 @@ import {
   IBatchOperation,
   IBatchOperationSearchCriteria,
   IBatchOperationResponseFormat,
-  IBatchOperationElementResponseFormat,
+  IBatchElementResponseFormat,
   IBatchCommandInvocationRequest,
   IInvocationByDeviceCriteriaRequest,
   IInvocationByAssignmentCriteriaRequest,
@@ -20,15 +20,17 @@ import {
  * Get batch operation by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getBatchOperation(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IBatchOperationResponseFormat
 ): Promise<AxiosResponse<IBatchOperation>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IBatchOperation
-  > = SiteWhere.API.BatchOperations.getBatchOperation(axios, token);
+  > = SiteWhere.API.BatchOperations.getBatchOperation(axios, token, format);
   return loaderWrapper(store, api);
 }
 
@@ -65,7 +67,7 @@ export function listBatchOperationElements(
   store: Store<SiteWhereUiSettings>,
   token: string,
   criteria: ISearchCriteria,
-  format: IBatchOperationElementResponseFormat
+  format: IBatchElementResponseFormat
 ): Promise<AxiosResponse<IBatchElementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
