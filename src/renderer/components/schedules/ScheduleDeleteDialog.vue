@@ -3,52 +3,54 @@
     ref="dialog"
     title="Delete Schedule"
     width="400"
-    :error="error"
-    @delete="onDeleteConfirmed"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
   >
-    <v-card-text>Are you sure you want to delete this schedule?</v-card-text>
+    <v-card-text>{{ message }}</v-card-text>
   </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteSchedule } from "../../rest/sitewhere-schedules-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import { ISchedule, IScheduleResponseFormat } from "sitewhere-rest-api";
+import {
+  getSchedule,
+  deleteSchedule
+} from "../../rest/sitewhere-schedules-api";
 
-  props: ["token"],
+@Component({})
+export default class ScheduleDeleteDialog extends DeleteDialogComponent<
+  ISchedule
+> {
+  message: string | null = null;
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.getDialogComponent().openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteSchedule(this.$store, this.token, true)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("deleted");
-    }
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<ISchedule> {
+    let format: IScheduleResponseFormat = {};
+    return getSchedule(this.$store, identifier, format);
   }
-};
-</script>
 
-<style scoped>
-</style>
+  /** Called after record is loaded */
+  afterLoad(device: ISchedule): void {
+    this.message = `Are you sure you want to delete '${device.token}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(item: ISchedule): AxiosPromise<ISchedule> {
+    return deleteSchedule(this.$store, item.token);
+  }
+
+  /** Called after create button is clicked */
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  /** Called after cancel button is clicked */
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
+</script>
