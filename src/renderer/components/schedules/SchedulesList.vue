@@ -2,7 +2,7 @@
   <sw-list-page
     :icon="icon"
     title="Schedules"
-    loadingMessage="Loading batch operations ..."
+    loadingMessage="Loading schedules ..."
     :loaded="loaded"
     :results="results"
     @pagingUpdated="onPagingUpdated"
@@ -23,14 +23,22 @@
             :title="formatDate(props.item.createdDate)"
           >{{ formatDate(props.item.createdDate) }}</td>
           <td width="15%">
-            <actions-block @edited="refresh" @deleted="refresh">
-              <schedule-update-dialog slot="edit" :token="props.item.token"></schedule-update-dialog>
-              <schedule-delete-dialog slot="delete" :token="props.item.token"></schedule-delete-dialog>
-            </actions-block>
+            <actions-block
+              @edit="onEditSchedule(props.item.token)"
+              @delete="onDeleteSchedule(props.item.token)"
+            />
           </td>
         </template>
       </v-data-table>
     </v-flex>
+    <template slot="dialogs">
+      <schedule-create-dialog ref="add" @created="onScheduleAdded" />
+      <schedule-update-dialog ref="edit" @updated="refresh" />
+      <schedule-delete-dialog ref="delete" @deleted="refresh" />
+    </template>
+    <template slot="actions">
+      <add-button tooltip="Add Schedule" @action="onAddSchedule" />
+    </template>
   </sw-list-page>
 </template>
 
@@ -39,13 +47,15 @@ import {
   Component,
   ListComponent,
   IPageSizes,
-  ITableHeaders
+  ITableHeaders,
+  Refs
 } from "sitewhere-ide-common";
 
 import ActionsBlock from "../common/ActionsBlock.vue";
 import ScheduleCreateDialog from "./ScheduleCreateDialog.vue";
 import ScheduleUpdateDialog from "./ScheduleUpdateDialog.vue";
 import ScheduleDeleteDialog from "./ScheduleDeleteDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate } from "../common/Utils";
@@ -63,7 +73,8 @@ import {
     ActionsBlock,
     ScheduleCreateDialog,
     ScheduleUpdateDialog,
-    ScheduleDeleteDialog
+    ScheduleDeleteDialog,
+    AddButton
   }
 })
 export default class SchedulesList extends ListComponent<
@@ -72,6 +83,12 @@ export default class SchedulesList extends ListComponent<
   IScheduleResponseFormat,
   IScheduleSearchResults
 > {
+  $refs!: Refs<{
+    add: ScheduleCreateDialog;
+    edit: ScheduleUpdateDialog;
+    delete: ScheduleDeleteDialog;
+  }>;
+
   headers: ITableHeaders = [
     {
       align: "left",
@@ -144,17 +161,29 @@ export default class SchedulesList extends ListComponent<
     return listSchedules(this.$store, criteria, format);
   }
 
-  // Called to open dialog.
+  /** Called to open dialog */
   onAddSchedule() {
-    (this.$refs.add as any).onOpenDialog();
+    this.$refs.add.open();
   }
 
-  // Format a date.
+  /** Called after add */
+  onScheduleAdded() {
+    this.refresh();
+  }
+
+  /** Open edit dialog */
+  onEditSchedule(token: string) {
+    this.$refs.edit.open(token);
+  }
+
+  /** Open delete dialog */
+  onDeleteSchedule(token: string) {
+    this.$refs.delete.open(token);
+  }
+
+  /** Format a date */
   formatDate(date: Date) {
-    formatDate(date);
+    return formatDate(date);
   }
 }
 </script>
-
-<style scoped>
-</style>

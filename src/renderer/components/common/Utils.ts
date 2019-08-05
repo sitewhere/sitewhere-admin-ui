@@ -54,7 +54,7 @@ export function formatDate(date: Date) {
  * Format date in YYYY-MM-DD H:mm:ss format.
  * @param date
  */
-export function formatIso8601(date: Date) {
+export function formatIso8601(date: Date | null) {
   if (!date) {
     return null;
   }

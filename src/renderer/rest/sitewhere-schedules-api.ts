@@ -32,15 +32,18 @@ export function createSchedule(
  * Get schedule by token.
  * @param store
  * @param token
+ * @param format
  */
 export function getSchedule(
   store: Store<SiteWhereUiSettings>,
-  token: string
+  token: string,
+  format: IScheduleResponseFormat
 ): Promise<AxiosResponse<ISchedule>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<ISchedule> = SiteWhere.API.Schedules.getSchedule(
     axios,
-    token
+    token,
+    format
   );
   return loaderWrapper(store, api);
 }
