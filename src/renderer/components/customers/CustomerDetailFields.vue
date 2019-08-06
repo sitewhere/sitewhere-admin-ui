@@ -1,16 +1,13 @@
 <template>
   <dialog-form>
     <v-flex xs12>
-      <form-text
+      <form-token
         required
-        label="Token"
+        label="Customer token"
         title="Unique token for referencing customer."
         v-model="token"
-        icon="info"
-      >
-        <span v-if="!$v.token.required && $v.$dirty">Customer token is required.</span>
-        <span v-if="!$v.token.validToken && $v.$dirty">Customer token is not valid.</span>
-      </form-text>
+        :validator="$v"
+      />
     </v-flex>
     <v-flex xs12>
       <form-text
@@ -44,6 +41,7 @@
 import { Component, DialogSection } from "sitewhere-ide-common";
 
 import DialogForm from "../common/form/DialogForm.vue";
+import FormToken from "../common/form/FormToken.vue";
 import FormText from "../common/form/FormText.vue";
 import FormTextArea from "../common/form/FormTextArea.vue";
 import CustomerTypeSelector from "../customertypes/CustomerTypeSelector.vue";
@@ -56,6 +54,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 @Component({
   components: {
     DialogForm,
+    FormToken,
     FormText,
     FormTextArea,
     CustomerTypeSelector

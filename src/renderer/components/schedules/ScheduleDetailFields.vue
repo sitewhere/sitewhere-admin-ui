@@ -1,16 +1,13 @@
 <template>
   <dialog-form>
     <v-flex xs12>
-      <form-text
+      <form-token
         required
-        label="Token"
+        label="Schedule token"
         title="Unique token for referencing schedule."
         v-model="token"
-        icon="info"
-      >
-        <span v-if="!$v.token.required && $v.$dirty">Schedule token is required.</span>
-        <span v-if="!$v.token.validToken && $v.$dirty">Schedule token is not valid.</span>
-      </form-text>
+        :validator="$v"
+      />
     </v-flex>
     <v-flex xs12>
       <form-text required label="Name" title="Schedule name." v-model="name" icon="info">
@@ -89,6 +86,7 @@
 import { Component, DialogSection } from "sitewhere-ide-common";
 
 import DialogForm from "../common/form/DialogForm.vue";
+import FormToken from "../common/form/FormToken.vue";
 import FormText from "../common/form/FormText.vue";
 import FormSelect from "../common/form/FormSelect.vue";
 import FormDateTimePicker from "../common/form/FormDateTimePicker.vue";
@@ -114,6 +112,7 @@ const reqIfSimple = requiredIf((vm: ScheduleDetailFields) => {
 @Component({
   components: {
     DialogForm,
+    FormToken,
     FormText,
     FormSelect,
     FormDateTimePicker
