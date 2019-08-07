@@ -1,60 +1,68 @@
 <template>
-  <div>
-    <device-group-element-dialog
-      ref="dialog"
-      title="Create Device Group Element"
-      width="700"
-      createLabel="Create"
-      cancelLabel="Cancel"
-      @payload="onCommit"
-    ></device-group-element-dialog>
-  </div>
+  <device-group-element-dialog
+    ref="dialog"
+    title="Add Device Group Element"
+    width="600"
+    createLabel="Create"
+    cancelLabel="Cancel"
+    @payload="onCommit"
+  />
 </template>
 
-<script>
-import DeviceGroupElementDialog from "./DeviceGroupElementDialog";
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  CreateDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
-import { addDeviceGroupElement } from "../../rest/sitewhere-device-groups-api";
+import DeviceGroupElementDialog from "./DeviceGroupElementDialog.vue";
 
-export default {
-  data: () => ({}),
+import { AxiosPromise } from "axios";
+import {
+  IDeviceGroupElement,
+  IDeviceGroupElementCreateRequest
+} from "sitewhere-rest-api";
+import { createDeviceGroupElements } from "../../rest/sitewhere-device-groups-api";
 
+@Component({
   components: {
     DeviceGroupElementDialog
-  },
-
-  props: ["token"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Send event to open dialog.
-    onOpenDialog: function() {
-      this.getDialogComponent().reset();
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      addDeviceGroupElement(this.$store, this.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("elementAdded");
-    }
   }
-};
-</script>
+})
+export default class DeviceSlotCreateDialog extends CreateDialogComponent<
+  IDeviceGroupElement,
+  IDeviceGroupElementCreateRequest
+> {
+  @Prop() token!: string;
 
-<style scoped>
-</style>
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IDeviceGroupElement>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IDeviceGroupElement> {
+    return this.$refs.dialog;
+  }
+
+  /** Called on payload commit */
+  onCommit(payload: IDeviceGroupElementCreateRequest): void {
+    this.commit(payload);
+  }
+
+  /** Implemented in subclasses to save payload */
+  save(
+    payload: IDeviceGroupElementCreateRequest
+  ): AxiosPromise<IDeviceGroupElement> {
+    let elements: IDeviceGroupElementCreateRequest[] = [];
+    elements.push(payload);
+    return createDeviceGroupElements(this.$store, this.token, elements);
+  }
+
+  /** Implemented in subclasses for after-save */
+  afterSave(payload: IDeviceGroupElement): void {}
+}
+</script>

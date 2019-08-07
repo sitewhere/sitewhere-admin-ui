@@ -1,5 +1,5 @@
 <template>
-  <chooser
+  <device-chooser-base
     :all="all"
     :chosenText="chosenText"
     :notChosenText="notChosenText"
@@ -12,7 +12,7 @@
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import Chooser from "../common/form/Chooser.vue";
+import DeviceChooserBase from "./DeviceChooserBase.vue";
 
 import { AxiosResponse } from "axios";
 import { listDevices } from "../../rest/sitewhere-devices-api";
@@ -25,7 +25,7 @@ import {
 
 @Component({
   components: {
-    Chooser
+    DeviceChooserBase
   }
 })
 export default class DeviceChooser extends Vue {
@@ -43,7 +43,7 @@ export default class DeviceChooser extends Vue {
 
   /** Refresh items list */
   async refresh() {
-    let format: IDeviceResponseFormat = {};
+    let format: IDeviceResponseFormat = { includeDeviceType: true };
     let criteria: IDeviceSearchCriteria = {};
     let response: AxiosResponse<IDeviceSearchResults> = await listDevices(
       this.$store,

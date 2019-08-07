@@ -12,6 +12,7 @@ import {
   IDeviceGroupElementResponseFormat,
   IDeviceGroupElement,
   IDeviceGroupSearchResults,
+  IDeviceGroupElementSearchCriteria,
   IDeviceGroupElementSearchResults
 } from "sitewhere-rest-api";
 
@@ -95,7 +96,7 @@ export function listDeviceGroups(
 export function listDeviceGroupElements(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  criteria: IDeviceGroupSearchCriteria,
+  criteria: IDeviceGroupElementSearchCriteria,
   format: IDeviceGroupElementResponseFormat
 ): Promise<AxiosResponse<IDeviceGroupElementSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
@@ -111,20 +112,20 @@ export function listDeviceGroupElements(
 }
 
 /**
- * Add new element to a device group.
+ * Add one or more elements to a device group.
  * @param store
  * @param token
  * @param request
  */
-export function addDeviceGroupElement(
+export function createDeviceGroupElements(
   store: Store<SiteWhereUiSettings>,
   token: string,
-  request: IDeviceGroupElementCreateRequest
+  request: IDeviceGroupElementCreateRequest[]
 ): Promise<AxiosResponse<IDeviceGroupElement>> {
   let axios: AxiosInstance = createCoreApiCall(store);
   let api: AxiosPromise<
     IDeviceGroupElement
-  > = SiteWhere.API.DeviceGroups.createDeviceGroupElement(
+  > = SiteWhere.API.DeviceGroups.createDeviceGroupElements(
     axios,
     token,
     request
