@@ -17,20 +17,17 @@
       <v-tab key="elements">Group Elements</v-tab>
     </template>
     <template slot="tab-items">
-      <device-group-elements tabkey="elements" ref="list" :deviceGroup="deviceGroup"/>
+      <device-group-elements tabkey="elements" ref="list" :deviceGroup="deviceGroup" />
     </template>
     <template slot="actions">
-      <edit-button tooltip="Edit Device Group" @action="onEdit"/>
-      <delete-button tooltip="Delete Device Group" @action="onDelete"/>
+      <add-button tooltip="Add Group Element" @action="onAddGroupElement" />
+      <edit-button tooltip="Edit Device Group" @action="onEdit" />
+      <delete-button tooltip="Delete Device Group" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <device-group-element-create-dialog
-        ref="create"
-        :token="token"
-        @elementAdded="onElementAdded"
-      />
-      <device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh"/>
-      <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted"/>
+      <device-group-element-create-dialog ref="create" :token="token" @created="onElementAdded" />
+      <device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh" />
+      <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted" />
     </template>
   </sw-detail-page>
 </template>
@@ -48,6 +45,7 @@ import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog.vue";
 import DeviceGroupDeleteDialog from "./DeviceGroupDeleteDialog.vue";
 import DeviceGroupElements from "./DeviceGroupElements.vue";
 import DeviceGroupElementCreateDialog from "./DeviceGroupElementCreateDialog.vue";
+import AddButton from "../common/navbuttons/AddButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
@@ -64,6 +62,7 @@ import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
     DeviceGroupDeleteDialog,
     DeviceGroupElements,
     DeviceGroupElementCreateDialog,
+    AddButton,
     EditButton,
     DeleteButton
   }
@@ -73,6 +72,8 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
 
   // References.
   $refs!: Refs<{
+    list: DeviceGroupElements;
+    create: DeviceGroupElementCreateDialog;
     edit: DeviceGroupUpdateDialog;
     delete: DeviceGroupDeleteDialog;
   }>;
@@ -130,17 +131,14 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
     routeTo(this, "/groups");
   }
 
-  // Called when 'add element' button is clicked.
-  onAddElement() {
-    (this.$refs["create"] as any).onOpenDialog();
+  /** Called when 'add element' button is clicked */
+  onAddGroupElement() {
+    this.$refs.create.open();
   }
 
-  // Called when an element is added.
+  /** Called when an element is added */
   onElementAdded() {
-    (this.$refs["list"] as any).refresh();
+    this.$refs.list.refresh();
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -1,53 +1,77 @@
 <template>
-  <span>
-    <sw-delete-dialog
-      ref="dialog"
-      title="Delete Device Group Element"
-      width="400"
-      :error="error"
-      @delete="onDeleteConfirmed"
-    >
-      <v-card-text>Are you sure you want to delete this group element?</v-card-text>
-    </sw-delete-dialog>
-  </span>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Device Group Element"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
+  </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteDeviceGroupElement } from "../../rest/sitewhere-device-groups-api";
+<script lang="ts">
+import { Component, Prop, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise, AxiosResponse } from "axios";
+import {
+  IDeviceGroupElement,
+  IDeviceGroupElementResponseFormat,
+  IDeviceGroupElementSearchCriteria,
+  IDeviceGroupElementSearchResults
+} from "sitewhere-rest-api";
+import {
+  listDeviceGroupElements,
+  deleteDeviceGroupElement
+} from "../../rest/sitewhere-device-groups-api";
 
-  props: ["groupToken", "elementId"],
+@Component({})
+export default class DeviceGroupElementDeleteDialog extends DeleteDialogComponent<
+  IDeviceGroupElementSearchResults
+> {
+  @Prop() token!: string;
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.getDialogComponent().openDialog();
-    },
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteDeviceGroupElement(this.$store, this.groupToken, this.elementId)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("elementDeleted");
-    }
+  message: string | null = null;
+  deleteId!: string;
+
+  /** Load payload */
+  prepareLoad(
+    identifier: string
+  ): AxiosPromise<IDeviceGroupElementSearchResults> {
+    this.deleteId = identifier;
+    let criteria: IDeviceGroupElementSearchCriteria = {
+      deviceGroupToken: this.token
+    };
+    let format: IDeviceGroupElementResponseFormat = {};
+    return listDeviceGroupElements(this.$store, this.token, criteria, format);
   }
-};
-</script>
 
-<style scoped>
-</style>
+  /** Called after record is loaded */
+  afterLoad(item: IDeviceGroupElementSearchResults): void {
+    this.message = `Are you sure you want to delete this element from the group?`;
+  }
+
+  /** Load payload */
+  prepareDelete(
+    item: IDeviceGroupElementSearchResults
+  ): AxiosPromise<IDeviceGroupElementSearchResults> {
+    deleteDeviceGroupElement(this.$store, this.token, this.deleteId);
+    let criteria: IDeviceGroupElementSearchCriteria = {
+      deviceGroupToken: this.token
+    };
+    let format: IDeviceGroupElementResponseFormat = {};
+    return listDeviceGroupElements(this.$store, this.token, criteria, format);
+  }
+
+  // Called after create button is clicked.
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  // Called after cancel button is clicked.
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
+</script>

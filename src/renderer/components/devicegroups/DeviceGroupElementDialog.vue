@@ -1,165 +1,109 @@
 <template>
-  <base-dialog
+  <sw-base-dialog
+    ref="dialog"
+    :icon="icon"
     :title="title"
     :width="width"
+    :loaded="loaded"
     :visible="dialogVisible"
     :createLabel="createLabel"
     :cancelLabel="cancelLabel"
-    :error="error"
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <v-tabs v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-item key="details">Element details</v-tabs-item>
-        <v-tabs-item key="roles">Roles</v-tabs-item>
-        <v-tabs-slider></v-tabs-slider>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <v-tabs-content key="details">
-          <v-card flat>
-            <v-card-text>
-              <v-select
-                required
-                :items="elementTypes"
-                v-model="elementType"
-                item-text="text"
-                item-value="value"
-                label="Element type"
-                prepend-icon="info"
-              ></v-select>
-              <device-chooser
-                v-if="elementType === 'device'"
-                v-model="deviceToken"
-                chosenText="Element points to device below:"
-                notChosenText="Choose a device from the list below:"
-              ></device-chooser>
-              <device-group-chooser
-                v-if="elementType === 'group'"
-                v-model="groupToken"
-                chosenText="Element points to group below:"
-                notChosenText="Choose a group from the list below:"
-              ></device-group-chooser>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-        <v-tabs-content key="roles">
-          <v-card flat>
-            <v-card-text>
-              <roles-field :roles="elementRoles" @onRolesUpdated="onRolesUpdated"></roles-field>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-      </v-tabs-items>
-    </v-tabs>
-  </base-dialog>
+    <template slot="tabs">
+      <v-tab key="details">Details</v-tab>
+      <v-tab key="roles">Roles</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="details">
+        <device-group-element-detail-fields ref="details" />
+      </v-tab-item>
+      <v-tab-item key="roles">
+        <device-group-element-role-fields ref="roles" />
+      </v-tab-item>
+    </template>
+  </sw-base-dialog>
 </template>
 
-<script>
-import { BaseDialog } from "sitewhere-ide-components";
-import DeviceChooser from "../devices/DeviceChooser";
-import DeviceGroupChooser from "../devicegroups/DeviceGroupChooser";
-import RolesField from "./RolesField";
+<script lang="ts">
+import {
+  Component,
+  DialogComponent,
+  DialogSection,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
+import { NavigationIcon } from "../../libraries/constants";
 
-export default {
-  data: () => ({
-    active: null,
-    menu: null,
-    dialogVisible: false,
-    elementType: "device",
-    deviceToken: null,
-    groupToken: null,
-    elementRoles: [],
-    elementTypes: [
-      {
-        text: "Device",
-        value: "device"
-      },
-      {
-        text: "Nested Group",
-        value: "group"
-      }
-    ],
-    error: null
-  }),
+import DeviceGroupElementDetailFields from "./DeviceGroupElementDetailFields.vue";
+import DeviceGroupElementRoleFields from "./DeviceGroupElementRoleFields.vue";
+import { IDeviceGroupElement } from "sitewhere-rest-api";
 
+@Component({
   components: {
-    BaseDialog,
-    DeviceChooser,
-    DeviceGroupChooser,
-    RolesField
-  },
+    DeviceGroupElementDetailFields,
+    DeviceGroupElementRoleFields
+  }
+})
+export default class DeviceGroupElementDialog extends DialogComponent<
+  IDeviceGroupElement
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: ITabbedComponent;
+    details: DeviceGroupElementDetailFields;
+    roles: DeviceGroupElementRoleFields;
+  }>;
 
-  props: ["title", "width", "createLabel", "cancelLabel"],
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.DeviceGroup;
+  }
 
-  methods: {
-    // Generate payload from UI.
-    generatePayload: function() {
-      let payload = [];
-      let element = {};
-      if (this.$data.elementType === "device") {
-        element.deviceToken = this.$data.deviceToken;
-      } else if (this.$data.elementType === "group") {
-        element.nestedGroupToken = this.$data.groupToken;
-      }
-      element.roles = this.$data.elementRoles;
-      payload.push(element);
-      return payload;
-    },
+  // Generate payload from UI.
+  generatePayload() {
+    let payload: any = {};
+    Object.assign(payload, this.$refs.details.save(), this.$refs.roles.save());
+    return payload;
+  }
 
-    // Reset dialog contents.
-    reset: function(e) {
-      this.$data.elementType = null;
-      this.$data.elementId = null;
-      this.$data.elementRoles = [];
-      this.$data.active = "details";
-      this.$data.error = null;
-    },
+  // Reset dialog contents.
+  reset() {
+    if (this.$refs.details) {
+      this.$refs.details.reset();
+    }
+    if (this.$refs.roles) {
+      this.$refs.roles.reset();
+    }
+    this.$refs.dialog.setActiveTab(0);
+  }
 
-    // Load dialog from a given payload.
-    load: function(payload) {
-      this.reset();
-
-      if (payload) {
-        this.$data.elementType = payload.type;
-        this.$data.elementId = payload.elementId;
-        this.$data.elementRoles = payload.roles;
-      }
-    },
-
-    // Called to open the dialog.
-    openDialog: function() {
-      this.$data.dialogVisible = true;
-    },
-
-    // Called to open the dialog.
-    closeDialog: function() {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called to show an error message.
-    showError: function(error) {
-      this.$data.error = error;
-    },
-
-    // Called after create button is clicked.
-    onCreateClicked: function(e) {
-      var payload = this.generatePayload();
-      this.$emit("payload", payload);
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function(e) {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called when roles are updated.
-    onRolesUpdated: function(roles) {
-      this.$data.groupRoles = roles;
+  // Load dialog from a given payload.
+  load(payload: IDeviceGroupElement) {
+    this.reset();
+    if (this.$refs.details) {
+      this.$refs.details.load(payload);
+    }
+    if (this.$refs.roles) {
+      this.$refs.roles.load(payload);
     }
   }
-};
-</script>
 
-<style scoped>
-</style>
+  // Called after create button is clicked.
+  onCreateClicked(e: any) {
+    if (!this.$refs.details.validate()) {
+      this.$refs.dialog.setActiveTab(0);
+      return;
+    }
+
+    if (!this.$refs.roles.validate()) {
+      this.$refs.dialog.setActiveTab(1);
+      return;
+    }
+
+    var payload = this.generatePayload();
+    this.$emit("payload", payload);
+  }
+}
+</script>
