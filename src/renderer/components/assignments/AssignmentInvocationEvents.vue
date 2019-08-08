@@ -9,9 +9,9 @@
     loadingMessage="Loading assignment command invocations ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="20%" :title="props.item.command.name">{{ props.item.command.name }}</td>
-      <td width="30%" :title="invocationSource(props.item)">{{ invocationSource(props.item) }}</td>
-      <td width="30%" :title="invocationTarget(props.item)">{{ invocationTarget(props.item) }}</td>
+      <td width="15%" :title="props.item.command.name">{{ props.item.command.name }}</td>
+      <td width="45%" :title="invocationSource(props.item)">{{ invocationSource(props.item) }}</td>
+      <td width="20%" :title="invocationTarget(props.item)">{{ invocationTarget(props.item) }}</td>
       <td
         width="10%"
         style="white-space: nowrap"

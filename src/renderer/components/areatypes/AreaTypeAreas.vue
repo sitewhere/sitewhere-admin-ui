@@ -12,6 +12,11 @@
         <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>There are no areas of this type.</div>
+      </no-results-panel>
+    </template>
   </sw-list-tab>
 </template>
 
@@ -19,6 +24,7 @@
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import AreaListEntry from "../areas/AreaListEntry.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
 import { routeTo } from "../common/Utils";
@@ -32,7 +38,8 @@ import {
 
 @Component({
   components: {
-    AreaListEntry
+    AreaListEntry,
+    NoResultsPanel
   }
 })
 export default class AreaTypeAreas extends ListComponent<

@@ -23,7 +23,9 @@
         </v-layout>
       </v-container>
     </v-content>
-    <sw-in-app-footer />
+    <sw-in-app-footer>
+      <copyright />
+    </sw-in-app-footer>
     <notifications />
   </v-app>
 </template>
@@ -37,10 +39,12 @@ import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
 import { NavigationIcon } from "../libraries/constants";
 
+import Copyright from "./Copyright.vue";
 import Notifications from "./common/Notifications.vue";
 
 @Component({
   components: {
+    Copyright,
     Notifications
   }
 })
