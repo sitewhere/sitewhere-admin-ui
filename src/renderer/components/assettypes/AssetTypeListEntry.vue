@@ -3,9 +3,7 @@
     <v-container fluid @click="onAssetTypeClicked">
       <v-layout row>
         <v-flex xs3>
-          <v-card-media>
-            <div :style="logoStyle"></div>
-          </v-card-media>
+          <branding-image :style="logoStyle" :entity="assetType" />
         </v-flex>
         <v-flex xs9>
           <div>
@@ -22,24 +20,25 @@
 import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
+import BrandingImage from "../common/BrandingImage.vue";
+
 import { IAssetType } from "sitewhere-rest-api";
 import { IStyle } from "../common/Style";
 
-@Component({})
+@Component({
+  components: {
+    BrandingImage
+  }
+})
 export default class AssetTypeListEntry extends Vue {
   @Prop() readonly assetType!: IAssetType;
 
   // Compute style of logo.
   get logoStyle(): IStyle {
     return {
-      "background-color": "#fff",
-      "background-image": "url(" + this.assetType.imageUrl + ")",
-      "background-size": "contain",
-      "background-repeat": "no-repeat",
-      "background-position": "50% 50%",
-      border: "1px solid #eee",
       height: "120px",
-      width: "100px"
+      width: "120px",
+      "padding-left": "15px"
     };
   }
 

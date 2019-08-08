@@ -91,7 +91,7 @@ import FormText from "../common/form/FormText.vue";
 import FormSelect from "../common/form/FormSelect.vue";
 import FormDateTimePicker from "../common/form/FormDateTimePicker.vue";
 
-import { formatIso8601, parseIso8601 } from "../common/Utils";
+import { formatIso8601 } from "../common/Utils";
 import { required, requiredIf, helpers } from "vuelidate/lib/validators";
 import {
   ISchedule,

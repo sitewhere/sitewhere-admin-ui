@@ -9,9 +9,14 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-        <customer-list-entry :customer="customer"></customer-list-entry>
+        <customer-list-entry :customer="customer" @open="onOpenCustomer" />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>There are no customers of this type.</div>
+      </no-results-panel>
+    </template>
   </sw-list-tab>
 </template>
 
@@ -19,8 +24,10 @@
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
+import { routeTo } from "../common/Utils";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
 import {
   ICustomer,
@@ -31,7 +38,8 @@ import {
 
 @Component({
   components: {
-    CustomerListEntry
+    CustomerListEntry,
+    NoResultsPanel
   }
 })
 export default class CustomerTypeCustomers extends ListComponent<
@@ -63,6 +71,11 @@ export default class CustomerTypeCustomers extends ListComponent<
     format: ICustomerResponseFormat
   ): AxiosPromise<ICustomerSearchResults> {
     return listCustomers(this.$store, criteria, format);
+  }
+
+  /** Called to open a customer */
+  onOpenCustomer(customer: ICustomer) {
+    routeTo(this, "/customers/" + customer.token);
   }
 }
 </script>

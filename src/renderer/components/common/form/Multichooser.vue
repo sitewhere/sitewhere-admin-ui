@@ -18,7 +18,13 @@
         </td>
         <td width="5%" class="pa-2">
           <v-avatar size="36px">
-            <img :src="props.item.imageUrl" />
+            <img :src="props.item.imageUrl" v-if="props.item.imageUrl" />
+            <font-awesome-icon
+              v-if="props.item.icon"
+              class="grey--text"
+              :icon="props.item.icon"
+              size="2x"
+            />
           </v-avatar>
         </td>
         <td width="90%" class="subheading pa-2">{{ props.item.name }}</td>
@@ -37,6 +43,7 @@ import { IBrandedEntity } from "sitewhere-rest-api";
 export default class Multichooser extends Vue {
   @Prop() readonly value!: string[];
   @Prop() readonly all!: IBrandedEntity[];
+  @Prop({ default: false }) readonly idMode!: boolean;
 
   selected: IBrandedEntity[] = [];
 
@@ -48,11 +55,19 @@ export default class Multichooser extends Vue {
         !this.selected.every(e => updated.includes(e.token))
       ) {
         let selection: IBrandedEntity[] = [];
-        this.all.forEach(item => {
-          if (updated.indexOf(item.token) > -1) {
-            selection.push(item);
-          }
-        });
+        if (this.idMode) {
+          this.all.forEach(item => {
+            if (updated.indexOf(item.id) > -1) {
+              selection.push(item);
+            }
+          });
+        } else {
+          this.all.forEach(item => {
+            if (updated.indexOf(item.token) > -1) {
+              selection.push(item);
+            }
+          });
+        }
         this.selected = selection;
       }
     } else {

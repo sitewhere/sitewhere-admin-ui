@@ -22,7 +22,6 @@
 <script lang="ts">
 import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
 
-import NoResultsPanel from "../common/NoResultsPanel.vue";
 import CommandPanel from "../commands/CommandPanel.vue";
 import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
 import CommandDeleteDialog from "../commands/CommandDeleteDialog.vue";
@@ -38,7 +37,6 @@ import {
 
 @Component({
   components: {
-    NoResultsPanel,
     CommandPanel,
     CommandUpdateDialog,
     CommandDeleteDialog

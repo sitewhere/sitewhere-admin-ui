@@ -9,18 +9,14 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(customerType) in matches" :key="customerType.token">
-        <customer-type-list-entry
-          :customerType="customerType"
-          @openCustomerType="onOpenCustomerType"
-          @customerTypeDeleted="refresh"
-        ></customer-type-list-entry>
+        <customer-type-list-entry :customerType="customerType" @open="onOpenCustomerType" />
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches"/>
+      <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Add Customer Type" @action="onAddCustomerType"/>
+      <add-button tooltip="Add Customer Type" @action="onAddCustomerType" />
     </template>
   </sw-list-page>
 </template>

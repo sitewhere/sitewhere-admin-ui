@@ -47,7 +47,6 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import NoResultsPanel from "../common/NoResultsPanel.vue";
 import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader.vue";
 import CustomerTypeCustomers from "./CustomerTypeCustomers.vue";
 import CustomerTypeDeleteDialog from "./CustomerTypeDeleteDialog.vue";
@@ -64,7 +63,6 @@ import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    NoResultsPanel,
     CustomerTypeDetailHeader,
     CustomerTypeCustomers,
     CustomerTypeDeleteDialog,

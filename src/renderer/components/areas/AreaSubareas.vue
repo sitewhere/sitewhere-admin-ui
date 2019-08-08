@@ -10,6 +10,15 @@
         <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>This area has no subareas.</div>
+        <div class="mt-2">
+          Click
+          <v-icon class="pl-1 pr-2">{{areaIcon}}</v-icon>in the toolbar to add a subarea.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
       <area-create-dialog @areaAdded="refresh" />
     </template>
@@ -21,7 +30,9 @@ import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listAreas } from "../../rest/sitewhere-areas-api";
@@ -35,7 +46,8 @@ import {
 @Component({
   components: {
     AreaListEntry,
-    AreaCreateDialog
+    AreaCreateDialog,
+    NoResultsPanel
   }
 })
 export default class AreaSubareas extends ListComponent<
@@ -46,6 +58,8 @@ export default class AreaSubareas extends ListComponent<
 > {
   @Prop() readonly tabkey!: string;
   @Prop() readonly areaToken!: string;
+
+  areaIcon: string = NavigationIcon.Area;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IAreaSearchCriteria {

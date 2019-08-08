@@ -16,7 +16,6 @@ import { Component, DialogSection } from "sitewhere-ide-common";
 import DialogForm from "../common/form/DialogForm.vue";
 import RolesField from "./RolesField.vue";
 
-import { required } from "vuelidate/lib/validators";
 import { IDeviceGroupElementCreateRequest } from "sitewhere-rest-api";
 
 @Component({

@@ -1,60 +1,32 @@
 <template>
-  <v-layout row wrap>
-    <v-flex xs12>
-      <v-card flat>
-        <div class="no-results" :style="noResultsStyle">{{text}}</div>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <v-card flat height="100%">
+    <div class="no-results">
+      <div class="no-results-content">
+        <slot />
+      </div>
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component } from "sitewhere-ide-common";
 
 @Component({})
-export default class NoResultsPanel extends Vue {
-  @Prop() readonly text!: string;
-  @Prop() readonly minHeight!: string;
-  @Prop() readonly fontSize!: string;
-  @Prop() readonly padding!: string;
-
-  get noResultsStyle() {
-    return {
-      "min-height": this.defaultedMinHeight,
-      "font-size": this.defaultedFontSize,
-      padding: this.defaultedPadding
-    };
-  }
-
-  // Minimum height with default fallback.
-  get defaultedMinHeight() {
-    if (this.minHeight) {
-      return this.minHeight;
-    }
-    return "100px";
-  }
-
-  // Font size with default fallback.
-  get defaultedFontSize() {
-    if (this.fontSize) {
-      return this.fontSize;
-    }
-    return "20px";
-  }
-
-  // Padding with default fallback.
-  get defaultedPadding() {
-    if (this.padding) {
-      return this.padding;
-    }
-    return "40px";
-  }
-}
+export default class NoResultsPanel extends Vue {}
 </script>
 
 <style scoped>
 .no-results {
+  display: table;
+  font-size: 20px;
+  color: #666;
   text-align: center;
+  width: 100%;
+  height: 100%;
+}
+.no-results-content {
+  display: table-cell;
+  vertical-align: middle;
 }
 </style>

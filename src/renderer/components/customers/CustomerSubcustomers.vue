@@ -7,11 +7,20 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-        <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"/>
+        <customer-list-entry :customer="customer" @open="onOpenCustomer" />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>This customer has no subcustomers.</div>
+        <div class="mt-2">
+          Click
+          <v-icon class="pl-1 pr-2">{{custIcon}}</v-icon>in the toolbar to add a subcustomer.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
-      <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer"/>
+      <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer" />
     </template>
   </sw-list-tab>
 </template>
@@ -21,7 +30,9 @@ import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
+import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
@@ -35,7 +46,8 @@ import {
 @Component({
   components: {
     CustomerListEntry,
-    CustomerCreateDialog
+    CustomerCreateDialog,
+    NoResultsPanel
   }
 })
 export default class CustomerSubcustomers extends ListComponent<
@@ -46,6 +58,8 @@ export default class CustomerSubcustomers extends ListComponent<
 > {
   @Prop() readonly tabkey!: string;
   @Prop() readonly customer!: ICustomer;
+
+  custIcon: string = NavigationIcon.Customer;
 
   /** Build search criteria for list */
   buildSearchCriteria(): ICustomerSearchCriteria {
@@ -77,6 +91,3 @@ export default class CustomerSubcustomers extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

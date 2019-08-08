@@ -9,12 +9,12 @@ import Vue from "vue";
 import Multichooser from "../common/form/Multichooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
+import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
 import {
-  IAreaType,
-  IAreaTypeSearchResults,
-  IAreaTypeResponseFormat,
-  IAreaTypeSearchCriteria
+  ICustomerType,
+  ICustomerTypeSearchResults,
+  ICustomerTypeResponseFormat,
+  ICustomerTypeSearchCriteria
 } from "sitewhere-rest-api";
 
 @Component({
@@ -22,12 +22,12 @@ import {
     Multichooser
   }
 })
-export default class AreaTypeMultiselect extends Vue {
+export default class CustomerTypeMultiselect extends Vue {
   @Prop() readonly value!: string[];
   @Prop({ default: false }) readonly idMode!: boolean;
 
   selected: string[] = [];
-  all: IAreaType[] = [];
+  all: ICustomerType[] = [];
 
   created() {
     this.refresh();
@@ -35,13 +35,11 @@ export default class AreaTypeMultiselect extends Vue {
 
   /** Refresh list */
   async refresh() {
-    let format: IAreaTypeResponseFormat = {};
-    let criteria: IAreaTypeSearchCriteria = {};
-    let response: AxiosResponse<IAreaTypeSearchResults> = await listAreaTypes(
-      this.$store,
-      criteria,
-      format
-    );
+    let format: ICustomerTypeResponseFormat = {};
+    let criteria: ICustomerTypeSearchCriteria = {};
+    let response: AxiosResponse<
+      ICustomerTypeSearchResults
+    > = await listCustomerTypes(this.$store, criteria, format);
     this.all = response.data.results;
   }
 

@@ -22,7 +22,7 @@
         <area-type-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="content">
-        <area-type-multiselect ref="content" />
+        <area-type-content-fields ref="content" />
       </v-tab-item>
       <v-tab-item key="branding">
         <branding-panel ref="branding" />
@@ -45,14 +45,14 @@ import {
 import { NavigationIcon } from "../../libraries/constants";
 
 import AreaTypeDetailFields from "./AreaTypeDetailFields.vue";
-import AreaTypeMultiselect from "./AreaTypeMultiselect.vue";
+import AreaTypeContentFields from "./AreaTypeContentFields.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";
 import { IAreaType } from "sitewhere-rest-api";
 
 @Component({
   components: {
     AreaTypeDetailFields,
-    AreaTypeMultiselect,
+    AreaTypeContentFields,
     BrandingPanel
   }
 })
@@ -60,8 +60,9 @@ export default class AreaTypeDialog extends DialogComponent<IAreaType> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
-    details: DialogSection;
-    branding: DialogSection;
+    details: AreaTypeDetailFields;
+    content: AreaTypeContentFields;
+    branding: BrandingPanel;
     metadata: DialogSection;
   }>;
 
@@ -76,6 +77,7 @@ export default class AreaTypeDialog extends DialogComponent<IAreaType> {
     Object.assign(
       payload,
       this.$refs.details.save(),
+      this.$refs.content.save(),
       this.$refs.branding.save(),
       this.$refs.metadata.save()
     );
@@ -86,6 +88,9 @@ export default class AreaTypeDialog extends DialogComponent<IAreaType> {
   reset() {
     if (this.$refs.details) {
       this.$refs.details.reset();
+    }
+    if (this.$refs.content) {
+      this.$refs.content.reset();
     }
     if (this.$refs.branding) {
       this.$refs.branding.reset();
@@ -102,6 +107,9 @@ export default class AreaTypeDialog extends DialogComponent<IAreaType> {
     if (this.$refs.details) {
       this.$refs.details.load(payload);
     }
+    if (this.$refs.content) {
+      this.$refs.content.load(payload);
+    }
     if (this.$refs.branding) {
       this.$refs.branding.load(payload);
     }
@@ -117,13 +125,17 @@ export default class AreaTypeDialog extends DialogComponent<IAreaType> {
       return;
     }
 
+    if (!this.$refs.content.validate()) {
+      this.$refs.dialog.setActiveTab(0);
+      return;
+    }
+
     if (!this.$refs.branding.validate()) {
       this.$refs.dialog.setActiveTab(1);
       return;
     }
 
     var payload = this.generatePayload();
-    console.log("Before payload emit:", this);
     this.$emit("payload", payload);
   }
 }

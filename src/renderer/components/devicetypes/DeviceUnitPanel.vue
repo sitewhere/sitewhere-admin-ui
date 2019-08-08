@@ -42,7 +42,7 @@
             </v-toolbar>
             <v-list class="pa-0" v-if="deviceUnit.deviceSlots.length > 0">
               <div v-for="(deviceSlot, index) in deviceUnit.deviceSlots" :key="deviceSlot.name">
-                <v-divider v-if="index > 0"/>
+                <v-divider v-if="index > 0" />
                 <device-slot-list-entry
                   :unitPath="fullPath"
                   :deviceSlot="deviceSlot"
