@@ -38,9 +38,9 @@
     <template slot="dialogs">
       <device-group-element-delete-dialog
         ref="delete"
-        :groupToken="deviceGroup.token"
-        @elementDeleted="refresh"
-      ></device-group-element-delete-dialog>
+        :token="deviceGroup.token"
+        @deleted="refresh"
+      />
     </template>
   </sw-data-table-tab>
 </template>
@@ -49,6 +49,7 @@
 import {
   Component,
   Prop,
+  Refs,
   ListComponent,
   IPageSizes,
   ITableHeaders
@@ -81,6 +82,12 @@ export default class DeviceGroupElements extends ListComponent<
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly deviceGroup!: IDeviceGroup;
+
+  // References.
+  $refs!: Refs<{
+    list: DeviceGroupElements;
+    delete: DeviceGroupElementDeleteDialog;
+  }>;
 
   deviceIcon: NavigationIcon = NavigationIcon.Device;
   groupIcon: NavigationIcon = NavigationIcon.DeviceGroup;
@@ -160,8 +167,7 @@ export default class DeviceGroupElements extends ListComponent<
 
   /** Show dialog for deleting element */
   showDeleteDialog(element: IDeviceGroupElement) {
-    (this.$refs["delete"] as any).elementId = element.id;
-    (this.$refs["delete"] as any).showDeleteDialog();
+    this.$refs.delete.open(element.id);
   }
 }
 </script>

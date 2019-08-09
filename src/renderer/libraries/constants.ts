@@ -10,7 +10,7 @@ export enum NavigationIcon {
   Global = "language",
   Device = "developer_board",
   DeviceType = "settings",
-  DeviceAssignment = "bookmark",
+  DeviceAssignment = "link",
   DeviceCommand = "call_made",
   DeviceStatus = "warning",
   DeviceGroup = "apps",
@@ -18,18 +18,22 @@ export enum NavigationIcon {
   CustomerType = "settings",
   Area = "collections",
   AreaType = "settings",
-  Asset = "link",
+  Asset = "devices_other",
   AssetType = "settings",
   BatchOperation = "view_module",
   Schedule = "access_alarm",
   Zone = "timeline",
+  Location = "room",
+  Alert = "warning",
+  Measurement = "ballot",
   Emulator = "settings_remote",
   Add = "add_circle",
   Edit = "create",
   Delete = "delete_forever",
   Filter = "filter_list",
   Up = "arrow_upward",
-  Script = "description"
+  Script = "description",
+  Remotes = "router"
 }
 
 // Page sizes shown for event list pages.

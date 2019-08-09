@@ -24,7 +24,6 @@ import ScriptsDialog from "./ScriptsDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IScriptCreateRequest, IScriptMetadata } from "sitewhere-rest-api";
-import { createDevice } from "../../rest/sitewhere-devices-api";
 import {
   createGlobalScript,
   createTenantScript
@@ -59,7 +58,6 @@ export default class ScriptsCreateDialog extends CreateDialogComponent<
 
   /** Implemented in subclasses to save payload */
   save(payload: IScriptCreateRequest): AxiosPromise<IScriptMetadata> {
-    var component = this;
     if (!this.tenantToken) {
       return createGlobalScript(this.$store, this.identifier, payload);
     } else {

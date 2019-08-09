@@ -9,9 +9,14 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
-        <area-list-entry :area="area"></area-list-entry>
+        <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>There are no areas of this type.</div>
+      </no-results-panel>
+    </template>
   </sw-list-tab>
 </template>
 
@@ -19,8 +24,10 @@
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import AreaListEntry from "../areas/AreaListEntry.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
+import { routeTo } from "../common/Utils";
 import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,
@@ -31,7 +38,8 @@ import {
 
 @Component({
   components: {
-    AreaListEntry
+    AreaListEntry,
+    NoResultsPanel
   }
 })
 export default class AreaTypeAreas extends ListComponent<
@@ -63,6 +71,11 @@ export default class AreaTypeAreas extends ListComponent<
     format: IAreaResponseFormat
   ): AxiosPromise<IAreaSearchResults> {
     return listAreas(this.$store, criteria, format);
+  }
+
+  /** Called to open an area */
+  onOpenArea(area: IArea) {
+    routeTo(this, "/areas/" + area.token);
   }
 }
 </script>

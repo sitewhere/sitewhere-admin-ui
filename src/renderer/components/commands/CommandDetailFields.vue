@@ -120,6 +120,3 @@ export default class CommandDetailFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

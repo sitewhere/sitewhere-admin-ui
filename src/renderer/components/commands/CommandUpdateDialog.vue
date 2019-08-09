@@ -12,6 +12,7 @@
 <script lang="ts">
 import {
   Component,
+  Prop,
   EditDialogComponent,
   DialogComponent,
   Refs
@@ -28,7 +29,7 @@ import {
 import {
   getDeviceCommand,
   updateDeviceCommand
-} from "../../rest/sitewhere-device-commands-api";
+} from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {
@@ -39,6 +40,8 @@ export default class CommandUpdateDialog extends EditDialogComponent<
   IDeviceCommand,
   IDeviceCommandCreateRequest
 > {
+  @Prop() readonly deviceTypeToken!: string;
+
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<IDeviceCommand>;
@@ -50,9 +53,9 @@ export default class CommandUpdateDialog extends EditDialogComponent<
   }
 
   /** Load payload */
-  prepareLoad(identifier: string): AxiosPromise<IDeviceCommand> {
+  prepareLoad(token: string): AxiosPromise<IDeviceCommand> {
     let format: IDeviceCommandResponseFormat = { includeCustomerType: true };
-    return getDeviceCommand(this.$store, identifier, format);
+    return getDeviceCommand(this.$store, this.deviceTypeToken, token, format);
   }
 
   /** Save payload */
@@ -60,7 +63,12 @@ export default class CommandUpdateDialog extends EditDialogComponent<
     original: IDeviceCommand,
     updated: IDeviceCommandCreateRequest
   ): AxiosPromise<IDeviceCommand> {
-    return updateDeviceCommand(this.$store, original.token, updated);
+    return updateDeviceCommand(
+      this.$store,
+      this.deviceTypeToken,
+      original.token,
+      updated
+    );
   }
 
   /** Called on payload commit */
@@ -74,6 +82,3 @@ export default class CommandUpdateDialog extends EditDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

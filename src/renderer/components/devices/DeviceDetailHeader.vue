@@ -1,29 +1,17 @@
 <template>
-  <sw-navigation-header-panel v-if="device" :imageUrl="imageUrl" height="190px">
+  <sw-navigation-header-panel v-if="device" height="190px">
+    <template slot="left">
+      <device-detail-header-image :device="device" />
+    </template>
     <template slot="content">
       <sw-header-field label="Token">
-        <sw-clipboard-copy-field :field="device.token" message="Token copied to clipboard"/>
+        <clipboard-copy-field :field="device.token" message="Token copied to clipboard" />
       </sw-header-field>
       <sw-linked-header-field
         label="Device Type"
         :text="device.deviceType.name"
         :url="'/devicetypes/' + device.deviceType.token"
       />
-      <sw-linked-header-field
-        v-if="device.assignment.asset"
-        label="Assigned Asset"
-        :text="device.assignment.asset.name"
-        :url="'/assets/' + device.assignment.asset.token"
-      />
-      <sw-linked-header-field
-        v-if="device.assignment.area"
-        label="Assigned Area"
-        :text="device.assignment.area.name"
-        :url="'/areas/' + device.assignment.area.token"
-      />
-      <sw-header-field v-else label="Assignment">
-        <span>Device is not assigned</span>
-      </sw-header-field>
       <sw-header-field label="Comments">
         <span>{{ device.comments }}</span>
       </sw-header-field>
@@ -35,7 +23,7 @@
       </sw-header-field>
     </template>
     <template slot="right">
-      <authenticated-image :url="qrCodeUrl"/>
+      <authenticated-image :url="qrCodeUrl" />
     </template>
   </sw-navigation-header-panel>
 </template>
@@ -43,11 +31,16 @@
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 import { IDevice, IDeviceType } from "sitewhere-rest-api";
+
+import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
+import DeviceDetailHeaderImage from "./DeviceDetailHeaderImage.vue";
 
 @Component({
   components: {
-    AuthenticatedImage
+    ClipboardCopyField,
+    AuthenticatedImage,
+    DeviceDetailHeaderImage
   }
 })
 export default class DeviceDetailHeader extends HeaderComponent<IDevice> {

@@ -3,13 +3,11 @@
     <v-container @click="onCustomerTypeClicked">
       <v-layout row>
         <v-flex xs2>
-          <v-card-media class="pt-2 pl-1">
-            <font-awesome-icon class="grey--text" :icon="customerType.icon" size="3x"/>
-          </v-card-media>
+          <branding-image :style="logoStyle" :entity="customerType" iconSize="3x" />
         </v-flex>
         <v-flex xs10>
           <div>
-            <div class="title ellipsis mb-1">{{ customerType.name }}</div>
+            <div class="title ellipsis mt-1 mb-2">{{ customerType.name }}</div>
             <div class="ctdesc">{{ customerType.description }}</div>
           </div>
         </v-flex>
@@ -22,15 +20,30 @@
 import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
+import BrandingImage from "../common/BrandingImage.vue";
+
+import { IStyle } from "../common/Style";
 import { ICustomerType } from "sitewhere-rest-api";
 
-@Component({})
-export default class DeviceTypeSelector extends Vue {
+@Component({
+  components: {
+    BrandingImage
+  }
+})
+export default class CustomerTypeListEntry extends Vue {
   @Prop() readonly customerType!: ICustomerType;
+
+  // Compute style of logo.
+  get logoStyle(): IStyle {
+    return {
+      height: "80px",
+      width: "80px"
+    };
+  }
 
   // Handle customer type clicked.
   onCustomerTypeClicked() {
-    this.$emit("openCustomerType", this.customerType);
+    this.$emit("open", this.customerType);
   }
 }
 </script>

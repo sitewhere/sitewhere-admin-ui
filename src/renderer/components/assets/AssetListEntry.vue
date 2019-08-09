@@ -3,9 +3,7 @@
     <v-container fluid @click="onAssetClicked">
       <v-layout row>
         <v-flex xs2>
-          <v-card-media>
-            <div :style="logoStyle"></div>
-          </v-card-media>
+          <branding-image :style="logoStyle" :entity="assetOrAssetType" />
         </v-flex>
         <v-flex xs10>
           <div>
@@ -22,24 +20,40 @@
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import { IStyle } from "../common/Style";
-import { IAsset } from "sitewhere-rest-api";
+import BrandingImage from "../common/BrandingImage.vue";
 
-@Component({})
+import { IStyle } from "../common/Style";
+import { IAsset, IBrandedEntity } from "sitewhere-rest-api";
+
+@Component({
+  components: {
+    BrandingImage
+  }
+})
 export default class AssetListEntry extends Vue {
   @Prop() readonly asset!: IAsset;
+
+  /** Use fallback for asset image as asset type */
+  get assetOrAssetType(): IBrandedEntity | null {
+    if (this.asset) {
+      if (this.asset.imageUrl) {
+        console.log("default");
+        return this.asset;
+      } else if ((this.asset as any).assetType) {
+        console.log("choose asset type");
+        return (this.asset as any).assetType;
+      }
+    }
+    console.log("fallthrough");
+    return this.asset;
+  }
 
   // Compute style of logo.
   get logoStyle(): IStyle {
     return {
-      "background-color": "#fff",
-      "background-image": "url(" + this.asset.imageUrl + ")",
-      "background-size": "contain",
-      "background-repeat": "no-repeat",
-      "background-position": "50% 50%",
-      border: "1px solid #eee",
-      height: "60px",
-      width: "60px"
+      height: "80px",
+      width: "80px",
+      padding: "5px"
     };
   }
 

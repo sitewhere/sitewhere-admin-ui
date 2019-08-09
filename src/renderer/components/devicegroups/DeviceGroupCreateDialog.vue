@@ -28,7 +28,7 @@ import { createDeviceGroup } from "../../rest/sitewhere-device-groups-api";
     DeviceGroupDialog
   }
 })
-export default class DeviceTypeCreateDialog extends CreateDialogComponent<
+export default class DeviceGroupCreateDialog extends CreateDialogComponent<
   IDeviceGroup,
   IDeviceGroupCreateRequest
 > {

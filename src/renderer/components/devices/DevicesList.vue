@@ -10,29 +10,35 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(device) in matches" :key="device.token">
-        <device-list-entry
-          :device="device"
-          @assignDevice="onAssignDevice"
-          @deviceOpened="onOpenDevice"
-        ></device-list-entry>
+        <device-list-entry :device="device" @assign="onAssignDevice" @open="onOpenDevice" />
       </v-flex>
     </sw-list-layout>
     <template slot="filters">
-      <device-list-filter-bar ref="filters" @filter="onFilterUpdated"></device-list-filter-bar>
+      <device-list-filter-bar ref="filters" :criteria="filter" @clear="onClearFilterCriteria" />
+    </template>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No devices have been created for this tenant.</div>
+        <div class="mt-2">
+          Click
+          <v-icon small class="pl-1 pr-2">{{addIcon}}</v-icon>in the toolbar to add a device.
+        </div>
+      </no-results-panel>
     </template>
     <template slot="dialogs">
-      <device-create-dialog ref="add" @deviceAdded="onDeviceAdded"/>
-      <assignment-create-dialog ref="assign" @assignmentCreated="onAssignmentCreated"></assignment-create-dialog>
-      <batch-command-create-dialog ref="batch" :filter="filter"></batch-command-create-dialog>
+      <device-create-dialog ref="add" @deviceAdded="onDeviceAdded" />
+      <assignment-create-dialog ref="assign" :device="selected" @created="onAssignmentCreated" />
+      <invocation-by-device-criteria-create-dialog :filter="filter" ref="batch" />
+      <device-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Add Device" @action="onAddDevice"/>
+      <add-button tooltip="Add Device" @action="onAddDevice" />
       <device-command-button
-        v-if="filter.deviceType"
+        v-if="filter.deviceTypeToken"
         tooltip="Execute Batch Command"
         @action="onBatchCommandInvocation"
       />
-      <filter-button tooltip="Filter Device List" @action="onShowFilterCriteria"/>
+      <filter-button tooltip="Filter Device List" @action="onShowFilterCriteria" />
     </template>
   </sw-list-page>
 </template>
@@ -47,12 +53,14 @@ import {
 
 import DeviceListEntry from "./DeviceListEntry.vue";
 import DeviceListFilterBar from "./DeviceListFilterBar.vue";
+import DeviceListFilterDialog from "./DeviceListFilterDialog.vue";
 import DeviceCreateDialog from "./DeviceCreateDialog.vue";
 import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog.vue";
-import BatchCommandCreateDialog from "../batch/BatchCommandCreateDialog.vue";
+import InvocationByDeviceCriteriaCreateDialog from "../batch/InvocationByDeviceCriteriaCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
 import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
 import FilterButton from "../common/navbuttons/FilterButton.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -69,12 +77,14 @@ import {
   components: {
     DeviceListEntry,
     DeviceListFilterBar,
+    DeviceListFilterDialog,
     DeviceCreateDialog,
     AssignmentCreateDialog,
-    BatchCommandCreateDialog,
+    InvocationByDeviceCriteriaCreateDialog,
     AddButton,
     DeviceCommandButton,
-    FilterButton
+    FilterButton,
+    NoResultsPanel
   }
 })
 export default class DevicesList extends ListComponent<
@@ -85,9 +95,15 @@ export default class DevicesList extends ListComponent<
 > {
   $refs!: Refs<{
     add: DeviceCreateDialog;
+    assign: AssignmentCreateDialog;
+    filter: DeviceListFilterDialog;
+    batch: InvocationByDeviceCriteriaCreateDialog;
   }>;
 
-  filter: {} = {};
+  addIcon: string = NavigationIcon.Add;
+
+  selected: IDevice | null = null;
+  filter: IDeviceSearchCriteria = {};
   pageSizes: IPageSizes = [
     {
       text: "20",
@@ -110,8 +126,7 @@ export default class DevicesList extends ListComponent<
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceSearchCriteria {
-    let criteria: IDeviceSearchCriteria = {};
-    return criteria;
+    return this.filter;
   }
 
   /** Build response format for list */
@@ -130,50 +145,54 @@ export default class DevicesList extends ListComponent<
     return listDevices(this.$store, criteria, format);
   }
 
-  // Called to show filter criteria dialog.
+  /** Called to show filter criteria dialog */
   onShowFilterCriteria() {
-    (this.$refs.filters as any).showFilterCriteriaDialog();
+    this.$refs.filter.openDialog();
   }
 
-  // Called when filter criteria are updated.
-  onFilterUpdated(filter: any) {
-    this.$data.filter = filter;
+  /** Clears the filter criteria */
+  onClearFilterCriteria() {
+    this.filter = {};
+    this.$refs.filter.reset();
     this.refresh();
   }
 
-  // Open device assignment dialog.
-  onAssignDevice(device: IDevice) {
-    // let assignDialog = this.$refs["assign"];
-    // assignDialog.deviceToken = device.token;
-    // assignDialog.onOpenDialog();
+  /** Called when filter criteria are updated */
+  onFilterUpdated(filter: IDeviceSearchCriteria) {
+    this.$refs.filter.closeDialog();
+    this.filter = filter;
+    this.refresh();
   }
 
-  // Called after new assignment is created.
+  /** Open device assignment dialog */
+  onAssignDevice(device: IDevice) {
+    this.selected = device;
+    this.$refs.assign.open();
+  }
+
+  /** Called after new assignment is created */
   onAssignmentCreated() {
     this.refresh();
   }
 
-  // Called when a new device is added.
+  /** Called when a new device is added */
   onDeviceAdded() {
     this.refresh();
   }
 
-  // Called to open detail page for device.
+  /** Called to open detail page for device */
   onOpenDevice(device: IDevice) {
     routeTo(this, "/devices/" + device.token);
   }
 
-  // Called to open dialog.
+  /** Called to open dialog */
   onAddDevice() {
     this.$refs.add.open();
   }
 
-  // Called to invoke a batch command.
+  /** Called to invoke a batch command */
   onBatchCommandInvocation() {
-    (this.$refs.batch as any).onOpenDialog();
+    this.$refs.batch.open();
   }
 }
 </script>
-
-<style scoped>
-</style>

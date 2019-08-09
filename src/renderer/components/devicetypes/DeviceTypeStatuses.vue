@@ -19,7 +19,16 @@
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <device-status-update-dialog ref="edit" @deviceStatusUpdated="refresh"/>
+      <device-status-update-dialog
+        ref="edit"
+        :deviceTypeToken="deviceTypeToken"
+        @updated="refresh"
+      />
+      <device-status-delete-dialog
+        ref="delete"
+        :deviceTypeToken="deviceTypeToken"
+        @deleted="refresh"
+      />
     </template>
   </sw-list-tab>
 </template>
@@ -27,14 +36,13 @@
 <script lang="ts">
 import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
 
-import NoResultsPanel from "../common/NoResultsPanel.vue";
 import DeviceStatusListEntry from "../statuses/DeviceStatusListEntry.vue";
 import DeviceStatusUpdateDialog from "../statuses/DeviceStatusUpdateDialog.vue";
+import DeviceStatusDeleteDialog from "../statuses/DeviceStatusDeleteDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { listDeviceStatuses } from "../../rest/sitewhere-device-statuses-api";
 import {
-  IDeviceType,
   IDeviceStatus,
   IDeviceStatusSearchCriteria,
   IDeviceStatusResponseFormat,
@@ -43,9 +51,9 @@ import {
 
 @Component({
   components: {
-    NoResultsPanel,
     DeviceStatusListEntry,
-    DeviceStatusUpdateDialog
+    DeviceStatusUpdateDialog,
+    DeviceStatusDeleteDialog
   }
 })
 export default class DeviceTypeStatuses extends ListComponent<
@@ -56,17 +64,18 @@ export default class DeviceTypeStatuses extends ListComponent<
 > {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
-  @Prop() readonly deviceType!: IDeviceType;
+  @Prop() readonly deviceTypeToken!: string;
 
   // References.
   $refs!: Refs<{
     edit: DeviceStatusUpdateDialog;
+    delete: DeviceStatusDeleteDialog;
   }>;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceStatusSearchCriteria {
     let criteria: IDeviceStatusSearchCriteria = {};
-    criteria.deviceTypeToken = this.deviceType.token;
+    criteria.deviceTypeToken = this.deviceTypeToken;
     return criteria;
   }
 
@@ -90,7 +99,9 @@ export default class DeviceTypeStatuses extends ListComponent<
   }
 
   /** Open dialog to delete status */
-  onDeleteStatus(status: IDeviceStatus) {}
+  onDeleteStatus(status: IDeviceStatus) {
+    this.$refs.delete.open(status.token);
+  }
 }
 </script>
 

@@ -1,42 +1,50 @@
 <template>
-  <sw-delete-dialog title="Delete Zone" width="400" :error="error" @delete="onDeleteConfirmed">
-    <v-card-text>
-      <v-card-text>Are you sure you want to delete this zone?</v-card-text>
-    </v-card-text>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Zone"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
   </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteZone } from "../../rest/sitewhere-zones-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import { IZone } from "sitewhere-rest-api";
+import { getZone, deleteZone } from "../../rest/sitewhere-zones-api";
 
-  props: ["token"],
+@Component({})
+export default class ZoneDeleteDialog extends DeleteDialogComponent<IZone> {
+  message: string | null = null;
 
-  methods: {
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.$children[0].openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteZone(this.$store, this.token)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.$children[0].closeDialog();
-      this.$emit("deleted");
-    }
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IZone> {
+    return getZone(this.$store, identifier);
   }
-};
+
+  /** Called after record is loaded */
+  afterLoad(entity: IZone): void {
+    this.message = `Are you sure you want to delete '${entity.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(entity: IZone): AxiosPromise<IZone> {
+    return deleteZone(this.$store, entity.token);
+  }
+
+  /** Called after create button is clicked */
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  /** Called after cancel button is clicked */
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
 </script>

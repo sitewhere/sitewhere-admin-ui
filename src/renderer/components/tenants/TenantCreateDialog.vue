@@ -2,7 +2,7 @@
   <tenant-dialog
     ref="dialog"
     title="Create Tenant"
-    width="600"
+    width="650"
     createLabel="Create"
     cancelLabel="Cancel"
     @payload="onCommit"

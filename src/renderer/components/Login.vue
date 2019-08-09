@@ -48,7 +48,7 @@
       <v-container>
         <div class="login-wrapper">
           <div class="sitewhere-logo"></div>
-          <sw-error-banner :error="error"/>
+          <sw-error-banner :error="error" />
           <v-card-text class="ma-0 pa-1">
             <div
               style="width: 100%; text-align: center; color: #333; font-size: 35px; font-family: RobotoRegular"
@@ -68,14 +68,11 @@
                   <span v-if="$v.password.$invalid && $v.$dirty">Password is required.</span>
                 </div>
               </v-flex>
-              <v-flex xs3 class="pr-3">
-                <v-select required :items="protocols" v-model="protocol" label="Protocol"></v-select>
+              <v-flex xs11>
+                <remotes-dropdown :remotes="remotes" @selected="onConnectionUpdated" />
               </v-flex>
-              <v-flex xs5 class="pr-3">
-                <v-text-field hide-details label="Server" v-model="server"></v-text-field>
-              </v-flex>
-              <v-flex xs4>
-                <v-text-field hide-details label="Port" type="number" v-model="port"></v-text-field>
+              <v-flex xs1>
+                <v-icon class="pt-2 pl-3 blue--grey text--darken-2" @click="onEditRemotes">edit</v-icon>
               </v-flex>
             </v-layout>
           </v-card-text>
@@ -97,11 +94,19 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <remotes-dialog ref="remotes" @save="onRemotesUpdated" />
         </div>
       </v-container>
       <div style="-webkit-app-region: drag" class="draggable-area"></div>
       <v-system-bar color="transparent" class="title-bar">
-        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="minWindow">
+        <v-btn
+          flat
+          icon
+          small
+          class="ma-0 mt-2 title-bar-button"
+          color="grey"
+          @click="openWebTools"
+        >
           <v-icon>menu</v-icon>
         </v-btn>
         <v-spacer></v-spacer>
@@ -121,9 +126,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "sitewhere-ide-common";
+import { Component, Refs, Watch } from "sitewhere-ide-common";
 
 import SocialButton from "./SocialButton.vue";
+import RemotesDropdown from "./login/RemotesDropdown.vue";
+import RemotesDialog from "./login/RemotesDialog.vue";
 
 import Electron from "electron";
 import { handleError } from "./common/Utils";
@@ -135,6 +142,7 @@ import { GoogleAnalytics } from "../libraries/google-analytics";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { getUser } from "../rest/sitewhere-users-api";
 import { IUser, IUserResponseFormat } from "sitewhere-rest-api";
+import { IRemotes, IRemoteConnection } from "./common/ApplicationModel";
 
 // Discord logo and tooltip.
 const discordSvgContent: string =
@@ -158,7 +166,9 @@ const twitterTitle: string = "Follow SiteWhere on Twitter";
 
 @Component({
   components: {
-    SocialButton
+    SocialButton,
+    RemotesDropdown,
+    RemotesDialog
   },
   mixins: [validationMixin],
   validations: {
@@ -175,19 +185,6 @@ export default class Login extends Vue {
   error: string | null = null;
   username: string = "";
   password: string = "";
-  protocol: string | null = null;
-  server: string | null = null;
-  port: number | null = null;
-  protocols: { text: string; value: string }[] = [
-    {
-      text: "http",
-      value: "http"
-    },
-    {
-      text: "https",
-      value: "https"
-    }
-  ];
   loggingIn: boolean = false;
   settings: {} | null = null;
   discordSvgContent: string = discordSvgContent;
@@ -198,12 +195,25 @@ export default class Login extends Vue {
   githubTitle: string = githubTitle;
   twitterSvgContent: string = twitterSvgContent;
   twitterTitle: string = twitterTitle;
+  connection: IRemoteConnection | null = null;
+
+  // References.
+  $refs!: Refs<{
+    remotes: RemotesDialog;
+  }>;
 
   created() {
-    this.protocol = this.$store.getters.protocol;
-    this.server = this.$store.getters.server;
-    this.port = this.$store.getters.port;
     this.getOrCreateSiteWhereSettings();
+  }
+
+  /** Compute remotes based on store */
+  get remotes(): IRemotes {
+    return this.$store.getters.remotes;
+  }
+
+  @Watch("remotes", { immediate: true })
+  onRemotesStoreUpdated(updated: IRemotes) {
+    console.log("Remotes store updated.", updated);
   }
 
   // Called to attempt server login.
@@ -214,11 +224,6 @@ export default class Login extends Vue {
     }
 
     let token = btoa(this.username + ":" + this.password);
-
-    // Save updates to server settings.
-    this.$store.commit("protocol", this.protocol);
-    this.$store.commit("server", this.server);
-    this.$store.commit("port", this.port);
 
     // Save Authorization token.
     this.$store.commit("authToken", token);
@@ -268,6 +273,31 @@ export default class Login extends Vue {
     this.settings = settings;
     this.$store.commit("settings", settings);
     GoogleAnalytics.sendStartupEvent(settings);
+  }
+
+  /** Open dialog to edit remotes */
+  onEditRemotes() {
+    this.$refs.remotes.load(this.remotes);
+    this.$refs.remotes.openDialog();
+  }
+
+  /** Called after remotes are updated */
+  onRemotesUpdated(updated: IRemotes) {
+    this.$store.commit("remotes", updated);
+    this.$refs.remotes.closeDialog();
+  }
+
+  /** Called when connection selection is updated */
+  onConnectionUpdated(connection: IRemoteConnection) {
+    console.log("connection updated", connection);
+    this.connection = connection;
+    this.$store.commit("protocol", connection.protocol);
+    this.$store.commit("server", connection.host);
+    this.$store.commit("port", connection.port);
+  }
+
+  openWebTools() {
+    Electron.remote.getCurrentWebContents().openDevTools();
   }
 
   minWindow() {

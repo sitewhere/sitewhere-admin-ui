@@ -22,13 +22,7 @@ import {
 
 import ScriptCloneDialog from "./ScriptCloneDialog.vue";
 
-import { AxiosPromise } from "axios";
 import { IScriptVersion } from "sitewhere-rest-api";
-import { createDevice } from "../../rest/sitewhere-devices-api";
-import {
-  createGlobalScript,
-  createTenantScript
-} from "../../rest/sitewhere-scripting-api";
 
 @Component({
   components: {

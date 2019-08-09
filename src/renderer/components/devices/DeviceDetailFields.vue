@@ -1,16 +1,13 @@
 <template>
   <dialog-form>
     <v-flex xs12>
-      <form-text
+      <form-token
         required
-        label="Token"
+        label="Device token"
         title="Unique token for referencing device."
         v-model="token"
-        icon="info"
-      >
-        <span v-if="!$v.token.required && $v.$dirty">Device token is required.</span>
-        <span v-if="!$v.token.validToken && $v.$dirty">Device token is not valid.</span>
-      </form-text>
+        :validator="$v"
+      />
     </v-flex>
     <v-flex xs12>
       <device-type-selector v-model="deviceTypeToken" title="Type of device being created.">
@@ -33,6 +30,7 @@
 import { Component, DialogSection } from "sitewhere-ide-common";
 
 import DialogForm from "../common/form/DialogForm.vue";
+import FormToken from "../common/form/FormToken.vue";
 import FormText from "../common/form/FormText.vue";
 import FormTextArea from "../common/form/FormTextArea.vue";
 import DeviceTypeSelector from "../devicetypes/DeviceTypeSelector.vue";
@@ -45,6 +43,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 @Component({
   components: {
     DialogForm,
+    FormToken,
     FormText,
     FormTextArea,
     DeviceTypeSelector
@@ -95,6 +94,3 @@ export default class DeviceDetailFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

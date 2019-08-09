@@ -32,7 +32,7 @@ import { getArea, updateArea } from "../../rest/sitewhere-areas-api";
     AreaDialog
   }
 })
-export default class CustomerUpdateDialog extends EditDialogComponent<
+export default class AreaUpdateDialog extends EditDialogComponent<
   IArea,
   IAreaCreateRequest
 > {

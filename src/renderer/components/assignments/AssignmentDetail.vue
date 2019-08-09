@@ -7,7 +7,7 @@
     :record="assignment"
   >
     <template slot="header">
-      <assignment-detail-header :record="assignment"/>
+      <assignment-detail-header :record="assignment" @statusUpdated="refresh" />
     </template>
     <template slot="tabs">
       <v-tab key="locations">Locations</v-tab>
@@ -17,11 +17,11 @@
       <v-tab key="responses">Command Responses</v-tab>
     </template>
     <template slot="tab-items">
-      <assignment-location-events tabkey="locations" :token="token"/>
-      <assignment-measurement-events tabkey="measurements" :token="token"/>
-      <assignment-alert-events tabkey="alerts" :token="token"/>
-      <assignment-invocation-events tabkey="invocations" :token="token"/>
-      <assignment-response-events tabkey="responses" :token="token"/>
+      <assignment-location-events tabkey="locations" :token="token" />
+      <assignment-measurement-events tabkey="measurements" :token="token" />
+      <assignment-alert-events tabkey="alerts" :token="token" />
+      <assignment-invocation-events tabkey="invocations" :token="token" />
+      <assignment-response-events tabkey="responses" :token="token" />
     </template>
     <template slot="dialogs">
       <invocation-create-dialog
@@ -37,9 +37,9 @@
       />
     </template>
     <template slot="actions">
-      <device-command-button tooltip="Invoke Command" @action="onAddCommandInvocation"/>
-      <emulator-button tooltip="Device Emulator" @action="onOpenEmulator"/>
-      <delete-button tooltip="Delete Assignment" @action="onAssignmentDelete"/>
+      <device-command-button tooltip="Invoke Command" @action="onAddCommandInvocation" />
+      <emulator-button tooltip="Device Emulator" @action="onOpenEmulator" />
+      <delete-button tooltip="Delete Assignment" @action="onAssignmentDelete" />
     </template>
   </sw-detail-page>
 </template>

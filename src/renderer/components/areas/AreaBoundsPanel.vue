@@ -1,188 +1,201 @@
 <template>
-  <map-panel height="450px" ref="map" @resetMap="onResetMap"></map-panel>
+  <div>
+    <map-with-zone-overlay-panel
+      style="height: 450px; border: 1px solid #ddd;"
+      ref="map"
+      :areaToken="areaToken"
+      :visible="showMap"
+      @ready="onInitializeMap"
+    />
+  </div>
 </template>
 
-<script>
-import MapPanel from "./MapPanel";
-import MapUtils from "./MapUtils";
-import L from "leaflet";
-import D from "leaflet-draw"; // eslint-disable-line no-unused-vars
+<script lang="ts">
+import { Component, Watch, Refs, DialogSection } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    editBounds: null,
-    editControl: null,
-    boundsLayer: null,
-    borderColor: "#446644",
-    fillColor: "#779977",
-    fillOpacity: 0.3
-  }),
+import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
+import {
+  swToLeafletBounds,
+  leafletToSwBounds,
+  enableMapDrawing,
+  enableMapEditing
+} from "../common/map/MapUtils";
 
+import {
+  LatLng,
+  LatLngBounds,
+  Polygon,
+  Map as LeafletMap,
+  Control,
+  Draw,
+  latLngBounds as GetLatLongBounds
+} from "leaflet";
+import XXX from "leaflet-draw";
+
+import { ILocation, IArea, IZoneCreateRequest } from "sitewhere-rest-api";
+
+@Component({
   components: {
-    MapPanel
-  },
+    MapWithZoneOverlayPanel
+  }
+})
+export default class AreaBoundsPanel extends DialogSection {
+  // References.
+  $refs!: Refs<{
+    map: MapWithZoneOverlayPanel;
+  }>;
 
-  props: ["bounds"],
+  showMap: boolean = false;
+  areaToken: string | undefined = undefined;
+  bounds: ILocation[] = [];
+  editControl: Control.Draw | null = null;
+  boundsLayer: Polygon | null = null;
+  borderColor: string = "#446644";
+  borderOpacity: number = 0.8;
+  fillColor: string = "#779977";
+  fillOpacity: number = 0.3;
 
-  watch: {
-    bounds: {
-      immediate: true,
-      handler: function(val) {
-        this.$data.editBounds = val;
-        if (this.$refs.map) {
-          this.onResetMap();
-        }
-      }
+  // Prevent unused warning.
+  xxx: any = XXX;
+
+  /** Make map visible */
+  makeMapVisible() {
+    this.showMap = true;
+  }
+
+  /** Initialize map */
+  onInitializeMap() {
+    var component = this;
+    let map: LeafletMap | null = this.getMap();
+    if (map) {
+      // Remove and add event handlers.
+      map.off(Draw.Event.DRAWSTART).on(Draw.Event.DRAWSTART, function(e) {
+        component.removeBoundsLayer();
+      });
+      map.off(Draw.Event.CREATED).on(Draw.Event.CREATED, function(e) {
+        component.addBoundsLayer(e);
+      });
+      map.off(Draw.Event.EDITED).on(Draw.Event.EDITED, function(e) {
+        component.editBoundsLayer(e);
+      });
+      map.off(Draw.Event.DELETED).on(Draw.Event.DELETED, function(e) {
+        component.bounds = [];
+        component.removeBoundsLayer();
+      });
     }
-  },
 
-  methods: {
-    // Access the Leaflet map directly.
-    getMap: function() {
-      return this.$refs.map.getMap();
-    },
+    // Update map with existing bounds.
+    this.onBoundsSet(this.bounds);
+  }
 
-    // Perform additional reset logic.
-    onResetMap: function() {
-      var component = this;
-      let map = this.getMap();
+  /** Reset section content */
+  reset(): void {
+    // Refresh zones.
+    if (this.$refs.map) {
+      this.$refs.map.refresh();
+    }
 
-      // Remove edit control.
-      var edit = this.$data.editControl;
-      if (edit) {
-        map.removeControl(edit);
+    // Reset fields.
+    this.areaToken = undefined;
+    this.bounds = [];
+    this.borderColor = "#446644";
+    this.fillColor = "#779977";
+    this.fillOpacity = 0.3;
+  }
+
+  /** Perform validation */
+  validate(): boolean {
+    return true;
+  }
+
+  /** Load form data from an object */
+  load(input: IArea): void {
+    this.areaToken = input.token;
+    this.bounds = input.bounds;
+  }
+
+  /** Save form data to an object */
+  save(): {} {
+    return {
+      bounds: this.bounds
+    };
+  }
+
+  /** Access the Leaflet map directly */
+  getMap(): LeafletMap | null {
+    return this.$refs.map ? this.$refs.map.getMap() : null;
+  }
+
+  @Watch("bounds")
+  onBoundsSet(updated: ILocation[]) {
+    let map: LeafletMap | null = this.getMap();
+    if (map) {
+      if (this.boundsLayer) {
+        this.removeBoundsLayer();
       }
 
-      let bounds = this.$data.editBounds;
-      if (bounds && !this.$data.boundsLayer) {
-        let lBounds = MapUtils.swToLeafletBounds(bounds);
-        if (lBounds && lBounds.length > 0) {
-          console.log(lBounds);
-          var polygon = new L.Polygon(lBounds, {
-            color: this.$data.borderColor,
+      if (updated && updated.length > 0) {
+        let latLongs: LatLng[] = swToLeafletBounds(updated);
+        let lBounds: LatLngBounds = GetLatLongBounds(latLongs);
+        if (latLongs && latLongs.length > 0) {
+          var polygon = new Polygon(latLongs, {
             opacity: 1,
-            weight: 3,
-            fillColor: this.$data.fillColor,
-            fillOpacity: this.$data.fillOpacity,
-            clickable: false
+            weight: 3
           });
-          this.$data.boundsLayer = polygon;
-          this.getMap().addLayer(polygon);
-          this.getMap().fitBounds(lBounds, {
+          polygon.setStyle({ color: this.borderColor });
+          polygon.setStyle({ fillColor: this.fillColor });
+          polygon.setStyle({ fillOpacity: this.fillOpacity });
+          this.boundsLayer = polygon;
+          map.addLayer(polygon);
+          map.fitBounds(lBounds, {
             padding: [10, 10]
           });
         }
       }
 
-      if (this.$data.boundsLayer) {
-        this.enableMapEditing();
+      /** Remove edit control */
+      var edit = this.editControl;
+      if (edit) {
+        map.removeControl(edit);
+      }
+
+      if (this.boundsLayer) {
+        this.editControl = enableMapEditing(map, this.boundsLayer);
       } else {
-        this.enableMapDrawing();
-      }
-
-      // Remove and add event handlers.
-      map.off("draw:drawstart").on("draw:drawstart", function(e) {
-        component.removeBoundsLayer();
-      });
-      map.off("draw:created").on("draw:created", function(e) {
-        component.addBoundsLayer(e);
-      });
-      map.off("draw:deleted").on("draw:deleted", function(e) {
-        component.removeBoundsLayer(e);
-      });
-    },
-
-    // Get drawing options based on UI settings.
-    getDrawOptions: function() {
-      return {
-        polyline: false,
-        circle: false,
-        marker: false,
-        circlemarker: false,
-        polygon: {
-          shapeOptions: {
-            color: this.$data.borderColor,
-            opacity: 1,
-            fillColor: this.$data.fillColor,
-            fillOpacity: this.$data.fillOpacity
-          }
-        },
-        rectangle: {
-          shapeOptions: {
-            color: this.$data.borderColor,
-            opacity: 1,
-            fillColor: this.$data.fillColor,
-            fillOpacity: this.$data.fillOpacity
-          }
-        }
-      };
-    },
-
-    /** Enables drawing features on map */
-    enableMapDrawing: function() {
-      var options = {
-        position: "topright",
-        edit: false
-      };
-      options.draw = this.getDrawOptions();
-
-      var drawControl = new L.Control.Draw(options);
-      this.getMap().addControl(drawControl);
-      this.$data.editControl = drawControl;
-    },
-
-    // Enables editing features on map.
-    enableMapEditing: function() {
-      var editFeatures = new L.FeatureGroup();
-      editFeatures.addLayer(this.$data.boundsLayer);
-      this.getMap().addLayer(editFeatures);
-      editFeatures.bringToFront();
-
-      var options = {
-        position: "topright",
-        draw: false,
-        edit: {
-          featureGroup: editFeatures,
-          remove: true
-        }
-      };
-
-      var drawControl = new L.Control.Draw(options);
-      this.getMap().addControl(drawControl);
-      this.$data.editControl = drawControl;
-
-      var bounds = this.$data.boundsLayer.getBounds();
-      if (bounds && bounds.length > 0) {
-        console.log(bounds);
-        this.getMap().fitBounds(bounds, {
-          padding: [0, 0]
-        });
-      }
-    },
-
-    // Add new bounds layer.
-    addBoundsLayer: function(e) {
-      var boundsLayer = e.layer;
-      boundsLayer.setStyle({ color: this.$data.borderColor });
-      boundsLayer.setStyle({ fillColor: this.$data.fillColor });
-      boundsLayer.setStyle({ fillOpacity: this.$data.fillOpacity });
-      this.getMap().addLayer(boundsLayer);
-      this.$data.boundsLayer = boundsLayer;
-      this.$emit("boundsUpdated", boundsLayer._latlngs[0]);
-      this.onResetMap();
-    },
-
-    // Remove existing bounds layer.
-    removeBoundsLayer: function() {
-      var boundsLayer = this.$data.boundsLayer;
-      if (boundsLayer) {
-        this.getMap().removeLayer(boundsLayer);
-        this.$data.boundsLayer = null;
-        this.$data.editBounds = null;
-        this.$emit("boundsUpdated", null);
-        this.onResetMap();
+        let zone: IZoneCreateRequest = {
+          areaToken: "",
+          name: "",
+          bounds: [],
+          borderColor: this.borderColor,
+          borderOpacity: this.borderOpacity,
+          fillColor: this.fillColor,
+          fillOpacity: this.fillOpacity
+        };
+        this.editControl = enableMapDrawing(map, zone);
       }
     }
   }
-};
+
+  /** Add new bounds layer */
+  addBoundsLayer(e: any) {
+    let boundsLayer: Polygon = e.layer;
+    this.bounds = leafletToSwBounds(boundsLayer.getLatLngs()[0]);
+  }
+
+  /** Edit existing bounds layer */
+  editBoundsLayer(e: any) {
+    if (this.boundsLayer) {
+      this.bounds = leafletToSwBounds(this.boundsLayer.getLatLngs()[0]);
+    }
+  }
+
+  /** Remove existing bounds layer */
+  removeBoundsLayer() {
+    let map: LeafletMap | null = this.getMap();
+    if (this.boundsLayer && map) {
+      map.removeLayer(this.boundsLayer);
+      this.boundsLayer = null;
+    }
+  }
+}
 </script>

@@ -1,24 +1,29 @@
 <template>
   <sw-navigation-header-panel v-if="areaType" :icon="areaType.icon" height="200px">
+    <template slot="left">
+      <sw-header-branding-panel :entity="areaType" />
+    </template>
     <template slot="content">
-      <sw-header-field label="Token">
-        <sw-clipboard-copy-field :field="areaType.token" message="Token copied to clipboard"/>
-      </sw-header-field>
-      <sw-header-field label="Name">
-        <span>{{ areaType.name }}</span>
-      </sw-header-field>
-      <sw-header-field label="Description">
-        <span>{{ areaType.description }}</span>
-      </sw-header-field>
-      <sw-header-field label="Created">
-        <span>{{ formatDate(areaType.createdDate) }}</span>
-      </sw-header-field>
-      <sw-header-field label="Updated">
-        <span>{{ formatDate(areaType.updatedDate) }}</span>
-      </sw-header-field>
+      <sw-navigation-header-fields>
+        <sw-header-field label="Token">
+          <clipboard-copy-field :field="areaType.token" message="Token copied to clipboard" />
+        </sw-header-field>
+        <sw-header-field label="Name">
+          <span>{{ areaType.name }}</span>
+        </sw-header-field>
+        <sw-header-field label="Description">
+          <span>{{ areaType.description }}</span>
+        </sw-header-field>
+        <sw-header-field label="Created">
+          <span>{{ formatDate(areaType.createdDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Updated">
+          <span>{{ formatDate(areaType.updatedDate) }}</span>
+        </sw-header-field>
+      </sw-navigation-header-fields>
     </template>
     <template slot="right">
-      <authenticated-image :url="qrCodeUrl"/>
+      <authenticated-image :url="qrCodeUrl" />
     </template>
   </sw-navigation-header-panel>
 </template>
@@ -28,10 +33,13 @@ import { Component, HeaderComponent } from "sitewhere-ide-common";
 
 import { formatDate } from "../common/Utils";
 import { IAreaType } from "sitewhere-rest-api";
+
+import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
 @Component({
   components: {
+    ClipboardCopyField,
     AuthenticatedImage
   }
 })

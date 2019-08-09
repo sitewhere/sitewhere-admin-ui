@@ -22,7 +22,7 @@ import DeviceStatusDialog from "./DeviceStatusDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IDeviceStatus, IDeviceStatusCreateRequest } from "sitewhere-rest-api";
-import { createDeviceStatus } from "../../rest/sitewhere-device-statuses-api";
+import { createDeviceStatus } from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {
@@ -52,7 +52,7 @@ export default class DeviceStatusCreateDialog extends CreateDialogComponent<
 
   /** Implemented in subclasses to save payload */
   save(payload: IDeviceStatusCreateRequest): AxiosPromise<IDeviceStatus> {
-    return createDeviceStatus(this.$store, payload);
+    return createDeviceStatus(this.$store, this.deviceTypeToken, payload);
   }
 
   /** Implemented in subclasses for after-save */

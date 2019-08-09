@@ -1,56 +1,65 @@
 <template>
-  <span>
-    <sw-delete-dialog
-      ref="dialog"
-      title="Delete Command"
-      width="400"
-      :error="error"
-      @delete="onDeleteConfirmed"
-    >
-      <v-card-text>Are you sure you want to delete this device command?</v-card-text>
-    </sw-delete-dialog>
-  </span>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Command"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
+  </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteDeviceCommand } from "../../rest/sitewhere-device-commands-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent, Prop } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import {
+  IDeviceCommand,
+  IDeviceCommandResponseFormat
+} from "sitewhere-rest-api";
+import {
+  getDeviceCommand,
+  deleteDeviceCommand
+} from "../../rest/sitewhere-device-types-api";
 
-  props: ["token"],
+@Component({})
+export default class CommandDeleteDialog extends DeleteDialogComponent<
+  IDeviceCommand
+> {
+  @Prop() readonly deviceTypeToken!: string;
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
+  message: string | null = null;
 
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.getDialogComponent().openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteDeviceCommand(this.$store, this.token, true)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("deleted");
-    }
+  /** Load payload */
+  prepareLoad(token: string): AxiosPromise<IDeviceCommand> {
+    let format: IDeviceCommandResponseFormat = {};
+    return getDeviceCommand(this.$store, this.deviceTypeToken, token, format);
   }
-};
-</script>
 
-<style scoped>
-</style>
+  /** Called after record is loaded */
+  afterLoad(command: IDeviceCommand): void {
+    this.message = `Are you sure you want to delete '${command.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(command: IDeviceCommand): AxiosPromise<IDeviceCommand> {
+    return deleteDeviceCommand(
+      this.$store,
+      this.deviceTypeToken,
+      command.token
+    );
+  }
+
+  /** Called after create button is clicked */
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  /** Called after cancel button is clicked */
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
+</script>

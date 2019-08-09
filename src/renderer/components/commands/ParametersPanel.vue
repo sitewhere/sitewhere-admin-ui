@@ -18,7 +18,7 @@
           >{{ (props.item.type.length > 25) ? props.item.type.substring(0, 25) + "..." : props.item.type }}</td>
           <td width="200px">
             <span v-if="props.item.required">
-              <font-awesome-icon color="#666" icon="check-circle"/>
+              <font-awesome-icon color="#666" icon="check-circle" />
             </span>
           </td>
           <td width="20px">
@@ -36,7 +36,7 @@
       <v-container class="pa-0 pt-5" fluid>
         <v-layout row>
           <v-flex xs4>
-            <v-text-field class="pr-3" placeholder=" " label="Name" v-model="name"/>
+            <v-text-field class="pr-3" placeholder=" " label="Name" v-model="name" />
           </v-flex>
           <v-flex xs4>
             <v-select
@@ -50,7 +50,7 @@
             />
           </v-flex>
           <v-flex xs3>
-            <v-checkbox label="Required" v-model="required"/>
+            <v-checkbox label="Required" v-model="required" />
           </v-flex>
           <v-flex xs1 class="pt-2">
             <v-tooltip left>
@@ -196,6 +196,3 @@ export default class ParametersPanel extends DialogSection {
   }
 }
 </script>
-
-<style scoped>
-</style>

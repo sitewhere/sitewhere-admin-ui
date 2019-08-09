@@ -1,13 +1,13 @@
 <template>
-  <router-view></router-view>
+  <router-view />
 </template>
 
-<script>
-export default {
-  data() {
-    return {};
-  }
-};
+<script lang="ts">
+import { Component } from "sitewhere-ide-common";
+import Vue from "vue";
+
+@Component({})
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">

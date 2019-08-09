@@ -12,6 +12,11 @@
         <asset-list-entry :asset="asset"></asset-list-entry>
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>There are no assets of this type.</div>
+      </no-results-panel>
+    </template>
   </sw-list-tab>
 </template>
 
@@ -19,6 +24,7 @@
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import AssetListEntry from "../assets/AssetListEntry.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
 import { listAssets } from "../../rest/sitewhere-assets-api";
@@ -31,7 +37,8 @@ import {
 
 @Component({
   components: {
-    AssetListEntry
+    AssetListEntry,
+    NoResultsPanel
   }
 })
 export default class AssetTypeAssets extends ListComponent<

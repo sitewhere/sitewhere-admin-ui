@@ -1,31 +1,57 @@
 <template>
-  <v-card v-if="tenant" color="white" class="grey--text text--darken-1">
-    <v-layout class="pa-3" row>
-      <v-flex xs3>
-        <v-card-media :src="tenant.imageUrl" height="100%" contain></v-card-media>
-      </v-flex>
-      <v-flex xs9>
-        <v-card-title class="pa-0" primary-title>
-          <div class="headline pt-1">{{ tenant.name }}</div>
-          <v-spacer></v-spacer>
-        </v-card-title>
-      </v-flex>
-    </v-layout>
-  </v-card>
+  <sw-navigation-header-panel v-if="tenant" height="150px">
+    <template slot="left">
+      <sw-header-branding-panel :entity="tenant" />
+    </template>
+    <template slot="content">
+      <sw-navigation-header-fields class="mt-3">
+        <sw-header-field label="Token">
+          <clipboard-copy-field :field="tenant.token" message="Token copied to clipboard" />
+        </sw-header-field>
+        <sw-header-field label="Name">
+          <span>{{ tenant.name }}</span>
+        </sw-header-field>
+        <sw-header-field label="Created">
+          <span>{{ formatDate(tenant.createdDate) }}</span>
+        </sw-header-field>
+        <sw-header-field label="Updated">
+          <span>{{ formatDate(tenant.updatedDate) }}</span>
+        </sw-header-field>
+      </sw-navigation-header-fields>
+    </template>
+    <template slot="right">
+      <authenticated-image :url="qrCodeUrl" />
+    </template>
+  </sw-navigation-header-panel>
 </template>
 
-<script>
-export default {
-  data: () => ({
-    copyData: null,
-    showIdCopied: false
-  }),
+<script lang="ts">
+import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { ITenant } from "sitewhere-rest-api";
 
-  props: ["tenant"],
+import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
+import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
-  methods: {}
-};
+@Component({
+  components: {
+    ClipboardCopyField,
+    AuthenticatedImage
+  }
+})
+export default class TenantDetailHeader extends HeaderComponent<ITenant> {
+  /** Reference record as tenant */
+  get tenant(): ITenant {
+    return this.record;
+  }
+
+  /** Get token */
+  get token(): string {
+    return this.tenant ? this.tenant.token : "";
+  }
+
+  // Get URL for QR code.
+  get qrCodeUrl(): string {
+    return this.tenant ? "tenants/" + this.token + "/label/qrcode" : "";
+  }
+}
 </script>
-
-<style scoped>
-</style>

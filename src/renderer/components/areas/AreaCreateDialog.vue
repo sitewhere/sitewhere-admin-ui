@@ -11,6 +11,7 @@
 <script lang="ts">
 import {
   Component,
+  Prop,
   CreateDialogComponent,
   DialogComponent,
   Refs
@@ -31,6 +32,8 @@ export default class AreaCreateDialog extends CreateDialogComponent<
   IArea,
   IAreaCreateRequest
 > {
+  @Prop() readonly parentArea!: IArea;
+
   // References.
   $refs!: Refs<{
     dialog: DialogComponent<IArea>;
@@ -48,12 +51,13 @@ export default class AreaCreateDialog extends CreateDialogComponent<
 
   /** Implemented in subclasses to save payload */
   save(payload: IAreaCreateRequest): AxiosPromise<IArea> {
+    if (this.parentArea) {
+      payload.parentToken = this.parentArea.token;
+    }
     return createArea(this.$store, payload);
   }
 
   /** Implemented in subclasses for after-save */
-  afterSave(payload: IArea): void {
-    this.$emit("areaAdded", payload);
-  }
+  afterSave(payload: IArea): void {}
 }
 </script>

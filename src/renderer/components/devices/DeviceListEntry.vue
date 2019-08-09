@@ -1,24 +1,36 @@
 <template>
-  <sw-list-entry class="pa-2">
-    <v-card-text @click="onOpenDevice" class="device-root">
-      <div class="device-image" :style="backgroundImageStyle(device.deviceType.imageUrl)"></div>
-      <div class="title device-type ellipsis">{{ device.deviceType.name }}</div>
-      <div class="subheading device-token ellipsis">{{ device.token }}</div>
-      <div class="device-comments ellipsis">{{ device.comments }}</div>
-      <div
-        v-if="hasAssignedAsset"
-        class="device-asset"
-        :style="backgroundImageStyle(assignment.assetImageUrl)"
-      ></div>
-      <div v-else-if="!assignment" class="device-assign-button">
-        <v-tooltip top>
-          <v-btn dark icon class="blue ml-0" @click.stop="onAssignDevice" slot="activator">
-            <font-awesome-icon icon="tag" size="lg"/>
-          </v-btn>
-          <span>Assign Device</span>
-        </v-tooltip>
-      </div>
-    </v-card-text>
+  <sw-list-entry style="min-height: 130px">
+    <v-container @click="onOpenDevice">
+      <v-layout row>
+        <v-flex xs3>
+          <branding-image :style="logoStyle" :entity="deviceType" iconSize="4x" />
+        </v-flex>
+        <v-flex xs8>
+          <div>
+            <div class="title ellipsis mb-2">{{ device.deviceType.name }}</div>
+            <div class="subheading mb-2">{{ device.token }}</div>
+            <div class="dvcomm">{{ device.comments }}</div>
+          </div>
+        </v-flex>
+        <v-flex xs1>
+          <div>
+            <v-tooltip top>
+              <v-btn dark icon class="blue pa-0 ma-0" @click.stop="onAssignDevice" slot="activator">
+                <v-icon>link</v-icon>
+              </v-btn>
+              <span>Create New Assignment</span>
+            </v-tooltip>
+          </div>
+          <div v-if="hasAssignments">
+            <v-btn :disabled="true" icon small class="mt-3 ml-1">
+              <v-avatar size="40">
+                <img :src="firstAssignment.assetImageUrl" />
+              </v-avatar>
+            </v-btn>
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </sw-list-entry>
 </template>
 
@@ -26,103 +38,58 @@
 import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 
-import { IStyle, styleForAssignmentStatus } from "../common/Style";
-import { IDevice, IDeviceAssignment } from "sitewhere-rest-api";
+import BrandingImage from "../common/BrandingImage.vue";
 
-@Component({})
+import { IStyle } from "../common/Style";
+import { IDevice, IDeviceType, IDeviceAssignment } from "sitewhere-rest-api";
+
+@Component({
+  components: {
+    BrandingImage
+  }
+})
 export default class DeviceListEntry extends Vue {
   @Prop() readonly device!: IDevice;
 
-  get assignment(): IDeviceAssignment {
-    return (this.device as any).assignment;
+  get deviceType(): IDeviceType {
+    return (this.device as any).deviceType;
   }
 
-  get styleForStatus(): IStyle {
-    return styleForAssignmentStatus(this.assignment);
+  get assignments(): IDeviceAssignment[] {
+    return (this.device as any).activeDeviceAssignments;
   }
 
-  get hasAssignedAsset() {
-    return this.assignment && this.assignment.assetId;
+  get hasAssignments() {
+    return this.assignments && this.assignments.length > 0;
   }
 
-  styleForDevice() {
-    let style: IStyle = {};
-    style["background-color"] = this.assignment ? "#fff" : "#f0f0ff";
-    style["border"] = "1px solid " + (this.assignment ? "#ddd" : "#dde");
-    return style;
+  get firstAssignment(): IDeviceAssignment | null {
+    return this.hasAssignments ? this.assignments[0] : null;
   }
 
-  // Create background image style.
-  backgroundImageStyle(image: string): IStyle {
+  // Compute style of logo.
+  get logoStyle(): IStyle {
     return {
-      "background-image": "url(" + image + ")",
-      "background-size": "contain",
-      "background-repeat": "no-repeat",
-      "background-position": "50% 50%"
+      height: "110px",
+      width: "110px"
     };
   }
 
   // Called when a device is clicked.
   onOpenDevice() {
-    this.$emit("deviceOpened", this.device);
+    this.$emit("open", this.device);
   }
 
   // Open device assignment dialog.
   onAssignDevice() {
-    this.$emit("assignDevice", this.device);
+    this.$emit("assign", this.device);
   }
 }
 </script>
 
 <style scoped>
-.device-root {
-  position: relative;
-  min-height: 80px;
-  overflow-x: hidden;
-}
-.device-image {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  bottom: 5px;
-  width: 80px;
-  background-color: #fff;
-  border-right: 1px solid #eee;
-}
-.device-type {
-  position: absolute;
-  top: 0px;
-  left: 110px;
-  right: 10px;
-}
-.device-token {
-  position: absolute;
-  top: 30px;
-  left: 110px;
-  right: 10px;
-  font-size: 14px;
-  color: #333;
-}
-.device-comments {
-  position: absolute;
-  top: 60px;
-  left: 110px;
-  right: 10px;
-  font-size: 12px;
-  color: #333;
-}
-.device-asset {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  width: 40px;
-  height: 40px;
-  background-color: #fff;
-  border: 1px solid #eee;
-}
-.device-assign-button {
-  position: absolute;
-  top: 0px;
-  right: 0px;
+.dvcomm {
+  height: 25px;
+  overflow-y: hidden;
 }
 </style>

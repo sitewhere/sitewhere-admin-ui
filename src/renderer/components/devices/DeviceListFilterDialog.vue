@@ -1,253 +1,97 @@
 <template>
   <sw-base-dialog
-    title="Update Device Filters"
-    width="800"
+    ref="dialog"
+    :icon="icon"
+    title="Filter Device List"
+    width="600"
+    :loaded="loaded"
     :visible="dialogVisible"
-    createLabel="Update Filter"
+    createLabel="Filter"
     cancelLabel="Cancel"
-    :error="error"
-    @createClicked="onFilterUpdateClicked"
+    @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <v-tabs v-model="active">
-      <v-tabs-bar dark color="primary">
-        <v-tabs-slider></v-tabs-slider>
-        <v-tabs-item key="area">Area</v-tabs-item>
-        <v-tabs-item key="deviceType">Device Type</v-tabs-item>
-        <v-tabs-item key="group">Device Group</v-tabs-item>
-        <v-tabs-item key="created">Created Date</v-tabs-item>
-        <slot name="tabitem"></slot>
-      </v-tabs-bar>
-      <v-tabs-items>
-        <v-tabs-content key="area">
-          <v-card flat>
-            <v-card-text>
-              <area-chooser
-                :chosenText="areaChosenText"
-                :notChosenText="areaNotChosenText"
-                :selected="areaFilter"
-                @areaUpdated="onAreaUpdated"
-              ></area-chooser>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-        <v-tabs-content key="deviceType">
-          <v-card flat>
-            <v-card-text>
-              <device-type-chooser
-                :chosenText="deviceTypeChosenText"
-                :notChosenText="deviceTypeNotChosenText"
-                v-model="deviceTypeToken"
-                @deviceTypeUpdated="onDeviceTypeUpdated"
-              ></device-type-chooser>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-        <v-tabs-content key="group">
-          <v-card flat>
-            <v-card-text>
-              <device-group-chooser
-                :chosenText="groupChosenText"
-                :notChosenText="groupNotChosenText"
-                :selected="deviceGroupFilter"
-                @groupUpdated="onGroupUpdated"
-              ></device-group-chooser>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-        <v-tabs-content key="created">
-          <v-card flat>
-            <v-card-text>
-              <v-container fluid>
-                <v-layout row wrap>
-                  <v-flex xs12>
-                    <v-select
-                      :items="createdDateRanges"
-                      v-model="createdDateFilter"
-                      label="Created Date"
-                      prepend-icon="insert_invitation"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12 mb-2 pb-2>
-                    <v-divider></v-divider>
-                  </v-flex>
-                  <v-flex xs12>
-                    <v-card flat>
-                      <v-card-text v-if="createdDateFilter === 'all'">
-                        Include all devices in search without consideration
-                        of created date.
-                      </v-card-text>
-                      <v-card-text
-                        v-if="createdDateFilter === 'hour'"
-                      >Include only devices created within the last hour.</v-card-text>
-                      <v-card-text
-                        v-if="createdDateFilter === 'day'"
-                      >Include only devices created within the last day.</v-card-text>
-                      <v-card-text
-                        v-if="createdDateFilter === 'week'"
-                      >Include only devices created within the last week.</v-card-text>
-                      <v-card-text v-if="createdDateFilter === 'after'">
-                        <sw-date-time-picker
-                          label="Devices created after this date/time"
-                          :v-model="createdAfter"
-                          @input="onCreatedAfterUpdated"
-                        />
-                      </v-card-text>
-                    </v-card>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </v-tabs-content>
-      </v-tabs-items>
-    </v-tabs>
+    <dialog-header>Choose criteria for filtering which devices are shown</dialog-header>
+    <template slot="tabs">
+      <v-tab key="devicetype">Device Type</v-tab>
+    </template>
+    <template slot="tab-items">
+      <v-tab-item key="devicetype">
+        <device-list-filter-device-type-fields ref="devicetype" />
+      </v-tab-item>
+    </template>
   </sw-base-dialog>
 </template>
 
-<script>
-import { BaseDialog } from "sitewhere-ide-components";
-import AreaChooser from "../areas/AreaChooser";
-import DeviceTypeChooser from "../devicetypes/DeviceTypeChooser";
-import DeviceGroupChooser from "../devicegroups/DeviceGroupChooser";
+<script lang="ts">
+import {
+  Component,
+  DialogComponent,
+  DialogSection,
+  ITabbedComponent,
+  Refs
+} from "sitewhere-ide-common";
+import { NavigationIcon } from "../../libraries/constants";
 
-export default {
-  data: () => ({
-    active: null,
-    menu: null,
-    areaFilter: null,
-    deviceTypeFilter: null,
-    deviceTypeToken: null,
-    deviceGroupFilter: null,
-    createdDateFilter: "all",
-    createdAfter: null,
-    areaChosenText:
-      "Search results will be limited to devices assigned to the area below.",
-    areaNotChosenText:
-      "Choose an area from the list below to limit search results to devices assigned to the given area.",
-    deviceTypeChosenText:
-      "Search results will be limited to devices implementing the device type below.",
-    deviceTypeNotChosenText:
-      "Choose a device type from the list below to limit search results to devices implementing the device type.",
-    groupChosenText:
-      "Search results will be limited to devices in the device group below.",
-    groupNotChosenText:
-      "Choose a device group from the list below to limit search results to devices in that group.",
-    createdDateRanges: [
-      {
-        text: "Devices created at any time",
-        value: "all"
-      },
-      {
-        text: "Devices created in the last hour",
-        value: "hour"
-      },
-      {
-        text: "Devices created in the last day",
-        value: "day"
-      },
-      {
-        text: "Devices created in the last week",
-        value: "week"
-      },
-      {
-        text: "Devices created after a given date",
-        value: "after"
-      }
-    ],
-    dialogVisible: false,
-    error: null
-  }),
+import DialogHeader from "../common/dialog/DialogHeader.vue";
+import DeviceListFilterDeviceTypeFields from "./DeviceListFilterDeviceTypeFields.vue";
 
+import { IDeviceSearchCriteria } from "sitewhere-rest-api";
+
+@Component({
   components: {
-    AreaChooser,
-    DeviceTypeChooser,
-    DeviceGroupChooser
-  },
+    DialogHeader,
+    DeviceListFilterDeviceTypeFields
+  }
+})
+export default class DeviceListFilterDialog extends DialogComponent<
+  IDeviceSearchCriteria
+> {
+  // References.
+  $refs!: Refs<{
+    dialog: ITabbedComponent;
+    devicetype: DialogSection;
+  }>;
 
-  props: ["filter"],
+  /** Get icon for dialog */
+  get icon(): NavigationIcon {
+    return NavigationIcon.Device;
+  }
 
-  watch: {
-    filter: function(value) {
-      this.load(value);
+  // Generate payload from UI.
+  generatePayload() {
+    let payload: any = {};
+    Object.assign(payload, this.$refs.devicetype.save());
+    return payload;
+  }
+
+  // Reset dialog contents.
+  reset() {
+    if (this.$refs.devicetype) {
+      this.$refs.devicetype.reset();
     }
-  },
-
-  methods: {
-    // Called when area filter is updated.
-    onAreaUpdated: function(area) {
-      this.$data.areaFilter = area;
-    },
-
-    // Called when deviceType filter is updated.
-    onDeviceTypeUpdated: function(deviceType) {
-      this.$data.deviceTypeFilter = deviceType;
-    },
-
-    // Called when device group filter is updated.
-    onGroupUpdated: function(group) {
-      this.$data.deviceGroupFilter = group;
-    },
-
-    // Called when 'created after' date is updated.
-    onCreatedAfterUpdated: function(date) {
-      console.log(date);
-    },
-
-    // Generate payload from UI.
-    generatePayload: function() {
-      var payload = {};
-      payload.areaFilter = this.$data.areaFilter;
-      payload.deviceTypeFilter = this.$data.deviceTypeFilter;
-      payload.deviceGroupFilter = this.$data.deviceGroupFilter;
-      return payload;
-    },
-
-    // Reset dialog contents.
-    reset: function(e) {
-      this.$data.active = "area";
-    },
-
-    // Load dialog from a given payload.
-    load: function(payload) {
-      this.reset();
-      if (payload) {
-        this.$data.areaFilter = payload.areaFilter;
-        this.$data.deviceTypeFilter = payload.deviceTypeFilter;
-        this.$data.deviceGroupFilter = payload.deviceGroupFilter;
-      }
-    },
-
-    // Called to open the dialog.
-    openDialog: function() {
-      this.reset();
-      this.$data.dialogVisible = true;
-    },
-
-    // Called to open the dialog.
-    closeDialog: function() {
-      this.$data.dialogVisible = false;
-    },
-
-    // Called to show an error message.
-    showError: function(error) {
-      this.$data.error = error;
-    },
-
-    // Called after filter update button is clicked.
-    onFilterUpdateClicked: function(e) {
-      var payload = this.generatePayload();
-      this.$emit("filter", payload);
-      this.closeDialog();
-    },
-
-    // Called after cancel button is clicked.
-    onCancelClicked: function(e) {
-      this.$data.dialogVisible = false;
+    if (this.$refs.dialog) {
+      this.$refs.dialog.setActiveTab(0);
     }
   }
-};
-</script>
 
-<style scoped>
-</style>
+  // Load dialog from a given payload.
+  load(payload: IDeviceSearchCriteria) {
+    this.reset();
+    if (this.$refs.devicetype) {
+      this.$refs.devicetype.load(payload);
+    }
+  }
+
+  // Called after create button is clicked.
+  onCreateClicked(e: any) {
+    if (!this.$refs.devicetype.validate()) {
+      this.$refs.dialog.setActiveTab(0);
+      return;
+    }
+
+    var payload = this.generatePayload();
+    this.$emit("payload", payload);
+  }
+}
+</script>

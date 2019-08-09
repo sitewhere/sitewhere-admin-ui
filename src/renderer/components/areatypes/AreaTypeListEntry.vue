@@ -3,9 +3,7 @@
     <v-container @click="onAreaTypeClicked">
       <v-layout row>
         <v-flex xs2>
-          <v-card-media class="pt-2 pl-1">
-            <font-awesome-icon class="grey--text" :icon="areaType.icon" size="3x"/>
-          </v-card-media>
+          <branding-image :style="logoStyle" :entity="areaType" iconSize="3x" />
         </v-flex>
         <v-flex xs10>
           <div>
@@ -22,15 +20,30 @@
 import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
+import BrandingImage from "../common/BrandingImage.vue";
+
+import { IStyle } from "../common/Style";
 import { IAreaType } from "sitewhere-rest-api";
 
-@Component({})
+@Component({
+  components: {
+    BrandingImage
+  }
+})
 export default class AreaTypeListEntry extends Vue {
   @Prop() readonly areaType!: IAreaType;
 
+  // Compute style of logo.
+  get logoStyle(): IStyle {
+    return {
+      height: "80px",
+      width: "80px"
+    };
+  }
+
   // Callen when clicked.
   onAreaTypeClicked() {
-    this.$emit("openAreaType", this.areaType);
+    this.$emit("open", this.areaType);
   }
 }
 </script>

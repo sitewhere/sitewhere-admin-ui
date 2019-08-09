@@ -9,14 +9,23 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(area) in matches" :key="area.token">
-        <area-list-entry :area="area" @openArea="onOpenArea"></area-list-entry>
+        <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No areas have been created for this tenant.</div>
+        <div class="mt-2">
+          Click
+          <v-icon small class="pl-1 pr-2">{{addIcon}}</v-icon>in the toolbar to add an area.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
-      <area-create-dialog ref="add" @areaAdded="onAreaAdded"/>
+      <area-create-dialog ref="add" @created="onAreaAdded" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Add Area" @action="onAddArea"/>
+      <add-button tooltip="Add Area" @action="onAddArea" />
     </template>
   </sw-list-page>
 </template>
@@ -27,6 +36,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -43,7 +53,8 @@ import {
   components: {
     AreaListEntry,
     AreaCreateDialog,
-    AddButton
+    AddButton,
+    NoResultsPanel
   }
 })
 export default class AreasList extends ListComponent<
@@ -55,6 +66,8 @@ export default class AreasList extends ListComponent<
   $refs!: Refs<{
     add: AreaCreateDialog;
   }>;
+
+  addIcon: string = NavigationIcon.Add;
 
   /** Get page icon */
   get icon(): NavigationIcon {
@@ -84,17 +97,17 @@ export default class AreasList extends ListComponent<
     return listAreas(this.$store, criteria, format);
   }
 
-  // Called to open an area.
+  /** Called to open an area */
   onOpenArea(area: IArea) {
     routeTo(this, "/areas/" + area.token);
   }
 
-  // Called to open dialog.
+  /** Called to open dialog */
   onAddArea() {
     this.$refs.add.open();
   }
 
-  // Called when a new area is added.
+  /** Called when a new area is added */
   onAreaAdded() {
     this.refresh();
   }

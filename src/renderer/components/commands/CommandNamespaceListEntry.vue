@@ -43,6 +43,3 @@ export default class CommandNamespaceListEntry extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -81,6 +81,3 @@ export default class CommandSelector extends Vue {
   }
 }
 </script>
-
-<style scoped>
-</style>

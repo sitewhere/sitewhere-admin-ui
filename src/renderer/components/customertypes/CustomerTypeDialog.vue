@@ -19,16 +19,16 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <customer-type-detail-fields ref="details"/>
+        <customer-type-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="content">
-        <customer-types-multiselect ref="content"/>
+        <customer-type-content-fields ref="content" />
       </v-tab-item>
       <v-tab-item key="branding">
-        <branding-panel ref="branding"/>
+        <branding-panel ref="branding" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -45,14 +45,14 @@ import {
 import { NavigationIcon } from "../../libraries/constants";
 
 import CustomerTypeDetailFields from "./CustomerTypeDetailFields.vue";
-import CustomerTypesMultiselect from "./CustomerTypesMultiselect.vue";
+import CustomerTypeContentFields from "./CustomerTypeContentFields.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";
 import { ICustomerType } from "sitewhere-rest-api";
 
 @Component({
   components: {
     CustomerTypeDetailFields,
-    CustomerTypesMultiselect,
+    CustomerTypeContentFields,
     BrandingPanel
   }
 })
@@ -60,8 +60,9 @@ export default class CustomerTypeDialog extends DialogComponent<ICustomerType> {
   // References.
   $refs!: Refs<{
     dialog: ITabbedComponent;
-    details: DialogSection;
-    branding: DialogSection;
+    details: CustomerTypeDetailFields;
+    content: CustomerTypeContentFields;
+    branding: BrandingPanel;
     metadata: DialogSection;
   }>;
 
@@ -76,6 +77,7 @@ export default class CustomerTypeDialog extends DialogComponent<ICustomerType> {
     Object.assign(
       payload,
       this.$refs.details.save(),
+      this.$refs.content.save(),
       this.$refs.branding.save(),
       this.$refs.metadata.save()
     );
@@ -87,13 +89,16 @@ export default class CustomerTypeDialog extends DialogComponent<ICustomerType> {
     if (this.$refs.details) {
       this.$refs.details.reset();
     }
+    if (this.$refs.content) {
+      this.$refs.content.reset();
+    }
     if (this.$refs.branding) {
       this.$refs.branding.reset();
     }
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -101,6 +106,9 @@ export default class CustomerTypeDialog extends DialogComponent<ICustomerType> {
     this.reset();
     if (this.$refs.details) {
       this.$refs.details.load(payload);
+    }
+    if (this.$refs.content) {
+      this.$refs.content.load(payload);
     }
     if (this.$refs.branding) {
       this.$refs.branding.load(payload);
@@ -113,21 +121,22 @@ export default class CustomerTypeDialog extends DialogComponent<ICustomerType> {
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
+      return;
+    }
+
+    if (!this.$refs.content.validate()) {
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
     if (!this.$refs.branding.validate()) {
-      this.$refs.dialog.setActiveTab("branding");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
 
     var payload = this.generatePayload();
-    console.log("Before payload emit:", this);
     this.$emit("payload", payload);
   }
 }
 </script>
-
-<style scoped>
-</style>

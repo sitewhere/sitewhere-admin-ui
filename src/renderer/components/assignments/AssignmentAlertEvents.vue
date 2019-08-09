@@ -9,8 +9,8 @@
     loadingMessage="Loading assignmnet alerts ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="30%" :title="props.item.type">{{ props.item.type }}</td>
-      <td width="40%" :title="props.item.message">{{ props.item.message }}</td>
+      <td width="20%" :title="props.item.type">{{ props.item.type }}</td>
+      <td width="50%" :title="props.item.message">{{ props.item.message }}</td>
       <td
         width="15%"
         style="white-space: nowrap"

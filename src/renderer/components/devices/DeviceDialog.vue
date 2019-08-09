@@ -17,10 +17,10 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <device-detail-fields ref="details"/>
+        <device-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -76,7 +76,7 @@ export default class DeviceDialog extends DialogComponent<IDevice> {
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -93,7 +93,7 @@ export default class DeviceDialog extends DialogComponent<IDevice> {
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
@@ -102,6 +102,3 @@ export default class DeviceDialog extends DialogComponent<IDevice> {
   }
 }
 </script>
-
-<style scoped>
-</style>

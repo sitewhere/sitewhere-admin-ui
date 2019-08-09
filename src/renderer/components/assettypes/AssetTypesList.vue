@@ -16,11 +16,20 @@
         ></asset-type-list-entry>
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No asset types have been created for this tenant.</div>
+        <div class="mt-2">
+          Click
+          <v-icon small class="pl-1 pr-2">{{addIcon}}</v-icon>in the toolbar to add an asset type.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
-      <asset-type-create-dialog ref="add" @assetTypeAdded="refresh"/>
+      <asset-type-create-dialog ref="add" @assetTypeAdded="refresh" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Add Asset Type" @action="onAddAssetType"/>
+      <add-button tooltip="Add Asset Type" @action="onAddAssetType" />
     </template>
   </sw-list-page>
 </template>
@@ -31,6 +40,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -47,10 +57,11 @@ import {
   components: {
     AssetTypeListEntry,
     AssetTypeCreateDialog,
-    AddButton
+    AddButton,
+    NoResultsPanel
   }
 })
-export default class AreasList extends ListComponent<
+export default class AssetTypesList extends ListComponent<
   IAssetType,
   IAssetTypeSearchCriteria,
   IAssetTypeResponseFormat,
@@ -59,6 +70,8 @@ export default class AreasList extends ListComponent<
   $refs!: Refs<{
     add: AssetTypeCreateDialog;
   }>;
+
+  addIcon: string = NavigationIcon.Add;
 
   /** Get page icon */
   get icon(): NavigationIcon {

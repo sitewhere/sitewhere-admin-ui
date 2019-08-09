@@ -3,6 +3,7 @@
     :icon="icon"
     title="Manage Tenants"
     loadingMessage="Loading tenant list ..."
+    :results="results"
     :loaded="loaded"
     @pagingUpdated="onPagingUpdated"
   >
@@ -17,10 +18,10 @@
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
-      <tenant-create-dialog ref="add" @tenantAdded="refresh"/>
+      <tenant-create-dialog ref="add" @tenantAdded="refresh" />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant"/>
+      <sw-navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant" />
     </template>
   </sw-list-page>
 </template>

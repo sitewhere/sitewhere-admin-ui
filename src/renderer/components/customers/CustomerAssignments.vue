@@ -14,6 +14,11 @@
         />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>This customer has no device assignments.</div>
+      </no-results-panel>
+    </template>
   </sw-list-tab>
 </template>
 
@@ -21,10 +26,11 @@
 import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { routeTo } from "../common/Utils";
 import { AxiosPromise } from "axios";
-import { listDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
+import { searchDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
 import {
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
@@ -34,10 +40,11 @@ import {
 
 @Component({
   components: {
-    AssignmentListEntry
+    AssignmentListEntry,
+    NoResultsPanel
   }
 })
-export default class CustomerTypeCustomers extends ListComponent<
+export default class CustomerAssignments extends ListComponent<
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
@@ -49,7 +56,7 @@ export default class CustomerTypeCustomers extends ListComponent<
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceAssignmentSearchCriteria {
     let criteria: IDeviceAssignmentSearchCriteria = {};
-    criteria.customerToken = this.customerToken;
+    criteria.customerTokens = [this.customerToken];
     return criteria;
   }
 
@@ -68,7 +75,7 @@ export default class CustomerTypeCustomers extends ListComponent<
     criteria: IDeviceAssignmentSearchCriteria,
     format: IDeviceAssignmentResponseFormat
   ): AxiosPromise<IDeviceAssignmentSearchResults> {
-    return listDeviceAssignments(this.$store, criteria, format);
+    return searchDeviceAssignments(this.$store, criteria, format);
   }
 
   /** Open device assignment detail page */
@@ -77,6 +84,3 @@ export default class CustomerTypeCustomers extends ListComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

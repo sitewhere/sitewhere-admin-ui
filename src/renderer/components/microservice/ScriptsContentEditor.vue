@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
 import {

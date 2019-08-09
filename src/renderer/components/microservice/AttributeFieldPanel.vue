@@ -13,7 +13,7 @@
           <span>{{ attribute.description }}</span>
         </v-tooltip>
         <v-tooltip top v-if="attribute.required">
-          <font-awesome-icon class="mr-1 red--text" icon="asterisk" size="xs" slot="activator"/>
+          <font-awesome-icon class="mr-1 red--text" icon="asterisk" size="xs" slot="activator" />
           <span>Attribute is required</span>
         </v-tooltip>
       </div>
@@ -57,14 +57,20 @@
         hide-details
       ></v-switch>
       <device-type-selector
+        :dense="true"
         v-else-if="attribute.type === 'DeviceTypeReference'"
         v-model="editedConstValue"
       />
       <customer-selector
+        :dense="true"
         v-else-if="attribute.type === 'CustomerReference'"
         v-model="editedConstValue"
       />
-      <area-selector v-else-if="attribute.type === 'AreaReference'" v-model="editedConstValue"/>
+      <area-selector
+        :dense="true"
+        v-else-if="attribute.type === 'AreaReference'"
+        v-model="editedConstValue"
+      />
       <scripts-selector
         v-else-if="attribute.type === 'Script'"
         v-model="editedConstValue"
@@ -189,7 +195,8 @@ export default class ComponentAttributes extends Vue {
 }
 .attr-name {
   position: absolute;
-  bottom: 5px;
+  bottom: 0px;
+  width: 200px;
 }
 .attr-env {
   position: absolute;

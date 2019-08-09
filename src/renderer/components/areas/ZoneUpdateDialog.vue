@@ -1,68 +1,67 @@
 <template>
   <zone-dialog
-    ref="dialog"
     :area="area"
-    style="display: none;"
     title="Update Zone"
-    width="600"
+    width="700"
+    ref="dialog"
     createLabel="Update"
     cancelLabel="Cancel"
-    mode="update"
-    @payload="onCommit"
-  ></zone-dialog>
+    @payload="onSave"
+  />
 </template>
 
-<script>
-import ZoneDialog from "./ZoneDialog";
+<script lang="ts">
+import {
+  Component,
+  Prop,
+  EditDialogComponent,
+  DialogComponent,
+  Refs
+} from "sitewhere-ide-common";
 
+import ZoneDialog from "./ZoneDialog.vue";
+
+import { AxiosPromise } from "axios";
+import { IArea, IZone, IZoneCreateRequest } from "sitewhere-rest-api";
 import { getZone, updateZone } from "../../rest/sitewhere-zones-api";
 
-export default {
-  data: () => ({}),
-
+@Component({
   components: {
     ZoneDialog
-  },
-
-  props: ["area", "token"],
-
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Load zone information
-    onOpenDialog: function() {
-      var component = this;
-      getZone(this.$store, this.token)
-        .then(function(response) {
-          component.onLoaded(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Called after data is loaded.
-    onLoaded: function(response) {
-      this.getDialogComponent().load(response.data);
-      this.getDialogComponent().openDialog();
-    },
-
-    // Handle payload commit.
-    onCommit: function(payload) {
-      var component = this;
-      updateZone(this.$store, this.token, payload)
-        .then(function(response) {
-          component.onCommitted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful commit.
-    onCommitted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("updated");
-    }
   }
-};
+})
+export default class ZoneUpdateDialog extends EditDialogComponent<
+  IZone,
+  IZoneCreateRequest
+> {
+  @Prop() readonly area!: IArea;
+
+  // References.
+  $refs!: Refs<{
+    dialog: DialogComponent<IZone>;
+  }>;
+
+  /** Get wrapped dialog */
+  getDialog(): DialogComponent<IZone> {
+    return this.$refs.dialog;
+  }
+
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<IZone> {
+    return getZone(this.$store, identifier);
+  }
+
+  /** Save payload */
+  prepareSave(
+    original: IZone,
+    updated: IZoneCreateRequest
+  ): AxiosPromise<IZone> {
+    return updateZone(this.$store, original.token, updated);
+  }
+
+  /** Called on payload commit */
+  onSave(payload: IZoneCreateRequest): void {
+    this.save(payload);
+  }
+}
 </script>

@@ -17,10 +17,10 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <script-detail-fields ref="details"/>
+        <script-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="content">
-        <script-content-fields :identifier="identifier" ref="content"/>
+        <script-content-fields :identifier="identifier" ref="content" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -31,7 +31,6 @@ import {
   Component,
   Prop,
   DialogComponent,
-  DialogSection,
   ITabbedComponent,
   Refs
 } from "sitewhere-ide-common";
@@ -87,7 +86,7 @@ export default class ScriptsDialog extends DialogComponent<
     if (this.$refs.content) {
       this.$refs.content.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -104,12 +103,12 @@ export default class ScriptsDialog extends DialogComponent<
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
     if (!this.$refs.content.validate()) {
-      this.$refs.dialog.setActiveTab("content");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
 

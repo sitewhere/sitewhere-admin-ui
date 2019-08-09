@@ -21,7 +21,7 @@
     </template>
     <template slot="dialogs">
       <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
-      <device-delete-dialog ref="delete" :token="token" @deviceDeleted="onDeviceDeleted"/>
+      <device-delete-dialog ref="delete" :token="token" @deleted="onDeviceDeleted"/>
     </template>
   </sw-detail-page>
 </template>

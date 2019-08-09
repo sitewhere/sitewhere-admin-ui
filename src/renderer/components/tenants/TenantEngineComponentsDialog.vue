@@ -39,7 +39,7 @@ import { NavigationIcon } from "../../libraries/constants";
 
 import ComponentStatusIcon from "./ComponentStatusIcon.vue";
 import { ITenant, ITenantEngineState } from "sitewhere-rest-api";
-import { ILifecycleComponentState } from "../../../../../sitewhere-rest-api/src";
+import { ILifecycleComponentState } from "sitewhere-rest-api";
 
 @Component({
   components: {

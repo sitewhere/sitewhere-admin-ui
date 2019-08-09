@@ -10,14 +10,7 @@
       <div class="assn-released-label">Released:</div>
       <div class="assn-released-value">{{ formatDate(assignment.releasedDate) }}</div>
       <div class="assn-status-label">Status:</div>
-      <assignment-status-button
-        @click.stop="ignore"
-        :assignment="assignment"
-        v-if="assignment.status !== 'Released'"
-        @statusUpdated="refresh"
-        class="assn-status-button"
-      ></assignment-status-button>
-      <div class="assn-status-value" v-if="assignment.status === 'Released'">Released</div>
+      <assignment-status-indicator class="assn-status-indicator" :assignment="assignment"/>
     </v-card-text>
   </v-card>
 </template>
@@ -28,7 +21,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 import { styleForAssignmentStatus } from "../common/Style";
 import AssetMiniPanel from "./AssetMiniPanel.vue";
 import DeviceMiniPanel from "../devices/DeviceMiniPanel.vue";
-import AssignmentStatusButton from "./AssignmentStatusButton.vue";
+import AssignmentStatusIndicator from "./AssignmentStatusIndicator.vue";
 
 import Vue from "vue";
 
@@ -39,7 +32,7 @@ import { IDeviceAssignment } from "sitewhere-rest-api";
   components: {
     AssetMiniPanel,
     DeviceMiniPanel,
-    AssignmentStatusButton
+    AssignmentStatusIndicator
   }
 })
 export default class AssignmentListEntry extends Vue {
@@ -151,7 +144,7 @@ export default class AssignmentListEntry extends Vue {
   bottom: 10px;
   left: 645px;
 }
-.assn-status-button {
+.assn-status-indicator {
   position: absolute;
   top: 58px;
   left: 745px;

@@ -1,56 +1,56 @@
 <template>
-  <span>
-    <sw-delete-dialog
-      ref="dialog"
-      title="Delete Customer Type"
-      width="400"
-      :error="error"
-      @delete="onDeleteConfirmed"
-    >
-      <v-card-text>Are you sure you want to delete this customer type?</v-card-text>
-    </sw-delete-dialog>
-  </span>
+  <sw-delete-dialog
+    ref="dialog"
+    title="Delete Customer Type"
+    width="400"
+    :visible="visible"
+    @delete="onDelete"
+    @cancel="onCancel"
+  >
+    <v-card-text>{{ message }}</v-card-text>
+  </sw-delete-dialog>
 </template>
 
-<script>
-import { deleteCustomerType } from "../../rest/sitewhere-customer-types-api";
+<script lang="ts">
+import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
 
-export default {
-  data: () => ({
-    error: null
-  }),
+import { AxiosPromise } from "axios";
+import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
+import {
+  getCustomerType,
+  deleteCustomerType
+} from "../../rest/sitewhere-customer-types-api";
 
-  props: ["token"],
+@Component({})
+export default class CustomerTypeDeleteDialog extends DeleteDialogComponent<
+  ICustomerType
+> {
+  message: string | null = null;
 
-  methods: {
-    // Get handle to nested dialog component.
-    getDialogComponent: function() {
-      return this.$refs["dialog"];
-    },
-
-    // Show delete dialog.
-    showDeleteDialog: function() {
-      this.getDialogComponent().openDialog();
-    },
-
-    // Perform delete.
-    onDeleteConfirmed: function() {
-      var component = this;
-      deleteCustomerType(this.$store, this.token, true)
-        .then(function(response) {
-          component.onDeleted(response);
-        })
-        .catch(function(e) {});
-    },
-
-    // Handle successful delete.
-    onDeleted: function(result) {
-      this.getDialogComponent().closeDialog();
-      this.$emit("customerTypeDeleted");
-    }
+  /** Load payload */
+  prepareLoad(identifier: string): AxiosPromise<ICustomerType> {
+    let format: ICustomerTypeResponseFormat = {};
+    return getCustomerType(this.$store, identifier, format);
   }
-};
-</script>
 
-<style scoped>
-</style>
+  /** Called after record is loaded */
+  afterLoad(type: ICustomerType): void {
+    this.message = `Are you sure you want to delete '${type.name}'?`;
+  }
+
+  /** Load payload */
+  prepareDelete(type: ICustomerType): AxiosPromise<ICustomerType> {
+    return deleteCustomerType(this.$store, type.token);
+  }
+
+  // Called after create button is clicked.
+  onDelete(e: any) {
+    this.delete();
+  }
+
+  // Called after cancel button is clicked.
+  onCancel(e: any) {
+    this.cancel();
+  }
+}
+</script>

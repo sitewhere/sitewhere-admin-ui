@@ -45,7 +45,7 @@
             </v-tooltip>
           </condensed-toolbar>
           <v-card flat v-else height="100%">
-            <v-divider/>
+            <v-divider />
           </v-card>
         </v-flex>
       </v-layout>
@@ -78,7 +78,7 @@
           @content="onContentUpdated"
         />
         <v-card flat v-else height="100%">
-          <v-divider vertical/>
+          <v-divider vertical />
         </v-card>
       </v-flex>
     </v-layout>
@@ -99,7 +99,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs } from "sitewhere-ide-common";
 
 import CondensedToolbar from "../common/CondensedToolbar.vue";
 import ScriptVersionList, { isVersionActive } from "./ScriptVersionList.vue";
@@ -112,8 +112,6 @@ import { formatDate, showMessage } from "../common/Utils";
 import {
   listGlobalScriptMetadata,
   listTenantScriptMetadata,
-  getGlobalScriptContent,
-  getTenantScriptContent,
   updateGlobalScript,
   updateTenantScript,
   cloneGlobalScript,
@@ -233,7 +231,6 @@ export default class ScriptsManager extends Vue {
 
   /** Save editor content */
   async onSave() {
-    var script = this.selectedScript;
     if (this.selectedScript && this.selectedVersion) {
       var updated = {
         id: this.selectedScript.id,
@@ -243,7 +240,7 @@ export default class ScriptsManager extends Vue {
         content: btoa(this.content)
       };
       if (!this.tenantToken) {
-        let response: AxiosResponse<IScriptMetadata> = await updateGlobalScript(
+        await updateGlobalScript(
           this.$store,
           this.identifier,
           this.selectedScript.id,
@@ -252,7 +249,7 @@ export default class ScriptsManager extends Vue {
         );
         this.onContentSaved();
       } else {
-        let response: AxiosResponse<IScriptMetadata> = await updateTenantScript(
+        await updateTenantScript(
           this.$store,
           this.identifier,
           this.tenantToken,
@@ -318,9 +315,7 @@ export default class ScriptsManager extends Vue {
   async onActivate() {
     if (this.selectedScript && this.selectedVersion) {
       if (!this.tenantToken) {
-        let response: AxiosResponse<
-          IScriptMetadata
-        > = await activateGlobalScript(
+        await activateGlobalScript(
           this.$store,
           this.identifier,
           this.selectedScript.id,
@@ -328,9 +323,7 @@ export default class ScriptsManager extends Vue {
         );
         this.onVersionActivated();
       } else {
-        let response: AxiosResponse<
-          IScriptMetadata
-        > = await activateTenantScript(
+        await activateTenantScript(
           this.$store,
           this.identifier,
           this.tenantToken,

@@ -1,15 +1,13 @@
 <template>
-  <sw-list-entry>
+  <sw-list-entry style="min-height: 150px">
     <v-container @click="onCustomerClicked">
       <v-layout row>
         <v-flex xs3>
-          <v-card-media>
-            <div :style="logoStyle"></div>
-          </v-card-media>
+          <branding-image :style="logoStyle" :entity="customer" />
         </v-flex>
         <v-flex xs9>
           <div>
-            <div class="title ellipsis">{{ customer.name }}</div>
+            <div class="title ellipsis mt-1 mb-2">{{ customer.name }}</div>
             <div class="custdesc">{{ customer.description }}</div>
           </div>
         </v-flex>
@@ -22,29 +20,31 @@
 import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
-import { ICustomer } from "sitewhere-rest-api";
+import BrandingImage from "../common/BrandingImage.vue";
 
-@Component({})
-export default class DeviceTypeSelector extends Vue {
+import { ICustomer } from "sitewhere-rest-api";
+import { IStyle } from "../common/Style";
+
+@Component({
+  components: {
+    BrandingImage
+  }
+})
+export default class CustomerListEntry extends Vue {
   @Prop() readonly customer!: ICustomer;
 
   // Compute style of logo.
-  get logoStyle() {
+  get logoStyle(): IStyle {
     return {
-      "background-color": "#fff",
-      "background-image": "url(" + this.customer.imageUrl + ")",
-      "background-size": "contain",
-      "background-repeat": "no-repeat",
-      "background-position": "50% 50%",
-      border: "1px solid #eee",
       height: "120px",
-      width: "100px"
+      width: "120px",
+      "padding-left": "15px"
     };
   }
 
   // Handle customer clicked.
   onCustomerClicked() {
-    this.$emit("openCustomer", this.customer);
+    this.$emit("open", this.customer);
   }
 }
 </script>

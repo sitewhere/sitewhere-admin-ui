@@ -25,7 +25,7 @@ import {
   IDeviceCommand,
   IDeviceCommandCreateRequest
 } from "sitewhere-rest-api";
-import { createDeviceCommand } from "../../rest/sitewhere-device-commands-api";
+import { createDeviceCommand } from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {
@@ -55,7 +55,7 @@ export default class CommandCreateDialog extends CreateDialogComponent<
 
   /** Implemented in subclasses to save payload */
   save(payload: IDeviceCommandCreateRequest): AxiosPromise<IDeviceCommand> {
-    return createDeviceCommand(this.$store, payload);
+    return createDeviceCommand(this.$store, this.deviceTypeToken, payload);
   }
 
   /** Implemented in subclasses for after-save */
@@ -64,6 +64,3 @@ export default class CommandCreateDialog extends CreateDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

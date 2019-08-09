@@ -25,10 +25,10 @@
         />
       </v-tab-item>
       <v-tab-item key="schedule">
-        <schedule-chooser-section ref="schedule"/>
+        <schedule-chooser-section ref="schedule" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata"/>
+        <sw-metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -103,7 +103,7 @@ export default class InvocationDialog extends DialogComponent<
     if (this.$refs.metadata) {
       this.$refs.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab("details");
+    this.$refs.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
@@ -123,12 +123,12 @@ export default class InvocationDialog extends DialogComponent<
   // Called after create button is clicked.
   onCreateClicked(e: any) {
     if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab("details");
+      this.$refs.dialog.setActiveTab(0);
       return;
     }
 
     if (!this.$refs.schedule.validate()) {
-      this.$refs.dialog.setActiveTab("schedule");
+      this.$refs.dialog.setActiveTab(1);
       return;
     }
 

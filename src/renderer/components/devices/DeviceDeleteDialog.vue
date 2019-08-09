@@ -49,6 +49,3 @@ export default class DeviceDeleteDialog extends DeleteDialogComponent<IDevice> {
   }
 }
 </script>
-
-<style scoped>
-</style>

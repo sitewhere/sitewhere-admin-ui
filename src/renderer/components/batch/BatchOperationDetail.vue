@@ -1,95 +1,87 @@
 <template>
-  <sw-navigation-page
-    icon="list-alt"
-    title="Manage Batch Operation"
+  <sw-detail-page
+    :icon="icon"
+    :title="title"
     loadingMessage="Loading batch operation ..."
     :loaded="loaded"
+    :record="operation"
   >
-    <div v-if="operation" slot="content">
-      <batch-operation-detail-header :operation="operation" class="mb-3"></batch-operation-detail-header>
-      <v-tabs v-model="active">
-        <v-tabs-bar dark color="primary">
-          <v-tabs-slider class="blue lighten-3"></v-tabs-slider>
-          <v-tabs-item key="elements">Batch Operation Elements</v-tabs-item>
-        </v-tabs-bar>
-        <v-tabs-items>
-          <v-tabs-content key="elements">
-            <batch-operation-elements-list :token="token"></batch-operation-elements-list>
-          </v-tabs-content>
-        </v-tabs-items>
-      </v-tabs>
-    </div>
-  </sw-navigation-page>
+    <template slot="header">
+      <batch-operation-detail-header :record="operation" />
+    </template>
+    <template slot="tabs">
+      <v-tab key="elements">Batch Operation Elements</v-tab>
+    </template>
+    <template slot="tab-items">
+      <batch-operation-elements-list tabkey="elements" :operation="operation" />
+    </template>
+    <template slot="actions"></template>
+    <template slot="dialogs"></template>
+  </sw-detail-page>
 </template>
 
-<script>
-import BatchOperationDetailHeader from "./BatchOperationDetailHeader";
-import BatchOperationElementsList from "./BatchOperationElementsList";
+<script lang="ts">
+import {
+  Component,
+  DetailComponent,
+  INavigationSection,
+  Refs
+} from "sitewhere-ide-common";
 
+import BatchOperationDetailHeader from "./BatchOperationDetailHeader.vue";
+import BatchOperationElementsList from "./BatchOperationElementsList.vue";
+
+import { AxiosPromise } from "axios";
+import { NavigationIcon } from "../../libraries/constants";
 import { getBatchOperation } from "../../rest/sitewhere-batch-operations-api";
+import {
+  IBatchOperation,
+  IBatchOperationResponseFormat
+} from "sitewhere-rest-api";
 
-export default {
-  data: () => ({
-    token: null,
-    operation: null,
-    active: null,
-    loaded: false
-  }),
-
+@Component({
   components: {
     BatchOperationDetailHeader,
     BatchOperationElementsList
-  },
-
-  // Called on initial create.
-  created: function() {
-    this.display(this.$route.params.token);
-  },
-
-  // Called when component is reused.
-  beforeRouteUpdate(to, from, next) {
-    this.display(to.params.token);
-    next();
-  },
-
-  methods: {
-    // Display entity with the given token.
-    display: function(token) {
-      this.$data.token = token;
-      this.refresh();
-    },
-    // Called to refresh data.
-    refresh: function() {
-      this.$data.loaded = false;
-      var token = this.$data.token;
-      var component = this;
-
-      // Load information.
-      getBatchOperation(this.$store, token)
-        .then(function(response) {
-          component.loaded = true;
-          component.onLoaded(response.data);
-        })
-        .catch(function(e) {
-          component.loaded = true;
-        });
-    },
-
-    // Called after data is loaded.
-    onLoaded: function(operation) {
-      this.$data.operation = operation;
-      var section = {
-        id: "batch",
-        title: "Batch",
-        icon: "list-alt",
-        route: "/admin/batch/" + operation.token,
-        longTitle: "Manage Batch Operation: " + operation.token
-      };
-      this.$store.commit("currentSection", section);
-    }
   }
-};
-</script>
+})
+export default class BatchOperationDetail extends DetailComponent<
+  IBatchOperation
+> {
+  // References.
+  $refs!: Refs<{}>;
 
-<style scoped>
-</style>
+  get operation(): IBatchOperation | null {
+    return this.record;
+  }
+
+  /** Icon for page */
+  get icon(): NavigationIcon {
+    return NavigationIcon.BatchOperation;
+  }
+
+  get title(): string {
+    return this.operation
+      ? `Manage batch operation ${this.operation.token}`
+      : "Manage batch operation";
+  }
+
+  /** Load record */
+  loadRecord(token: string): AxiosPromise<IBatchOperation> {
+    let format: IBatchOperationResponseFormat = {};
+    return getBatchOperation(this.$store, token, format);
+  }
+
+  // Called after data is loaded.
+  afterRecordLoaded(item: IBatchOperation) {
+    var section: INavigationSection = {
+      id: "batches",
+      title: "Batch Operations",
+      icon: NavigationIcon.BatchOperation,
+      route: "/admin/batch/" + item.token,
+      longTitle: "Manage Batch Operation: " + item.token
+    };
+    this.$store.commit("currentSection", section);
+  }
+}
+</script>
