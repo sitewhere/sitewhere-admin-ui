@@ -13,18 +13,20 @@
           </div>
         </v-flex>
         <v-flex xs1>
-          <div
-            v-if="hasAssignedAsset"
-            class="device-asset"
-            :style="backgroundImageStyle(assignment.assetImageUrl)"
-          ></div>
-          <div v-else-if="!assignment" class="device-assign-button">
+          <div>
             <v-tooltip top>
               <v-btn dark icon class="blue pa-0 ma-0" @click.stop="onAssignDevice" slot="activator">
                 <v-icon>link</v-icon>
               </v-btn>
-              <span>Assign Device</span>
+              <span>Create New Assignment</span>
             </v-tooltip>
+          </div>
+          <div v-if="hasAssignments">
+            <v-btn :disabled="true" icon small class="mt-3 ml-1">
+              <v-avatar size="40">
+                <img :src="firstAssignment.assetImageUrl" />
+              </v-avatar>
+            </v-btn>
           </div>
         </v-flex>
       </v-layout>
@@ -53,16 +55,16 @@ export default class DeviceListEntry extends Vue {
     return (this.device as any).deviceType;
   }
 
-  get assignment(): IDeviceAssignment {
-    return (this.device as any).assignment;
+  get assignments(): IDeviceAssignment[] {
+    return (this.device as any).activeDeviceAssignments;
   }
 
-  get styleForStatus(): IStyle {
-    return styleForAssignmentStatus(this.assignment);
+  get hasAssignments() {
+    return this.assignments && this.assignments.length > 0;
   }
 
-  get hasAssignedAsset() {
-    return this.assignment && this.assignment.assetId;
+  get firstAssignment(): IDeviceAssignment | null {
+    return this.hasAssignments ? this.assignments[0] : null;
   }
 
   // Compute style of logo.
