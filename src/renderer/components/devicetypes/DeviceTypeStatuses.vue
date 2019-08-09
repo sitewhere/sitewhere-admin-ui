@@ -36,7 +36,6 @@
 <script lang="ts">
 import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
 
-import NoResultsPanel from "../common/NoResultsPanel.vue";
 import DeviceStatusListEntry from "../statuses/DeviceStatusListEntry.vue";
 import DeviceStatusUpdateDialog from "../statuses/DeviceStatusUpdateDialog.vue";
 import DeviceStatusDeleteDialog from "../statuses/DeviceStatusDeleteDialog.vue";
@@ -52,7 +51,6 @@ import {
 
 @Component({
   components: {
-    NoResultsPanel,
     DeviceStatusListEntry,
     DeviceStatusUpdateDialog,
     DeviceStatusDeleteDialog

@@ -17,7 +17,7 @@
       <v-tab key="alerts">Alerts</v-tab>
     </template>
     <template slot="tab-items">
-      <customer-subcustomers tabkey="customers" ref="customers" :customer="customer" />
+      <customer-subcustomers tabkey="customers" ref="subcustomers" :customer="customer" />
       <customer-assignments tabkey="assignments" :customerToken="token" />
       <customer-location-events tabkey="locations" :customerToken="token" />
       <customer-measurement-events tabkey="measurements" :customerToken="token" />
@@ -27,15 +27,15 @@
       <customer-create-dialog
         ref="create"
         :parentCustomer="customer"
-        @customerAdded="onSubcustomerAdded"
+        @created="onSubcustomerAdded"
       />
       <customer-update-dialog
         ref="edit"
         :token="token"
         :parentCustomer="parentCustomer"
-        @customerUpdated="onCustomerUpdated"
+        @updated="onCustomerUpdated"
       />
-      <customer-delete-dialog ref="delete" :token="token" @customerDeleted="onCustomerDeleted" />
+      <customer-delete-dialog ref="delete" :token="token" @deleted="onCustomerDeleted" />
     </template>
     <template slot="actions">
       <up-button v-if="parentCustomer" tooltip="Up One Level" @action="onUpOneLevel" />
@@ -47,11 +47,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DetailComponent,
-  DialogComponent
-} from "sitewhere-ide-common";
+import { Component, DetailComponent } from "sitewhere-ide-common";
 
 import CustomerDetailHeader from "./CustomerDetailHeader.vue";
 import CustomerSubcustomers from "./CustomerSubcustomers.vue";
@@ -97,8 +93,10 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
 
   // References.
   $refs!: Refs<{
+    create: CustomerCreateDialog;
     edit: CustomerUpdateDialog;
-    delete: DialogComponent<ICustomer>;
+    delete: CustomerDeleteDialog;
+    subcustomers: CustomerSubcustomers;
   }>;
 
   /** Get record as customer */
@@ -153,13 +151,12 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
 
   // Called to add a subcustomer.
   onAddSubcustomer() {
-    (this.$refs["customerCreate"] as any).onOpenDialog();
+    this.$refs.create.open();
   }
 
   // Called after subarea added.
   onSubcustomerAdded() {
-    this.$data.active = "customers";
-    (this.$refs["customers"] as any).refresh();
+    this.$refs.subcustomers.refresh();
   }
 
   // Called when customer is updated.
@@ -168,7 +165,9 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   }
 
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    if (this.token) {
+      this.$refs.delete.open(this.token);
+    }
   }
 
   // Called when customer is deleted.

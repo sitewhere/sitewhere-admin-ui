@@ -1,11 +1,9 @@
 <template>
-  <sw-list-entry>
+  <sw-list-entry style="min-height: 140px">
     <v-container @click="onAreaClicked">
       <v-layout row>
         <v-flex xs3>
-          <v-responsive>
-            <div :style="logoStyle"></div>
-          </v-responsive>
+          <branding-image :style="logoStyle" :entity="area" />
         </v-flex>
         <v-flex xs9>
           <div>
@@ -22,23 +20,25 @@
 import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
-import { IArea } from "sitewhere-rest-api";
+import BrandingImage from "../common/BrandingImage.vue";
 
-@Component({})
+import { IArea } from "sitewhere-rest-api";
+import { IStyle } from "../common/Style";
+
+@Component({
+  components: {
+    BrandingImage
+  }
+})
 export default class AreaListEntry extends Vue {
   @Prop() readonly area!: IArea;
 
   // Compute style of logo.
-  get logoStyle() {
+  get logoStyle(): IStyle {
     return {
-      "background-color": "#fff",
-      "background-image": "url(" + this.area.imageUrl + ")",
-      "background-size": "contain",
-      "background-repeat": "no-repeat",
-      "background-position": "50% 50%",
-      border: "1px solid #eee",
       height: "120px",
-      width: "100px"
+      width: "120px",
+      "padding-left": "15px"
     };
   }
 

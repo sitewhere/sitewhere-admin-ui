@@ -30,7 +30,6 @@
 import {
   Component,
   DialogComponent,
-  DialogSection,
   ITabbedComponent,
   Refs
 } from "sitewhere-ide-common";

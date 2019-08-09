@@ -14,9 +14,8 @@
 <script lang="ts">
 import { Component, Prop, DeleteDialogComponent } from "sitewhere-ide-common";
 
-import { AxiosPromise, AxiosResponse } from "axios";
+import { AxiosPromise } from "axios";
 import {
-  IDeviceGroupElement,
   IDeviceGroupElementResponseFormat,
   IDeviceGroupElementSearchCriteria,
   IDeviceGroupElementSearchResults

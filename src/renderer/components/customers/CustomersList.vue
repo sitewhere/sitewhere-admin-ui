@@ -9,7 +9,7 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
-        <customer-list-entry :customer="customer" @openCustomer="onOpenCustomer"></customer-list-entry>
+        <customer-list-entry :customer="customer" @open="onOpenCustomer" />
       </v-flex>
     </sw-list-layout>
     <template slot="dialogs">
