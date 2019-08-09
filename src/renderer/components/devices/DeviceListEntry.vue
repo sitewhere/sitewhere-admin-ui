@@ -40,7 +40,7 @@ import Vue from "vue";
 
 import BrandingImage from "../common/BrandingImage.vue";
 
-import { IStyle, styleForAssignmentStatus } from "../common/Style";
+import { IStyle } from "../common/Style";
 import { IDevice, IDeviceType, IDeviceAssignment } from "sitewhere-rest-api";
 
 @Component({
