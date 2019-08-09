@@ -1,7 +1,7 @@
 <template>
   <v-card flat height="100%">
     <div class="no-results">
-      <div class="no-results-content">
+      <div class="no-results-content subheading">
         <slot />
       </div>
     </div>
@@ -19,7 +19,6 @@ export default class NoResultsPanel extends Vue {}
 <style scoped>
 .no-results {
   display: table;
-  font-size: 20px;
   color: #666;
   text-align: center;
   width: 100%;

@@ -44,6 +44,11 @@
         </template>
       </v-data-table>
     </v-flex>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No batch operations have been created for this tenant.</div>
+      </no-results-panel>
+    </template>
   </sw-list-page>
 </template>
 
@@ -54,6 +59,8 @@ import {
   IPageSizes,
   ITableHeaders
 } from "sitewhere-ide-common";
+
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate, routeTo } from "../common/Utils";
@@ -66,13 +73,19 @@ import {
   IBatchOperationSearchResults
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({
+  components: {
+    NoResultsPanel
+  }
+})
 export default class BatchOperationsList extends ListComponent<
   IBatchOperation,
   IBatchOperationSearchCriteria,
   IBatchOperationResponseFormat,
   IBatchOperationSearchResults
 > {
+  addIcon: string = NavigationIcon.Add;
+
   headers: ITableHeaders = [
     {
       align: "left",

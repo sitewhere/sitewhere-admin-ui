@@ -31,6 +31,15 @@
         </template>
       </v-data-table>
     </v-flex>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No schedules have been created for this tenant.</div>
+        <div class="mt-2">
+          Click
+          <v-icon small class="pl-1 pr-2">{{addIcon}}</v-icon>in the toolbar to add a schedule.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
       <schedule-create-dialog ref="add" @created="onScheduleAdded" />
       <schedule-update-dialog ref="edit" @updated="refresh" />
@@ -56,6 +65,7 @@ import ScheduleCreateDialog from "./ScheduleCreateDialog.vue";
 import ScheduleUpdateDialog from "./ScheduleUpdateDialog.vue";
 import ScheduleDeleteDialog from "./ScheduleDeleteDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { formatDate } from "../common/Utils";
@@ -74,7 +84,8 @@ import {
     ScheduleCreateDialog,
     ScheduleUpdateDialog,
     ScheduleDeleteDialog,
-    AddButton
+    AddButton,
+    NoResultsPanel
   }
 })
 export default class SchedulesList extends ListComponent<
@@ -88,6 +99,8 @@ export default class SchedulesList extends ListComponent<
     edit: ScheduleUpdateDialog;
     delete: ScheduleDeleteDialog;
   }>;
+
+  addIcon: string = NavigationIcon.Add;
 
   headers: ITableHeaders = [
     {

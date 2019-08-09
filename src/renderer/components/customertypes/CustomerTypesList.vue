@@ -12,6 +12,15 @@
         <customer-type-list-entry :customerType="customerType" @open="onOpenCustomerType" />
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No customer types have been created for this tenant.</div>
+        <div class="mt-2">
+          Click
+          <v-icon small class="pl-1 pr-2">{{addIcon}}</v-icon>in the toolbar to add a customer type.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
       <customer-type-create-dialog ref="add" @customerTypeAdded="refresh" :customerTypes="matches" />
     </template>
@@ -27,6 +36,7 @@ import { Component, ListComponent, Refs } from "sitewhere-ide-common";
 import CustomerTypeListEntry from "./CustomerTypeListEntry.vue";
 import CustomerTypeCreateDialog from "./CustomerTypeCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { routeTo } from "../common/Utils";
 import { NavigationIcon } from "../../libraries/constants";
@@ -43,7 +53,8 @@ import {
   components: {
     CustomerTypeListEntry,
     CustomerTypeCreateDialog,
-    AddButton
+    AddButton,
+    NoResultsPanel
   }
 })
 export default class CustomerTypesList extends ListComponent<
@@ -55,6 +66,8 @@ export default class CustomerTypesList extends ListComponent<
   $refs!: Refs<{
     add: CustomerTypeCreateDialog;
   }>;
+
+  addIcon: string = NavigationIcon.Add;
 
   /** Get page icon */
   get icon(): NavigationIcon {

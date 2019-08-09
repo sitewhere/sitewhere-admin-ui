@@ -21,12 +21,16 @@
         @clear="onClearFilterCriteria"
       />
     </template>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No device assignments have been created for this tenant.</div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
       <assignment-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
       <invocation-by-assignment-criteria-create-dialog :filter="filter" ref="batch" />
     </template>
     <template slot="actions">
-      <add-button tooltip="Create Assignment" />
       <device-command-button
         v-if="hasOneDeviceType"
         tooltip="Execute Batch Command"
@@ -50,9 +54,9 @@ import AssignmentListFilterBar from "./AssignmentListFilterBar.vue";
 import AssignmentCreateDialog from "./AssignmentCreateDialog.vue";
 import AssignmentListFilterDialog from "./AssignmentListFilterDialog.vue";
 import InvocationByAssignmentCriteriaCreateDialog from "../batch/InvocationByAssignmentCriteriaCreateDialog.vue";
-import AddButton from "../common/navbuttons/AddButton.vue";
 import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
 import FilterButton from "../common/navbuttons/FilterButton.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -72,9 +76,9 @@ import {
     AssignmentCreateDialog,
     AssignmentListFilterDialog,
     InvocationByAssignmentCriteriaCreateDialog,
-    AddButton,
     DeviceCommandButton,
-    FilterButton
+    FilterButton,
+    NoResultsPanel
   }
 })
 export default class AssignmentsList extends ListComponent<

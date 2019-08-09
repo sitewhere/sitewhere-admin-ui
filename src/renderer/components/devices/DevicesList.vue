@@ -16,6 +16,15 @@
     <template slot="filters">
       <device-list-filter-bar ref="filters" :criteria="filter" @clear="onClearFilterCriteria" />
     </template>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No devices have been created for this tenant.</div>
+        <div class="mt-2">
+          Click
+          <v-icon small class="pl-1 pr-2">{{addIcon}}</v-icon>in the toolbar to add a device.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
       <device-create-dialog ref="add" @deviceAdded="onDeviceAdded" />
       <assignment-create-dialog ref="assign" :device="selected" @created="onAssignmentCreated" />
@@ -51,6 +60,7 @@ import InvocationByDeviceCriteriaCreateDialog from "../batch/InvocationByDeviceC
 import AddButton from "../common/navbuttons/AddButton.vue";
 import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
 import FilterButton from "../common/navbuttons/FilterButton.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -73,7 +83,8 @@ import {
     InvocationByDeviceCriteriaCreateDialog,
     AddButton,
     DeviceCommandButton,
-    FilterButton
+    FilterButton,
+    NoResultsPanel
   }
 })
 export default class DevicesList extends ListComponent<
@@ -88,6 +99,8 @@ export default class DevicesList extends ListComponent<
     filter: DeviceListFilterDialog;
     batch: InvocationByDeviceCriteriaCreateDialog;
   }>;
+
+  addIcon: string = NavigationIcon.Add;
 
   selected: IDevice | null = null;
   filter: IDeviceSearchCriteria = {};
