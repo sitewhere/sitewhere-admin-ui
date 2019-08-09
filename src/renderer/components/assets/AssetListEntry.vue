@@ -3,7 +3,7 @@
     <v-container fluid @click="onAssetClicked">
       <v-layout row>
         <v-flex xs2>
-          <branding-image :style="logoStyle" :entity="asset" />
+          <branding-image :style="logoStyle" :entity="assetOrAssetType" />
         </v-flex>
         <v-flex xs10>
           <div>
@@ -23,7 +23,7 @@ import Vue from "vue";
 import BrandingImage from "../common/BrandingImage.vue";
 
 import { IStyle } from "../common/Style";
-import { IAsset } from "sitewhere-rest-api";
+import { IAsset, IBrandedEntity } from "sitewhere-rest-api";
 
 @Component({
   components: {
@@ -32,6 +32,21 @@ import { IAsset } from "sitewhere-rest-api";
 })
 export default class AssetListEntry extends Vue {
   @Prop() readonly asset!: IAsset;
+
+  /** Use fallback for asset image as asset type */
+  get assetOrAssetType(): IBrandedEntity | null {
+    if (this.asset) {
+      if (this.asset.imageUrl) {
+        console.log("default");
+        return this.asset;
+      } else if ((this.asset as any).assetType) {
+        console.log("choose asset type");
+        return (this.asset as any).assetType;
+      }
+    }
+    console.log("fallthrough");
+    return this.asset;
+  }
 
   // Compute style of logo.
   get logoStyle(): IStyle {

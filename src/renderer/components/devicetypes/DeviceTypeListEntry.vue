@@ -49,42 +49,6 @@ export default class DeviceTypeListEntry extends Vue {
 </script>
 
 <style scoped>
-.deviceType {
-  min-height: 122px;
-  overflow-y: hidden;
-}
-
-.type-logo {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  bottom: 10px;
-  width: 100px;
-}
-
-.type-name {
-  position: absolute;
-  top: 5px;
-  left: 158px;
-  right: 10px;
-  font-size: 22px;
-  font-weight: 400;
-  white-space: nowrap;
-  overflow-x: hidden;
-}
-
-.type-desc {
-  position: absolute;
-  top: 42px;
-  left: 160px;
-  right: 10px;
-  bottom: 10px;
-  font-size: 14px;
-  overflow-y: hidden;
-}
-</style>
-
-<style scoped>
 .dtdesc {
   height: 60px;
   overflow-y: hidden;

@@ -13,11 +13,20 @@
         <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
       </v-flex>
     </sw-list-layout>
+    <template slot="noresults">
+      <no-results-panel>
+        <div>No assets have been created for this tenant.</div>
+        <div class="mt-2">
+          Click
+          <v-icon small class="pl-1 pr-2">{{addIcon}}</v-icon>in the toolbar to add an asset.
+        </div>
+      </no-results-panel>
+    </template>
     <template slot="dialogs">
-      <asset-create-dialog ref="add" @assetAdded="refresh"/>
+      <asset-create-dialog ref="add" @assetAdded="refresh" />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="plus" tooltip="Add Asset" @action="onAddAsset"/>
+      <sw-navigation-action-button icon="plus" tooltip="Add Asset" @action="onAddAsset" />
     </template>
   </sw-list-page>
 </template>
@@ -32,6 +41,7 @@ import {
 
 import AssetListEntry from "./AssetListEntry.vue";
 import AssetCreateDialog from "./AssetCreateDialog.vue";
+import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "../common/Utils";
@@ -47,7 +57,8 @@ import {
 @Component({
   components: {
     AssetListEntry,
-    AssetCreateDialog
+    AssetCreateDialog,
+    NoResultsPanel
   }
 })
 export default class AssetsList extends ListComponent<
@@ -59,6 +70,8 @@ export default class AssetsList extends ListComponent<
   $refs!: Refs<{
     add: AssetCreateDialog;
   }>;
+
+  addIcon: string = NavigationIcon.Add;
 
   pageSizes: IPageSizes = [
     {
@@ -88,7 +101,7 @@ export default class AssetsList extends ListComponent<
 
   /** Build response format for list */
   buildResponseFormat(): IAssetResponseFormat {
-    let format: IAssetResponseFormat = {};
+    let format: IAssetResponseFormat = { includeAssetType: true };
     format.includeAssetType = true;
     return format;
   }
