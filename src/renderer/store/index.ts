@@ -38,7 +38,7 @@ const store: StoreOptions<SiteWhereUiSettings> = {
           name: "Local Instance",
           protocol: "http",
           host: "localhost",
-          port: 80
+          port: 8080
         }
       ]
     },

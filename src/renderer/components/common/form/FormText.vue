@@ -1,6 +1,7 @@
 <template>
   <div class="mb-3">
     <v-text-field
+      class="text-field-input"
       :required="required"
       :title="title"
       :label="label"
@@ -9,9 +10,10 @@
       v-model="wrapped"
       hide-details
       :prepend-icon="icon"
+      :disabled="readonly"
     />
     <div class="verror">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -28,6 +30,7 @@ export default class FormText extends Vue {
   @Prop() readonly required!: boolean;
   @Prop() readonly value!: string;
   @Prop() readonly type!: string;
+  @Prop() readonly readonly!: boolean;
 
   get wrapped(): string {
     return this.value;
@@ -40,4 +43,8 @@ export default class FormText extends Vue {
 </script>
 
 <style scoped>
+.text-field-input >>> i.v-icon {
+  font-size: 16px;
+  color: #ccc;
+}
 </style>

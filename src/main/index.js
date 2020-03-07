@@ -8,7 +8,7 @@ const { autoUpdater } = require("electron-updater");
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 app.on("ready", () => {
-  let version = !IsDev ? app.getVersion() : "2.0.0";
+  let version = !IsDev ? app.getVersion() : "3.0.0";
 
   // Main window options.
   let windowOptions = {

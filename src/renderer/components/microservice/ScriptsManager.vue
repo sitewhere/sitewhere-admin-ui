@@ -4,25 +4,38 @@
       <v-layout row>
         <v-flex xs3>
           <condensed-toolbar title="Scripts">
-            <v-tooltip left>
-              <v-icon @click="onScriptCreate" small class="mr-2" slot="activator">add</v-icon>
+            <v-tooltip bottom>
+              <v-icon
+                @click="onScriptCreate"
+                small
+                class="mr-2"
+                slot="activator"
+                >add</v-icon
+              >
               <span>Create Script</span>
             </v-tooltip>
-            <v-tooltip left>
+            <v-tooltip bottom>
               <v-icon @click="refresh" small slot="activator">refresh</v-icon>
               <span>Refresh Scripts</span>
             </v-tooltip>
           </condensed-toolbar>
         </v-flex>
         <v-flex xs9>
-          <condensed-toolbar :title="scriptTitle" v-if="this.selectedScript != null">
+          <condensed-toolbar
+            :title="scriptTitle"
+            v-if="this.selectedScript != null"
+          >
             <template slot="icon">
               <v-icon small>description</v-icon>
             </template>
             <v-menu v-if="selectedScript" offset-y class="mr-3" max-width="400">
               <v-btn color="primary" dark slot="activator">
-                <v-icon small class="mr-1" :color="versionColor">{{ versionIcon }}</v-icon>
-                <span class="white--text">{{ formatDate(selectedVersion.createdDate) }}</span>
+                <v-icon small class="mr-1" :color="versionColor">{{
+                  versionIcon
+                }}</v-icon>
+                <span class="white--text">{{
+                  formatDate(selectedVersion.createdDate)
+                }}</span>
                 <v-icon small>expand_more</v-icon>
               </v-btn>
               <script-version-list
@@ -32,15 +45,21 @@
               />
             </v-menu>
             <v-tooltip left>
-              <v-icon @click="onActivate" small class="mr-2" slot="activator">play_circle_outline</v-icon>
+              <v-icon @click="onActivate" small class="mr-2" slot="activator"
+                >play_circle_outline</v-icon
+              >
               <span>Make Version Active</span>
             </v-tooltip>
             <v-tooltip left>
-              <v-icon @click="onClone" small class="mr-2" slot="activator">note_add</v-icon>
+              <v-icon @click="onClone" small class="mr-2" slot="activator"
+                >note_add</v-icon
+              >
               <span>Clone as New Version</span>
             </v-tooltip>
             <v-tooltip left>
-              <v-icon @click="onSave" small slot="activator">cloud_upload</v-icon>
+              <v-icon @click="onSave" small slot="activator"
+                >cloud_upload</v-icon
+              >
               <span>Upload Changes</span>
             </v-tooltip>
           </condensed-toolbar>
@@ -52,12 +71,25 @@
     </template>
     <v-layout row wrap fill-height>
       <v-flex xs3>
-        <v-list dense two-line v-if="scripts && scripts.length > 0" style="height: 100%;">
+        <v-list
+          dense
+          two-line
+          v-if="scripts && scripts.length > 0"
+          style="height: 100%;"
+        >
           <template v-for="script in scripts">
-            <v-list-tile v-bind:key="script.id" @click="onScriptClicked(script)">
+            <v-list-tile
+              v-bind:key="script.id"
+              @click="onScriptClicked(script)"
+            >
               <v-list-tile-content>
-                <v-list-tile-title class="subheading" v-html="script.name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="script.description"></v-list-tile-sub-title>
+                <v-list-tile-title
+                  class="subheading"
+                  v-html="script.name"
+                ></v-list-tile-title>
+                <v-list-tile-sub-title
+                  v-html="script.description"
+                ></v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-divider v-bind:key="'div_' + script.name"></v-divider>
@@ -160,14 +192,13 @@ export default class ScriptsManager extends Vue {
   /** Refresh list of scripts */
   async refresh() {
     if (!this.tenantToken) {
-      let response: AxiosResponse<
-        IScriptMetadata[]
-      > = await listGlobalScriptMetadata(this.$store, this.identifier);
+      let response: AxiosResponse<IScriptMetadata[]> = await listGlobalScriptMetadata(
+        this.$store,
+        this.identifier
+      );
       this.onScriptsRefreshed(response.data);
     } else {
-      let response: AxiosResponse<
-        IScriptMetadata[]
-      > = await listTenantScriptMetadata(
+      let response: AxiosResponse<IScriptMetadata[]> = await listTenantScriptMetadata(
         this.$store,
         this.identifier,
         this.tenantToken

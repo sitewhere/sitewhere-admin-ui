@@ -17,4 +17,5 @@ export default class App extends Vue {}
 @import "~highlight.js/styles/default.css";
 @import "~flatpickr/dist/flatpickr.css";
 @import "~material-icons/iconfont/material-icons.css";
+@import "~@fortawesome/fontawesome-free/css/all.css";
 </style>

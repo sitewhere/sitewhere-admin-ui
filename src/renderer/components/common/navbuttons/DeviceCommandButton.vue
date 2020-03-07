@@ -1,5 +1,9 @@
 <template>
-  <sw-navigation-action-button material="true" :icon="icon" :tooltip="tooltip" @action="onAction"/>
+  <sw-navigation-action-button
+    :icon="icon"
+    :tooltip="tooltip"
+    @action="onAction"
+  />
 </template>
 
 <script lang="ts">
@@ -22,5 +26,4 @@ export default class DeviceCommandButton extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -4,9 +4,6 @@ import Vue from "vue";
 import App from "./App.vue";
 import store from "./store";
 import router from "./router";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import SiteWhere from "sitewhere-ide-components";
 import Vuetify from "vuetify";
@@ -32,10 +29,6 @@ Vue.use(VueMoment);
 Vue.use(VueClipboards);
 Vue.use(VueHighlightJS);
 Vue.use(VueFlatPickr);
-
-// Fontawesome.
-library.add(fas);
-Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 Vue.component("v-map", Vue2Leaflet.Map);
 Vue.component("v-tilelayer", Vue2Leaflet.TileLayer);

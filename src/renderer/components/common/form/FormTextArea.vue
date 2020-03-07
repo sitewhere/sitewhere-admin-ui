@@ -10,7 +10,7 @@
       :prepend-icon="icon"
     />
     <div class="verror">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -37,5 +37,4 @@ export default class FormText extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

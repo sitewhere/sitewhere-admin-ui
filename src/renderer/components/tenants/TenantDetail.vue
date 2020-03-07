@@ -14,16 +14,35 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="microservices">
-        <microservice-list :topology="tenantTopology" @microserviceClicked="onMicroserviceClicked" />
+        <microservice-list
+          :microservices="microservices"
+          @microserviceClicked="onMicroserviceClicked"
+        />
       </v-tab-item>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button icon="edit" tooltip="Edit Tenant" @action="onEdit" />
-      <sw-navigation-action-button icon="times" tooltip="Delete Tenant" @action="onDelete" />
+      <sw-navigation-action-button
+        icon="fa-edit"
+        tooltip="Edit Tenant"
+        @action="onEdit"
+      />
+      <sw-navigation-action-button
+        icon="fa-trash"
+        tooltip="Delete Tenant"
+        @action="onDelete"
+      />
     </template>
     <template slot="dialogs">
-      <tenant-update-dialog ref="edit" :tenantToken="token" @tenantUpdated="onTenantEdited" />
-      <tenant-delete-dialog ref="delete" :tenantToken="token" @deleted="onTenantDeleted" />
+      <tenant-update-dialog
+        ref="edit"
+        :tenantToken="token"
+        @tenantUpdated="onTenantEdited"
+      />
+      <tenant-delete-dialog
+        ref="delete"
+        :tenantToken="token"
+        @deleted="onTenantDeleted"
+      />
     </template>
   </sw-detail-page>
 </template>
@@ -39,18 +58,17 @@ import {
 import TenantDetailHeader from "./TenantDetailHeader.vue";
 import TenantUpdateDialog from "./TenantUpdateDialog.vue";
 import TenantDeleteDialog from "./TenantDeleteDialog.vue";
-import MicroserviceList from "../microservice/MicroserviceList.vue";
+import MicroserviceList from "./MicroserviceList.vue";
 
-import { handleError } from "../common/Utils";
 import { AxiosPromise, AxiosResponse } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getTenant } from "../../rest/sitewhere-tenants-api";
-import { getTenantTopology } from "../../rest/sitewhere-instance-api";
 import {
   ITenant,
   ITenantResponseFormat,
-  IInstanceTopologySummary
+  IMicroserviceSummary
 } from "sitewhere-rest-api";
+import { getInstanceMicroservices } from "../../rest/sitewhere-instance-api";
 
 @Component({
   components: {
@@ -61,7 +79,7 @@ import {
   }
 })
 export default class TenantDetail extends DetailComponent<ITenant> {
-  tenantTopology: IInstanceTopologySummary[] = [];
+  microservices: IMicroserviceSummary[] = [];
 
   // References.
   $refs!: Refs<{
@@ -84,13 +102,13 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 
   /** Load record */
   loadRecord(token: string): AxiosPromise<ITenant> {
-    this.refreshTopology();
     let format: ITenantResponseFormat = {};
     return getTenant(this.$store, token, format);
   }
 
   /** Called after data is loaded */
   afterRecordLoaded(tenant: ITenant) {
+    this.loadMicroserviceList();
     var section: INavigationSection = {
       id: "tenants",
       title: "Manage Tenant",
@@ -101,25 +119,23 @@ export default class TenantDetail extends DetailComponent<ITenant> {
     this.$store.commit("currentSection", section);
   }
 
-  /** Called if a microservice is clicked */
-  onMicroserviceClicked(microservice: IInstanceTopologySummary) {
-    if (this.tenant) {
-      this.$router.push(
-        "/system/tenants/" + this.tenant.token + "/" + microservice.identifier
-      );
-    }
+  /**
+   * Load list of microservices which will be displayed.
+   */
+  async loadMicroserviceList() {
+    let response: AxiosResponse<IMicroserviceSummary[]> = await getInstanceMicroservices(
+      this.$store
+    );
+    this.microservices = response.data;
   }
 
-  // Called to refresh data.
-  async refreshTopology() {
-    try {
-      let response: AxiosResponse<
-        IInstanceTopologySummary[]
-      > = await getTenantTopology(this.$store);
-      this.tenantTopology = response.data;
-    } catch (err) {
-      handleError(err);
-    }
+  /**
+   * Called when a microservice from the list is clicked.
+   */
+  onMicroserviceClicked(microservice: IMicroserviceSummary) {
+    this.$router.push(
+      `/system/tenants/${this.token}/${microservice.functionalArea}`
+    );
   }
 
   // Called to edit tenant.
@@ -148,5 +164,4 @@ export default class TenantDetail extends DetailComponent<ITenant> {
 }
 </script>
 
-<style>
-</style>
+<style></style>

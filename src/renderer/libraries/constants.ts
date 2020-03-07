@@ -5,9 +5,9 @@ import { ParameterType } from "sitewhere-rest-api";
  * Enumeration of navigation icons.
  */
 export enum NavigationIcon {
-  Tenant = "layers",
-  User = "people",
-  Global = "language",
+  Tenant = "fa-layer-group",
+  User = "fa-user",
+  Global = "fa-globe",
   Device = "developer_board",
   DeviceType = "settings",
   DeviceAssignment = "link",
@@ -27,13 +27,15 @@ export enum NavigationIcon {
   Alert = "warning",
   Measurement = "ballot",
   Emulator = "settings_remote",
-  Add = "add_circle",
-  Edit = "create",
-  Delete = "delete_forever",
-  Filter = "filter_list",
-  Up = "arrow_upward",
-  Script = "description",
-  Remotes = "router"
+  Add = "fa-plus-square",
+  Edit = "fa-edit",
+  Delete = "fa-trash",
+  Filter = "fa-filter",
+  Up = "fa-arrow-up",
+  Script = "fa-code",
+  Remotes = "fa-network-wired",
+  Datastore = "fa-database",
+  Settings = "fa-cogs"
 }
 
 // Page sizes shown for event list pages.

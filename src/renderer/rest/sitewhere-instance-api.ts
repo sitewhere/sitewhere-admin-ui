@@ -4,169 +4,72 @@ import { Store } from "vuex";
 import { SiteWhereUiSettings } from "../store";
 import { createCoreApiCall, loaderWrapper } from "./sitewhere-api-wrapper";
 import {
-  IInstanceTopologySummary,
-  ITenantEngineState,
-  IConfigurationModel,
-  IElementContent
+  IMicroserviceSummary,
+  ITenantEngineConfiguration,
+  IInstanceConfiguration
 } from "sitewhere-rest-api";
+
+/**
+ * Get currently effective instance configuration.
+ * @param store
+ */
+export function getInstanceConfiguration(
+  store: Store<SiteWhereUiSettings>
+): Promise<AxiosResponse<IInstanceConfiguration>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<IInstanceConfiguration> = SiteWhere.API.Instance.getInstanceConfiguration(
+    axios
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * Update the global instance configuration.
+ * @param store
+ * @param request
+ */
+export function updateInstanceConfiguration(
+  store: Store<SiteWhereUiSettings>,
+  request: IInstanceConfiguration
+): Promise<AxiosResponse<IInstanceConfiguration>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<IInstanceConfiguration> = SiteWhere.API.Instance.updateInstanceConfiguration(
+    axios,
+    request
+  );
+  return loaderWrapper(store, api);
+}
 
 /**
  * Get instance topology information.
  * @param store
  */
-export function getTopology(
+export function getInstanceMicroservices(
   store: Store<SiteWhereUiSettings>
-): Promise<AxiosResponse<IInstanceTopologySummary[]>> {
+): Promise<AxiosResponse<IMicroserviceSummary[]>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    IInstanceTopologySummary[]
-  > = SiteWhere.API.Instance.getTopology(axios);
-  return loaderWrapper(store, api);
-}
-
-/**
- * Get topology information for global microservices.
- * @param store
- */
-export function getGlobalTopology(
-  store: Store<SiteWhereUiSettings>
-): Promise<AxiosResponse<IInstanceTopologySummary[]>> {
-  let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    IInstanceTopologySummary[]
-  > = SiteWhere.API.Instance.getGlobalTopology(axios);
-  return loaderWrapper(store, api);
-}
-
-/**
- * Get topology information for multitenant microservices.
- * @param store
- */
-export function getTenantTopology(
-  store: Store<SiteWhereUiSettings>
-): Promise<AxiosResponse<IInstanceTopologySummary[]>> {
-  let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    IInstanceTopologySummary[]
-  > = SiteWhere.API.Instance.getTenantTopology(axios);
-  return loaderWrapper(store, api);
-}
-
-/**
- * Get runtime state for a microservice tenant.
- * @param store
- * @param identifier
- * @param tenantId
- */
-export function getTenantRuntimeState(
-  store: Store<SiteWhereUiSettings>,
-  identifier: string,
-  tenantId: string
-): Promise<AxiosResponse<ITenantEngineState[]>> {
-  let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    ITenantEngineState[]
-  > = SiteWhere.API.Instance.getTenantRuntimeState(axios, identifier, tenantId);
-  return loaderWrapper(store, api);
-}
-
-/**
- * Get microservice configuration model.
- * @param store
- * @param identifier
- */
-export function getConfigurationModel(
-  store: Store<SiteWhereUiSettings>,
-  identifier: string
-): Promise<AxiosResponse<IConfigurationModel>> {
-  let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    IConfigurationModel
-  > = SiteWhere.API.Instance.getConfigurationModel(axios, identifier);
-  return loaderWrapper(store, api);
-}
-
-/**
- * Get configuration content for a global microservice.
- * @param store
- * @param identifier
- */
-export function getGlobalConfiguration(
-  store: Store<SiteWhereUiSettings>,
-  identifier: string
-): Promise<AxiosResponse<IElementContent>> {
-  let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    IElementContent
-  > = SiteWhere.API.Instance.getGlobalConfiguration(axios, identifier);
-  return loaderWrapper(store, api);
-}
-
-/**
- * Update configuration content for a global microservice.
- * @param store
- * @param identifier
- * @param content
- */
-export function updateGlobalConfiguration(
-  store: Store<SiteWhereUiSettings>,
-  identifier: string,
-  content: IElementContent
-): Promise<AxiosResponse<void>> {
-  let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    void
-  > = SiteWhere.API.Instance.updateGlobalConfiguration(
-    axios,
-    identifier,
-    content
+  let api: AxiosPromise<IMicroserviceSummary[]> = SiteWhere.API.Instance.getInstanceMicroservices(
+    axios
   );
   return loaderWrapper(store, api);
 }
 
 /**
- * Get microservice tenant configuration content.
+ * Get tenant engine configuration information.
  * @param store
- * @param identifier
- * @param tenantId
+ * @param functionalArea
+ * @param tenant
  */
-export function getTenantConfiguration(
+export function getTenantEngineConfiguration(
   store: Store<SiteWhereUiSettings>,
-  identifier: string,
-  tenantId: string
-): Promise<AxiosResponse<IElementContent>> {
+  functionalArea: string,
+  tenant: string
+): Promise<AxiosResponse<ITenantEngineConfiguration>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    IElementContent
-  > = SiteWhere.API.Instance.getTenantConfiguration(
+  let api: AxiosPromise<ITenantEngineConfiguration> = SiteWhere.API.Instance.getTenantEngineConfiguration(
     axios,
-    identifier,
-    tenantId
-  );
-  return loaderWrapper(store, api);
-}
-
-/**
- * Update microservice tenant configuration content.
- * @param store
- * @param tenantId
- * @param identifier
- * @param content
- */
-export function updateTenantConfiguration(
-  store: Store<SiteWhereUiSettings>,
-  identifier: string,
-  tenantId: string,
-  content: IElementContent
-): Promise<AxiosResponse<void>> {
-  let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    void
-  > = SiteWhere.API.Instance.updateTenantConfiguration(
-    axios,
-    identifier,
-    tenantId,
-    content
+    functionalArea,
+    tenant
   );
   return loaderWrapper(store, api);
 }

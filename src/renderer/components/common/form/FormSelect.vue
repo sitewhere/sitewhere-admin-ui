@@ -1,6 +1,7 @@
 <template>
   <div class="mb-3">
     <v-select
+      class="text-field-input"
       :required="required"
       :title="title"
       :label="label"
@@ -15,7 +16,7 @@
       @change="onSelectionChanged"
     />
     <div class="verror">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -52,4 +53,8 @@ export default class FormSelect extends Vue {
 </script>
 
 <style scoped>
+.text-field-input >>> i.v-icon {
+  font-size: 16px;
+  color: #999;
+}
 </style>

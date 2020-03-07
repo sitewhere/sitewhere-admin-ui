@@ -5,11 +5,10 @@ import Login from "@/components/Login.vue";
 import SystemAdministration from "@/components/SystemAdministration.vue";
 import TenantsList from "@/components/tenants/TenantsList.vue";
 import TenantDetail from "@/components/tenants/TenantDetail.vue";
-import TenantMicroserviceEditor from "@/components/tenants/TenantMicroserviceEditor.vue";
+import TenantEngineEditor from "@/components/tenantengines/TenantEngineEditor.vue";
 import UsersList from "@/components/users/UsersList.vue";
-import GlobalMicroservicesList from "@/components/global/GlobalMicroservicesList.vue";
-import GlobalMicroserviceEditor from "@/components/global/GlobalMicroserviceEditor.vue";
 import TenantAdministration from "@/components/tenants/TenantAdministration.vue";
+import GlobalSettings from "@/components/global/GlobalSettings.vue";
 import Server from "@/components/server/Server.vue";
 import CustomerTypesList from "@/components/customertypes/CustomerTypesList.vue";
 import CustomerTypeDetail from "@/components/customertypes/CustomerTypeDetail.vue";
@@ -58,19 +57,15 @@ const routes = <Array<RouteConfig>>[
       },
       {
         path: "tenants/:token/:identifier",
-        component: TenantMicroserviceEditor
+        component: TenantEngineEditor
       },
       {
         path: "users",
         component: UsersList
       },
       {
-        path: "microservices",
-        component: GlobalMicroservicesList
-      },
-      {
-        path: "microservices/:identifier",
-        component: GlobalMicroserviceEditor
+        path: "settings",
+        component: GlobalSettings
       }
     ]
   },

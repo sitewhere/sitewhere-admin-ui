@@ -1,7 +1,13 @@
 <template>
   <v-app v-if="user">
     <sw-in-app-system-bar style="-webkit-app-region: drag" />
-    <v-navigation-drawer fixed :permanent="true" style="margin-top: 25px;" v-model="drawer" app>
+    <v-navigation-drawer
+      fixed
+      :permanent="true"
+      style="margin-top: 25px;"
+      v-model="drawer"
+      app
+    >
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
         <div class="sitewhere-logo" />
         <v-spacer />
@@ -69,11 +75,11 @@ export default class SystemAdministration extends Vue {
       requireAll: ["ADMINISTER_USERS"]
     },
     {
-      id: "global",
-      title: "Global Microservices",
+      id: "settings",
+      title: "Global Settings",
       icon: NavigationIcon.Global,
-      route: "system/microservices",
-      longTitle: "Manage Global microservices",
+      route: "system/settings",
+      longTitle: "Manage Global Settings",
       requireAll: ["ADMINISTER_TENANTS"]
     }
   ];
