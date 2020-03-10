@@ -11,6 +11,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
+    <slot />
     <v-card color="#f5f5f5" flat class="pl-3 pr-3 pt-1">
       <v-select
         :required="true"
@@ -132,7 +133,6 @@ export default class RdbDatastoreDialog extends DialogComponent<
 
     var payload = this.generatePayload();
     this.$emit("payload", payload);
-    this.dialogVisible = false;
   }
 }
 </script>

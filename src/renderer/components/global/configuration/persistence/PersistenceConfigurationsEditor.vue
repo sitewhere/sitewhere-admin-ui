@@ -7,7 +7,9 @@
   >
     <rdb-configurations-table
       :configuration="configuration"
+      @datastoreCreated="onRdbDatastoreCreated"
       @datastoreUpdated="onRdbDatastoreUpdated"
+      @datastoreDeleted="onRdbDatastoreDeleted"
     />
     <v-divider class="mt-4 mb-4" />
     <influx-configurations-table :configuration="configuration" />
@@ -39,8 +41,17 @@ export default class PersistenceConfigurationsEditor extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly configuration!: IInstanceConfiguration;
 
+  /** Notifies when an RDB datastore is created */
+  onRdbDatastoreCreated(): void {
+    this.$emit("updated");
+  }
+
   /** Notifies when an RDB datastore is updated */
   onRdbDatastoreUpdated(): void {
+    this.$emit("updated");
+  }
+  /** Notifies when an RDB datastore is deleted */
+  onRdbDatastoreDeleted(): void {
     this.$emit("updated");
   }
 }

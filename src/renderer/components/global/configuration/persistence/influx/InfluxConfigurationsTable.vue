@@ -14,7 +14,11 @@
       </td>
       <td>{{ props.item.meta.connection }}</td>
       <td>{{ props.item.config.databaseName }}</td>
-      <td><v-icon small class="text--grey">fa-trash</v-icon></td>
+      <td>
+        <content-delete-icon
+          @delete="onDeleteDatastore(props.item.meta.name)"
+        />
+      </td>
     </template>
     <template v-slot:datatable-footer>
       <content-link
@@ -29,11 +33,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "sitewhere-ide-common";
 
 import DatatableSection from "../../../../configuration/DatatableSection.vue";
 import DatatableLink from "../../../../configuration/DatatableLink.vue";
 import ContentLink from "../../../../configuration/ContentLink.vue";
+import ContentDeleteIcon from "../../../../configuration/ContentDeleteIcon.vue";
 
 import {
   IInstanceConfiguration,
@@ -41,7 +46,12 @@ import {
 } from "sitewhere-rest-api";
 
 @Component({
-  components: { DatatableSection, DatatableLink, ContentLink }
+  components: {
+    DatatableSection,
+    DatatableLink,
+    ContentLink,
+    ContentDeleteIcon
+  }
 })
 export default class InfluxConfigurationsTable extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
@@ -53,6 +63,14 @@ export default class InfluxConfigurationsTable extends Vue {
     { text: "", value: "delete" }
   ];
 
+  /** Datastore configurations in format for display */
+  configsAsSortedArray: any[] = [];
+
+  @Watch("influxConfigurations", { immediate: true })
+  onConfigurationsUpdated(updated: any) {
+    this.calculateConfigsAsSortedArray();
+  }
+
   /** Global InfluxDB configurations */
   get influxConfigurations(): any | null {
     return this.configuration && this.configuration.persistenceConfigurations
@@ -61,7 +79,7 @@ export default class InfluxConfigurationsTable extends Vue {
   }
 
   /** Get InfluxDB configs as a sorted array */
-  get configsAsSortedArray(): any[] {
+  calculateConfigsAsSortedArray(): void {
     let configs: any[] = [];
     let hashed: any | null = this.influxConfigurations;
     if (hashed) {
@@ -79,14 +97,17 @@ export default class InfluxConfigurationsTable extends Vue {
     configs.sort(function(a, b) {
       return a.meta.name.localeCompare(b.meta.name);
     });
-    return configs;
+    this.configsAsSortedArray = configs;
   }
 
-  /** Add a new RDB datastore */
+  /** Add a new Influx datastore */
   onAddDatastore() {}
 
-  /** Open an existing RDB datastore */
+  /** Open an existing Influx datastore */
   onOpenDatastore(name: string) {}
+
+  /** Called to delete a datastore by id */
+  onDeleteDatastore(name: string): void {}
 }
 </script>
 

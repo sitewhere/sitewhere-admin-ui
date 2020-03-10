@@ -15,14 +15,9 @@ import RdbDatastoreDialog from "./RdbDatastoreDialog.vue";
 
 import {
   IDatastoreDefinition,
-  IDatastoreDefinitionLocal,
-  IDatastoreDefinitionReference
+  IDatastoreDefinitionLocal
 } from "sitewhere-configuration-model";
-import {
-  IInstanceConfiguration,
-  IRdbConfigurationMap,
-  IRdbConfiguration
-} from "sitewhere-rest-api";
+import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
   components: { RdbDatastoreDialog }
@@ -55,6 +50,7 @@ export default class RdbDatastoreUpdateDialog extends Vue {
     this.type = payload.type;
     this.configuration = payload.configuration;
     this.$emit("updated", payload);
+    this.$refs.dialog.dialogVisible = false;
   }
 }
 </script>

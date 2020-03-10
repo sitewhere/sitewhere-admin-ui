@@ -14,7 +14,11 @@
       </td>
       <td>{{ props.item.meta.type }}</td>
       <td>{{ props.item.meta.connection }}</td>
-      <td><v-icon small class="text--grey">fa-trash</v-icon></td>
+      <td>
+        <content-delete-icon
+          @delete="onDeleteDatastore(props.item.meta.name)"
+        />
+      </td>
     </template>
     <template v-slot:datatable-footer>
       <content-link
@@ -25,8 +29,13 @@
       />
     </template>
     <template v-slot:datatable-dialogs>
+      <rdb-datastore-create-dialog
+        ref="create"
+        :configuration="configuration"
+        @created="onDatastoreCreated"
+      />
       <rdb-datastore-update-dialog
-        ref="dialog"
+        ref="update"
         :configuration="configuration"
         @updated="onDatastoreUpdated"
       />
@@ -36,11 +45,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs, Watch } from "sitewhere-ide-common";
 
 import DatatableSection from "../../../../configuration/DatatableSection.vue";
 import DatatableLink from "../../../../configuration/DatatableLink.vue";
 import ContentLink from "../../../../configuration/ContentLink.vue";
+import ContentDeleteIcon from "../../../../configuration/ContentDeleteIcon.vue";
+import RdbDatastoreCreateDialog from "./RdbDatastoreCreateDialog.vue";
 import RdbDatastoreUpdateDialog from "./RdbDatastoreUpdateDialog.vue";
 
 import {
@@ -55,6 +66,8 @@ import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
     DatatableSection,
     DatatableLink,
     ContentLink,
+    ContentDeleteIcon,
+    RdbDatastoreCreateDialog,
     RdbDatastoreUpdateDialog
   }
 })
@@ -63,8 +76,12 @@ export default class RdbConfigurationsTable extends Vue {
 
   /** References */
   $refs!: Refs<{
-    dialog: RdbDatastoreUpdateDialog;
+    create: RdbDatastoreCreateDialog;
+    update: RdbDatastoreUpdateDialog;
   }>;
+
+  /** RDB configurations in format for display */
+  rdbConfigsAsSortedArray: any[] = [];
 
   /** Name of RDB entry being updated */
   updating: string | null = null;
@@ -76,6 +93,11 @@ export default class RdbConfigurationsTable extends Vue {
     { text: "", value: "delete" }
   ];
 
+  @Watch("rdbConfigurations", { immediate: true })
+  onRdbConfigurationsUpdated(updated: IRdbConfigurationMap) {
+    this.calculateRdbConfigsAsSortedArray();
+  }
+
   /** Global RDB configurations */
   get rdbConfigurations(): IRdbConfigurationMap | null {
     return this.configuration && this.configuration.persistenceConfigurations
@@ -84,7 +106,7 @@ export default class RdbConfigurationsTable extends Vue {
   }
 
   /** Get RDB configs as a sorted array */
-  get rdbConfigsAsSortedArray(): any[] {
+  calculateRdbConfigsAsSortedArray(): void {
     let configs: any[] = [];
     let hashed: IRdbConfigurationMap | null = this.rdbConfigurations;
     if (hashed) {
@@ -103,7 +125,7 @@ export default class RdbConfigurationsTable extends Vue {
     configs.sort(function(a, b) {
       return a.meta.name.localeCompare(b.meta.name);
     });
-    return configs;
+    this.rdbConfigsAsSortedArray = configs;
   }
 
   /** Determine connection info based on type */
@@ -115,7 +137,9 @@ export default class RdbConfigurationsTable extends Vue {
   }
 
   /** Add a new RDB datastore */
-  onAddDatastore() {}
+  onAddDatastore() {
+    this.$refs.create.openDialog();
+  }
 
   /** Open an existing RDB datastore */
   onOpenDatastore(name: string) {
@@ -123,12 +147,40 @@ export default class RdbConfigurationsTable extends Vue {
     let configs: IRdbConfigurationMap | null = this.rdbConfigurations;
     if (configs) {
       let config: IRdbConfiguration = configs[name];
-      this.$refs.dialog.load({
+      this.$refs.update.load({
         type: config.type,
         configuration: config.configuration
       });
-      this.$refs.dialog.openDialog();
+      this.$refs.update.openDialog();
     }
+  }
+
+  /** Called to remove a datastore from the list */
+  onDeleteDatastore(name: string) {
+    this.updating = name;
+    let configs: IRdbConfigurationMap | null = this.rdbConfigurations;
+    if (configs) {
+      delete configs[name];
+    }
+    this.$emit("datastoreDeleted");
+    this.calculateRdbConfigsAsSortedArray();
+  }
+
+  /** Called with creation information */
+  onDatastoreCreated(created: any) {
+    let name: string = created.name;
+    let definition: IDatastoreDefinitionLocal = created.definition;
+
+    let configs: IRdbConfigurationMap | null = this.rdbConfigurations;
+    if (configs) {
+      let rdb: IRdbConfiguration = {
+        type: definition.type,
+        configuration: definition.configuration
+      };
+      configs[name] = rdb;
+    }
+    this.$emit("datastoreCreated");
+    this.calculateRdbConfigsAsSortedArray();
   }
 
   /** Called with updated information */
@@ -143,6 +195,7 @@ export default class RdbConfigurationsTable extends Vue {
     }
     this.updating = null;
     this.$emit("datastoreUpdated");
+    this.calculateRdbConfigsAsSortedArray();
   }
 }
 </script>

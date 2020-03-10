@@ -7,11 +7,14 @@
   >
     <grpc-section :configuration="configuration" @updated="onGrpcUpdated" />
     <v-divider class="mt-4 mb-4" />
-    <kafka-section :configuration="configuration" />
+    <kafka-section :configuration="configuration" @updated="onKafkaUpdated" />
     <v-divider class="mt-4 mb-4" />
-    <redis-section :configuration="configuration" />
+    <redis-section :configuration="configuration" @updated="onRedisUpdated" />
     <v-divider class="mt-4 mb-4" />
-    <metrics-section :configuration="configuration" />
+    <metrics-section
+      :configuration="configuration"
+      @updated="onMetricsUpdated"
+    />
   </instance-configuration-editor>
 </template>
 
@@ -26,7 +29,12 @@ import RedisSection from "./redis/RedisSection.vue";
 import KafkaSection from "./kafka/KafkaSection.vue";
 import GrpcSection from "./grpc/GrpcSection.vue";
 import MetricsSection from "./metrics/MetricsSection.vue";
-import { IGrpcConfiguration } from "../../../../../../../sitewhere-rest-api/src";
+import {
+  IGrpcConfiguration,
+  IKafkaConfiguration,
+  IRedisConfiguration,
+  IMetricsConfiguration
+} from "../../../../../../../sitewhere-rest-api/src";
 
 @Component({
   components: {
@@ -43,7 +51,32 @@ export default class InfrastructureEditor extends Vue {
 
   /** Called when gRPC values are updated. */
   onGrpcUpdated(updated: IGrpcConfiguration) {
-    console.log("gRPC values updated");
+    if (this.configuration) {
+      this.configuration.infrastructure.grpc = updated;
+    }
+    this.$emit("updated");
+  }
+
+  /** Called when Kafka values are updated. */
+  onKafkaUpdated(updated: IKafkaConfiguration) {
+    if (this.configuration) {
+      this.configuration.infrastructure.kafka = updated;
+    }
+    this.$emit("updated");
+  }
+  /** Called when Redis values are updated. */
+  onRedisUpdated(updated: IRedisConfiguration) {
+    if (this.configuration) {
+      this.configuration.infrastructure.redis = updated;
+    }
+    this.$emit("updated");
+  }
+  /** Called when metrics values are updated. */
+  onMetricsUpdated(updated: IMetricsConfiguration) {
+    if (this.configuration) {
+      this.configuration.infrastructure.metrics = updated;
+    }
+    this.$emit("updated");
   }
 }
 </script>

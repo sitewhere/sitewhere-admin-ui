@@ -11,7 +11,12 @@
           color="#666"
           @click="onRevert"
           >Revert</v-btn
-        ><v-btn class="tiny-button caption ml-2" outline dark color="#090"
+        ><v-btn
+          class="tiny-button caption ml-2"
+          outline
+          dark
+          color="#090"
+          @click="onSave"
           >Save</v-btn
         >
       </div></v-card-text
@@ -31,6 +36,11 @@ export default class UnsavedUpdatesPanel extends Vue {
   /** Called when revert is clicked */
   onRevert(): void {
     this.$emit("revert");
+  }
+
+  /** Called when revert is clicked */
+  onSave(): void {
+    this.$emit("save");
   }
 }
 </script>
