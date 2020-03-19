@@ -95,7 +95,7 @@ import { required } from "vuelidate/lib/validators";
       required
     }
   }
-})
+} as any)
 export default class Postgres95Fields extends DialogSection {
   @Prop() readonly readonly!: boolean;
 

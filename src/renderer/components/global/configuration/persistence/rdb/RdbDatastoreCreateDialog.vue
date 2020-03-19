@@ -32,10 +32,7 @@ import { required, helpers } from "vuelidate/lib/validators";
 // Validation for token.
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
-import {
-  IDatastoreDefinition,
-  IDatastoreDefinitionLocal
-} from "sitewhere-configuration-model";
+import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({

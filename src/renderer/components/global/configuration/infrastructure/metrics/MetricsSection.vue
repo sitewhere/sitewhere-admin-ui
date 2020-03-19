@@ -1,9 +1,13 @@
 <template>
-  <content-section icon="fa-cogs" title="Metrics Configuration">
+  <sw-content-section icon="fa-cogs" title="Metrics Configuration">
     <v-card v-if="metrics" flat>
-      <content-field name="enabled" :value="metrics.enabled" />
-      <content-field :alt="true" name="http port" :value="metrics.httpPort" />
-      <content-link
+      <sw-content-field name="enabled" :value="metrics.enabled" />
+      <sw-content-field
+        :alt="true"
+        name="http port"
+        :value="metrics.httpPort"
+      />
+      <sw-content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit metrics configuration."
@@ -15,23 +19,15 @@
       :metrics="metrics"
       @payload="onMetricsUpdated"
     />
-  </content-section>
+  </sw-content-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Refs } from "sitewhere-ide-common";
 
-import ContentSection from "../../../../configuration/ContentSection.vue";
-import ContentField from "../../../../configuration/ContentField.vue";
-import ContentLink from "../../../../configuration/ContentLink.vue";
 import MetricsConfigurationDialog from "./MetricsConfigurationDialog.vue";
 
-import { ITenantEngineConfiguration } from "sitewhere-rest-api";
-import {
-  IDeviceManagementConfiguration,
-  IDatastoreDefinition
-} from "sitewhere-configuration-model";
 import {
   IInstanceConfiguration,
   IInfrastructureConfiguration,
@@ -40,9 +36,6 @@ import {
 
 @Component({
   components: {
-    ContentSection,
-    ContentField,
-    ContentLink,
     MetricsConfigurationDialog
   }
 })

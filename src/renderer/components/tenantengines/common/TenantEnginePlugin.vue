@@ -4,7 +4,7 @@
       <div class="flex-rows">
         <div v-if="microservice && tenant" class="plugin-header">
           <slot name="header">
-            <page-header :text="header" />
+            <sw-page-header :text="header" />
           </slot>
         </div>
         <div class="plugin-content">
@@ -23,8 +23,6 @@
 import Vue from "vue";
 import { Component, Prop } from "sitewhere-ide-common";
 
-import PageHeader from "../../configuration/PageHeader.vue";
-
 import {
   ITenantEngineConfiguration,
   IMicroserviceSummary,
@@ -32,7 +30,7 @@ import {
 } from "sitewhere-rest-api";
 
 @Component({
-  components: { PageHeader }
+  components: {}
 })
 export default class TenantEnginePlugin extends Vue {
   @Prop() readonly configuration!: ITenantEngineConfiguration;

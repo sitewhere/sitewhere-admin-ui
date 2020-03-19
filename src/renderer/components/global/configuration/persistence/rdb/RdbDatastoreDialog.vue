@@ -37,8 +37,7 @@ import {
   DialogSection,
   ITabbedComponent,
   Refs,
-  Prop,
-  Watch
+  Prop
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../../../../libraries/constants";
 
@@ -47,14 +46,9 @@ import Postgres95Fields from "../../../../configuration/datastore/postgres95/Pos
 
 import {
   IDatastoreDefinition,
-  IDatastoreDefinitionLocal,
-  IDatastoreDefinitionReference
+  IDatastoreDefinitionLocal
 } from "sitewhere-configuration-model";
-import {
-  IInstanceConfiguration,
-  IRdbConfigurationMap,
-  IRdbConfiguration
-} from "sitewhere-rest-api";
+import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
   components: { DialogForm, Postgres95Fields }

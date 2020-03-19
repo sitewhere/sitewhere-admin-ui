@@ -1,16 +1,16 @@
 <template>
-  <content-section icon="fa-cogs" title="Redis Configuration">
+  <sw-content-section icon="fa-cogs" title="Redis Configuration">
     <template slot="overlay"><div class="logo"/></template>
     <v-card v-if="redis" flat>
-      <content-field name="hostname" :value="redis.hostname" />
-      <content-field :alt="true" name="sentinel port" :value="redis.port" />
-      <content-field name="node count" :value="redis.nodeCount" />
-      <content-field
+      <sw-content-field name="hostname" :value="redis.hostname" />
+      <sw-content-field :alt="true" name="sentinel port" :value="redis.port" />
+      <sw-content-field name="node count" :value="redis.nodeCount" />
+      <sw-content-field
         :alt="true"
         name="master group name"
         :value="redis.masterGroupName"
       />
-      <content-link
+      <sw-content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit Redis configuration."
@@ -22,23 +22,15 @@
       :redis="redis"
       @payload="onRedisUpdated"
     />
-  </content-section>
+  </sw-content-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Refs } from "sitewhere-ide-common";
 
-import ContentSection from "../../../../configuration/ContentSection.vue";
-import ContentField from "../../../../configuration/ContentField.vue";
-import ContentLink from "../../../../configuration/ContentLink.vue";
 import RedisConfigurationDialog from "./RedisConfigurationDialog.vue";
 
-import { ITenantEngineConfiguration } from "sitewhere-rest-api";
-import {
-  IDeviceManagementConfiguration,
-  IDatastoreDefinition
-} from "sitewhere-configuration-model";
 import {
   IInstanceConfiguration,
   IInfrastructureConfiguration,
@@ -47,9 +39,6 @@ import {
 
 @Component({
   components: {
-    ContentSection,
-    ContentField,
-    ContentLink,
     RedisConfigurationDialog
   }
 })

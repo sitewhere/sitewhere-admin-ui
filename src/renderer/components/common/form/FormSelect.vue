@@ -12,6 +12,8 @@
       :item-value="itemValue"
       :chips="chips"
       :prepend-icon="icon"
+      :menu-props="{ closeOnContentClick: true }"
+      :hide-details="true"
       placeholder=" "
       @change="onSelectionChanged"
     />

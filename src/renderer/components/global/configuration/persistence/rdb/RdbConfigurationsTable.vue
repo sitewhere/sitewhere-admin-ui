@@ -1,5 +1,5 @@
 <template>
-  <datatable-section
+  <sw-datatable-section
     icon="fa-database"
     title="Relational Database Global Configurations"
     :headers="headers"
@@ -7,7 +7,7 @@
     width="50%"
     ><template v-slot:items="props">
       <td>
-        <datatable-link
+        <sw-datatable-link
           @linkClicked="onOpenDatastore(props.item.meta.name)"
           :text="props.item.meta.name"
         />
@@ -15,13 +15,13 @@
       <td>{{ props.item.meta.type }}</td>
       <td>{{ props.item.meta.connection }}</td>
       <td>
-        <content-delete-icon
+        <sw-content-delete-icon
           @delete="onDeleteDatastore(props.item.meta.name)"
         />
       </td>
     </template>
     <template v-slot:datatable-footer>
-      <content-link
+      <sw-content-link
         class="mt-3"
         icon="fa-plus-circle"
         text="Add new relational database global configuration."
@@ -40,17 +40,13 @@
         @updated="onDatastoreUpdated"
       />
     </template>
-  </datatable-section>
+  </sw-datatable-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Refs, Watch } from "sitewhere-ide-common";
 
-import DatatableSection from "../../../../configuration/DatatableSection.vue";
-import DatatableLink from "../../../../configuration/DatatableLink.vue";
-import ContentLink from "../../../../configuration/ContentLink.vue";
-import ContentDeleteIcon from "../../../../configuration/ContentDeleteIcon.vue";
 import RdbDatastoreCreateDialog from "./RdbDatastoreCreateDialog.vue";
 import RdbDatastoreUpdateDialog from "./RdbDatastoreUpdateDialog.vue";
 
@@ -63,10 +59,6 @@ import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
 
 @Component({
   components: {
-    DatatableSection,
-    DatatableLink,
-    ContentLink,
-    ContentDeleteIcon,
     RdbDatastoreCreateDialog,
     RdbDatastoreUpdateDialog
   }

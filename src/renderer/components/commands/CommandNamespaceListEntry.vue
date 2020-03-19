@@ -6,7 +6,11 @@
     <v-list two-line dense>
       <div v-for="(command, index) in namespace.commands" :key="command.token">
         <v-divider v-if="index > 0"></v-divider>
-        <command-panel :command="command" @edit="onEditCommand" @delete="onDeleteCommand"/>
+        <command-panel
+          :command="command"
+          @edit="onEditCommand"
+          @delete="onDeleteCommand"
+        />
       </div>
     </v-list>
   </sw-list-entry>
@@ -18,11 +22,7 @@ import Vue from "vue";
 
 import CommandPanel from "../commands/CommandPanel.vue";
 
-import {
-  IDeviceType,
-  IDeviceCommand,
-  IDeviceCommandNamespace
-} from "sitewhere-rest-api";
+import { IDeviceCommand, IDeviceCommandNamespace } from "sitewhere-rest-api";
 
 @Component({
   components: {

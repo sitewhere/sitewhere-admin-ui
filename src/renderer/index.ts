@@ -71,4 +71,4 @@ new Vue({
   components: {
     App
   }
-});
+} as any);

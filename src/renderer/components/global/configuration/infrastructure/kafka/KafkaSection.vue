@@ -1,19 +1,19 @@
 <template>
-  <content-section icon="fa-cogs" title="Apache Kafka Configuration">
+  <sw-content-section icon="fa-cogs" title="Apache Kafka Configuration">
     <template slot="overlay"><div class="logo"/></template>
     <v-card v-if="kafka" flat>
-      <content-field name="hostname" :value="kafka.hostname" />
-      <content-field :alt="true" name="port" :value="kafka.port" />
-      <content-field
+      <sw-content-field name="hostname" :value="kafka.hostname" />
+      <sw-content-field :alt="true" name="port" :value="kafka.port" />
+      <sw-content-field
         name="default topic partitions"
         :value="kafka.defaultTopicPartitions"
       />
-      <content-field
+      <sw-content-field
         :alt="true"
         name="default topic relication factor"
         :value="kafka.defaultTopicReplicationFactor"
       />
-      <content-link
+      <sw-content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit Kafka configuration."
@@ -25,23 +25,15 @@
       :kafka="kafka"
       @payload="onKafkaUpdated"
     />
-  </content-section>
+  </sw-content-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Refs } from "sitewhere-ide-common";
 
-import ContentSection from "../../../../configuration/ContentSection.vue";
-import ContentField from "../../../../configuration/ContentField.vue";
-import ContentLink from "../../../../configuration/ContentLink.vue";
 import KafkaConfigurationDialog from "./KafkaConfigurationDialog.vue";
 
-import { ITenantEngineConfiguration } from "sitewhere-rest-api";
-import {
-  IDeviceManagementConfiguration,
-  IDatastoreDefinition
-} from "sitewhere-configuration-model";
 import {
   IInstanceConfiguration,
   IInfrastructureConfiguration,
@@ -50,9 +42,6 @@ import {
 
 @Component({
   components: {
-    ContentSection,
-    ContentField,
-    ContentLink,
     KafkaConfigurationDialog
   }
 })

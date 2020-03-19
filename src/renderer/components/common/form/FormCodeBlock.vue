@@ -20,7 +20,7 @@
       />
     </v-input>
     <div class="verror">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>

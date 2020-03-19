@@ -1,8 +1,9 @@
 <template>
-  <v-card class="grey lighten-3">
-    <v-card-text>
-      <slot />
-    </v-card-text>
+  <v-card
+    flat
+    style="background-color: #f5f5f5; border-bottom: 1px solid #eee;"
+  >
+    <slot />
   </v-card>
 </template>
 

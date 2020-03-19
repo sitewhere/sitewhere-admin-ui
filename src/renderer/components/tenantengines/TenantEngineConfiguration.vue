@@ -4,6 +4,10 @@
       :configuration="configuration"
       v-if="functionalArea == 'device-management'"
     />
+    <event-sources-plugin
+      :configuration="configuration"
+      v-if="functionalArea == 'event-sources'"
+    />
     <tenant-engine-plugin v-else :configuration="configuration"
       >No Plugin Found for Functional Area:
       {{ functionalArea }}</tenant-engine-plugin
@@ -19,9 +23,10 @@ import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 
 import TenantEnginePlugin from "./common/TenantEnginePlugin.vue";
 import DeviceManagementPlugin from "./functionalareas/devicemanagement/DeviceManagementPlugin.vue";
+import EventSourcesPlugin from "./functionalareas/eventsources/EventSourcesPlugin.vue";
 
 @Component({
-  components: { DeviceManagementPlugin, TenantEnginePlugin }
+  components: { DeviceManagementPlugin, EventSourcesPlugin, TenantEnginePlugin }
 })
 export default class TenantMicroserviceConfiguration extends Vue {
   @Prop() readonly tabkey!: string;

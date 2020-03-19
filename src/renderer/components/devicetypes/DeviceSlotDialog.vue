@@ -51,13 +51,12 @@
 import {
   Component,
   DialogComponent,
-  DialogSection,
   ITabbedComponent,
   Refs
 } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 
-import { IDeviceType, IDeviceUnit, IDeviceSlot } from "sitewhere-rest-api";
+import { IDeviceType } from "sitewhere-rest-api";
 
 @Component({})
 export default class DeviceSlotDialog extends DialogComponent<IDeviceType> {
@@ -91,5 +90,4 @@ export default class DeviceSlotDialog extends DialogComponent<IDeviceType> {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

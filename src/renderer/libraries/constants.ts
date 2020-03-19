@@ -2,6 +2,25 @@ import { ITableHeaders, IPageSizes } from "sitewhere-ide-common";
 import { ParameterType } from "sitewhere-rest-api";
 
 /**
+ * Enumeration of default microservice icons.
+ */
+export enum MicroserviceIcon {
+  AssetManagement = "devices_other",
+  BatchOperations = "view_module",
+  CommandDelivery = "call_made",
+  DeviceManagement = "developer_board",
+  DeviceRegistration = "add_box",
+  DeviceState = "warning",
+  EventMangement = "dynamic_feed",
+  EventSources = "forward",
+  InboundProcessing = "input",
+  InstanceManagement = "language",
+  LabelGeneration = "label",
+  OutboundConnectors = "label",
+  ScheduleManagement = "label"
+}
+
+/**
  * Enumeration of navigation icons.
  */
 export enum NavigationIcon {

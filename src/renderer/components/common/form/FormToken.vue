@@ -11,12 +11,13 @@
     />
     <div class="verror">
       <slot>
-        <span
-          v-if="!validator.token.required && validator.$dirty"
-        >{{ label || 'Token'}} is required.</span>
-        <span
-          v-if="!validator.token.validToken && validator.$dirty"
-        >{{ label || 'Token'}} is not valid (Alphanumeric with '-' or '_').</span>
+        <span v-if="!validator.token.required && validator.$dirty"
+          >{{ label || "Token" }} is required.</span
+        >
+        <span v-if="!validator.token.validToken && validator.$dirty"
+          >{{ label || "Token" }} is not valid (Alphanumeric with '-' or
+          '_').</span
+        >
       </slot>
     </div>
   </div>

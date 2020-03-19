@@ -1,24 +1,24 @@
 <template>
-  <content-section icon="fa-cogs" title="gRPC Configuration">
+  <sw-content-section icon="fa-cogs" title="gRPC Configuration">
     <template slot="overlay"><div class="logo"/></template>
     <v-card v-if="grpc" flat>
-      <content-field name="max retry count" :value="grpc.maxRetryCount" />
-      <content-field
+      <sw-content-field name="max retry count" :value="grpc.maxRetryCount" />
+      <sw-content-field
         :alt="true"
         name="initial backoff seconds"
         :value="grpc.initialBackoffSeconds"
       />
-      <content-field
+      <sw-content-field
         name="max backoff seconds"
         :value="grpc.maxBackoffSeconds"
       />
-      <content-field
+      <sw-content-field
         :alt="true"
         name="backoff multiplier"
         :value="grpc.backoffMultiplier"
       />
-      <content-field name="resolve fqdn" :value="grpc.resolveFQDN" />
-      <content-link
+      <sw-content-field name="resolve fqdn" :value="grpc.resolveFQDN" />
+      <sw-content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit gRPC configuration."
@@ -30,23 +30,15 @@
       :grpc="grpc"
       @payload="onGrpcUpdated"
     />
-  </content-section>
+  </sw-content-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Refs } from "sitewhere-ide-common";
 
-import ContentSection from "../../../../configuration/ContentSection.vue";
-import ContentField from "../../../../configuration/ContentField.vue";
-import ContentLink from "../../../../configuration/ContentLink.vue";
 import GrpcConfigurationDialog from "./GrpcConfigurationDialog.vue";
 
-import { ITenantEngineConfiguration } from "sitewhere-rest-api";
-import {
-  IDeviceManagementConfiguration,
-  IDatastoreDefinition
-} from "sitewhere-configuration-model";
 import {
   IInstanceConfiguration,
   IInfrastructureConfiguration,
@@ -55,9 +47,6 @@ import {
 
 @Component({
   components: {
-    ContentSection,
-    ContentField,
-    ContentLink,
     GrpcConfigurationDialog
   }
 })

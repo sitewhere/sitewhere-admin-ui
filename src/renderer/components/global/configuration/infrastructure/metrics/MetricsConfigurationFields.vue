@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, DialogSection, Prop } from "sitewhere-ide-common";
+import { Component, DialogSection } from "sitewhere-ide-common";
 
 import DialogForm from "../../../../common/form/DialogForm.vue";
 import FormText from "../../../../common/form/FormText.vue";

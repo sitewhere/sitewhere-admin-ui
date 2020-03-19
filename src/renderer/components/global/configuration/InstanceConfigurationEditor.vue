@@ -4,7 +4,7 @@
       <v-card-text>
         <div class="flex-rows">
           <div v-if="configuration" class="config-header">
-            <page-header :text="header" />
+            <sw-page-header :text="header" />
           </div>
           <div class="config-content">
             <slot />
@@ -25,10 +25,8 @@ import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
-import PageHeader from "../../configuration/PageHeader.vue";
-
 @Component({
-  components: { PageHeader }
+  components: {}
 })
 export default class InstanceConfigurationEditor extends Vue {
   @Prop() readonly tabkey!: string;

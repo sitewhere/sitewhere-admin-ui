@@ -7,24 +7,24 @@
         >.
       </v-card>
       <postgres-95-summary v-if="isPostgres95" :configuration="configuration" />
-      <content-link
+      <sw-content-link
         class="mt-3"
         icon="fa-edit"
         text="Update datastore settings"
         @linkClicked="onUpdateDatastore"
       />
-      <content-link
+      <sw-content-link
         icon="fa-trash"
         text="Unset datastore"
         @linkClicked="onUnsetDatastore"
       />
     </v-card>
     <v-card flat v-else>
-      <content-warning
+      <sw-content-warning
         text="No datastore is set. This will cause
     tenant engine startup to fail!"
       />
-      <content-link
+      <sw-content-link
         class="mt-3"
         icon="fa-plus-circle"
         text="Add datastore information."
@@ -52,15 +52,8 @@ import {
 import DatastoreDialog from "./datastore/DatastoreDialog.vue";
 import Postgres95Summary from "./datastore/postgres95/Postgres95Summary.vue";
 
-import ContentField from "./ContentField.vue";
-import ContentLink from "./ContentLink.vue";
-import ContentWarning from "./ContentWarning.vue";
-
 @Component({
   components: {
-    ContentField,
-    ContentLink,
-    ContentWarning,
     DatastoreDialog,
     Postgres95Summary
   }
