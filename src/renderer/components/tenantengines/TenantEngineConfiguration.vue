@@ -3,10 +3,12 @@
     <device-management-plugin
       :configuration="configuration"
       v-if="functionalArea == 'device-management'"
+      @dirty="markDirty"
     />
     <event-sources-plugin
       :configuration="configuration"
       v-if="functionalArea == 'event-sources'"
+      @dirty="markDirty"
     />
     <tenant-engine-plugin v-else :configuration="configuration"
       >No Plugin Found for Functional Area:
@@ -58,6 +60,11 @@ export default class TenantMicroserviceConfiguration extends Vue {
     return this.configuration
       ? JSON.stringify(this.configuration.tenantConfiguration, null, 2)
       : null;
+  }
+
+  /** Mark as hanving unsaved updates */
+  markDirty(): void {
+    this.$emit("dirty");
   }
 }
 </script>

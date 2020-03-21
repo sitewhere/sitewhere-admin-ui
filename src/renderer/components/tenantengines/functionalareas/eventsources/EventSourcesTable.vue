@@ -16,7 +16,7 @@
       <td>{{ props.item.decoder.type }}</td>
       <td>
         <sw-content-delete-icon
-          @delete="onDeleteEventSource(props.item.meta.name)"
+          @delete="onDeleteEventSource(props.item.meta.id)"
         />
       </td>
     </template>
@@ -32,11 +32,19 @@
       <new-event-source-chooser ref="chooser" @chosen="onEventSourceCreate" />
       <mqtt-event-source-create-dialog
         ref="mqttCreate"
-        @create="onMqttEventSourceAdded"
+        @create="onEventSourceAdded"
       />
       <mqtt-event-source-update-dialog
         ref="mqttUpdate"
-        @update="onMqttEventSourceUpdated"
+        @update="onEventSourceUpdated"
+      />
+      <coap-event-source-create-dialog
+        ref="coapCreate"
+        @create="onEventSourceAdded"
+      />
+      <coap-event-source-update-dialog
+        ref="coapUpdate"
+        @update="onEventSourceUpdated"
       />
     </template>
   </sw-datatable-section>
@@ -49,28 +57,31 @@ import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
 import NewEventSourceChooser from "./NewEventSourceChooser.vue";
 import MqttEventSourceCreateDialog from "../eventsources/mqtt/MqttEventSourceCreateDialog.vue";
 import MqttEventSourceUpdateDialog from "../eventsources/mqtt/MqttEventSourceUpdateDialog.vue";
+import CoapEventSourceCreateDialog from "../eventsources/coap/CoapEventSourceCreateDialog.vue";
+import CoapEventSourceUpdateDialog from "../eventsources/coap/CoapEventSourceUpdateDialog.vue";
 
 import { MicroserviceIcon } from "../../../../libraries/constants";
-import {
-  IEventSourcesConfiguration,
-  IEventSourceGenericConfiguration
-} from "sitewhere-configuration-model";
+import { IEventSourceGenericConfiguration } from "sitewhere-configuration-model";
 
 @Component({
   components: {
     NewEventSourceChooser,
     MqttEventSourceCreateDialog,
-    MqttEventSourceUpdateDialog
+    MqttEventSourceUpdateDialog,
+    CoapEventSourceCreateDialog,
+    CoapEventSourceUpdateDialog
   }
 })
 export default class EventSourcesTable extends Vue {
-  @Prop() readonly configuration!: IEventSourcesConfiguration;
+  @Prop() readonly eventSources!: IEventSourceGenericConfiguration[];
 
   /** References */
   $refs!: Refs<{
     chooser: NewEventSourceChooser;
     mqttCreate: MqttEventSourceCreateDialog;
     mqttUpdate: MqttEventSourceUpdateDialog;
+    coapCreate: CoapEventSourceCreateDialog;
+    coapUpdate: CoapEventSourceUpdateDialog;
   }>;
 
   headers: any[] = [
@@ -84,7 +95,7 @@ export default class EventSourcesTable extends Vue {
   eventSourcesAsSortedArray: any[] = [];
 
   @Watch("eventSources", { immediate: true })
-  onConfigurationsUpdated(updated: any) {
+  onEventSourcesUpdated(updated: any) {
     this.calculateEventSourcesAsSortedArray();
   }
 
@@ -93,22 +104,39 @@ export default class EventSourcesTable extends Vue {
     return MicroserviceIcon.EventSources;
   }
 
-  /** Get event sources list */
-  get eventSources(): IEventSourceGenericConfiguration[] | null {
-    return this.configuration ? this.configuration.eventSources : null;
-  }
-
-  /** Get an event source by id */
-  getEventSourceById(id: string): IEventSourceGenericConfiguration | null {
-    let match: IEventSourceGenericConfiguration | null = null;
+  /** Get list of ids already in use */
+  findIdsInUse(exclude?: string): string[] {
+    let ids: string[] = [];
     if (this.eventSources) {
       this.eventSources.forEach(source => {
+        if (source.id != exclude) {
+          ids.push(source.id);
+        }
+      });
+    }
+    return ids;
+  }
+
+  /** Get event source index based on id */
+  getEventSourceIndex(id: string): number | null {
+    let match: number | null = null;
+    if (this.eventSources) {
+      this.eventSources.forEach((source, index) => {
         if (source.id === id) {
-          match = source;
+          match = index;
         }
       });
     }
     return match;
+  }
+
+  /** Get an event source by id */
+  getEventSourceById(id: string): IEventSourceGenericConfiguration | null {
+    let index: number | null = this.getEventSourceIndex(id);
+    if (this.eventSources && index != null) {
+      return this.eventSources[index];
+    }
+    return null;
   }
 
   /** Get event sources as a sorted array */
@@ -138,19 +166,21 @@ export default class EventSourcesTable extends Vue {
 
   /** Called to create a new event source based on type */
   onEventSourceCreate(id: string): void {
-    console.log(`Create for ${id}.`);
-    if (id == "mqtt") {
-      this.$refs.mqttCreate.openDialog();
+    let idsInUse: string[] = this.findIdsInUse();
+    if (id == "coap") {
+      this.$refs.coapCreate.openDialog(idsInUse);
+    } else if (id == "mqtt") {
+      this.$refs.mqttCreate.openDialog(idsInUse);
     }
   }
 
   /** Called when MQTT event source is added */
-  onMqttEventSourceAdded(config: IEventSourceGenericConfiguration): void {
-    console.log("MQTT event source created.", config);
-  }
-
-  onMqttEventSourceUpdated(config: IEventSourceGenericConfiguration): void {
-    console.log("MQTT event source updated.", config);
+  onEventSourceAdded(config: IEventSourceGenericConfiguration): void {
+    if (this.eventSources) {
+      this.eventSources.push(config);
+      this.calculateEventSourcesAsSortedArray();
+    }
+    this.$emit("create", config);
   }
 
   /** Open event source by id */
@@ -158,15 +188,38 @@ export default class EventSourcesTable extends Vue {
     let config: IEventSourceGenericConfiguration | null = this.getEventSourceById(
       id
     );
+    let idsInUse: string[] = this.findIdsInUse(id);
     if (config) {
-      if (config.type === "mqtt") {
-        this.$refs.mqttUpdate.openDialog(config);
+      if (config.type === "coap") {
+        this.$refs.coapUpdate.openDialog(config, idsInUse);
+      } else if (config.type === "mqtt") {
+        this.$refs.mqttUpdate.openDialog(config, idsInUse);
       }
     }
   }
 
+  /** Called when MQTT event source is updated */
+  onEventSourceUpdated(
+    originalId: string,
+    config: IEventSourceGenericConfiguration
+  ): void {
+    let index: number | null = this.getEventSourceIndex(originalId);
+    if (this.eventSources && index != null) {
+      Vue.set(this.eventSources, index, config);
+      this.calculateEventSourcesAsSortedArray();
+    }
+    this.$emit("update", originalId, config);
+  }
+
   /** Delete event source by id */
-  onDeleteEventSource(id: string) {}
+  onDeleteEventSource(id: string) {
+    let index: number | null = this.getEventSourceIndex(id);
+    if (this.eventSources && index != null) {
+      this.eventSources.splice(index);
+      this.calculateEventSourcesAsSortedArray();
+    }
+    this.$emit("delete", id);
+  }
 }
 </script>
 

@@ -12,6 +12,7 @@
       </v-btn>
     </v-btn-toggle>
     <editor
+      ref="editor"
       class="editor"
       v-model="content"
       @init="editorInit"
@@ -25,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
 
 import Vue from "vue";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
@@ -39,23 +40,34 @@ export default class TenantMicroserviceConfiguration extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly configuration!: ITenantEngineConfiguration;
 
+  /** References */
+  $refs!: Refs<{
+    editor: any;
+  }>;
+
   jsonChoice: number = 0;
-  content: string = "";
   aceOptions: {} = {
     showPrintMargin: false,
     readOnly: true
   };
 
-  @Watch("jsonChoice", { immediate: true })
-  onSourceChosen(updated: number) {
-    if (updated == 0) {
-      this.content = this.tenantEngineConfiguration || "";
-    } else if (updated == 1) {
-      this.content = this.microserviceConfiguration || "";
-    } else if (updated == 2) {
-      this.content = this.instanceConfiguration || "";
+  /** Get content based on choice */
+  get content() {
+    if (this.jsonChoice == 0) {
+      return this.tenantEngineConfiguration || "";
+    } else if (this.jsonChoice == 1) {
+      return this.microserviceConfiguration || "";
+    } else if (this.jsonChoice == 2) {
+      return this.instanceConfiguration || "";
     }
   }
+
+  /** Access the editor component */
+  get editorComponent(): any {
+    return this.$refs.editor.editor;
+  }
+
+  set content(updated: string) {}
 
   /** Initialize code editor by requiring dependencies */
   editorInit() {

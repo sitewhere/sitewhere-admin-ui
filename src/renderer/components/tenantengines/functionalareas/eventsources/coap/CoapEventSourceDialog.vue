@@ -1,7 +1,7 @@
 <template>
   <event-source-dialog
     ref="dialog"
-    type="mqtt"
+    type="coap"
     :icon="icon"
     :title="title"
     :width="width"
@@ -14,15 +14,11 @@
     @cancelClicked="onCancelClicked"
   >
     <template slot="event-source-tabs">
-      <v-tab key="connection">Connection</v-tab>
-      <v-tab key="authentication">Authentication</v-tab>
+      <v-tab key="server">Server</v-tab>
     </template>
     <template slot="event-source-tab-items">
-      <v-tab-item key="connection">
-        <mqtt-connection-fields ref="connection" />
-      </v-tab-item>
-      <v-tab-item key="authentication">
-        <mqtt-authentication-fields ref="authentication" />
+      <v-tab-item key="server">
+        <coap-server-fields ref="server" />
       </v-tab-item>
     </template>
   </event-source-dialog>
@@ -41,17 +37,15 @@ import { IEventSourceGenericConfiguration } from "sitewhere-configuration-model"
 import { MicroserviceIcon } from "../../../../../libraries/constants";
 
 import EventSourceDialog from "../EventSourceDialog.vue";
-import MqttConnectionFields from "../../../common/mqtt/MqttConnectionFields.vue";
-import MqttAuthenticationFields from "../../../common/mqtt/MqttAuthenticationFields.vue";
+import CoapServerFields from "./CoapServerFields.vue";
 
 @Component({
   components: {
     EventSourceDialog,
-    MqttConnectionFields,
-    MqttAuthenticationFields
+    CoapServerFields
   }
 })
-export default class MqttEventSourceDialog extends DialogComponent<
+export default class CoapEventSourceDialog extends DialogComponent<
   IEventSourceGenericConfiguration
 > {
   @Prop() readonly title!: string;
@@ -63,8 +57,7 @@ export default class MqttEventSourceDialog extends DialogComponent<
   // References.
   $refs!: Refs<{
     dialog: any;
-    connection: MqttConnectionFields;
-    authentication: MqttAuthenticationFields;
+    server: CoapServerFields;
   }>;
 
   /** Get icon for dialog */
@@ -75,8 +68,7 @@ export default class MqttEventSourceDialog extends DialogComponent<
   /** Generate payload from UI */
   generatePayload() {
     let config: any = {};
-    Object.assign(config, this.$refs.connection.save());
-    Object.assign(config, this.$refs.authentication.save());
+    Object.assign(config, this.$refs.server.save());
 
     let payload: any = {};
     Object.assign(payload, this.$refs.dialog.save());
@@ -87,11 +79,8 @@ export default class MqttEventSourceDialog extends DialogComponent<
 
   /** Reset dialog contents */
   reset() {
-    if (this.$refs.connection) {
-      this.$refs.connection.reset();
-    }
-    if (this.$refs.authentication) {
-      this.$refs.authentication.reset();
+    if (this.$refs.server) {
+      this.$refs.server.reset();
     }
     this.$refs.dialog.reset();
   }
@@ -102,11 +91,8 @@ export default class MqttEventSourceDialog extends DialogComponent<
     if (this.$refs.dialog) {
       this.$refs.dialog.load(config);
     }
-    if (this.$refs.connection) {
-      this.$refs.connection.load(config.configuration);
-    }
-    if (this.$refs.authentication) {
-      this.$refs.authentication.load(config.configuration);
+    if (this.$refs.server) {
+      this.$refs.server.load(config.configuration);
     }
   }
 
@@ -115,12 +101,8 @@ export default class MqttEventSourceDialog extends DialogComponent<
     if (!this.$refs.dialog.validate()) {
       return;
     }
-    if (!this.$refs.connection.validate()) {
+    if (!this.$refs.server.validate()) {
       this.$refs.dialog.setActiveTab(0);
-      return;
-    }
-    if (!this.$refs.authentication.validate()) {
-      this.$refs.dialog.setActiveTab(1);
       return;
     }
 

@@ -26,6 +26,9 @@
               class="mr-3"
             >
               <span v-if="!$v.id.required && $v.$dirty">Id is required.</span>
+              <span v-if="!$v.id.idConflict && $v.$dirty"
+                >Id already in use.</span
+              >
             </form-text>
           </v-flex>
           <v-flex xs7>
@@ -72,13 +75,27 @@ import DecoderConfiguration from "./decoders/DecoderConfiguration.vue";
 
 import { IEventSourceGenericConfiguration } from "sitewhere-configuration-model";
 
-import { required } from "vuelidate/lib/validators";
+import { required, ValidationRule, helpers } from "vuelidate/lib/validators";
+
+/** Validator for checking if id is already used */
+const idConflict: ValidationRule = helpers.withParams(
+  { type: "idConflict" },
+  (value, vm) => {
+    let idsInUse: string[] = vm.idsInUse;
+    let conflict: boolean = false;
+    idsInUse.forEach(id => {
+      if (vm.id == id) conflict = true;
+    });
+    return !conflict;
+  }
+);
 
 @Component({
   components: { DialogHeader, FormText, FormSelect, DecoderConfiguration },
   validations: {
     id: {
-      required
+      required,
+      idConflict
     }
   }
 })
@@ -90,6 +107,7 @@ export default class EventSourceDialog extends Vue {
   @Prop() readonly cancelLabel!: string;
   @Prop() readonly createLabel!: string;
   @Prop() readonly visible!: boolean;
+  @Prop() readonly idsInUse!: string[];
 
   // References.
   $refs!: Refs<{
@@ -130,6 +148,7 @@ export default class EventSourceDialog extends Vue {
     this.decoderType = "json";
     this.setActiveTab(0);
     this.$refs.decoder.reset();
+    this.$v.$reset();
   }
 
   /** Validate fields */
@@ -144,6 +163,7 @@ export default class EventSourceDialog extends Vue {
   /** Load dialog from a given configuration */
   load(config: IEventSourceGenericConfiguration) {
     this.id = config.id;
+    this.decoderType = config.decoder ? config.decoder.type : "json";
   }
 
   /** Set the active tab */

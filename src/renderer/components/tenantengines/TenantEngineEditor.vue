@@ -7,7 +7,13 @@
     :loaded="loaded"
     :record="tenant"
   >
-    <template slot="header"> </template>
+    <template slot="header">
+      <unsaved-updates-panel
+        v-if="dirty"
+        @revert="onRevertConfiguration"
+        @save="onSaveConfiguration"
+      />
+    </template>
     <template slot="tabs">
       <v-tab key="configuration">Configuration</v-tab>
       <v-tab key="scripts">Scripts</v-tab>
@@ -15,11 +21,12 @@
     </template>
     <template slot="tab-items">
       <tenant-engine-configuration
-        :configuration="configuration"
+        :configuration="workingCopy"
         tabkey="configuration"
+        @dirty="checkDirty"
       />
       <scripts-manager tabkey="scripts" :identifier="identifier" />
-      <tenant-engine-source :configuration="configuration" tabkey="json" />
+      <tenant-engine-source :configuration="workingCopy" tabkey="json" />
     </template>
     <template slot="actions">
       <sw-navigation-action-button
@@ -37,10 +44,11 @@ import Vue from "vue";
 import ScriptsManager from "../microservice/ScriptsManager.vue";
 import TenantEngineConfiguration from "./TenantEngineConfiguration.vue";
 import TenantEngineSource from "./TenantEngineSource.vue";
+import UnsavedUpdatesPanel from "./UnsavedUpdatesPanel.vue";
 
 import { AxiosResponse } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
-import { Component, WithRoute } from "sitewhere-ide-common";
+import { Component, WithRoute, Watch } from "sitewhere-ide-common";
 import {
   ITenantEngineConfiguration,
   ITenant,
@@ -52,7 +60,8 @@ import { getTenantEngineConfiguration } from "../../rest/sitewhere-instance-api"
   components: {
     ScriptsManager,
     TenantEngineConfiguration,
-    TenantEngineSource
+    TenantEngineSource,
+    UnsavedUpdatesPanel
   }
 })
 export default class TenantEngineEditor extends Vue implements WithRoute {
@@ -61,6 +70,15 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
   configuration: ITenantEngineConfiguration | null = null;
   dirty: boolean = false;
   loaded: boolean = false;
+
+  /** Tracks updated configuration */
+  workingCopy: ITenantEngineConfiguration | null = null;
+
+  /** Creates a working copy of the configuration */
+  @Watch("configuration", { immediate: true })
+  onConfigurationUpdated(updated: ITenantEngineConfiguration) {
+    this.workingCopy = JSON.parse(JSON.stringify(updated));
+  }
 
   created() {
     this.tenantToken = this.$route.params.token;
@@ -97,6 +115,7 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
   /** Refresh all data */
   async refresh() {
     if (this.identifier && this.tenantToken) {
+      this.loaded = false;
       let response: AxiosResponse<ITenantEngineConfiguration> = await getTenantEngineConfiguration(
         this.$store,
         this.identifier,
@@ -107,12 +126,35 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
     }
   }
 
-  // Called when configuration is changed.
-  onConfigurationUpdated() {
-    this.dirty = true;
+  /** Reverts to saved configuration */
+  onRevertConfiguration(): void {
+    if (this.configuration) {
+      this.onConfigurationUpdated(this.configuration);
+      this.dirty = false;
+    }
   }
 
-  // Navigate back to microservices list.
+  /** Called to save configuration updates */
+  async onSaveConfiguration() {
+    if (this.workingCopy) {
+      // let response: AxiosResponse<ITenantEngineConfiguration> = await updateInstanceConfiguration(
+      //   this.$store,
+      //   this.workingCopy
+      // );
+      // this.configuration = response.data;
+      // this.onConfigurationUpdated(this.configuration);
+      // this.dirty = false;
+    }
+  }
+
+  /** Compares original with working copy for dirty check */
+  checkDirty() {
+    let orig: string = JSON.stringify(this.configuration);
+    let work: string = JSON.stringify(this.workingCopy);
+    this.dirty = orig != work;
+  }
+
+  /** Navigate back to microservices list */
   onBackToList() {
     this.$router.push("/system/tenants/" + this.tenantToken);
   }

@@ -1,6 +1,11 @@
 <template>
   <tenant-engine-plugin :configuration="configuration">
-    <event-sources-table :configuration="eventSourcesConfiguration" />
+    <event-sources-table
+      :eventSources="eventSources"
+      @create="onEventSourceCreated"
+      @update="onEventSourceUpdated"
+      @delete="onEventSourceDeleted"
+    />
   </tenant-engine-plugin>
 </template>
 
@@ -45,6 +50,29 @@ export default class EventSourcesPlugin extends Vue {
     return this.eventSourcesConfiguration
       ? this.eventSourcesConfiguration.eventSources
       : null;
+  }
+
+  /** Handle event source created */
+  onEventSourceCreated(config: IEventSourceGenericConfiguration): void {
+    this.markDirty();
+  }
+
+  /** Handle event source updated */
+  onEventSourceUpdated(
+    originalId: string,
+    config: IEventSourceGenericConfiguration
+  ): void {
+    this.markDirty();
+  }
+
+  /** Handle event source deleted */
+  onEventSourceDeleted(id: string): void {
+    this.markDirty();
+  }
+
+  /** Mark data as having been updated */
+  markDirty(): void {
+    this.$emit("dirty");
   }
 }
 </script>

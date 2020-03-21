@@ -1,7 +1,7 @@
 <template>
-  <mqtt-event-source-dialog
+  <coap-event-source-dialog
     ref="dialog"
-    title="Create MQTT Event Source"
+    title="Create CoAP Server Event Source"
     width="700"
     createLabel="Create"
     cancelLabel="Cancel"
@@ -14,25 +14,25 @@
 import Vue from "vue";
 import { Component, Refs } from "sitewhere-ide-common";
 
-import MqttEventSourceDialog from "./MqttEventSourceDialog.vue";
+import CoapEventSourceDialog from "./CoapEventSourceDialog.vue";
 
-import { IMqttEventSourceConfiguration } from "sitewhere-configuration-model";
+import { ICoapServerConfiguration } from "sitewhere-configuration-model";
 
 @Component({
   components: {
-    MqttEventSourceDialog
+    CoapEventSourceDialog
   }
 })
-export default class MqttEventSourceCreateDialog extends Vue {
+export default class CoapEventSourceCreateDialog extends Vue {
   /** References */
   $refs!: Refs<{
-    dialog: MqttEventSourceDialog;
+    dialog: CoapEventSourceDialog;
   }>;
 
   idsInUse: string[] = [];
 
   /** Emit payload */
-  onPayload(payload: IMqttEventSourceConfiguration): void {
+  onPayload(payload: ICoapServerConfiguration): void {
     this.$refs.dialog.closeDialog();
     this.$emit("create", payload);
   }
