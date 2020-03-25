@@ -54,7 +54,11 @@ import {
   ITenant,
   IMicroserviceSummary
 } from "sitewhere-rest-api";
-import { getTenantEngineConfiguration } from "../../rest/sitewhere-instance-api";
+import {
+  getTenantEngineConfiguration,
+  updateTenantEngineConfiguration,
+  updateInstanceConfiguration
+} from "../../rest/sitewhere-instance-api";
 
 @Component({
   components: {
@@ -136,14 +140,14 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
 
   /** Called to save configuration updates */
   async onSaveConfiguration() {
-    if (this.workingCopy) {
-      // let response: AxiosResponse<ITenantEngineConfiguration> = await updateInstanceConfiguration(
-      //   this.$store,
-      //   this.workingCopy
-      // );
-      // this.configuration = response.data;
-      // this.onConfigurationUpdated(this.configuration);
-      // this.dirty = false;
+    if (this.identifier && this.tenantToken && this.workingCopy) {
+      let response: AxiosResponse<ITenantEngineConfiguration> = await updateTenantEngineConfiguration(
+        this.$store,
+        this.identifier,
+        this.tenantToken,
+        this.workingCopy.tenantConfiguration
+      );
+      this.dirty = false;
     }
   }
 

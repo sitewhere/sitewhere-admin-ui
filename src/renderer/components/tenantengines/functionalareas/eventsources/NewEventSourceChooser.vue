@@ -4,11 +4,26 @@
     :icon="icon"
     title="Add Event Source"
     width="500"
-  >
-    <sw-new-element-entry icon="fa-plus" itemId="mqtt" @chosen="onChosen"
-      >MQTT Event Source</sw-new-element-entry
+    ><sw-new-element-entry
+      icon="fa-globe"
+      itemId="activemq-broker"
+      @chosen="onChosen"
+      >ActiveMQ Broker Event Source</sw-new-element-entry
+    ><sw-new-element-entry
+      icon="fa-globe"
+      itemId="activemq-client"
+      @chosen="onChosen"
+      >ActiveMQ Client Event Source</sw-new-element-entry
+    ><sw-new-element-entry icon="fa-globe" itemId="eventhub" @chosen="onChosen"
+      >Azure Event Hub Event Source</sw-new-element-entry
     ><sw-new-element-entry icon="fa-globe" itemId="coap" @chosen="onChosen"
       >CoAP Server Event Source</sw-new-element-entry
+    >
+    <sw-new-element-entry icon="fa-globe" itemId="mqtt" @chosen="onChosen"
+      >MQTT Event Source</sw-new-element-entry
+    >
+    <sw-new-element-entry icon="fa-globe" itemId="rabbitmq" @chosen="onChosen"
+      >RabbitMQ Event Source</sw-new-element-entry
     >
   </sw-new-element-chooser>
 </template>

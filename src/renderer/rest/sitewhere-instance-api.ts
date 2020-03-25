@@ -73,3 +73,26 @@ export function getTenantEngineConfiguration(
   );
   return loaderWrapper(store, api);
 }
+
+/**
+ * Update tenant engine configuration information.
+ * @param store
+ * @param functionalArea
+ * @param tenant
+ * @param configuration
+ */
+export function updateTenantEngineConfiguration(
+  store: Store<SiteWhereUiSettings>,
+  functionalArea: string,
+  tenant: string,
+  configuration: any
+): Promise<AxiosResponse<ITenantEngineConfiguration>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<ITenantEngineConfiguration> = SiteWhere.API.Instance.updateTenantEngineConfiguration(
+    axios,
+    functionalArea,
+    tenant,
+    configuration
+  );
+  return loaderWrapper(store, api);
+}
