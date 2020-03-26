@@ -25,14 +25,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  Prop
-} from "sitewhere-ide-common";
+import { Component, DialogComponent, Refs, Prop } from "sitewhere-ide-common";
 import { IEventSourceGenericConfiguration } from "sitewhere-configuration-model";
 import { MicroserviceIcon } from "../../../../../libraries/constants";
 

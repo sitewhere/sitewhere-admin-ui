@@ -6,7 +6,6 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import { Component, Prop, DialogSection, Refs } from "sitewhere-ide-common";
 
 import JsonDecoderConfiguration from "./json/JsonDecoderConfiguration.vue";

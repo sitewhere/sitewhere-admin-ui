@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import { Component, DialogSection } from "sitewhere-ide-common";
 
 import NoConfiguration from "../NoConfiguration.vue";

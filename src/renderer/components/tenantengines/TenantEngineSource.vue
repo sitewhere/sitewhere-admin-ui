@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs } from "sitewhere-ide-common";
 
 import Vue from "vue";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
@@ -52,7 +52,7 @@ export default class TenantMicroserviceConfiguration extends Vue {
   };
 
   /** Get content based on choice */
-  get content() {
+  get content(): string {
     if (this.jsonChoice == 0) {
       return this.tenantEngineConfiguration || "";
     } else if (this.jsonChoice == 1) {
@@ -60,6 +60,7 @@ export default class TenantMicroserviceConfiguration extends Vue {
     } else if (this.jsonChoice == 2) {
       return this.instanceConfiguration || "";
     }
+    return "";
   }
 
   /** Access the editor component */

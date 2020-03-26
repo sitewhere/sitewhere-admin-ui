@@ -1,5 +1,5 @@
 <template>
-  <active-mq-client-event-source-dialog
+  <rabbit-mq-event-source-dialog
     ref="dialog"
     title="Update RabbitMQ Event Source"
     width="700"

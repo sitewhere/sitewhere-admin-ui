@@ -56,8 +56,7 @@ import {
 } from "sitewhere-rest-api";
 import {
   getTenantEngineConfiguration,
-  updateTenantEngineConfiguration,
-  updateInstanceConfiguration
+  updateTenantEngineConfiguration
 } from "../../rest/sitewhere-instance-api";
 
 @Component({
@@ -141,7 +140,7 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
   /** Called to save configuration updates */
   async onSaveConfiguration() {
     if (this.identifier && this.tenantToken && this.workingCopy) {
-      let response: AxiosResponse<ITenantEngineConfiguration> = await updateTenantEngineConfiguration(
+      await updateTenantEngineConfiguration(
         this.$store,
         this.identifier,
         this.tenantToken,

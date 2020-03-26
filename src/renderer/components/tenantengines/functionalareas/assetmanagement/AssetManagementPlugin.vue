@@ -1,6 +1,6 @@
 <template>
   <tenant-engine-plugin :configuration="configuration">
-    <sw-content-section icon="fa-database" title="Device Management Datastore">
+    <sw-content-section icon="fa-database" title="Asset Management Datastore">
       <datastore-selector
         :datastore="datastore"
         :instance="instanceManagement"
@@ -19,7 +19,7 @@ import DatastoreSelector from "../../../configuration/DatastoreSelector.vue";
 
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 import {
-  IDeviceManagementConfiguration,
+  IAssetManagementConfiguration,
   IDatastoreDefinition
 } from "sitewhere-configuration-model";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
@@ -27,11 +27,11 @@ import { IInstanceConfiguration } from "sitewhere-rest-api";
 @Component({
   components: { TenantEnginePlugin, DatastoreSelector }
 })
-export default class DeviceManagementPlugin extends Vue {
+export default class AssetManagementPlugin extends Vue {
   @Prop() readonly configuration!: ITenantEngineConfiguration;
 
-  /** Get tenant configuration for device management */
-  get deviceManagement(): IDeviceManagementConfiguration {
+  /** Get tenant configuration for asset management */
+  get assetManagement(): IAssetManagementConfiguration {
     return this.configuration ? this.configuration.tenantConfiguration : null;
   }
 
@@ -42,12 +42,12 @@ export default class DeviceManagementPlugin extends Vue {
 
   /** Get datastore definition */
   get datastore(): IDatastoreDefinition | null {
-    return this.deviceManagement ? this.deviceManagement.datastore : null;
+    return this.assetManagement ? this.assetManagement.datastore : null;
   }
 
   onUnsetDatastore(): void {
-    if (this.deviceManagement) {
-      (this.deviceManagement as any).datastore = null;
+    if (this.assetManagement) {
+      (this.assetManagement as any).datastore = null;
     }
   }
 }

@@ -9,12 +9,7 @@
         @success="onFieldCopied"
         @error="onFieldCopyFailed"
       >
-        <font-awesome-icon
-          class="grey--text text--lighten-1 mt-1"
-          icon="copy"
-          size="sm"
-          style="vertical-align: top;"
-        />
+        <v-icon small class="copy-field">fa-copy</v-icon>
       </span>
       <span>Copy to Clipboard</span>
     </v-tooltip>
@@ -42,3 +37,15 @@ export default class ClipboardCopyField extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.copy-field {
+  color: #eee;
+  font-size: 12px !important;
+  margin-left: 4px;
+  margin-bottom: 3px;
+}
+.copy-field:hover {
+  color: #ccc;
+}
+</style>

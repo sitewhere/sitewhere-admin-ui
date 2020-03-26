@@ -8,8 +8,8 @@ import {
   ITenant,
   ITenantSearchCriteria,
   ITenantResponseFormat,
-  ITenantTemplate,
-  IDatasetTemplate,
+  ITenantConfigurationTemplate,
+  ITenantDatasetTemplate,
   ITenantSearchResults
 } from "sitewhere-rest-api";
 
@@ -82,9 +82,11 @@ export function listTenants(
   format: ITenantResponseFormat
 ): Promise<AxiosResponse<ITenantSearchResults>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    ITenantSearchResults
-  > = SiteWhere.API.Tenants.listTenants(axios, criteria, format);
+  let api: AxiosPromise<ITenantSearchResults> = SiteWhere.API.Tenants.listTenants(
+    axios,
+    criteria,
+    format
+  );
   return loaderWrapper(store, api);
 }
 
@@ -106,16 +108,16 @@ export function deleteTenant(
 }
 
 /**
- * List available tenant templates.
+ * List available tenant configuration templates.
  * @param store
  */
-export function listTenantTemplates(
+export function listTenantConfigurationTemplates(
   store: Store<SiteWhereUiSettings>
-): Promise<AxiosResponse<ITenantTemplate[]>> {
+): Promise<AxiosResponse<ITenantConfigurationTemplate[]>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    ITenantTemplate[]
-  > = SiteWhere.API.Tenants.listTenantTemplates(axios);
+  let api: AxiosPromise<ITenantConfigurationTemplate[]> = SiteWhere.API.Tenants.listTenantConfigurationTemplates(
+    axios
+  );
   return loaderWrapper(store, api);
 }
 
@@ -123,12 +125,12 @@ export function listTenantTemplates(
  * List available dataset templates.
  * @param store
  */
-export function listDatasetTemplates(
+export function listTenantDatasetTemplates(
   store: Store<SiteWhereUiSettings>
-): Promise<AxiosResponse<IDatasetTemplate[]>> {
+): Promise<AxiosResponse<ITenantDatasetTemplate[]>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<
-    IDatasetTemplate[]
-  > = SiteWhere.API.Tenants.listDatasetTemplates(axios);
+  let api: AxiosPromise<ITenantDatasetTemplate[]> = SiteWhere.API.Tenants.listTenantDatasetTemplates(
+    axios
+  );
   return loaderWrapper(store, api);
 }

@@ -9,8 +9,12 @@
         icon="info"
         class="mr-3"
       >
-        <span v-if="!$v.token.required && $v.$dirty">Tenant token is required.</span>
-        <span v-if="!$v.token.validToken && $v.$dirty">Tenant token is not valid.</span>
+        <span v-if="!$v.token.required && $v.$dirty"
+          >Tenant token is required.</span
+        >
+        <span v-if="!$v.token.validToken && $v.$dirty"
+          >Tenant token is not valid.</span
+        >
       </form-text>
     </v-flex>
     <v-flex xs7>
@@ -21,7 +25,9 @@
         label="Authentication Token"
         icon="https"
       >
-        <span v-if="$v.authToken.$invalid && $v.$dirty">Authentication Token is required.</span>
+        <span v-if="$v.authToken.$invalid && $v.$dirty"
+          >Authentication Token is required.</span
+        >
       </form-text>
     </v-flex>
     <v-flex xs12>
@@ -60,7 +66,9 @@
         icon="layers"
         class="mr-3"
       >
-        <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty">Tenant template is required.</span>
+        <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty"
+          >Tenant template is required.</span
+        >
       </form-select>
     </v-flex>
     <v-flex xs6>
@@ -74,7 +82,9 @@
         item-value="id"
         icon="backup"
       >
-        <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty">Dataset template is required.</span>
+        <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty"
+          >Dataset template is required.</span
+        >
       </form-select>
     </v-flex>
   </dialog-form>
@@ -96,12 +106,12 @@ import {
   IUserSearchCriteria,
   IUserResponseFormat,
   IUserSearchResults,
-  ITenantTemplate,
-  IDatasetTemplate
+  ITenantConfigurationTemplate,
+  ITenantDatasetTemplate
 } from "sitewhere-rest-api";
 import {
-  listTenantTemplates,
-  listDatasetTemplates
+  listTenantConfigurationTemplates,
+  listTenantDatasetTemplates
 } from "../../rest/sitewhere-tenants-api";
 import { listUsers } from "../../rest/sitewhere-users-api";
 
@@ -144,9 +154,9 @@ export default class TenantDetailFields extends DialogSection {
   tenantTemplateId: string | null = null;
   datasetTemplateId: string | null = null;
 
-  // Content for dropdowns.
-  templatesList: ITenantTemplate[] = [];
-  datasetsList: IDatasetTemplate[] = [];
+  /** Content for dropdowns */
+  templatesList: ITenantConfigurationTemplate[] = [];
+  datasetsList: ITenantDatasetTemplate[] = [];
   allUsers: IUser[] = [];
 
   /** Reset section content */
@@ -192,12 +202,12 @@ export default class TenantDetailFields extends DialogSection {
   /** Refresh content for dropdowns */
   refreshDropdownContent(): void {
     let component = this;
-    let tenantTemplates: AxiosPromise<ITenantTemplate[]> = listTenantTemplates(
+    let tenantTemplates: AxiosPromise<ITenantConfigurationTemplate[]> = listTenantConfigurationTemplates(
       this.$store
     );
-    let datasetTemplates: AxiosPromise<
-      IDatasetTemplate[]
-    > = listDatasetTemplates(this.$store);
+    let datasetTemplates: AxiosPromise<ITenantDatasetTemplate[]> = listTenantDatasetTemplates(
+      this.$store
+    );
 
     let criteria: IUserSearchCriteria = { pageNumber: 1, pageSize: 0 };
     let format: IUserResponseFormat = {};
@@ -219,5 +229,4 @@ export default class TenantDetailFields extends DialogSection {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
