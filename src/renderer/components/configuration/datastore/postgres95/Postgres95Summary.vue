@@ -5,7 +5,13 @@
     <sw-content-field name="hostname" :value="hostname" />
     <sw-content-field :alt="true" name="port" :value="port" />
     <sw-content-field name="username" :value="username" />
-    <sw-content-field :alt="true" name="password" :value="password" />
+    <sw-content-field
+      :alt="true"
+      name="password"
+      :password="true"
+      :value="password"
+    />
+    <sw-content-field name="max connections" :value="maxConnections" />
   </v-card>
 </template>
 
@@ -38,6 +44,11 @@ export default class Postgres95Summary extends Vue {
   /** Password */
   get password(): string | null {
     return this.configuration ? this.configuration.password : null;
+  }
+
+  /** Max connections */
+  get maxConnections(): number | null {
+    return this.configuration ? this.configuration.maxConnections : null;
   }
 }
 </script>

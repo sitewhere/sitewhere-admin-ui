@@ -31,7 +31,16 @@
         @linkClicked="onAddDatastore"
       />
     </v-card>
-    <datastore-dialog :instance="instance" ref="dialog" />
+    <datastore-create-dialog
+      :instance="instance"
+      ref="create"
+      @create="onDatastoreCreate"
+    />
+    <datastore-update-dialog
+      :instance="instance"
+      ref="update"
+      @update="onDatastoreUpdate"
+    />
   </div>
 </template>
 
@@ -49,12 +58,14 @@ import {
   IRdbConfiguration
 } from "sitewhere-rest-api";
 
-import DatastoreDialog from "./datastore/DatastoreDialog.vue";
+import DatastoreCreateDialog from "./datastore/DatastoreCreateDialog.vue";
+import DatastoreUpdateDialog from "./datastore/DatastoreUpdateDialog.vue";
 import Postgres95Summary from "./datastore/postgres95/Postgres95Summary.vue";
 
 @Component({
   components: {
-    DatastoreDialog,
+    DatastoreCreateDialog,
+    DatastoreUpdateDialog,
     Postgres95Summary
   }
 })
@@ -64,7 +75,8 @@ export default class DatastoreSelector extends Vue {
 
   /** References */
   $refs!: Refs<{
-    dialog: DatastoreDialog;
+    create: DatastoreCreateDialog;
+    update: DatastoreUpdateDialog;
   }>;
 
   /** Global RDB configurations */
@@ -131,18 +143,27 @@ export default class DatastoreSelector extends Vue {
 
   /** Add datastore */
   onAddDatastore() {
-    console.log("Add datastore.");
+    this.$refs.create.openDialog();
+  }
+
+  /** Called to create datastore based on UI data */
+  onDatastoreCreate(definition: IDatastoreDefinition) {
+    this.$emit("create", definition);
   }
 
   /** Update datastore */
   onUpdateDatastore() {
-    this.$refs.dialog.load(this.datastore);
-    this.$refs.dialog.openDialog();
+    this.$refs.update.openDialog(this.datastore);
+  }
+
+  /** Called to update datastore based on UI data */
+  onDatastoreUpdate(definition: IDatastoreDefinition) {
+    this.$emit("update", definition);
   }
 
   /** Unset datastore */
   onUnsetDatastore() {
-    this.$emit("unsetDatastore");
+    this.$emit("unset");
   }
 }
 </script>

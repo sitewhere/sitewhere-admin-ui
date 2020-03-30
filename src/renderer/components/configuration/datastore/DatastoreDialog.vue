@@ -2,11 +2,11 @@
   <sw-base-dialog
     ref="dialog"
     :icon="icon"
-    title="Configure Datastore"
+    :title="title"
     width="550"
     :loaded="true"
     :visible="dialogVisible"
-    createLabel="Save"
+    :createLabel="createLabel"
     cancelLabel="Cancel"
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
@@ -14,7 +14,7 @@
     <dialog-header class="pl-3 pr-3 pt-1">
       <v-layout class="pl-2 pr-2 pt-0 pb-0" row wrap>
         <v-flex xs4
-          ><v-btn-toggle class="mt-3" v-model="scope">
+          ><v-btn-toggle mandatory class="mt-3" v-model="scope">
             <v-btn flat>
               Local
             </v-btn>
@@ -97,6 +97,8 @@ export default class DatastoreDialog extends DialogComponent<
   IDatastoreDefinition
 > {
   @Prop() readonly instance!: IInstanceConfiguration;
+  @Prop() readonly title!: string;
+  @Prop() readonly createLabel!: string;
 
   scope: number = 0;
   reference: string | null = null;
@@ -120,9 +122,18 @@ export default class DatastoreDialog extends DialogComponent<
   @Watch("scope")
   onScopeChanged(updated: number) {
     if (!this.isLocalScope) {
-      console.trace("Saving configuration", this.generatePayload());
-      this.configuration = this.generatePayload();
+      if (!this.reference) {
+        let refs: { text: string; value: string }[] = this.globalDatabases;
+        if (refs.length) {
+          this.reference = refs[0].value;
+        }
+      }
     }
+    this.reloadDetails();
+  }
+
+  @Watch("reference")
+  onReferenceChanged(updated: string) {
     this.reloadDetails();
   }
 
@@ -176,7 +187,7 @@ export default class DatastoreDialog extends DialogComponent<
   }
 
   /** Local or global datastore type */
-  get datastoreType(): string | null {
+  getDatastoreType(): string | null {
     if (!this.isLocalScope && this.reference) {
       let global: IDatastoreDefinition | null = this.findGlobalDefinition(
         this.reference
@@ -187,28 +198,43 @@ export default class DatastoreDialog extends DialogComponent<
   }
 
   /** Local or global datastore configuration */
-  get datastoreConfiguration(): any {
-    if (!this.isLocalScope && this.reference) {
+  getDatastoreConfiguration(): any {
+    if (this.isLocalScope) {
+      return this.configuration;
+    } else if (this.reference) {
       let global: IDatastoreDefinition | null = this.findGlobalDefinition(
         this.reference
       );
-      console.log("Returning global config", global);
-      return global ? global.configuration : null;
+      return global ? global.configuration : {};
+    } else {
+      console.log("neither local scope or reference!");
+      return {};
     }
-    console.log("Returning local config", this.configuration);
-    return this.configuration;
   }
 
   /** Indicates whether database is Postgres95 */
   get isPostgres95(): boolean {
-    return this.datastoreType == "postgres95";
+    let type: string | null = this.getDatastoreType();
+    return type == "postgres95";
+  }
+
+  /** Generate configuration from detail panel */
+  generateConfiguration(): any {
+    let configuration: any = {};
+    Object.assign(configuration, this.$refs.details.save());
+    return configuration;
   }
 
   /** Generate payload from UI data */
-  generatePayload() {
-    let payload: any = {};
-    Object.assign(payload, this.$refs.details.save());
-    return payload;
+  generatePayload(): IDatastoreDefinition {
+    if (this.scope == 1 && this.reference) {
+      return {
+        reference: this.reference
+      };
+    } else {
+      let configuration: any = this.generateConfiguration();
+      return { type: this.type, configuration: configuration };
+    }
   }
 
   /** Reset dialog content to default */
@@ -227,13 +253,15 @@ export default class DatastoreDialog extends DialogComponent<
       (payload as IDatastoreDefinitionLocal).configuration || {};
     this.reference = (payload as IDatastoreDefinitionReference).reference;
     this.scope = this.reference ? 1 : 0;
+    console.log("reference", this.reference);
     this.reloadDetails();
   }
 
   /** Reload details panel based on updated configuration */
   reloadDetails() {
-    if (this.$refs.details && this.datastoreConfiguration) {
-      this.$refs.details.load(this.datastoreConfiguration);
+    let config: any = this.getDatastoreConfiguration();
+    if (this.$refs.details && config) {
+      this.$refs.details.load(config);
     }
   }
 

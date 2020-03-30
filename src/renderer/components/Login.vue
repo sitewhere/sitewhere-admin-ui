@@ -52,41 +52,74 @@
           <v-card-text class="ma-0 pa-1">
             <div
               style="width: 100%; text-align: center; color: #333; font-size: 35px; font-family: RobotoRegular"
-            >Instance Administration</div>
+            >
+              Instance Administration
+            </div>
           </v-card-text>
           <v-card-text>
             <v-layout row wrap>
               <v-flex xs12 class="mb-2">
-                <v-text-field hide-details label="Username" v-model="username"></v-text-field>
+                <v-text-field
+                  placeholder=" "
+                  hide-details
+                  label="Username"
+                  v-model="username"
+                ></v-text-field>
                 <div class="verror">
-                  <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
+                  <span v-if="$v.username.$invalid && $v.$dirty"
+                    >Username is required.</span
+                  >
                 </div>
               </v-flex>
               <v-flex xs12 class="mb-4">
-                <v-text-field hide-details label="Password" v-model="password" type="password"></v-text-field>
+                <v-text-field
+                  placeholder=" "
+                  hide-details
+                  label="Password"
+                  v-model="password"
+                  type="password"
+                ></v-text-field>
                 <div class="verror">
-                  <span v-if="$v.password.$invalid && $v.$dirty">Password is required.</span>
+                  <span v-if="$v.password.$invalid && $v.$dirty"
+                    >Password is required.</span
+                  >
                 </div>
               </v-flex>
               <v-flex xs11>
-                <remotes-dropdown :remotes="remotes" @selected="onConnectionUpdated" />
+                <remotes-dropdown
+                  :remotes="remotes"
+                  @selected="onConnectionUpdated"
+                />
               </v-flex>
               <v-flex xs1>
-                <v-icon class="pt-2 pl-3 blue--grey text--darken-2" @click="onEditRemotes">edit</v-icon>
+                <v-icon
+                  class="pt-2 pl-3 blue--grey text--darken-2"
+                  @click="onEditRemotes"
+                  >edit</v-icon
+                >
               </v-flex>
             </v-layout>
           </v-card-text>
           <v-card-actions class="pr-2">
             <v-spacer></v-spacer>
-            <v-btn type="submit" color="primary" dark @click="onLogin" :loading="loggingIn">Login</v-btn>
+            <v-btn
+              type="submit"
+              color="primary"
+              dark
+              @click="onLogin"
+              :loading="loggingIn"
+              >Login</v-btn
+            >
           </v-card-actions>
           <v-dialog v-model="noserver" max-width="300">
             <v-card>
-              <v-card-title class="headline">Instance Not Available</v-card-title>
+              <v-card-title class="headline"
+                >Instance Not Available</v-card-title
+              >
               <v-card-text>
-                The server location specified could not be contacted. Verify that
-                you have started a SiteWhere instance and the microservices have
-                started successfully.
+                The server location specified could not be contacted. Verify
+                that you have started a SiteWhere instance and the microservices
+                have started successfully.
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -110,13 +143,34 @@
           <v-icon>menu</v-icon>
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="minWindow">
+        <v-btn
+          flat
+          icon
+          small
+          class="ma-0 mt-2 title-bar-button"
+          color="grey"
+          @click="minWindow"
+        >
           <v-icon>remove</v-icon>
         </v-btn>
-        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="maxWindow">
+        <v-btn
+          flat
+          icon
+          small
+          class="ma-0 mt-2 title-bar-button"
+          color="grey"
+          @click="maxWindow"
+        >
           <v-icon>check_box_outline_blank</v-icon>
         </v-btn>
-        <v-btn flat icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="closeWindow">
+        <v-btn
+          flat
+          icon
+          small
+          class="ma-0 mt-2 title-bar-button"
+          color="grey"
+          @click="closeWindow"
+        >
           <v-icon>close</v-icon>
         </v-btn>
       </v-system-bar>

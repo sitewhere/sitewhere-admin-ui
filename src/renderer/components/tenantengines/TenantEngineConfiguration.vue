@@ -1,13 +1,23 @@
 <template>
   <sw-content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
+    <asset-management-plugin
+      :configuration="configuration"
+      v-if="functionalArea == 'asset-management'"
+      @dirty="markDirty"
+    />
+    <batch-operations-plugin
+      :configuration="configuration"
+      v-else-if="functionalArea == 'batch-operations'"
+      @dirty="markDirty"
+    />
     <device-management-plugin
       :configuration="configuration"
-      v-if="functionalArea == 'device-management'"
+      v-else-if="functionalArea == 'device-management'"
       @dirty="markDirty"
     />
     <event-sources-plugin
       :configuration="configuration"
-      v-if="functionalArea == 'event-sources'"
+      v-else-if="functionalArea == 'event-sources'"
       @dirty="markDirty"
     />
     <tenant-engine-plugin v-else :configuration="configuration"
@@ -24,11 +34,19 @@ import Vue from "vue";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 
 import TenantEnginePlugin from "./common/TenantEnginePlugin.vue";
+import AssetManagementPlugin from "./functionalareas/assetmanagement/AssetManagementPlugin.vue";
+import BatchOperationsPlugin from "./functionalareas/batchoperations/BatchOperationsPlugin.vue";
 import DeviceManagementPlugin from "./functionalareas/devicemanagement/DeviceManagementPlugin.vue";
 import EventSourcesPlugin from "./functionalareas/eventsources/EventSourcesPlugin.vue";
 
 @Component({
-  components: { DeviceManagementPlugin, EventSourcesPlugin, TenantEnginePlugin }
+  components: {
+    AssetManagementPlugin,
+    BatchOperationsPlugin,
+    DeviceManagementPlugin,
+    EventSourcesPlugin,
+    TenantEnginePlugin
+  }
 })
 export default class TenantMicroserviceConfiguration extends Vue {
   @Prop() readonly tabkey!: string;
