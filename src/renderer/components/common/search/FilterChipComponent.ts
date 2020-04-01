@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 
-import { handleError } from "../Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosPromise, AxiosResponse } from "axios";
 import { IBrandedEntity } from "sitewhere-rest-api";
 

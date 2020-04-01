@@ -17,10 +17,18 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details">
-        <script-detail-fields ref="details" />
+        <script-detail-fields
+          ref="details"
+          :scriptCategories="scriptCategories"
+          @categoryUpdated="onCategoryUpdated"
+        />
       </v-tab-item>
       <v-tab-item key="content">
-        <script-content-fields :identifier="identifier" ref="content" />
+        <script-content-fields
+          :identifier="identifier"
+          :category="category"
+          ref="content"
+        />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -38,7 +46,7 @@ import { NavigationIcon } from "../../libraries/constants";
 
 import ScriptDetailFields from "./ScriptDetailFields.vue";
 import ScriptContentFields from "./ScriptContentFields.vue";
-import { IScriptCreateRequest } from "sitewhere-rest-api";
+import { IScriptCreateRequest, IScriptCategory } from "sitewhere-rest-api";
 
 @Component({
   components: {
@@ -46,7 +54,7 @@ import { IScriptCreateRequest } from "sitewhere-rest-api";
     ScriptContentFields
   }
 })
-export default class ScriptsDialog extends DialogComponent<
+export default class ScriptDialog extends DialogComponent<
   IScriptCreateRequest
 > {
   @Prop() readonly title!: string;
@@ -54,6 +62,9 @@ export default class ScriptsDialog extends DialogComponent<
   @Prop() readonly createLabel!: string;
   @Prop() readonly cancelLabel!: string;
   @Prop() readonly identifier!: string;
+  @Prop() readonly scriptCategories!: IScriptCategory[];
+
+  category: string | null = null;
 
   // References.
   $refs!: Refs<{
@@ -98,6 +109,11 @@ export default class ScriptsDialog extends DialogComponent<
     if (this.$refs.content) {
       this.$refs.content.load(payload);
     }
+  }
+
+  /** Called when category is updated */
+  onCategoryUpdated(updated: string) {
+    this.category = updated;
   }
 
   // Called after create button is clicked.

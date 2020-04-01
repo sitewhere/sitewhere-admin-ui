@@ -17,15 +17,23 @@
       <v-tab key="areas">Areas of Type</v-tab>
     </template>
     <template slot="tab-items">
-      <area-type-areas tabkey="areas" ref="areas" :areaTypeToken="token"/>
+      <area-type-areas tabkey="areas" ref="areas" :areaTypeToken="token" />
     </template>
     <template slot="dialogs">
-      <area-type-update-dialog ref="edit" :token="token" @areaTypeUpdated="onAreaTypeUpdated"/>
-      <area-type-delete-dialog ref="delete" :token="token" @areaTypeDeleted="onAreaTypeDeleted"/>
+      <area-type-update-dialog
+        ref="edit"
+        :token="token"
+        @areaTypeUpdated="onAreaTypeUpdated"
+      />
+      <area-type-delete-dialog
+        ref="delete"
+        :token="token"
+        @areaTypeDeleted="onAreaTypeDeleted"
+      />
     </template>
     <template slot="actions">
-      <edit-button tooltip="Edit Area Type" @action="onEdit"/>
-      <delete-button tooltip="Delete Area Type" @action="onDelete"/>
+      <edit-button tooltip="Edit Area Type" @action="onEdit" />
+      <delete-button tooltip="Delete Area Type" @action="onDelete" />
     </template>
   </sw-detail-page>
 </template>
@@ -47,7 +55,7 @@ import AreaListEntry from "../areas/AreaListEntry.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getAreaType } from "../../rest/sitewhere-area-types-api";

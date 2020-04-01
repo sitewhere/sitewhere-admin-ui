@@ -16,20 +16,26 @@
         @click="onOpenDevice(props.item.device)"
         :title="props.item.device.token"
       >
-        <v-icon small class="grey--text">{{deviceIcon}}</v-icon>
+        <v-icon small class="grey--text">{{ deviceIcon }}</v-icon>
         {{ props.item.device.token }}
       </td>
-      <td width="20%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
+      <td width="20%" :title="props.item.processingStatus">
+        {{ props.item.processingStatus }}
+      </td>
       <td
         width="20%"
         style="white-space: nowrap"
         :title="formatDate(props.item.processedDate)"
-      >{{ formatDate(props.item.processedDate) }}</td>
+      >
+        {{ formatDate(props.item.processedDate) }}
+      </td>
       <td
         width="20%"
         style="white-space: nowrap"
         :title="props.item.metadata.invocation"
-      >{{ props.item.metadata.invocation }}</td>
+      >
+        {{ props.item.metadata.invocation }}
+      </td>
     </template>
     <template slot="dialogs"></template>
   </sw-data-table-tab>
@@ -45,7 +51,7 @@ import {
 } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
-import { formatDate, routeTo } from "../common/Utils";
+import { formatDate, routeTo } from "sitewhere-ide-common";
 import { NavigationIcon } from "../../libraries/constants";
 import { listBatchOperationElements } from "../../rest/sitewhere-batch-operations-api";
 import {

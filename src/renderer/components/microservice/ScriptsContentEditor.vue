@@ -21,11 +21,8 @@ import Vue from "vue";
 import { Component, Prop, Watch } from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
-import {
-  getGlobalScriptContent,
-  getTenantScriptContent
-} from "../../rest/sitewhere-scripting-api";
-import { formatDate } from "../common/Utils";
+import { getTenantScriptContent } from "../../rest/sitewhere-scripting-api";
+import { formatDate } from "sitewhere-ide-common";
 import { IScriptMetadata, IScriptVersion } from "sitewhere-rest-api";
 
 @Component({
@@ -78,24 +75,14 @@ export default class ScriptsContentEditor extends Vue {
 
   /** Update script content */
   async updateContent() {
-    if (!this.tenantToken) {
-      let response: AxiosResponse<string> = await getGlobalScriptContent(
-        this.$store,
-        this.identifier,
-        this.selectedScript.id,
-        this.selectedVersion.versionId
-      );
-      this.content = response.data;
-    } else {
-      let response: AxiosResponse<string> = await getTenantScriptContent(
-        this.$store,
-        this.identifier,
-        this.tenantToken,
-        this.selectedScript.id,
-        this.selectedVersion.versionId
-      );
-      this.content = response.data;
-    }
+    let response: AxiosResponse<string> = await getTenantScriptContent(
+      this.$store,
+      this.identifier,
+      this.tenantToken,
+      this.selectedScript.id,
+      this.selectedVersion.versionId
+    );
+    this.content = response.data;
   }
 
   /** Make function available to template */

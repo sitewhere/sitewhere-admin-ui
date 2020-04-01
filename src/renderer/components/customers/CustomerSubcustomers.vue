@@ -6,7 +6,7 @@
     @pagingUpdated="onPagingUpdated"
   >
     <sw-list-layout>
-      <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+      <v-flex xs6 v-for="customer in matches" :key="customer.token">
         <customer-list-entry :customer="customer" @open="onOpenCustomer" />
       </v-flex>
     </sw-list-layout>
@@ -15,12 +15,16 @@
         <div>This customer has no subcustomers.</div>
         <div class="mt-2">
           Click
-          <v-icon class="pl-1 pr-2">{{custIcon}}</v-icon>in the toolbar to add a subcustomer.
+          <v-icon class="pl-1 pr-2">{{ custIcon }}</v-icon
+          >in the toolbar to add a subcustomer.
         </div>
       </no-results-panel>
     </template>
     <template slot="dialogs">
-      <customer-create-dialog @customerAdded="refresh" :parentCustomer="customer" />
+      <customer-create-dialog
+        @customerAdded="refresh"
+        :parentCustomer="customer"
+      />
     </template>
   </sw-list-tab>
 </template>
@@ -33,7 +37,7 @@ import CustomerCreateDialog from "./CustomerCreateDialog.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
 import {

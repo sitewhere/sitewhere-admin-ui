@@ -9,19 +9,25 @@
     loadingMessage="Loading customer measurements ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
+      <td width="30%" :title="props.item.assetName">
+        {{ props.item.assetName }}
+      </td>
       <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
       <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
+      >
+        {{ formatDate(props.item.eventDate) }}
+      </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+      >
+        {{ formatDate(props.item.receivedDate) }}
+      </td>
     </template>
   </sw-data-table-tab>
 </template>
@@ -35,7 +41,7 @@ import {
   ITableHeaders
 } from "sitewhere-ide-common";
 
-import { formatDate } from "../common/Utils";
+import { formatDate } from "sitewhere-ide-common";
 import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";
 import { AxiosPromise } from "axios";
 import { listMeasurementsForCustomer } from "../../rest/sitewhere-customers-api";
@@ -91,5 +97,4 @@ export default class CustomerMeasurementEvents extends ListComponent<
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

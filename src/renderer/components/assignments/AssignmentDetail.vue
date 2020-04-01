@@ -37,7 +37,10 @@
       />
     </template>
     <template slot="actions">
-      <device-command-button tooltip="Invoke Command" @action="onAddCommandInvocation" />
+      <device-command-button
+        tooltip="Invoke Command"
+        @action="onAddCommandInvocation"
+      />
       <emulator-button tooltip="Device Emulator" @action="onOpenEmulator" />
       <delete-button tooltip="Delete Assignment" @action="onAssignmentDelete" />
     </template>
@@ -64,7 +67,7 @@ import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
 import EmulatorButton from "../common/navbuttons/EmulatorButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";

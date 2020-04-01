@@ -16,7 +16,7 @@
     </template>
     <template slot="tabs">
       <v-tab key="configuration">Configuration</v-tab>
-      <v-tab key="scripts">Scripts</v-tab>
+      <v-tab key="scripts" v-if="hasScriptCategories">Scripts</v-tab>
       <v-tab key="json">JSON</v-tab>
     </template>
     <template slot="tab-items">
@@ -25,7 +25,13 @@
         tabkey="configuration"
         @dirty="checkDirty"
       />
-      <scripts-manager tabkey="scripts" :identifier="identifier" />
+      <scripts-manager
+        tabkey="scripts"
+        :tenantToken="tenantToken"
+        :identifier="identifier"
+        :scriptCategories="scriptCategories"
+        v-if="hasScriptCategories"
+      />
       <tenant-engine-source :configuration="workingCopy" tabkey="json" />
     </template>
     <template slot="actions">
@@ -52,12 +58,14 @@ import { Component, WithRoute, Watch } from "sitewhere-ide-common";
 import {
   ITenantEngineConfiguration,
   ITenant,
+  IScriptCategory,
   IMicroserviceSummary
 } from "sitewhere-rest-api";
 import {
   getTenantEngineConfiguration,
   updateTenantEngineConfiguration
 } from "../../rest/sitewhere-instance-api";
+import { listScriptCategories } from "../../rest/sitewhere-scripting-api";
 
 @Component({
   components: {
@@ -74,6 +82,9 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
   dirty: boolean = false;
   loaded: boolean = false;
 
+  /** List of script categories for functional area */
+  scriptCategories: IScriptCategory[] = [];
+
   /** Tracks updated configuration */
   workingCopy: ITenantEngineConfiguration | null = null;
 
@@ -83,22 +94,19 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
     this.workingCopy = JSON.parse(JSON.stringify(updated));
   }
 
+  /** Handle creation logic */
   created() {
     this.tenantToken = this.$route.params.token;
     this.identifier = this.$route.params.identifier;
     this.refresh();
   }
 
-  /**
-   * Get tenant information.
-   */
+  /** Get tenant information */
   get tenant(): ITenant | null {
     return this.configuration ? this.configuration.tenant : null;
   }
 
-  /**
-   * Get microservice information.
-   */
+  /** Get microservice information */
   get microservice(): IMicroserviceSummary | null {
     return this.configuration ? this.configuration.microservice : null;
   }
@@ -115,6 +123,11 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
       : "";
   }
 
+  /** Flag for whether the functional area has categories */
+  get hasScriptCategories(): boolean {
+    return this.scriptCategories && this.scriptCategories.length > 0;
+  }
+
   /** Refresh all data */
   async refresh() {
     if (this.identifier && this.tenantToken) {
@@ -126,6 +139,18 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
       );
       this.configuration = response.data;
       this.loaded = true;
+      this.loadScriptCategories();
+    }
+  }
+
+  /** Load list of script categories */
+  async loadScriptCategories() {
+    if (this.identifier) {
+      let response: AxiosResponse<IScriptCategory[]> = await listScriptCategories(
+        this.$store,
+        this.identifier
+      );
+      this.scriptCategories = response.data;
     }
   }
 

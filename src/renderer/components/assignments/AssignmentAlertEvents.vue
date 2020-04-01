@@ -15,12 +15,16 @@
         width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
+      >
+        {{ formatDate(props.item.eventDate) }}
+      </td>
       <td
         width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+      >
+        {{ formatDate(props.item.receivedDate) }}
+      </td>
     </template>
   </sw-data-table-tab>
 </template>
@@ -34,7 +38,7 @@ import {
   ITableHeaders
 } from "sitewhere-ide-common";
 
-import { formatDate } from "../common/Utils";
+import { formatDate } from "sitewhere-ide-common";
 import {
   EventPageSizes,
   AssignmentAlertHeaders

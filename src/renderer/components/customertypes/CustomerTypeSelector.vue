@@ -8,7 +8,7 @@
     v-model="wrapped"
     icon="settings"
   >
-    <slot/>
+    <slot />
   </form-select>
 </template>
 
@@ -18,7 +18,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 
 import FormSelect from "../common/form/FormSelect.vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
 import {
@@ -55,9 +55,11 @@ export default class CustomerTypeSelector extends Vue {
     };
     let format: ICustomerTypeResponseFormat = {};
     try {
-      let response: AxiosResponse<
-        ICustomerTypeSearchResults
-      > = await listCustomerTypes(this.$store, criteria, format);
+      let response: AxiosResponse<ICustomerTypeSearchResults> = await listCustomerTypes(
+        this.$store,
+        criteria,
+        format
+      );
       this.customerTypes = response.data.results;
     } catch (err) {
       handleError(err);

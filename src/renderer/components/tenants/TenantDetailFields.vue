@@ -98,7 +98,7 @@ import FormText from "../common/form/FormText.vue";
 import FormSelect from "../common/form/FormSelect.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import {

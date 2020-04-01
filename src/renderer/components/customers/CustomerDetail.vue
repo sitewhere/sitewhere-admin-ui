@@ -17,10 +17,17 @@
       <v-tab key="alerts">Alerts</v-tab>
     </template>
     <template slot="tab-items">
-      <customer-subcustomers tabkey="customers" ref="subcustomers" :customer="customer" />
+      <customer-subcustomers
+        tabkey="customers"
+        ref="subcustomers"
+        :customer="customer"
+      />
       <customer-assignments tabkey="assignments" :customerToken="token" />
       <customer-location-events tabkey="locations" :customerToken="token" />
-      <customer-measurement-events tabkey="measurements" :customerToken="token" />
+      <customer-measurement-events
+        tabkey="measurements"
+        :customerToken="token"
+      />
       <customer-alert-events tabkey="alerts" :customerToken="token" />
     </template>
     <template slot="dialogs">
@@ -35,10 +42,18 @@
         :parentCustomer="parentCustomer"
         @updated="onCustomerUpdated"
       />
-      <customer-delete-dialog ref="delete" :token="token" @deleted="onCustomerDeleted" />
+      <customer-delete-dialog
+        ref="delete"
+        :token="token"
+        @deleted="onCustomerDeleted"
+      />
     </template>
     <template slot="actions">
-      <up-button v-if="parentCustomer" tooltip="Up One Level" @action="onUpOneLevel" />
+      <up-button
+        v-if="parentCustomer"
+        tooltip="Up One Level"
+        @action="onUpOneLevel"
+      />
       <customer-button tooltip="Add Subcustomer" @action="onAddSubcustomer" />
       <edit-button tooltip="Edit Customer" @action="onEdit" />
       <delete-button tooltip="Delete Customer" @action="onDelete" />
@@ -63,8 +78,7 @@ import UpButton from "../common/navbuttons/UpButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { Route } from "vue-router";
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { INavigationSection, Refs } from "sitewhere-ide-common";
@@ -115,7 +129,7 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   }
 
   /** Called when component is reused */
-  beforeRouteUpdate(to: Route, from: Route, next: any) {
+  beforeRouteUpdate(to: any, from: any, next: any) {
     this.display(to.params.token);
     next();
   }

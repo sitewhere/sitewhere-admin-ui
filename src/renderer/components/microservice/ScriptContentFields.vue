@@ -1,6 +1,6 @@
 <template>
   <dialog-form>
-    <v-flex xs12>
+    <v-flex xs11>
       <form-select
         title="Script template to use for content."
         :items="scriptTemplates"
@@ -9,19 +9,30 @@
         item-text="name"
         item-value="id"
         icon="library_books"
-        @change="onTemplateUpdated"
       />
     </v-flex>
+    <v-flex xs1>
+      <v-btn icon small class="ma-3 grey--text" @click="onCopyClicked"
+        ><v-icon small>fa-copy</v-icon></v-btn
+      >
+    </v-flex>
     <v-flex xs12>
-      <form-code-block required label="Content" title="Script Content." v-model="content">
-        <span v-if="$v.content.$invalid && $v.$dirty">Script content is required.</span>
+      <form-code-block
+        required
+        label="Content"
+        title="Script Content."
+        v-model="content"
+      >
+        <span v-if="$v.content.$invalid && $v.$dirty"
+          >Script content is required.</span
+        >
       </form-code-block>
     </v-flex>
   </dialog-form>
 </template>
 
 <script lang="ts">
-import { Component, Prop, DialogSection } from "sitewhere-ide-common";
+import { Component, Prop, Watch, DialogSection } from "sitewhere-ide-common";
 
 import DialogForm from "../common/form/DialogForm.vue";
 import FormCodeBlock from "../common/form/FormCodeBlock.vue";
@@ -29,11 +40,9 @@ import FormSelect from "../common/form/FormSelect.vue";
 
 import { AxiosResponse } from "axios";
 import { required } from "vuelidate/lib/validators";
-import {
-  listScriptTemplates,
-  getScriptTemplateContent
-} from "../../rest/sitewhere-scripting-api";
+import { listScriptTemplates } from "../../rest/sitewhere-scripting-api";
 import { IScriptTemplate } from "sitewhere-rest-api";
+import { IScriptCreateRequest } from "../../../../../sitewhere-rest-api/src";
 
 @Component({
   components: {
@@ -49,37 +58,43 @@ import { IScriptTemplate } from "sitewhere-rest-api";
 })
 export default class ScriptContentFields extends DialogSection {
   @Prop() readonly identifier!: string;
+  @Prop() readonly category!: string;
 
   template: string | null = null;
   content: string = "";
   scriptTemplates: IScriptTemplate[] = [];
-  scriptTypes: { text: string; value: string }[] = [
-    {
-      text: "Groovy",
-      value: "groovy"
-    }
-  ];
+
   aceOptions: {} = {
     showPrintMargin: false
   };
 
-  /** Load list of script templates */
-  async loadTemplates() {
-    let response: AxiosResponse<IScriptTemplate[]> = await listScriptTemplates(
-      this.$store,
-      this.identifier
-    );
-    this.scriptTemplates = response.data;
+  @Watch("category", { immediate: true })
+  onCategoryUpdated(updated: string) {
+    this.loadTemplates();
   }
 
-  /** Set content based on template when selection changes */
-  async onTemplateUpdated(templateId: string) {
-    let response: AxiosResponse<string> = await getScriptTemplateContent(
-      this.$store,
-      this.identifier,
-      templateId
-    );
-    this.content = response.data;
+  /** Load list of script templates */
+  async loadTemplates() {
+    if (this.category) {
+      let response: AxiosResponse<IScriptTemplate[]> = await listScriptTemplates(
+        this.$store,
+        this.identifier,
+        this.category
+      );
+      this.scriptTemplates = response.data;
+      if (this.scriptTemplates.length > 0) {
+        this.template = this.scriptTemplates[0].id;
+      }
+    }
+  }
+
+  /** Called to copy content of selected template */
+  onCopyClicked(): void {
+    this.scriptTemplates.forEach(template => {
+      if (template.id == this.template) {
+        this.content = template.script;
+      }
+    });
   }
 
   /** Reset section content */
@@ -87,9 +102,6 @@ export default class ScriptContentFields extends DialogSection {
     this.template = null;
     this.content = "";
     this.$v.$reset();
-
-    // Load script templates list.
-    this.loadTemplates();
   }
 
   /** Perform validation */
@@ -99,7 +111,7 @@ export default class ScriptContentFields extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: {}): void {
+  load(input: IScriptCreateRequest): void {
     this.content = (input as any).content;
   }
 
@@ -112,5 +124,4 @@ export default class ScriptContentFields extends DialogSection {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

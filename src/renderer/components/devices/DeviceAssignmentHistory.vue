@@ -9,7 +9,7 @@
   >
     <v-container class="pa-2" fluid grid-list-md fill-height>
       <v-layout align-content-start row wrap>
-        <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+        <v-flex xs12 v-for="assignment in matches" :key="assignment.token">
           <assignment-list-entry
             :assignment="assignment"
             @assignmentOpened="onOpenAssignment(assignment)"
@@ -26,7 +26,7 @@ import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { listDeviceAssignmentHistory } from "../../rest/sitewhere-devices-api";
 import {
@@ -88,5 +88,4 @@ export default class DeviceAssignmentHistory extends ListComponent<
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

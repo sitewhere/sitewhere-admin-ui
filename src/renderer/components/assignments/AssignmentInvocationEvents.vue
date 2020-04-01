@@ -9,19 +9,29 @@
     loadingMessage="Loading assignment command invocations ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="15%" :title="props.item.command.name">{{ props.item.command.name }}</td>
-      <td width="45%" :title="invocationSource(props.item)">{{ invocationSource(props.item) }}</td>
-      <td width="20%" :title="invocationTarget(props.item)">{{ invocationTarget(props.item) }}</td>
+      <td width="15%" :title="props.item.command.name">
+        {{ props.item.command.name }}
+      </td>
+      <td width="45%" :title="invocationSource(props.item)">
+        {{ invocationSource(props.item) }}
+      </td>
+      <td width="20%" :title="invocationTarget(props.item)">
+        {{ invocationTarget(props.item) }}
+      </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
+      >
+        {{ formatDate(props.item.eventDate) }}
+      </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+      >
+        {{ formatDate(props.item.receivedDate) }}
+      </td>
     </template>
   </sw-data-table-tab>
 </template>
@@ -37,7 +47,7 @@ import {
 
 import { AxiosPromise } from "axios";
 import { listCommandInvocationsForAssignment } from "../../rest/sitewhere-device-assignments-api";
-import { formatDate } from "../common/Utils";
+import { formatDate } from "sitewhere-ide-common";
 import { EventPageSizes, InvocationHeaders } from "../../libraries/constants";
 import {
   IDeviceCommandInvocation,

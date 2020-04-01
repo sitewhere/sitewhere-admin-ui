@@ -12,26 +12,38 @@
     <template slot="items" slot-scope="props">
       <td width="30%" :title="props.item.name">
         <span class="zone-name">
-          <div class="zone-outer" :style="{'border-color': props.item.borderColor}">
+          <div
+            class="zone-outer"
+            :style="{ 'border-color': props.item.borderColor }"
+          >
             <div
               class="zone-inner"
-              :style="{'background-color': props.item.fillColor, 'opacity': props.item.opacity}"
+              :style="{
+                'background-color': props.item.fillColor,
+                opacity: props.item.opacity
+              }"
             ></div>
           </div>
           {{ props.item.name }}
         </span>
       </td>
-      <td width="40%" :title="props.item.token" class="zone-token">{{ props.item.token }}</td>
+      <td width="40%" :title="props.item.token" class="zone-token">
+        {{ props.item.token }}
+      </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.createdDate)"
-      >{{ formatDate(props.item.createdDate) }}</td>
+      >
+        {{ formatDate(props.item.createdDate) }}
+      </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.updatedDate)"
-      >{{ formatDate(props.item.updatedDate) }}</td>
+      >
+        {{ formatDate(props.item.updatedDate) }}
+      </td>
       <td width="1%" style="white-space: nowrap" title="Edit/Delete">
         <actions-block
           @edit="onEditZone(props.item.token)"
@@ -61,7 +73,7 @@ import ZoneUpdateDialog from "./ZoneUpdateDialog.vue";
 import ZoneDeleteDialog from "./ZoneDeleteDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { formatDate } from "../common/Utils";
+import { formatDate } from "sitewhere-ide-common";
 import { listZones } from "../../rest/sitewhere-zones-api";
 import {
   IArea,

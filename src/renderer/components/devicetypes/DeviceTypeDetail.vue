@@ -19,26 +19,51 @@
       <!--
       <v-tab key="code">Code Generation</v-tab>
       -->
-      <v-tab v-if="containerPolicy === 'Composite'" key="composition">Composition</v-tab>
+      <v-tab v-if="containerPolicy === 'Composite'" key="composition"
+        >Composition</v-tab
+      >
     </template>
     <template slot="tab-items">
-      <device-type-commands tabkey="commands" ref="commands" :deviceTypeToken="token" />
-      <device-type-statuses tabkey="statuses" ref="statuses" :deviceTypeToken="token" />
+      <device-type-commands
+        tabkey="commands"
+        ref="commands"
+        :deviceTypeToken="token"
+      />
+      <device-type-statuses
+        tabkey="statuses"
+        ref="statuses"
+        :deviceTypeToken="token"
+      />
       <!--
       <device-type-codegen tabkey="code" id="code" :deviceType="deviceType"/>
       -->
       <device-type-composition tabkey="composition" :deviceType="deviceType" />
     </template>
     <template slot="actions">
-      <device-command-button tooltip="Create Command" @action="onCommandCreate" />
+      <device-command-button
+        tooltip="Create Command"
+        @action="onCommandCreate"
+      />
       <device-status-button tooltip="Create Status" @action="onStatusCreate" />
       <edit-button tooltip="Edit Device Type" @action="onEdit" />
       <delete-button tooltip="Delete Device Type" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated" />
-      <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted" />
-      <command-create-dialog ref="command" :deviceTypeToken="token" @commandAdded="onCommandAdded" />
+      <device-type-update-dialog
+        ref="edit"
+        :token="token"
+        @deviceTypeUpdated="onUpdated"
+      />
+      <device-type-delete-dialog
+        ref="delete"
+        :token="token"
+        @deviceTypeDeleted="onDeleted"
+      />
+      <command-create-dialog
+        ref="command"
+        :deviceTypeToken="token"
+        @commandAdded="onCommandAdded"
+      />
       <device-status-create-dialog
         ref="status"
         :deviceTypeToken="token"
@@ -69,7 +94,7 @@ import DeviceStatusButton from "../common/navbuttons/DeviceStatusButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getDeviceType } from "../../rest/sitewhere-device-types-api";
@@ -192,5 +217,4 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

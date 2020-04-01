@@ -8,7 +8,7 @@
     v-model="wrapped"
     icon="settings"
   >
-    <slot/>
+    <slot />
   </form-select>
 </template>
 
@@ -18,7 +18,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 
 import FormSelect from "../common/form/FormSelect.vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
 import {

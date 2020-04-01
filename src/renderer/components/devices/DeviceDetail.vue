@@ -7,21 +7,29 @@
     :record="device"
   >
     <template slot="header">
-      <device-detail-header :record="device" @deviceDeleted="onDeviceDeleted"/>
+      <device-detail-header :record="device" @deviceDeleted="onDeviceDeleted" />
     </template>
     <template slot="tabs">
       <v-tab key="assignments">Assignment History</v-tab>
     </template>
     <template slot="tab-items">
-      <device-assignment-history tabkey="assignments" :deviceToken="token"/>
+      <device-assignment-history tabkey="assignments" :deviceToken="token" />
     </template>
     <template slot="actions">
-      <edit-button tooltip="Edit Device" @action="onEdit"/>
-      <delete-button tooltip="Delete Device" @action="onDelete"/>
+      <edit-button tooltip="Edit Device" @action="onEdit" />
+      <delete-button tooltip="Delete Device" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated"/>
-      <device-delete-dialog ref="delete" :token="token" @deleted="onDeviceDeleted"/>
+      <device-update-dialog
+        ref="edit"
+        :token="token"
+        @deviceUpdated="onDeviceUpdated"
+      />
+      <device-delete-dialog
+        ref="delete"
+        :token="token"
+        @deleted="onDeviceDeleted"
+      />
     </template>
   </sw-detail-page>
 </template>
@@ -41,7 +49,7 @@ import DeviceDeleteDialog from "./DeviceDeleteDialog.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getDevice } from "../../rest/sitewhere-devices-api";
@@ -124,5 +132,4 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

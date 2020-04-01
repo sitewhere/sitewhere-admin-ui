@@ -8,7 +8,7 @@
     v-model="wrapped"
     icon="settings"
   >
-    <slot/>
+    <slot />
   </form-select>
 </template>
 
@@ -18,7 +18,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 
 import FormSelect from "../common/form/FormSelect.vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { listAssetTypes } from "../../rest/sitewhere-asset-types-api";
 import {
@@ -55,9 +55,11 @@ export default class AssetTypeSelector extends Vue {
     };
     let format: IAssetTypeResponseFormat = {};
     try {
-      let response: AxiosResponse<
-        IAssetTypeSearchResults
-      > = await listAssetTypes(this.$store, criteria, format);
+      let response: AxiosResponse<IAssetTypeSearchResults> = await listAssetTypes(
+        this.$store,
+        criteria,
+        format
+      );
       this.assetTypes = response.data.results;
     } catch (err) {
       handleError(err);

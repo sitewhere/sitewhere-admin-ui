@@ -9,8 +9,11 @@
     @pagingUpdated="onPagingUpdated"
   >
     <sw-list-layout>
-      <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
-        <assignment-list-entry :assignment="assignment" @assignmentOpened="onOpenAssignment" />
+      <v-flex xs12 v-for="assignment in matches" :key="assignment.token">
+        <assignment-list-entry
+          :assignment="assignment"
+          @assignmentOpened="onOpenAssignment"
+        />
       </v-flex>
     </sw-list-layout>
     <template slot="filters">
@@ -28,7 +31,10 @@
     </template>
     <template slot="dialogs">
       <assignment-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
-      <invocation-by-assignment-criteria-create-dialog :filter="filter" ref="batch" />
+      <invocation-by-assignment-criteria-create-dialog
+        :filter="filter"
+        ref="batch"
+      />
     </template>
     <template slot="actions">
       <device-command-button
@@ -36,7 +42,10 @@
         tooltip="Execute Batch Command"
         @action="onBatchCommandInvocation"
       />
-      <filter-button tooltip="Filter Device Assignment List" @action="onShowFilterCriteria" />
+      <filter-button
+        tooltip="Filter Device Assignment List"
+        @action="onShowFilterCriteria"
+      />
     </template>
   </sw-list-page>
 </template>
@@ -59,7 +68,7 @@ import FilterButton from "../common/navbuttons/FilterButton.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { NavigationIcon } from "../../libraries/constants";
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { searchDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
 import {

@@ -9,18 +9,26 @@
     loadingMessage="Loading assignment command responses ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="20%" :title="props.item.originatingEventId">{{ props.item.originatingEventId }}</td>
-      <td width="30%" :title="props.item.response">{{ props.item.response }}</td>
+      <td width="20%" :title="props.item.originatingEventId">
+        {{ props.item.originatingEventId }}
+      </td>
+      <td width="30%" :title="props.item.response">
+        {{ props.item.response }}
+      </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
+      >
+        {{ formatDate(props.item.eventDate) }}
+      </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+      >
+        {{ formatDate(props.item.receivedDate) }}
+      </td>
     </template>
   </sw-data-table-tab>
 </template>
@@ -36,7 +44,7 @@ import {
 
 import { AxiosPromise } from "axios";
 import { listCommandResponsesForAssignment } from "../../rest/sitewhere-device-assignments-api";
-import { formatDate } from "../common/Utils";
+import { formatDate } from "sitewhere-ide-common";
 import { EventPageSizes, ResponseHeaders } from "../../libraries/constants";
 import {
   IDeviceCommandResponse,

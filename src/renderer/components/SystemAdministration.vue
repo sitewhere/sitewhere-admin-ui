@@ -39,7 +39,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { handleError } from "./common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";

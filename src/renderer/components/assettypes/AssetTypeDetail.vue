@@ -18,15 +18,23 @@
       <v-tab key="assets">Assets</v-tab>
     </template>
     <template slot="tab-items">
-      <asset-type-assets tabkey="assets" ref="assets" :assetTypeToken="token"/>
+      <asset-type-assets tabkey="assets" ref="assets" :assetTypeToken="token" />
     </template>
     <template slot="dialogs">
-      <asset-type-update-dialog ref="edit" :token="token" @assetTypeUpdated="onAssetTypeUpdated"/>
-      <asset-type-delete-dialog ref="delete" :token="token" @assetTypeDeleted="onAssetTypeDeleted"/>
+      <asset-type-update-dialog
+        ref="edit"
+        :token="token"
+        @assetTypeUpdated="onAssetTypeUpdated"
+      />
+      <asset-type-delete-dialog
+        ref="delete"
+        :token="token"
+        @assetTypeDeleted="onAssetTypeDeleted"
+      />
     </template>
     <template slot="actions">
-      <edit-button tooltip="Edit Asset Type" @action="onEdit"/>
-      <delete-button tooltip="Delete Asset Type" @action="onDelete"/>
+      <edit-button tooltip="Edit Asset Type" @action="onEdit" />
+      <delete-button tooltip="Delete Asset Type" @action="onDelete" />
     </template>
   </sw-detail-page>
 </template>
@@ -48,7 +56,7 @@ import AssetListEntry from "../assets/AssetListEntry.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getAssetType } from "../../rest/sitewhere-asset-types-api";

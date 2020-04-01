@@ -1,16 +1,33 @@
 <template>
   <v-card :hover="!headerMode" class="white">
-    <v-card-text @click="onOpenAssignment" :style="styleForStatus" class="assn-root">
-      <asset-mini-panel class="assn-asset" :assignment="assignment"></asset-mini-panel>
+    <v-card-text
+      @click="onOpenAssignment"
+      :style="styleForStatus"
+      class="assn-root"
+    >
+      <asset-mini-panel
+        class="assn-asset"
+        :assignment="assignment"
+      ></asset-mini-panel>
       <div class="assn-separator1"></div>
-      <device-mini-panel class="assn-device" :device="assignment.device"></device-mini-panel>
+      <device-mini-panel
+        class="assn-device"
+        :device="assignment.device"
+      ></device-mini-panel>
       <div class="assn-separator2"></div>
       <div class="assn-assigned-label">Assigned:</div>
-      <div class="assn-assigned-value">{{ formatDate(assignment.activeDate) }}</div>
+      <div class="assn-assigned-value">
+        {{ formatDate(assignment.activeDate) }}
+      </div>
       <div class="assn-released-label">Released:</div>
-      <div class="assn-released-value">{{ formatDate(assignment.releasedDate) }}</div>
+      <div class="assn-released-value">
+        {{ formatDate(assignment.releasedDate) }}
+      </div>
       <div class="assn-status-label">Status:</div>
-      <assignment-status-indicator class="assn-status-indicator" :assignment="assignment"/>
+      <assignment-status-indicator
+        class="assn-status-indicator"
+        :assignment="assignment"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -25,7 +42,7 @@ import AssignmentStatusIndicator from "./AssignmentStatusIndicator.vue";
 
 import Vue from "vue";
 
-import { formatDate } from "../common/Utils";
+import { formatDate } from "sitewhere-ide-common";
 import { IDeviceAssignment } from "sitewhere-rest-api";
 
 @Component({

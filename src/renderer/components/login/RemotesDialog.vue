@@ -33,7 +33,7 @@ import { NavigationIcon } from "../../libraries/constants";
 import RemoteConnectionsList from "./RemoteConnectionsList.vue";
 import RemoteConnectionDetails from "./RemoteConnectionDetails.vue";
 
-import { IRemotes, IRemoteConnection } from "../common/ApplicationModel";
+import { IRemotes, IRemoteConnection } from "sitewhere-ide-common";
 
 @Component({
   components: {

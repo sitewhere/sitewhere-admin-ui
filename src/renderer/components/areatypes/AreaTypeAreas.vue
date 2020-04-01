@@ -8,7 +8,7 @@
     loadingMessage="Loading areas ..."
   >
     <sw-list-layout>
-      <v-flex xs6 v-for="(area) in matches" :key="area.token">
+      <v-flex xs6 v-for="area in matches" :key="area.token">
         <area-list-entry :area="area" @open="onOpenArea" />
       </v-flex>
     </sw-list-layout>
@@ -27,7 +27,7 @@ import AreaListEntry from "../areas/AreaListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,

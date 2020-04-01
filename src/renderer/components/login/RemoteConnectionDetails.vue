@@ -23,7 +23,13 @@
       />
     </v-flex>
     <v-flex xs6>
-      <form-text required class="ml-3" label="Hostname" title="Hostname for remote." v-model="host">
+      <form-text
+        required
+        class="ml-3"
+        label="Hostname"
+        title="Hostname for remote."
+        v-model="host"
+      >
         <span v-if="!$v.host.required && $v.$dirty">Hostname is required.</span>
       </form-text>
     </v-flex>
@@ -53,10 +59,9 @@ import { Component, DialogSection } from "sitewhere-ide-common";
 import DialogForm from "../common/form/DialogForm.vue";
 import FormText from "../common/form/FormText.vue";
 import FormSelect from "../common/form/FormSelect.vue";
-import { generateUniqueId } from "../common/Utils";
+import { generateUniqueId, IRemoteConnection } from "sitewhere-ide-common";
 
 import { required } from "vuelidate/lib/validators";
-import { IRemoteConnection } from "../common/ApplicationModel";
 
 @Component({
   components: {

@@ -19,7 +19,7 @@ import { Component, DialogSection } from "sitewhere-ide-common";
 
 import DialogForm from "../common/form/DialogForm.vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
 import { IGrantedAuthorityHierarchyNode } from "sitewhere-rest-api";
@@ -42,9 +42,9 @@ export default class UserPermissions extends DialogSection {
 
     // Reload permissions hierarchy.
     try {
-      let response: AxiosResponse<
-        IGrantedAuthorityHierarchyNode[]
-      > = await getAuthoritiesHierarchy(this.$store);
+      let response: AxiosResponse<IGrantedAuthorityHierarchyNode[]> = await getAuthoritiesHierarchy(
+        this.$store
+      );
       this.allPermissions = response.data;
     } catch (err) {
       handleError(err);

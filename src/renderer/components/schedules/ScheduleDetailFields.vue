@@ -10,7 +10,13 @@
       />
     </v-flex>
     <v-flex xs12>
-      <form-text required label="Name" title="Schedule name." v-model="name" icon="info">
+      <form-text
+        required
+        label="Name"
+        title="Schedule name."
+        v-model="name"
+        icon="info"
+      >
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
       </form-text>
     </v-flex>
@@ -43,7 +49,9 @@
         item-value="value"
         icon="flash_on"
       >
-        <span v-if="$v.triggerType.$invalid && $v.$dirty">Trigger type is required.</span>
+        <span v-if="$v.triggerType.$invalid && $v.$dirty"
+          >Trigger type is required.</span
+        >
       </form-select>
     </v-flex>
     <v-flex xs12 v-if="triggerType === 'CronTrigger'">
@@ -54,7 +62,9 @@
         v-model="cronExpression"
         icon="info"
       >
-        <span v-if="!$v.cronExpression.reqIfCron && $v.$dirty">Cron expression is required.</span>
+        <span v-if="!$v.cronExpression.reqIfCron && $v.$dirty"
+          >Cron expression is required.</span
+        >
       </form-text>
     </v-flex>
     <v-flex xs6 v-if="triggerType === 'SimpleTrigger'">
@@ -65,7 +75,9 @@
         v-model="repeatInterval"
         icon="alarm"
       >
-        <span v-if="!$v.repeatInterval.reqIfSimple && $v.$dirty">Repeat interval is required.</span>
+        <span v-if="!$v.repeatInterval.reqIfSimple && $v.$dirty"
+          >Repeat interval is required.</span
+        >
       </form-text>
     </v-flex>
     <v-flex xs6 v-if="triggerType === 'SimpleTrigger'">
@@ -76,7 +88,9 @@
         v-model="repeatCount"
         icon="autorenew"
       >
-        <span v-if="!$v.repeatCount.reqIfSimple && $v.$dirty">Repeat count is required.</span>
+        <span v-if="!$v.repeatCount.reqIfSimple && $v.$dirty"
+          >Repeat count is required.</span
+        >
       </form-text>
     </v-flex>
   </dialog-form>
@@ -91,7 +105,7 @@ import FormText from "../common/form/FormText.vue";
 import FormSelect from "../common/form/FormSelect.vue";
 import FormDateTimePicker from "../common/form/FormDateTimePicker.vue";
 
-import { formatIso8601 } from "../common/Utils";
+import { formatIso8601 } from "sitewhere-ide-common";
 import { required, requiredIf, helpers } from "vuelidate/lib/validators";
 import {
   ISchedule,

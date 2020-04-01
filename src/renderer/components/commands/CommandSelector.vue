@@ -8,7 +8,7 @@
     v-model="wrapped"
     icon="settings"
   >
-    <slot/>
+    <slot />
   </form-select>
 </template>
 
@@ -18,7 +18,7 @@ import { Component, Prop, Watch } from "sitewhere-ide-common";
 
 import FormSelect from "../common/form/FormSelect.vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
 import {
@@ -70,9 +70,11 @@ export default class CommandSelector extends Vue {
       };
       let format: IDeviceCommandResponseFormat = {};
       try {
-        let response: AxiosResponse<
-          IDeviceCommandSearchResults
-        > = await listDeviceCommands(this.$store, criteria, format);
+        let response: AxiosResponse<IDeviceCommandSearchResults> = await listDeviceCommands(
+          this.$store,
+          criteria,
+          format
+        );
         this.commands = response.data.results;
       } catch (err) {
         handleError(err);

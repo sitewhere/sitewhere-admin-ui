@@ -1,7 +1,13 @@
 <template>
   <v-app v-if="tenant">
     <sw-in-app-system-bar style="-webkit-app-region: drag" />
-    <v-navigation-drawer fixed :permanent="true" style="margin-top: 25px;" v-model="drawer" app>
+    <v-navigation-drawer
+      fixed
+      :permanent="true"
+      style="margin-top: 25px;"
+      v-model="drawer"
+      app
+    >
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
         <div class="tenant-logo" :style="tenantLogoStyle" />
         <v-spacer />
@@ -39,7 +45,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { getJwt } from "../../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";

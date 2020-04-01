@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "sitewhere-ide-common";
-import { IRemotes, IRemoteConnection } from "../common/ApplicationModel";
+import { IRemotes, IRemoteConnection } from "sitewhere-ide-common";
 
 @Component
 export default class RemotesDropdown extends Vue {

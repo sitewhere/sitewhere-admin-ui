@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Component, Watch } from "sitewhere-ide-common";
-import { IAlertMessage } from "./ApplicationModel";
+import { IAlertMessage } from "sitewhere-ide-common";
 import Vue from "vue";
 
 @Component({})
@@ -31,5 +31,4 @@ export default class Notifications extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

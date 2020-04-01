@@ -29,7 +29,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 import FormSelect from "../common/form/FormSelect.vue";
 import FormSelectCondensed from "../common/form/FormSelectCondensed.vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
 import {

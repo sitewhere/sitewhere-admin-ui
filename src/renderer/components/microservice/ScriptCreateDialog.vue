@@ -1,10 +1,11 @@
 <template>
-  <scripts-dialog
+  <script-dialog
     ref="dialog"
     title="Create Script"
     width="700"
     resetOnOpen="true"
     :identifier="identifier"
+    :scriptCategories="scriptCategories"
     createLabel="Create"
     cancelLabel="Cancel"
     @payload="onCommit"
@@ -20,26 +21,28 @@ import {
   Refs
 } from "sitewhere-ide-common";
 
-import ScriptsDialog from "./ScriptsDialog.vue";
+import ScriptDialog from "./ScriptDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { IScriptCreateRequest, IScriptMetadata } from "sitewhere-rest-api";
 import {
-  createGlobalScript,
-  createTenantScript
-} from "../../rest/sitewhere-scripting-api";
+  IScriptCreateRequest,
+  IScriptMetadata,
+  IScriptCategory
+} from "sitewhere-rest-api";
+import { createTenantScript } from "../../rest/sitewhere-scripting-api";
 
 @Component({
   components: {
-    ScriptsDialog
+    ScriptDialog
   }
 })
-export default class ScriptsCreateDialog extends CreateDialogComponent<
+export default class ScriptCreateDialog extends CreateDialogComponent<
   IScriptMetadata,
   IScriptCreateRequest
 > {
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
+  @Prop() readonly scriptCategories!: IScriptCategory[];
 
   // References.
   $refs!: Refs<{
@@ -58,16 +61,12 @@ export default class ScriptsCreateDialog extends CreateDialogComponent<
 
   /** Implemented in subclasses to save payload */
   save(payload: IScriptCreateRequest): AxiosPromise<IScriptMetadata> {
-    if (!this.tenantToken) {
-      return createGlobalScript(this.$store, this.identifier, payload);
-    } else {
-      return createTenantScript(
-        this.$store,
-        this.identifier,
-        this.tenantToken,
-        payload
-      );
-    }
+    return createTenantScript(
+      this.$store,
+      this.identifier,
+      this.tenantToken,
+      payload
+    );
   }
 
   /** Implemented in subclasses for after-save */

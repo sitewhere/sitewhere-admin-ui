@@ -114,10 +114,11 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <scripts-create-dialog
+    <script-create-dialog
       ref="create"
       :identifier="identifier"
       :tenantToken="tenantToken"
+      :scriptCategories="scriptCategories"
       @scriptAdded="onScriptAdded"
     />
     <script-create-clone-dialog
@@ -136,29 +137,29 @@ import { Component, Prop, Refs } from "sitewhere-ide-common";
 import CondensedToolbar from "../common/CondensedToolbar.vue";
 import ScriptVersionList, { isVersionActive } from "./ScriptVersionList.vue";
 import ScriptsContentEditor from "./ScriptsContentEditor.vue";
-import ScriptsCreateDialog from "./ScriptsCreateDialog.vue";
+import ScriptCreateDialog from "./ScriptCreateDialog.vue";
 import ScriptCreateCloneDialog from "./ScriptCreateCloneDialog.vue";
 
 import { AxiosResponse } from "axios";
-import { formatDate, showMessage } from "../common/Utils";
+import { formatDate, showMessage } from "sitewhere-ide-common";
 import {
-  listGlobalScriptMetadata,
   listTenantScriptMetadata,
-  updateGlobalScript,
   updateTenantScript,
-  cloneGlobalScript,
   cloneTenantScript,
-  activateGlobalScript,
   activateTenantScript
 } from "../../rest/sitewhere-scripting-api";
-import { IScriptMetadata, IScriptVersion } from "sitewhere-rest-api";
+import {
+  IScriptCategory,
+  IScriptMetadata,
+  IScriptVersion
+} from "sitewhere-rest-api";
 
 @Component({
   components: {
     CondensedToolbar,
     ScriptVersionList,
     ScriptsContentEditor,
-    ScriptsCreateDialog,
+    ScriptCreateDialog,
     ScriptCreateCloneDialog
   }
 })
@@ -166,6 +167,7 @@ export default class ScriptsManager extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
+  @Prop() readonly scriptCategories!: IScriptCategory[];
 
   scripts: IScriptMetadata[] = [];
   selectedScript: IScriptMetadata | null = null;
@@ -184,27 +186,19 @@ export default class ScriptsManager extends Vue {
 
   // References.
   $refs!: Refs<{
-    create: ScriptsCreateDialog;
+    create: ScriptCreateDialog;
     content: ScriptsContentEditor;
     clone: ScriptCreateCloneDialog;
   }>;
 
   /** Refresh list of scripts */
   async refresh() {
-    if (!this.tenantToken) {
-      let response: AxiosResponse<IScriptMetadata[]> = await listGlobalScriptMetadata(
-        this.$store,
-        this.identifier
-      );
-      this.onScriptsRefreshed(response.data);
-    } else {
-      let response: AxiosResponse<IScriptMetadata[]> = await listTenantScriptMetadata(
-        this.$store,
-        this.identifier,
-        this.tenantToken
-      );
-      this.onScriptsRefreshed(response.data);
-    }
+    let response: AxiosResponse<IScriptMetadata[]> = await listTenantScriptMetadata(
+      this.$store,
+      this.identifier,
+      this.tenantToken
+    );
+    this.onScriptsRefreshed(response.data);
   }
 
   /** Load selected script after refresh */
@@ -266,30 +260,20 @@ export default class ScriptsManager extends Vue {
       var updated = {
         id: this.selectedScript.id,
         name: this.selectedScript.name,
-        description: this.selectedScript.description,
-        type: this.selectedScript.type,
+        category: "",
+        description: "",
+        interpreterType: this.selectedScript.interpreterType,
         content: btoa(this.content)
       };
-      if (!this.tenantToken) {
-        await updateGlobalScript(
-          this.$store,
-          this.identifier,
-          this.selectedScript.id,
-          this.selectedVersion.versionId,
-          updated
-        );
-        this.onContentSaved();
-      } else {
-        await updateTenantScript(
-          this.$store,
-          this.identifier,
-          this.tenantToken,
-          this.selectedScript.id,
-          this.selectedVersion.versionId,
-          updated
-        );
-        this.onContentSaved();
-      }
+      await updateTenantScript(
+        this.$store,
+        this.identifier,
+        this.tenantToken,
+        this.selectedScript.id,
+        this.selectedVersion.versionId,
+        updated
+      );
+      this.onContentSaved();
     }
   }
 
@@ -309,26 +293,15 @@ export default class ScriptsManager extends Vue {
       comment: version.comment
     };
     if (this.selectedScript && this.selectedVersion) {
-      if (!this.tenantToken) {
-        let response: AxiosResponse<IScriptVersion> = await cloneGlobalScript(
-          this.$store,
-          this.identifier,
-          this.selectedScript.id,
-          this.selectedVersion.versionId,
-          request
-        );
-        this.onVersionCloned(response.data);
-      } else {
-        let response: AxiosResponse<IScriptVersion> = await cloneTenantScript(
-          this.$store,
-          this.identifier,
-          this.tenantToken,
-          this.selectedScript.id,
-          this.selectedVersion.versionId,
-          request
-        );
-        this.onVersionCloned(response.data);
-      }
+      let response: AxiosResponse<IScriptVersion> = await cloneTenantScript(
+        this.$store,
+        this.identifier,
+        this.tenantToken,
+        this.selectedScript.id,
+        this.selectedVersion.versionId,
+        request
+      );
+      this.onVersionCloned(response.data);
     }
   }
 
@@ -345,24 +318,14 @@ export default class ScriptsManager extends Vue {
   /** Activate current version */
   async onActivate() {
     if (this.selectedScript && this.selectedVersion) {
-      if (!this.tenantToken) {
-        await activateGlobalScript(
-          this.$store,
-          this.identifier,
-          this.selectedScript.id,
-          this.selectedVersion.versionId
-        );
-        this.onVersionActivated();
-      } else {
-        await activateTenantScript(
-          this.$store,
-          this.identifier,
-          this.tenantToken,
-          this.selectedScript.id,
-          this.selectedVersion.versionId
-        );
-        this.onVersionActivated();
-      }
+      await activateTenantScript(
+        this.$store,
+        this.identifier,
+        this.tenantToken,
+        this.selectedScript.id,
+        this.selectedVersion.versionId
+      );
+      this.onVersionActivated();
     }
   }
 
@@ -379,7 +342,7 @@ export default class ScriptsManager extends Vue {
   /** Build script title */
   get scriptTitle() {
     if (this.selectedScript && this.selectedVersion) {
-      return this.selectedScript.id + "." + this.selectedScript.type;
+      return this.selectedScript.id + "." + this.selectedScript.interpreterType;
     }
     return null;
   }

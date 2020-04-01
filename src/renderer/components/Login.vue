@@ -187,7 +187,7 @@ import RemotesDropdown from "./login/RemotesDropdown.vue";
 import RemotesDialog from "./login/RemotesDialog.vue";
 
 import Electron from "electron";
-import { handleError } from "./common/Utils";
+import { handleError, IRemotes, IRemoteConnection } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
@@ -196,7 +196,6 @@ import { GoogleAnalytics } from "../libraries/google-analytics";
 import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { getUser } from "../rest/sitewhere-users-api";
 import { IUser, IUserResponseFormat } from "sitewhere-rest-api";
-import { IRemotes, IRemoteConnection } from "./common/ApplicationModel";
 
 // Discord logo and tooltip.
 const discordSvgContent: string =

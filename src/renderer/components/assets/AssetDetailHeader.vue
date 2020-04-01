@@ -6,7 +6,10 @@
     <template slot="content">
       <sw-navigation-header-fields>
         <sw-header-field label="Token">
-          <clipboard-copy-field :field="asset.token" message="Token copied to clipboard" />
+          <clipboard-copy-field
+            :field="asset.token"
+            message="Token copied to clipboard"
+          />
         </sw-header-field>
         <sw-header-field label="Name">
           <span>{{ asset.name }}</span>
@@ -36,7 +39,7 @@
 <script lang="ts">
 import { Component, HeaderComponent } from "sitewhere-ide-common";
 
-import { formatDate } from "../common/Utils";
+import { formatDate } from "sitewhere-ide-common";
 import { IAsset } from "sitewhere-rest-api";
 
 import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";

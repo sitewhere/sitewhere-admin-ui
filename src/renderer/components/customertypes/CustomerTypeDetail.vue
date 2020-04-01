@@ -54,8 +54,7 @@ import CustomerTypeUpdateDialog from "./CustomerTypeUpdateDialog.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { Route } from "vue-router";
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
@@ -92,7 +91,7 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
   }
 
   /** Called when component is reused */
-  beforeRouteUpdate(to: Route, from: Route, next: any) {
+  beforeRouteUpdate(to: any, from: any, next: any) {
     this.display(to.params.token);
     next();
   }

@@ -26,18 +26,34 @@
       <area-zones ref="zones" tabkey="zones" :area="area" />
     </template>
     <template slot="dialogs">
-      <area-create-dialog ref="create" :parentArea="area" @created="onSubareaAdded" />
+      <area-create-dialog
+        ref="create"
+        :parentArea="area"
+        @created="onSubareaAdded"
+      />
       <area-update-dialog
         ref="edit"
         :token="token"
         :parentArea="area"
         @areaUpdated="onAreaUpdated"
       />
-      <area-delete-dialog ref="delete" :token="token" @deleted="afterAreaDeleted" />
-      <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded" />
+      <area-delete-dialog
+        ref="delete"
+        :token="token"
+        @deleted="afterAreaDeleted"
+      />
+      <zone-create-dialog
+        ref="zoneCreate"
+        :area="area"
+        @zoneAdded="onZoneAdded"
+      />
     </template>
     <template slot="actions">
-      <up-button v-if="parentArea" tooltip="Up One Level" @action="onUpOneLevel" />
+      <up-button
+        v-if="parentArea"
+        tooltip="Up One Level"
+        @action="onUpOneLevel"
+      />
       <area-button tooltip="Add Subarea" @action="onAddSubarea" />
       <zone-button tooltip="Add Zone" @action="onAddZone" />
       <edit-button tooltip="Edit Area" @action="onEdit" />
@@ -71,8 +87,7 @@ import ZoneButton from "../common/navbuttons/ZoneButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { Route } from "vue-router";
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { NavigationIcon } from "../../libraries/constants";
 import { getArea } from "../../rest/sitewhere-areas-api";
@@ -127,7 +142,7 @@ export default class AreaDetail extends DetailComponent<IArea> {
   }
 
   /** Called when component is reused */
-  beforeRouteUpdate(to: Route, from: Route, next: any) {
+  beforeRouteUpdate(to: any, from: any, next: any) {
     this.display(to.params.token);
     next();
   }

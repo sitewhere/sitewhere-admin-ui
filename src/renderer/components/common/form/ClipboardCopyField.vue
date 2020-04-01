@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { Component, Prop } from "sitewhere-ide-common";
-import { showMessage, showError } from "../Utils";
+import { showMessage, showError } from "sitewhere-ide-common";
 import Vue from "vue";
 
 @Component({})

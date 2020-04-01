@@ -8,7 +8,7 @@
     loadingMessage="Loading customers ..."
   >
     <sw-list-layout>
-      <v-flex xs6 v-for="(customer) in matches" :key="customer.token">
+      <v-flex xs6 v-for="customer in matches" :key="customer.token">
         <customer-list-entry :customer="customer" @open="onOpenCustomer" />
       </v-flex>
     </sw-list-layout>
@@ -27,7 +27,7 @@ import CustomerListEntry from "../customers/CustomerListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { listCustomers } from "../../rest/sitewhere-customers-api";
 import {
   ICustomer,

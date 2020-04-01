@@ -29,7 +29,7 @@ import { Component, Prop } from "sitewhere-ide-common";
 import FormSelect from "../common/form/FormSelect.vue";
 import FormSelectCondensed from "../common/form/FormSelectCondensed.vue";
 
-import { handleError } from "../common/Utils";
+import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
 import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
 import {
@@ -68,9 +68,11 @@ export default class DeviceTypeSelector extends Vue {
     };
     let format: IDeviceTypeResponseFormat = { includeAsset: true };
     try {
-      let response: AxiosResponse<
-        IDeviceTypeSearchResults
-      > = await listDeviceTypes(this.$store, criteria, format);
+      let response: AxiosResponse<IDeviceTypeSearchResults> = await listDeviceTypes(
+        this.$store,
+        criteria,
+        format
+      );
       this.deviceTypes = response.data.results;
     } catch (err) {
       handleError(err);

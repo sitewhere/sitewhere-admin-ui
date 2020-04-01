@@ -6,7 +6,7 @@
     @pagingUpdated="onPagingUpdated"
   >
     <sw-list-layout>
-      <v-flex xs12 v-for="(assignment) in matches" :key="assignment.token">
+      <v-flex xs12 v-for="assignment in matches" :key="assignment.token">
         <assignment-list-entry
           :assignment="assignment"
           @assignmentOpened="onOpenAssignment(assignment)"
@@ -28,7 +28,7 @@ import { Component, Prop, ListComponent } from "sitewhere-ide-common";
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { routeTo } from "../common/Utils";
+import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { searchDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
 import {
