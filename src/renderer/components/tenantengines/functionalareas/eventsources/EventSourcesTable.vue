@@ -32,26 +32,32 @@
       <new-event-source-chooser ref="chooser" @chosen="onEventSourceCreate" />
       <active-mq-broker-event-source-create-dialog
         ref="amqBrokerCreate"
+        :tenantId="tenantId"
         @create="onEventSourceAdded"
       />
       <active-mq-broker-event-source-update-dialog
         ref="amqBrokerUpdate"
+        :tenantId="tenantId"
         @update="onEventSourceUpdated"
       />
       <active-mq-client-event-source-create-dialog
         ref="amqClientCreate"
+        :tenantId="tenantId"
         @create="onEventSourceAdded"
       />
       <active-mq-client-event-source-update-dialog
         ref="amqClientUpdate"
+        :tenantId="tenantId"
         @update="onEventSourceUpdated"
       />
       <coap-event-source-create-dialog
         ref="coapCreate"
+        :tenantId="tenantId"
         @create="onEventSourceAdded"
       />
       <coap-event-source-update-dialog
         ref="coapUpdate"
+        :tenantId="tenantId"
         @update="onEventSourceUpdated"
       />
       <event-hub-event-source-create-dialog
@@ -60,22 +66,27 @@
       />
       <event-hub-event-source-update-dialog
         ref="eventHubUpdate"
+        :tenantId="tenantId"
         @update="onEventSourceUpdated"
       />
       <mqtt-event-source-create-dialog
         ref="mqttCreate"
+        :tenantId="tenantId"
         @create="onEventSourceAdded"
       />
       <mqtt-event-source-update-dialog
         ref="mqttUpdate"
+        :tenantId="tenantId"
         @update="onEventSourceUpdated"
       />
       <rabbit-mq-event-source-create-dialog
         ref="rabbitMqCreate"
+        :tenantId="tenantId"
         @create="onEventSourceAdded"
       />
       <rabbit-mq-event-source-update-dialog
         ref="rabbitMqUpdate"
+        :tenantId="tenantId"
         @update="onEventSourceUpdated"
       />
     </template>
@@ -117,10 +128,11 @@ import { IEventSourceGenericConfiguration } from "sitewhere-configuration-model"
     MqttEventSourceCreateDialog,
     MqttEventSourceUpdateDialog,
     RabbitMqEventSourceCreateDialog,
-    RabbitMqEventSourceUpdateDialog
-  }
+    RabbitMqEventSourceUpdateDialog,
+  },
 })
 export default class EventSourcesTable extends Vue {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly eventSources!: IEventSourceGenericConfiguration[];
 
   /** References */
@@ -144,7 +156,7 @@ export default class EventSourcesTable extends Vue {
     { text: "Id", value: "id" },
     { text: "Type", value: "type" },
     { text: "Decoder", value: "decoder" },
-    { text: "", value: "delete" }
+    { text: "", value: "delete" },
   ];
 
   /** Datastore configurations in format for display */
@@ -164,7 +176,7 @@ export default class EventSourcesTable extends Vue {
   findIdsInUse(exclude?: string): string[] {
     let ids: string[] = [];
     if (this.eventSources) {
-      this.eventSources.forEach(source => {
+      this.eventSources.forEach((source) => {
         if (source.id != exclude) {
           ids.push(source.id);
         }
@@ -199,7 +211,7 @@ export default class EventSourcesTable extends Vue {
   calculateEventSourcesAsSortedArray(): void {
     let all: any[] = [];
     if (this.eventSources) {
-      this.eventSources.forEach(source => {
+      this.eventSources.forEach((source) => {
         let meta: any = {};
         meta.id = source.id;
         meta.type = source.type;

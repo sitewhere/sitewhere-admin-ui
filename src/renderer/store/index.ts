@@ -2,8 +2,11 @@ import Vue from "vue";
 import Vuex, { StoreOptions } from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import { IUser, ITenant } from "sitewhere-rest-api";
-import { INavigationSection } from "sitewhere-ide-common";
-import { IAlertMessage, IRemotes } from "../components/common/ApplicationModel";
+import {
+  INavigationSection,
+  IAlertMessage,
+  IRemotes
+} from "sitewhere-ide-common";
 
 Vue.use(Vuex);
 

@@ -1,6 +1,7 @@
 <template>
   <tenant-engine-plugin :configuration="configuration">
     <event-sources-table
+      :tenantId="tenantId"
       :eventSources="eventSources"
       @create="onEventSourceCreated"
       @update="onEventSourceUpdated"
@@ -20,12 +21,12 @@ import { MicroserviceIcon } from "../../../../libraries/constants";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 import {
   IEventSourcesConfiguration,
-  IEventSourceGenericConfiguration
+  IEventSourceGenericConfiguration,
 } from "sitewhere-configuration-model";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { TenantEnginePlugin, EventSourcesTable }
+  components: { TenantEnginePlugin, EventSourcesTable },
 })
 export default class EventSourcesPlugin extends Vue {
   @Prop() readonly configuration!: ITenantEngineConfiguration;
@@ -33,6 +34,11 @@ export default class EventSourcesPlugin extends Vue {
   /** Get page icon */
   get icon(): MicroserviceIcon {
     return MicroserviceIcon.EventSources;
+  }
+
+  /** Tenant id */
+  get tenantId(): string | null {
+    return this.configuration ? this.configuration.tenant.token : null;
   }
 
   /** Get tenant configuration for event sources */

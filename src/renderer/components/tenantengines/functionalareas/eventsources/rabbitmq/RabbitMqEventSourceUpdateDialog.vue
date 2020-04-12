@@ -6,13 +6,14 @@
     createLabel="Update"
     cancelLabel="Cancel"
     :idsInUse="idsInUse"
+    :tenantId="tenantId"
     @payload="onPayload"
   />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs } from "sitewhere-ide-common";
 
 import RabbitMqEventSourceDialog from "./RabbitMqEventSourceDialog.vue";
 
@@ -20,10 +21,12 @@ import { IEventSourceGenericConfiguration } from "sitewhere-configuration-model"
 
 @Component({
   components: {
-    RabbitMqEventSourceDialog
-  }
+    RabbitMqEventSourceDialog,
+  },
 })
 export default class RabbitMqEventSourceUpdateDialog extends Vue {
+  @Prop() readonly tenantId!: string;
+
   /** References */
   $refs!: Refs<{
     dialog: RabbitMqEventSourceDialog;

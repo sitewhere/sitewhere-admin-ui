@@ -1,29 +1,57 @@
 <template>
   <v-card flat>
-    <json-decoder-configuration ref="details" v-if="type == 'json'" />
-    <protobuf-decoder-configuration ref="details" v-if="type == 'protobuf'" />
+    <json-decoder-configuration ref="details" v-if="decoderType == 'json'" />
+    <protobuf-decoder-configuration
+      ref="details"
+      v-if="decoderType == 'protobuf'"
+    />
+    <scripted-event-decoder-configuration
+      ref="details"
+      :tenantId="tenantId"
+      v-if="decoderType == 'scripted'"
+    />
   </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Prop, DialogSection, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  DialogSection,
+  Refs,
+  Watch
+} from "sitewhere-ide-common";
 
 import JsonDecoderConfiguration from "./json/JsonDecoderConfiguration.vue";
 import ProtobufDecoderConfiguration from "./protobuf/ProtobufDecoderConfiguration.vue";
+import ScriptedEventDecoderConfiguration from "./scripted/ScriptedEventDecoderConfiguration.vue";
+import { IEventDecoderGenericConfiguration } from "sitewhere-configuration-model";
 
 @Component({
   components: {
     JsonDecoderConfiguration,
-    ProtobufDecoderConfiguration
+    ProtobufDecoderConfiguration,
+    ScriptedEventDecoderConfiguration
   }
 })
 export default class DecoderConfiguration extends DialogSection {
-  @Prop() readonly type!: string;
+  @Prop() readonly tenantId!: string;
+  @Prop() readonly decoder!: IEventDecoderGenericConfiguration;
 
   // References.
   $refs!: Refs<{
     details: DialogSection;
   }>;
+
+  @Watch("decoderType", { immediate: true })
+  onDecoderTypeUpdated(updated: string) {
+    this.load(this.decoder);
+  }
+
+  /** Decoder type */
+  get decoderType(): string | null {
+    return this.decoder ? this.decoder.type : null;
+  }
 
   /** Reset section content */
   reset(): void {
@@ -43,10 +71,12 @@ export default class DecoderConfiguration extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: any): void {
-    if (this.$refs.details) {
-      this.$refs.details.load(input);
-    }
+  load(input: IEventDecoderGenericConfiguration): void {
+    this.$nextTick().then(() => {
+      if (this.$refs.details) {
+        this.$refs.details.load(input.configuration);
+      }
+    });
   }
 
   /** Save form data to an object */

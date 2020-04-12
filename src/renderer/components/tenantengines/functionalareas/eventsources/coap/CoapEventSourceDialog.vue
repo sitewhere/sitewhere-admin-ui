@@ -2,6 +2,7 @@
   <event-source-dialog
     ref="dialog"
     type="coap"
+    :tenantId="tenantId"
     :icon="icon"
     :title="title"
     :width="width"
@@ -35,12 +36,13 @@ import CoapServerFields from "./CoapServerFields.vue";
 @Component({
   components: {
     EventSourceDialog,
-    CoapServerFields
-  }
+    CoapServerFields,
+  },
 })
 export default class CoapEventSourceDialog extends DialogComponent<
   IEventSourceGenericConfiguration
 > {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;

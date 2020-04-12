@@ -2,6 +2,7 @@
   <event-source-dialog
     ref="dialog"
     type="rabbitmq"
+    :tenantId="tenantId"
     :icon="icon"
     :title="title"
     :width="width"
@@ -35,12 +36,13 @@ import RabbitMqFields from "./RabbitMqFields.vue";
 @Component({
   components: {
     EventSourceDialog,
-    RabbitMqFields
-  }
+    RabbitMqFields,
+  },
 })
 export default class RabbitMqEventSourceDialog extends DialogComponent<
   IEventSourceGenericConfiguration
 > {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;

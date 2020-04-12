@@ -6,13 +6,14 @@
     createLabel="Create"
     cancelLabel="Cancel"
     :idsInUse="idsInUse"
+    :tenantId="tenantId"
     @payload="onPayload"
   />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs } from "sitewhere-ide-common";
 
 import CoapEventSourceDialog from "./CoapEventSourceDialog.vue";
 
@@ -20,10 +21,12 @@ import { ICoapServerConfiguration } from "sitewhere-configuration-model";
 
 @Component({
   components: {
-    CoapEventSourceDialog
-  }
+    CoapEventSourceDialog,
+  },
 })
 export default class CoapEventSourceCreateDialog extends Vue {
+  @Prop() readonly tenantId!: string;
+
   /** References */
   $refs!: Refs<{
     dialog: CoapEventSourceDialog;

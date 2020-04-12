@@ -6,13 +6,14 @@
     createLabel="Create"
     cancelLabel="Cancel"
     :idsInUse="idsInUse"
+    :tenantId="tenantId"
     @payload="onPayload"
   />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs } from "sitewhere-ide-common";
 
 import ActiveMqClientEventSourceDialog from "./ActiveMqClientEventSourceDialog.vue";
 
@@ -20,10 +21,12 @@ import { IActiveMqClientConfiguration } from "sitewhere-configuration-model";
 
 @Component({
   components: {
-    ActiveMqClientEventSourceDialog
-  }
+    ActiveMqClientEventSourceDialog,
+  },
 })
 export default class ActiveMqBrokerEventSourceCreateDialog extends Vue {
+  @Prop() readonly tenantId!: string;
+
   /** References */
   $refs!: Refs<{
     dialog: ActiveMqClientEventSourceDialog;

@@ -45,8 +45,8 @@ import EventSourcesPlugin from "./functionalareas/eventsources/EventSourcesPlugi
     BatchOperationsPlugin,
     DeviceManagementPlugin,
     EventSourcesPlugin,
-    TenantEnginePlugin
-  }
+    TenantEnginePlugin,
+  },
 })
 export default class TenantMicroserviceConfiguration extends Vue {
   @Prop() readonly tabkey!: string;

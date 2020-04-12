@@ -2,6 +2,7 @@
   <event-source-dialog
     ref="dialog"
     type="activemq-client"
+    :tenantId="tenantId"
     :icon="icon"
     :title="title"
     :width="width"
@@ -35,12 +36,13 @@ import ActiveMqClientFields from "./ActiveMqClientFields.vue";
 @Component({
   components: {
     EventSourceDialog,
-    ActiveMqClientFields
-  }
+    ActiveMqClientFields,
+  },
 })
 export default class ActiveMqClientEventSourceDialog extends DialogComponent<
   IEventSourceGenericConfiguration
 > {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;

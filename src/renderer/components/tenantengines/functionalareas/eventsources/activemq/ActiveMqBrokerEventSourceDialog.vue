@@ -2,6 +2,7 @@
   <event-source-dialog
     ref="dialog"
     type="activemq-broker"
+    :tenantId="tenantId"
     :icon="icon"
     :title="title"
     :width="width"
@@ -35,12 +36,13 @@ import ActiveMqBrokerFields from "./ActiveMqBrokerFields.vue";
 @Component({
   components: {
     EventSourceDialog,
-    ActiveMqBrokerFields
-  }
+    ActiveMqBrokerFields,
+  },
 })
 export default class ActiveMqBrokerEventSourceDialog extends DialogComponent<
   IEventSourceGenericConfiguration
 > {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;

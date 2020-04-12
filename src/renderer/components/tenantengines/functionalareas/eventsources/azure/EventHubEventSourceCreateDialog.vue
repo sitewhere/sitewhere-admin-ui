@@ -6,13 +6,14 @@
     createLabel="Create"
     cancelLabel="Cancel"
     :idsInUse="idsInUse"
+    :tenantId="tenantId"
     @payload="onPayload"
   />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs } from "sitewhere-ide-common";
 
 import EventHubEventSourceDialog from "./EventHubEventSourceDialog.vue";
 
@@ -20,10 +21,12 @@ import { IEventHubConfiguration } from "sitewhere-configuration-model";
 
 @Component({
   components: {
-    EventHubEventSourceDialog
-  }
+    EventHubEventSourceDialog,
+  },
 })
 export default class EventHubEventSourceCreateDialog extends Vue {
+  @Prop() readonly tenantId!: string;
+
   /** References */
   $refs!: Refs<{
     dialog: EventHubEventSourceDialog;

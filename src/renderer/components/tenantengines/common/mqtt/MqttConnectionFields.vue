@@ -91,31 +91,31 @@ import { required } from "vuelidate/lib/validators";
   components: {
     DialogForm,
     FormText,
-    FormSelect
+    FormSelect,
   },
   validations: {
     protocol: {
-      required
+      required,
     },
     hostname: {
-      required
+      required,
     },
     port: {
-      required
+      required,
     },
     topic: {
-      required
+      required,
     },
     qos: {
-      required
+      required,
     },
     numThreads: {
-      required
-    }
-  }
+      required,
+    },
+  },
 })
 export default class MqttConnectionFields extends DialogSection {
-  protocol: string = "http";
+  protocol: string = "tcp";
   hostname: string | null = null;
   port: number = 1883;
   topic: string | null = null;
@@ -124,33 +124,33 @@ export default class MqttConnectionFields extends DialogSection {
 
   protocols: { text: string; value: string }[] = [
     {
-      text: "http",
-      value: "http"
+      text: "TCP",
+      value: "tcp",
     },
     {
-      text: "https",
-      value: "https"
-    }
+      text: "TLS",
+      value: "tls",
+    },
   ];
 
   qosValues: { text: string; value: string }[] = [
     {
       text: "0 - At Most Once",
-      value: "at_most_once"
+      value: "at_most_once",
     },
     {
       text: "1 - At Least Once",
-      value: "at_least_once"
+      value: "at_least_once",
     },
     {
       text: "2 - Exactly Once",
-      value: "exactly_once"
-    }
+      value: "exactly_once",
+    },
   ];
 
   /** Reset section content */
   reset(): void {
-    this.protocol = "http";
+    this.protocol = "tcp";
     this.hostname = null;
     this.port = 1883;
     this.topic = null;
@@ -167,7 +167,7 @@ export default class MqttConnectionFields extends DialogSection {
 
   /** Load form data from an object */
   load(input: IMqttConnectionConfiguration): void {
-    this.protocol = input.protocol || "http";
+    this.protocol = input.protocol || "tcp";
     this.hostname = input.hostname;
     this.port = input.port || 1883;
     this.topic = input.topic;
@@ -183,7 +183,7 @@ export default class MqttConnectionFields extends DialogSection {
       port: this.port,
       topic: this.topic,
       qos: this.qos,
-      numThreads: this.numThreads
+      numThreads: this.numThreads,
     };
   }
 }

@@ -2,6 +2,7 @@
   <event-source-dialog
     ref="dialog"
     type="mqtt"
+    :tenantId="tenantId"
     :icon="icon"
     :title="title"
     :width="width"
@@ -41,12 +42,13 @@ import MqttAuthenticationFields from "../../../common/mqtt/MqttAuthenticationFie
   components: {
     EventSourceDialog,
     MqttConnectionFields,
-    MqttAuthenticationFields
-  }
+    MqttAuthenticationFields,
+  },
 })
 export default class MqttEventSourceDialog extends DialogComponent<
   IEventSourceGenericConfiguration
 > {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;

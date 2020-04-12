@@ -52,7 +52,11 @@
     <template slot="tab-items">
       <slot name="event-source-tab-items" />
       <v-tab-item key="decoder">
-        <decoder-configuration ref="decoder" :type="decoderType" />
+        <decoder-configuration
+          ref="decoder"
+          :decoder="decoder"
+          :tenantId="tenantId"
+        />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -73,7 +77,10 @@ import FormText from "../../../common/form/FormText.vue";
 import FormSelect from "../../../common/form/FormSelect.vue";
 import DecoderConfiguration from "./decoders/DecoderConfiguration.vue";
 
-import { IEventSourceGenericConfiguration } from "sitewhere-configuration-model";
+import {
+  IEventSourceGenericConfiguration,
+  IEventDecoderGenericConfiguration
+} from "sitewhere-configuration-model";
 
 import { required, ValidationRule, helpers } from "vuelidate/lib/validators";
 
@@ -100,6 +107,7 @@ const idConflict: ValidationRule = helpers.withParams(
   }
 })
 export default class EventSourceDialog extends Vue {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly type!: string;
   @Prop() readonly icon!: string;
   @Prop() readonly title!: string;
@@ -116,8 +124,29 @@ export default class EventSourceDialog extends Vue {
     decoder: DecoderConfiguration;
   }>;
 
+  defaultDecoder = {
+    type: "json",
+    configuration: {}
+  };
+
   id: string | null = null;
-  decoderType: string = "json";
+  decoder: IEventDecoderGenericConfiguration = this.defaultDecoder;
+
+  /** Decoder type */
+  get decoderType(): string | null {
+    return this.decoder ? this.decoder.type : null;
+  }
+
+  /** Blank configuration if type updated */
+  set decoderType(value: string | null) {
+    console.log(this.$refs.dialog);
+    if (value) {
+      this.decoder = {
+        type: value,
+        configuration: {}
+      };
+    }
+  }
 
   /** List of decoder types */
   decoderTypes: { text: string; value: string }[] = [
@@ -128,15 +157,19 @@ export default class EventSourceDialog extends Vue {
     {
       text: "Google Protocol Buffers",
       value: "protobuf"
+    },
+    {
+      text: "Scripted Event Decoder",
+      value: "scripted"
     }
   ];
 
   /** Save dialog fields */
   save(): any {
     let config: any = { id: this.id, type: this.type };
-    let decoderConfig: any = this.$refs.decoder.save();
-    let decoder: any = {
-      decoder: { type: this.decoderType, config: decoderConfig }
+    this.decoder.configuration = this.$refs.decoder.save();
+    let decoder: { decoder: IEventDecoderGenericConfiguration } = {
+      decoder: this.decoder
     };
     Object.assign(config, decoder);
     return config;
@@ -145,7 +178,7 @@ export default class EventSourceDialog extends Vue {
   /** Reset the dialog */
   reset(): void {
     this.id = null;
-    this.decoderType = "json";
+    this.decoder = this.defaultDecoder;
     this.setActiveTab(0);
     this.$refs.decoder.reset();
     this.$v.$reset();
@@ -163,7 +196,7 @@ export default class EventSourceDialog extends Vue {
   /** Load dialog from a given configuration */
   load(config: IEventSourceGenericConfiguration) {
     this.id = config.id;
-    this.decoderType = config.decoder ? config.decoder.type : "json";
+    this.decoder = config.decoder;
   }
 
   /** Set the active tab */

@@ -22,10 +22,9 @@ export function listScriptCategories(
   identifier: string
 ): Promise<AxiosResponse<IScriptCategory[]>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptCategory[]> = SiteWhere.API.Scripting.listScriptCategories(
-    axios,
-    identifier
-  );
+  let api: AxiosPromise<
+    IScriptCategory[]
+  > = SiteWhere.API.Scripting.listScriptCategories(axios, identifier);
   return loaderWrapper(store, api);
 }
 
@@ -41,11 +40,9 @@ export function listScriptTemplates(
   category: string
 ): Promise<AxiosResponse<IScriptTemplate[]>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptTemplate[]> = SiteWhere.API.Scripting.listScriptTemplates(
-    axios,
-    identifier,
-    category
-  );
+  let api: AxiosPromise<
+    IScriptTemplate[]
+  > = SiteWhere.API.Scripting.listScriptTemplates(axios, identifier, category);
   return loaderWrapper(store, api);
 }
 
@@ -61,7 +58,52 @@ export function listTenantScriptMetadata(
   tenantToken: string
 ): Promise<AxiosResponse<IScriptMetadata[]>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptMetadata[]> = SiteWhere.API.Scripting.listTenantScripts(
+  let api: AxiosPromise<
+    IScriptMetadata[]
+  > = SiteWhere.API.Scripting.listTenantScripts(axios, identifier, tenantToken);
+  return loaderWrapper(store, api);
+}
+
+/**
+ * List tenant scripts for functional area and belonging to category.
+ * @param store
+ * @param identifier
+ * @param tenantToken
+ * @param category
+ */
+export function listTenantScriptsForCategory(
+  store: Store<SiteWhereUiSettings>,
+  identifier: string,
+  tenantToken: string,
+  category: string
+): Promise<AxiosResponse<IScriptMetadata[]>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IScriptMetadata[]
+  > = SiteWhere.API.Scripting.listTenantScriptsForCategory(
+    axios,
+    identifier,
+    tenantToken,
+    category
+  );
+  return loaderWrapper(store, api);
+}
+
+/**
+ * List scripts organized by category.
+ * @param store
+ * @param identifier
+ * @param tenantToken
+ */
+export function listTenantScriptsByCategory(
+  store: Store<SiteWhereUiSettings>,
+  identifier: string,
+  tenantToken: string
+): Promise<AxiosResponse<IScriptCategory[]>> {
+  let axios: AxiosInstance = createCoreApiCall(store);
+  let api: AxiosPromise<
+    IScriptCategory[]
+  > = SiteWhere.API.Scripting.listTenantScriptsByCategory(
     axios,
     identifier,
     tenantToken
@@ -83,7 +125,9 @@ export function getTenantScriptMetadata(
   scriptId: string
 ): Promise<AxiosResponse<IScriptMetadata>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptMetadata> = SiteWhere.API.Scripting.getTenantScript(
+  let api: AxiosPromise<
+    IScriptMetadata
+  > = SiteWhere.API.Scripting.getTenantScript(
     axios,
     identifier,
     tenantToken,
@@ -106,7 +150,9 @@ export function createTenantScript(
   request: IScriptCreateRequest
 ): Promise<AxiosResponse<IScriptMetadata>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptMetadata> = SiteWhere.API.Scripting.createTenantScript(
+  let api: AxiosPromise<
+    IScriptMetadata
+  > = SiteWhere.API.Scripting.createTenantScript(
     axios,
     identifier,
     tenantToken,
@@ -131,7 +177,9 @@ export function getTenantScriptContent(
   versionId: string
 ): Promise<AxiosResponse<string>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<string> = SiteWhere.API.Scripting.getTenantScriptContent(
+  let api: AxiosPromise<
+    string
+  > = SiteWhere.API.Scripting.getTenantScriptContent(
     axios,
     identifier,
     tenantToken,
@@ -159,7 +207,9 @@ export function updateTenantScript(
   request: IScriptCreateRequest
 ): Promise<AxiosResponse<IScriptMetadata>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptMetadata> = SiteWhere.API.Scripting.updateTenantScript(
+  let api: AxiosPromise<
+    IScriptMetadata
+  > = SiteWhere.API.Scripting.updateTenantScript(
     axios,
     identifier,
     tenantToken,
@@ -188,7 +238,9 @@ export function cloneTenantScript(
   request: IScriptCloneRequest
 ): Promise<AxiosResponse<IScriptVersion>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptVersion> = SiteWhere.API.Scripting.cloneTenantScript(
+  let api: AxiosPromise<
+    IScriptVersion
+  > = SiteWhere.API.Scripting.cloneTenantScript(
     axios,
     identifier,
     tenantToken,
@@ -215,7 +267,9 @@ export function activateTenantScript(
   versionId: string
 ): Promise<AxiosResponse<IScriptMetadata>> {
   let axios: AxiosInstance = createCoreApiCall(store);
-  let api: AxiosPromise<IScriptMetadata> = SiteWhere.API.Scripting.activateTenantScript(
+  let api: AxiosPromise<
+    IScriptMetadata
+  > = SiteWhere.API.Scripting.activateTenantScript(
     axios,
     identifier,
     tenantToken,

@@ -2,6 +2,7 @@
   <event-source-dialog
     ref="dialog"
     type="eventhub"
+    :tenantId="tenantId"
     :icon="icon"
     :title="title"
     :width="width"
@@ -35,12 +36,13 @@ import EventHubFields from "./EventHubFields.vue";
 @Component({
   components: {
     EventSourceDialog,
-    EventHubFields
-  }
+    EventHubFields,
+  },
 })
 export default class EventHubEventSourceDialog extends DialogComponent<
   IEventSourceGenericConfiguration
 > {
+  @Prop() readonly tenantId!: string;
   @Prop() readonly title!: string;
   @Prop() readonly width!: number;
   @Prop() readonly createLabel!: string;

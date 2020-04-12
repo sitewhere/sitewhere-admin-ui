@@ -1,8 +1,9 @@
 <template>
   <v-layout row wrap fill-height v-if="selectedVersion">
     <v-flex xs12>
-      <v-card height="100%">
+      <v-card flat height="100%">
         <editor
+          ref="editor"
           v-model="content"
           @init="editorInit"
           lang="groovy"
@@ -18,7 +19,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
 import { getTenantScriptContent } from "../../rest/sitewhere-scripting-api";
@@ -35,6 +36,11 @@ export default class ScriptsContentEditor extends Vue {
   @Prop() readonly tenantToken!: string;
   @Prop() readonly script!: IScriptMetadata;
   @Prop() readonly version!: IScriptVersion;
+
+  /** References */
+  $refs!: Refs<{
+    editor: any;
+  }>;
 
   selectedScript: any = null;
   selectedVersion: any = null;
@@ -63,6 +69,11 @@ export default class ScriptsContentEditor extends Vue {
     this.$emit("content", updated);
   }
 
+  /** Get handle to embedded Ace editor */
+  get editor(): any {
+    return this.$refs.editor.editor;
+  }
+
   /** Initialize code editor by requiring dependencies */
   editorInit() {
     require("brace/ext/language_tools"); //language extension prerequsite...
@@ -71,6 +82,12 @@ export default class ScriptsContentEditor extends Vue {
     require("brace/mode/less");
     require("brace/theme/chrome");
     require("brace/snippets/javascript"); //snippet
+
+    this.editor.commands.addCommand({
+      name: "save",
+      bindKey: { win: "Ctrl-S", mac: "Cmd-S" },
+      exec: this.onSaveContent
+    });
   }
 
   /** Update script content */
@@ -83,6 +100,12 @@ export default class ScriptsContentEditor extends Vue {
       this.selectedVersion.versionId
     );
     this.content = response.data;
+    console.log(this.editor);
+  }
+
+  /** Called when save keybinding is clicked */
+  onSaveContent() {
+    this.$emit("save");
   }
 
   /** Make function available to template */

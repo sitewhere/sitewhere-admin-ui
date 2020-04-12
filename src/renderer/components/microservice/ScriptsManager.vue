@@ -26,14 +26,14 @@
             v-if="this.selectedScript != null"
           >
             <template slot="icon">
-              <v-icon small>description</v-icon>
+              <v-icon style="font-size: 10px;">fa-code</v-icon>
             </template>
             <v-menu v-if="selectedScript" offset-y class="mr-3" max-width="400">
               <v-btn color="primary" dark slot="activator">
                 <v-icon small class="mr-1" :color="versionColor">{{
                   versionIcon
                 }}</v-icon>
-                <span class="white--text">{{
+                <span v-if="selectedVersion" class="white--text">{{
                   formatDate(selectedVersion.createdDate)
                 }}</span>
                 <v-icon small>expand_more</v-icon>
@@ -44,19 +44,19 @@
                 @selected="onVersionSelected"
               />
             </v-menu>
-            <v-tooltip left>
+            <v-tooltip bottom>
               <v-icon @click="onActivate" small class="mr-2" slot="activator"
                 >play_circle_outline</v-icon
               >
               <span>Make Version Active</span>
             </v-tooltip>
-            <v-tooltip left>
+            <v-tooltip bottom>
               <v-icon @click="onClone" small class="mr-2" slot="activator"
                 >note_add</v-icon
               >
               <span>Clone as New Version</span>
             </v-tooltip>
-            <v-tooltip left>
+            <v-tooltip bottom>
               <v-icon @click="onSave" small slot="activator"
                 >cloud_upload</v-icon
               >
@@ -69,32 +69,42 @@
         </v-flex>
       </v-layout>
     </template>
-    <v-layout row wrap fill-height>
+    <v-layout style="border-bottom: 1px solid #ddd;" row wrap fill-height>
       <v-flex xs3>
-        <v-list
-          dense
-          two-line
-          v-if="scripts && scripts.length > 0"
-          style="height: 100%;"
+        <v-expansion-panel
+          style="box-shadow: none; border-bottom: 1px solid #eee;"
+          v-if="scriptsByCategory && scriptsByCategory.length"
+          :expand="true"
+          value="0"
+          ><v-expansion-panel-content
+            v-for="category in scriptsByCategory"
+            :key="category.id"
+          >
+            <template v-slot:header>
+              <div>{{ category.name }}</div>
+            </template>
+            <v-divider />
+            <v-list v-if="category.scripts && category.scripts.length" dense>
+              <v-list-tile
+                v-for="script in category.scripts"
+                :key="script.id"
+                @click="onScriptClicked(script)"
+              >
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    <v-icon style="font-size: 12px;" color="grey" class="mr-2"
+                      >fa-code</v-icon
+                    >{{ script.name }}
+                  </v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile> </v-list
+            ><v-card v-else
+              ><v-card-text style="text-align: center;"
+                >No Scripts Configured</v-card-text
+              ></v-card
+            ></v-expansion-panel-content
+          ></v-expansion-panel
         >
-          <template v-for="script in scripts">
-            <v-list-tile
-              v-bind:key="script.id"
-              @click="onScriptClicked(script)"
-            >
-              <v-list-tile-content>
-                <v-list-tile-title
-                  class="subheading"
-                  v-html="script.name"
-                ></v-list-tile-title>
-                <v-list-tile-sub-title
-                  v-html="script.description"
-                ></v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-divider v-bind:key="'div_' + script.name"></v-divider>
-          </template>
-        </v-list>
         <v-card flat v-else class="subheading">
           <v-card-text>No scripts have been configured.</v-card-text>
         </v-card>
@@ -108,6 +118,7 @@
           :identifier="identifier"
           :tenantToken="tenantToken"
           @content="onContentUpdated"
+          @save="onSave"
         />
         <v-card flat v-else height="100%">
           <v-divider vertical />
@@ -141,9 +152,10 @@ import ScriptCreateDialog from "./ScriptCreateDialog.vue";
 import ScriptCreateCloneDialog from "./ScriptCreateCloneDialog.vue";
 
 import { AxiosResponse } from "axios";
-import { formatDate, showMessage } from "sitewhere-ide-common";
+import { formatDate, showMessage, showError } from "sitewhere-ide-common";
 import {
-  listTenantScriptMetadata,
+  listTenantScriptsByCategory,
+  getTenantScriptMetadata,
   updateTenantScript,
   cloneTenantScript,
   activateTenantScript
@@ -169,7 +181,7 @@ export default class ScriptsManager extends Vue {
   @Prop() readonly tenantToken!: string;
   @Prop() readonly scriptCategories!: IScriptCategory[];
 
-  scripts: IScriptMetadata[] = [];
+  scriptsByCategory: IScriptCategory[] = [];
   selectedScript: IScriptMetadata | null = null;
   scriptAfterRefresh: string | null = null;
   versions: IScriptVersion[] = [];
@@ -193,21 +205,31 @@ export default class ScriptsManager extends Vue {
 
   /** Refresh list of scripts */
   async refresh() {
-    let response: AxiosResponse<IScriptMetadata[]> = await listTenantScriptMetadata(
-      this.$store,
-      this.identifier,
-      this.tenantToken
-    );
-    this.onScriptsRefreshed(response.data);
+    try {
+      let response: AxiosResponse<
+        IScriptCategory[]
+      > = await listTenantScriptsByCategory(
+        this.$store,
+        this.identifier,
+        this.tenantToken
+      );
+      this.onScriptsRefreshed(response.data);
+    } catch (err) {
+      showError(this, err);
+    }
   }
 
   /** Load selected script after refresh */
-  onScriptsRefreshed(scripts: IScriptMetadata[]) {
-    this.scripts = scripts;
+  onScriptsRefreshed(scriptsByCategory: IScriptCategory[]) {
+    this.scriptsByCategory = scriptsByCategory;
     if (this.scriptAfterRefresh) {
-      this.scripts.forEach(script => {
-        if (this.scriptAfterRefresh === script.id) {
-          this.onScriptClicked(script);
+      this.scriptsByCategory.forEach(category => {
+        if (category.scripts) {
+          category.scripts.forEach(script => {
+            if (this.scriptAfterRefresh === script.id) {
+              this.onScriptClicked(script);
+            }
+          });
         }
       });
       this.scriptAfterRefresh = null;
@@ -226,7 +248,24 @@ export default class ScriptsManager extends Vue {
   }
 
   /** Called when a script is clicked */
-  onScriptClicked(script: IScriptMetadata) {
+  async onScriptClicked(script: IScriptMetadata) {
+    try {
+      let response: AxiosResponse<
+        IScriptMetadata
+      > = await getTenantScriptMetadata(
+        this.$store,
+        this.identifier,
+        this.tenantToken,
+        script.id
+      );
+      this.onScriptLoaded(response.data);
+    } catch (err) {
+      showError(this, err);
+    }
+  }
+
+  /** Called after script detail has been loaded */
+  onScriptLoaded(script: IScriptMetadata): void {
     this.selectedScript = script;
     this.versions = script.versions;
     let versionId = this.versionAfterRefresh;
@@ -265,15 +304,19 @@ export default class ScriptsManager extends Vue {
         interpreterType: this.selectedScript.interpreterType,
         content: btoa(this.content)
       };
-      await updateTenantScript(
-        this.$store,
-        this.identifier,
-        this.tenantToken,
-        this.selectedScript.id,
-        this.selectedVersion.versionId,
-        updated
-      );
-      this.onContentSaved();
+      try {
+        await updateTenantScript(
+          this.$store,
+          this.identifier,
+          this.tenantToken,
+          this.selectedScript.id,
+          this.selectedVersion.versionId,
+          updated
+        );
+        this.onContentSaved();
+      } catch (err) {
+        showError(this, err);
+      }
     }
   }
 
@@ -293,15 +336,19 @@ export default class ScriptsManager extends Vue {
       comment: version.comment
     };
     if (this.selectedScript && this.selectedVersion) {
-      let response: AxiosResponse<IScriptVersion> = await cloneTenantScript(
-        this.$store,
-        this.identifier,
-        this.tenantToken,
-        this.selectedScript.id,
-        this.selectedVersion.versionId,
-        request
-      );
-      this.onVersionCloned(response.data);
+      try {
+        let response: AxiosResponse<IScriptVersion> = await cloneTenantScript(
+          this.$store,
+          this.identifier,
+          this.tenantToken,
+          this.selectedScript.id,
+          this.selectedVersion.versionId,
+          request
+        );
+        this.onVersionCloned(response.data);
+      } catch (err) {
+        showError(this, err);
+      }
     }
   }
 
@@ -342,7 +389,14 @@ export default class ScriptsManager extends Vue {
   /** Build script title */
   get scriptTitle() {
     if (this.selectedScript && this.selectedVersion) {
-      return this.selectedScript.id + "." + this.selectedScript.interpreterType;
+      return (
+        this.selectedScript.name +
+        " (" +
+        this.selectedScript.id +
+        "." +
+        this.selectedScript.interpreterType +
+        ")"
+      );
     }
     return null;
   }
@@ -357,7 +411,7 @@ export default class ScriptsManager extends Vue {
   /** Get icon indicating whether current version is active */
   get versionColor(): string {
     return isVersionActive(this.selectedScript, this.selectedVersion)
-      ? "#6c6"
+      ? "#8fcb8f"
       : "#ccc";
   }
 
