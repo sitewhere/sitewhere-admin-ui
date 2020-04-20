@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <v-select
         :items="commands"
@@ -28,16 +28,19 @@
         </v-card-text>
       </v-card>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, DialogSection } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
+import {
+  Component,
+  Prop,
+  Watch,
+  DialogSection,
+  listDeviceCommands
+} from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
-import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
 import {
   IDeviceCommand,
   IDeviceCommandSearchCriteria,
@@ -45,11 +48,7 @@ import {
   IDeviceCommandSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    DialogForm
-  }
-})
+@Component({})
 export default class BatchCommandDetailFields extends DialogSection {
   @Prop() readonly deviceTypeToken!: string;
 
@@ -79,9 +78,11 @@ export default class BatchCommandDetailFields extends DialogSection {
       deviceTypeToken: this.deviceTypeToken
     };
     let format: IDeviceCommandResponseFormat = {};
-    let response: AxiosResponse<
-      IDeviceCommandSearchResults
-    > = await listDeviceCommands(this.$store, criteria, format);
+    let response: AxiosResponse<IDeviceCommandSearchResults> = await listDeviceCommands(
+      this.$store,
+      criteria,
+      format
+    );
     this.commands = response.data.results;
   }
 

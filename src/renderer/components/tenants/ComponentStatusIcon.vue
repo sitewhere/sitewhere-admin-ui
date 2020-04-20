@@ -1,6 +1,6 @@
 <template>
   <v-avatar size="23px" :class="statusClass">
-    <font-awesome-icon :class="statusIconClass" :icon="statusIcon" size="lg"/>
+    <font-awesome-icon :class="statusIconClass" :icon="statusIcon" size="lg" />
   </v-avatar>
 </template>
 

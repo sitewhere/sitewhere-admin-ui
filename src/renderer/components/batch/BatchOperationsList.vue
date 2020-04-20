@@ -15,40 +15,29 @@
         no-data-text="No Batch Operations Found"
       >
         <template slot="items" slot-scope="props">
-          <td width="15%" :title="props.item.operationType">
-            {{ props.item.operationType }}
-          </td>
-          <td width="15%" :title="props.item.processingStatus">
-            {{ props.item.processingStatus }}
-          </td>
+          <td width="15%" :title="props.item.operationType">{{ props.item.operationType }}</td>
+          <td width="15%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
           <td
             width="20%"
             style="white-space: nowrap"
             :title="formatDate(props.item.createdDate)"
-          >
-            {{ formatDate(props.item.createdDate) }}
-          </td>
+          >{{ formatDate(props.item.createdDate) }}</td>
           <td
             width="20%"
             style="white-space: nowrap"
             :title="formatDate(props.item.processingStartedDate)"
-          >
-            {{ formatDate(props.item.processingStartedDate) }}
-          </td>
+          >{{ formatDate(props.item.processingStartedDate) }}</td>
           <td
             width="20%"
             style="white-space: nowrap"
             :title="formatDate(props.item.processingEndedDate)"
-          >
-            {{ formatDate(props.item.processingEndedDate) }}
-          </td>
+          >{{ formatDate(props.item.processingEndedDate) }}</td>
           <td width="10%" title="View Batch Operation">
             <v-tooltip left>
               <v-icon
                 slot="activator"
                 @click.stop="openBatchOperation(props.item.token)"
-                >navigate_next</v-icon
-              >
+              >navigate_next</v-icon>
               <span>Batch Operation Detail</span>
             </v-tooltip>
           </td>
@@ -68,15 +57,15 @@ import {
   Component,
   ListComponent,
   IPageSizes,
-  ITableHeaders
+  ITableHeaders,
+  NavigationIcon,
+  listBatchOperations
 } from "sitewhere-ide-common";
 
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { NavigationIcon } from "../../libraries/constants";
 import { formatDate, routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listBatchOperations } from "../../rest/sitewhere-batch-operations-api";
 import {
   IBatchOperation,
   IBatchOperationSearchCriteria,

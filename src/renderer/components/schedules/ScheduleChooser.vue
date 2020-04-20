@@ -10,13 +10,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop, listSchedules } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Chooser from "../common/form/Chooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listSchedules } from "../../rest/sitewhere-schedules-api";
 import {
   ISchedule,
   IScheduleSearchResults,

@@ -1,8 +1,9 @@
 <template>
   <div style="width: 100%; text-align: center;">
-    <span style="color: #aaa; font-size: 12px;"
-      >Copyright &copy; 2020 <strong>SiteWhere LLC</strong></span
-    >
+    <span style="color: #aaa; font-size: 12px;">
+      Copyright &copy; 2020
+      <strong>SiteWhere LLC</strong>
+    </span>
   </div>
 </template>
 

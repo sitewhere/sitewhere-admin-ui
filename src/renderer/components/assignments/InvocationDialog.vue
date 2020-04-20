@@ -41,9 +41,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import InvocationDetailFields from "./InvocationDetailFields.vue";
 import ScheduleChooserSection from "./ScheduleChooserSection.vue";

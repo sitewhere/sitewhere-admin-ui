@@ -14,14 +14,14 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createCustomer
 } from "sitewhere-ide-common";
 
 import CustomerDialog from "./CustomerDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { ICustomer, ICustomerCreateRequest } from "sitewhere-rest-api";
-import { createCustomer } from "../../rest/sitewhere-customers-api";
 
 @Component({
   components: {

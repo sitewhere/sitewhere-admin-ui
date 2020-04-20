@@ -1,15 +1,9 @@
 <template>
   <sw-content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
     <v-btn-toggle class="overlay" v-model="jsonChoice">
-      <v-btn flat small>
-        Tenant Engine
-      </v-btn>
-      <v-btn flat small>
-        Microservice
-      </v-btn>
-      <v-btn flat small>
-        Instance
-      </v-btn>
+      <v-btn flat small>Tenant Engine</v-btn>
+      <v-btn flat small>Microservice</v-btn>
+      <v-btn flat small>Instance</v-btn>
     </v-btn-toggle>
     <editor
       ref="editor"

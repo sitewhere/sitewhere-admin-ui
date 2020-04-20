@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
 import Vue from "vue";
+import { Component, Prop } from "sitewhere-ide-common";
 import { ITreeNode } from "sitewhere-rest-api";
 
 @Component({})

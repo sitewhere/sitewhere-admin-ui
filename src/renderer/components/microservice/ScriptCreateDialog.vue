@@ -18,7 +18,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createTenantScript
 } from "sitewhere-ide-common";
 
 import ScriptDialog from "./ScriptDialog.vue";
@@ -29,7 +30,6 @@ import {
   IScriptMetadata,
   IScriptCategory
 } from "sitewhere-rest-api";
-import { createTenantScript } from "../../rest/sitewhere-scripting-api";
 
 @Component({
   components: {

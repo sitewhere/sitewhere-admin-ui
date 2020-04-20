@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "sitewhere-ide-common";
+import { Component, getAsset } from "sitewhere-ide-common";
 
 import FilterChip from "../common/search/FilterChip.vue";
 
@@ -19,7 +19,6 @@ import { AxiosPromise } from "axios";
 import { MultifilterChipComponent } from "../common/search/MultifilterChipComponent";
 
 import { IAsset, IAssetResponseFormat } from "sitewhere-rest-api";
-import { getAsset } from "../../rest/sitewhere-assets-api";
 
 @Component({
   components: {

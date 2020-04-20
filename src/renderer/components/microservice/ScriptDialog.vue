@@ -24,11 +24,7 @@
         />
       </v-tab-item>
       <v-tab-item key="content">
-        <script-content-fields
-          :identifier="identifier"
-          :category="category"
-          ref="content"
-        />
+        <script-content-fields :identifier="identifier" :category="category" ref="content" />
       </v-tab-item>
     </template>
   </sw-base-dialog>
@@ -40,9 +36,9 @@ import {
   Prop,
   DialogComponent,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import ScriptDetailFields from "./ScriptDetailFields.vue";
 import ScriptContentFields from "./ScriptContentFields.vue";

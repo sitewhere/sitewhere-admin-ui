@@ -5,7 +5,7 @@
         <v-toolbar-title class="namespace-title subheading">Device Element Schema</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip left>
-          <template v-slot:activator="{ on }">
+          <template>
             <v-icon @click="onAddDeviceUnitLocal()">{{addIcon}}</v-icon>
           </template>
           <span>Add Device Unit</span>
@@ -15,13 +15,13 @@
         <v-toolbar-title class="namespace-title subheading">{{ deviceUnit.name }} ({{ fullPath }})</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip left>
-          <template v-slot:activator="{ on }">
+          <template>
             <v-icon class="mr-2" @click="onAddDeviceUnitLocal()">{{addIcon}}</v-icon>
           </template>
           <span>Add Device Unit</span>
         </v-tooltip>
         <v-tooltip left>
-          <template v-slot:activator="{ on }">
+          <template>
             <v-icon @click="onDeleteDeviceUnitLocal()">{{deleteIcon}}</v-icon>
           </template>
           <span>Delete Device Unit</span>
@@ -34,7 +34,7 @@
               <v-toolbar-title class="namespace-title subheading">Device Slots</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-tooltip left>
-                <template v-slot:activator="{ on }">
+                <template>
                   <v-icon @click="onAddDeviceSlotLocal()" light>{{addIcon}}</v-icon>
                 </template>
                 <span>Add Device Slot</span>
@@ -80,9 +80,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
-
-import { NavigationIcon } from "../../libraries/constants";
+import { Component, Prop, NavigationIcon } from "sitewhere-ide-common";
 
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import DeviceSlotListEntry from "./DeviceSlotListEntry.vue";

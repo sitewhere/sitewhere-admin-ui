@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <v-card-text class="subheading">
         Assets selected below will be included in results.
@@ -7,20 +7,18 @@
       </v-card-text>
       <asset-multiselect v-model="assetTokens" />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import AssetMultiselect from "../assets/AssetMultiselect.vue";
 
 import { IDeviceAssignmentSearchCriteria } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DialogForm,
     AssetMultiselect
   }
 })

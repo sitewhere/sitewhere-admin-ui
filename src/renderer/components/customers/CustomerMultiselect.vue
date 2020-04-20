@@ -3,13 +3,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Watch, listCustomers } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Multichooser from "../common/form/Multichooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listCustomers } from "../../rest/sitewhere-customers-api";
 import {
   ICustomer,
   ICustomerSearchResults,

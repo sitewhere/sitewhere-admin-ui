@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "sitewhere-ide-common";
+import { Component, getDeviceType } from "sitewhere-ide-common";
 
 import FilterChip from "../common/search/FilterChip.vue";
 
@@ -18,7 +18,6 @@ import { AxiosPromise } from "axios";
 import { FilterChipComponent } from "../common/search/FilterChipComponent";
 
 import { IDeviceType, IDeviceTypeResponseFormat } from "sitewhere-rest-api";
-import { getDeviceType } from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {

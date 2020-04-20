@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getDeviceGroup,
+  updateDeviceGroup
 } from "sitewhere-ide-common";
 
 import DeviceGroupDialog from "./DeviceGroupDialog.vue";
@@ -25,10 +27,6 @@ import {
   IDeviceGroupCreateRequest,
   IDeviceGroupResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getDeviceGroup,
-  updateDeviceGroup
-} from "../../rest/sitewhere-device-groups-api";
 
 @Component({
   components: {

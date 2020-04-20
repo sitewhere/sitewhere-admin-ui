@@ -30,10 +30,7 @@
         :configuration="workingCopy"
         @updated="onInfrastructureUpdated"
       />
-      <instance-configuration-source
-        tabkey="json"
-        :configuration="workingCopy"
-      />
+      <instance-configuration-source tabkey="json" :configuration="workingCopy" />
     </template>
     <template slot="actions" />
   </sw-detail-page>
@@ -43,8 +40,13 @@
 import Vue from "vue";
 
 import { AxiosResponse } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { Component, Watch } from "sitewhere-ide-common";
+import {
+  Component,
+  Watch,
+  NavigationIcon,
+  getInstanceConfiguration,
+  updateInstanceConfiguration
+} from "sitewhere-ide-common";
 
 import InfrastructureEditor from "./configuration/infrastructure/InfrastructureEditor.vue";
 import PersistenceConfigurationsEditor from "./configuration/persistence/PersistenceConfigurationsEditor.vue";
@@ -52,10 +54,6 @@ import InstanceConfigurationSource from "./InstanceConfigurationSource.vue";
 import UnsavedUpdatesPanel from "./configuration/UnsavedUpdatesPanel.vue";
 
 import { IInstanceConfiguration } from "sitewhere-rest-api";
-import {
-  getInstanceConfiguration,
-  updateInstanceConfiguration
-} from "../../rest/sitewhere-instance-api";
 
 @Component({
   components: {

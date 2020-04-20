@@ -15,16 +15,12 @@
         width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
-      >
-        {{ formatDate(props.item.eventDate) }}
-      </td>
+      >{{ formatDate(props.item.eventDate) }}</td>
       <td
         width="15%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
-      >
-        {{ formatDate(props.item.receivedDate) }}
-      </td>
+      >{{ formatDate(props.item.receivedDate) }}</td>
     </template>
   </sw-data-table-tab>
 </template>
@@ -35,7 +31,8 @@ import {
   Prop,
   ListComponent,
   IPageSizes,
-  ITableHeaders
+  ITableHeaders,
+  listAlertsForAssignment
 } from "sitewhere-ide-common";
 
 import { formatDate } from "sitewhere-ide-common";
@@ -44,7 +41,6 @@ import {
   AssignmentAlertHeaders
 } from "../../libraries/constants";
 import { AxiosPromise } from "axios";
-import { listAlertsForAssignment } from "../../rest/sitewhere-device-assignments-api";
 import {
   IDeviceAlert,
   IDeviceAlertResponseFormat,

@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <device-type-chooser
         v-model="token"
@@ -7,18 +7,16 @@
         chosenText="Filter will include type chosen below:"
       />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import DeviceTypeChooser from "../devicetypes/DeviceTypeChooser.vue";
 
 @Component({
   components: {
-    DialogForm,
     DeviceTypeChooser
   }
 })

@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getDevice,
+  updateDevice
 } from "sitewhere-ide-common";
 
 import DeviceDialog from "./DeviceDialog.vue";
@@ -25,7 +27,6 @@ import {
   IDeviceCreateRequest,
   IDeviceResponseFormat
 } from "sitewhere-rest-api";
-import { getDevice, updateDevice } from "../../rest/sitewhere-devices-api";
 
 @Component({
   components: {

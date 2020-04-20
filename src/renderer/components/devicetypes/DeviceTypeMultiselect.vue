@@ -3,13 +3,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Watch, listDeviceTypes } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Multichooser from "../common/form/Multichooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
 import {
   IDeviceType,
   IDeviceTypeSearchResults,
@@ -36,9 +35,11 @@ export default class DeviceTypeMultiselect extends Vue {
   async refresh() {
     let format: IDeviceTypeResponseFormat = {};
     let criteria: IDeviceTypeSearchCriteria = {};
-    let response: AxiosResponse<
-      IDeviceTypeSearchResults
-    > = await listDeviceTypes(this.$store, criteria, format);
+    let response: AxiosResponse<IDeviceTypeSearchResults> = await listDeviceTypes(
+      this.$store,
+      criteria,
+      format
+    );
     this.all = response.data.results;
   }
 

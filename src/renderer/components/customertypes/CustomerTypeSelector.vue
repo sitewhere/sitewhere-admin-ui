@@ -14,13 +14,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
-
-import FormSelect from "../common/form/FormSelect.vue";
+import { Component, Prop, listCustomerTypes } from "sitewhere-ide-common";
 
 import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
-import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
 import {
   ICustomerType,
   ICustomerTypeResponseFormat,
@@ -28,11 +25,7 @@ import {
   ICustomerTypeSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    FormSelect
-  }
-})
+@Component({})
 export default class CustomerTypeSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;

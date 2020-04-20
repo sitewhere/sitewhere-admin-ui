@@ -10,13 +10,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop, listAreas } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Chooser from "../common/form/Chooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,
   IAreaSearchResults,

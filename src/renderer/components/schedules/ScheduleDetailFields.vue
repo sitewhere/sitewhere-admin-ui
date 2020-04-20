@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-token
+      <sw-form-token
         required
         label="Schedule token"
         title="Unique token for referencing schedule."
@@ -10,15 +10,9 @@
       />
     </v-flex>
     <v-flex xs12>
-      <form-text
-        required
-        label="Name"
-        title="Schedule name."
-        v-model="name"
-        icon="info"
-      >
+      <sw-form-text required label="Name" title="Schedule name." v-model="name" icon="info">
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6 class="pr-5">
       <form-date-time-picker
@@ -39,7 +33,7 @@
       />
     </v-flex>
     <v-flex xs12>
-      <form-select
+      <sw-form-select
         required
         title="Schedule trigger type."
         :items="triggerTypes"
@@ -49,60 +43,48 @@
         item-value="value"
         icon="flash_on"
       >
-        <span v-if="$v.triggerType.$invalid && $v.$dirty"
-          >Trigger type is required.</span
-        >
-      </form-select>
+        <span v-if="$v.triggerType.$invalid && $v.$dirty">Trigger type is required.</span>
+      </sw-form-select>
     </v-flex>
     <v-flex xs12 v-if="triggerType === 'CronTrigger'">
-      <form-text
+      <sw-form-text
         required
         label="Cron expression"
         title="Expression used to configure cron trigger."
         v-model="cronExpression"
         icon="info"
       >
-        <span v-if="!$v.cronExpression.reqIfCron && $v.$dirty"
-          >Cron expression is required.</span
-        >
-      </form-text>
+        <span v-if="!$v.cronExpression.reqIfCron && $v.$dirty">Cron expression is required.</span>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6 v-if="triggerType === 'SimpleTrigger'">
-      <form-text
+      <sw-form-text
         required
         label="Interval (ms)"
         title="Schedule interval in milliseconds."
         v-model="repeatInterval"
         icon="alarm"
       >
-        <span v-if="!$v.repeatInterval.reqIfSimple && $v.$dirty"
-          >Repeat interval is required.</span
-        >
-      </form-text>
+        <span v-if="!$v.repeatInterval.reqIfSimple && $v.$dirty">Repeat interval is required.</span>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6 v-if="triggerType === 'SimpleTrigger'">
-      <form-text
+      <sw-form-text
         required
         label="Repetitions"
         title="Number of times trigger will be executed."
         v-model="repeatCount"
         icon="autorenew"
       >
-        <span v-if="!$v.repeatCount.reqIfSimple && $v.$dirty"
-          >Repeat count is required.</span
-        >
-      </form-text>
+        <span v-if="!$v.repeatCount.reqIfSimple && $v.$dirty">Repeat count is required.</span>
+      </sw-form-text>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormToken from "../common/form/FormToken.vue";
-import FormText from "../common/form/FormText.vue";
-import FormSelect from "../common/form/FormSelect.vue";
 import FormDateTimePicker from "../common/form/FormDateTimePicker.vue";
 
 import { formatIso8601 } from "sitewhere-ide-common";
@@ -125,10 +107,6 @@ const reqIfSimple = requiredIf((vm: ScheduleDetailFields) => {
 
 @Component({
   components: {
-    DialogForm,
-    FormToken,
-    FormText,
-    FormSelect,
     FormDateTimePicker
   },
   validations: {

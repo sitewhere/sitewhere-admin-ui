@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "sitewhere-ide-common";
+import { Component, getCustomer } from "sitewhere-ide-common";
 
 import FilterChip from "../common/search/FilterChip.vue";
 
@@ -19,7 +19,6 @@ import { AxiosPromise } from "axios";
 import { MultifilterChipComponent } from "../common/search/MultifilterChipComponent";
 
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
-import { getCustomer } from "../../rest/sitewhere-customers-api";
 
 @Component({
   components: {

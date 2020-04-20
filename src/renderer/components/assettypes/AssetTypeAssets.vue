@@ -21,13 +21,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, ListComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  listAssets
+} from "sitewhere-ide-common";
 
 import AssetListEntry from "../assets/AssetListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
-import { listAssets } from "../../rest/sitewhere-assets-api";
 import {
   IAsset,
   IAssetSearchCriteria,

@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Latitude"
         title="Location latitude."
@@ -10,10 +10,10 @@
         icon="language"
       >
         <span v-if="!$v.latitude.required && $v.$dirty">Latitude is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Longitude"
         title="Location longitude."
@@ -22,10 +22,10 @@
         icon="language"
       >
         <span v-if="!$v.longitude.required && $v.$dirty">Longitude is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Elevation"
         title="Location elevation."
@@ -34,24 +34,17 @@
         icon="flight_takeoff"
       >
         <span v-if="!$v.elevation.required && $v.$dirty">Elevation is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../../common/form/DialogForm.vue";
-import FormText from "../../common/form/FormText.vue";
-
 import { required } from "vuelidate/lib/validators";
 
 @Component({
-  components: {
-    DialogForm,
-    FormText
-  },
   validations: {
     latitude: {
       required

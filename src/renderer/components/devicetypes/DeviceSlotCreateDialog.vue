@@ -14,14 +14,14 @@ import {
   Component,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createDeviceType
 } from "sitewhere-ide-common";
 
 import DeviceSlotDialog from "./DeviceSlotDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IDeviceType, IDeviceTypeCreateRequest } from "sitewhere-rest-api";
-import { createDeviceType } from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {

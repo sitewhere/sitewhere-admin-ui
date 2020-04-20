@@ -37,9 +37,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import CommandDetailFields from "./CommandDetailFields.vue";
 import ParametersPanel from "./ParametersPanel.vue";

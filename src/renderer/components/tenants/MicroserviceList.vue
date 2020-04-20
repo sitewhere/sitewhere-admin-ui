@@ -1,10 +1,7 @@
 <template>
   <v-list v-if="microservices" two-line dense>
     <template v-for="microservice in microservices">
-      <v-list-tile
-        :key="microservice.id"
-        @click="onMicroserviceClicked(microservice)"
-      >
+      <v-list-tile :key="microservice.id" @click="onMicroserviceClicked(microservice)">
         <v-list-tile-avatar>
           <v-icon>{{ microservice.icon }}</v-icon>
         </v-list-tile-avatar>

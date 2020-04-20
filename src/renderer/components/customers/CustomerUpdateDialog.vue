@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getCustomer,
+  updateCustomer
 } from "sitewhere-ide-common";
 
 import CustomerDialog from "./CustomerDialog.vue";
@@ -25,10 +27,6 @@ import {
   ICustomerCreateRequest,
   ICustomerResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getCustomer,
-  updateCustomer
-} from "../../rest/sitewhere-customers-api";
 
 @Component({
   components: {

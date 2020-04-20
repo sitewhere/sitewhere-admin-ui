@@ -5,13 +5,7 @@
         <v-flex xs3>
           <condensed-toolbar title="Scripts">
             <v-tooltip bottom>
-              <v-icon
-                @click="onScriptCreate"
-                small
-                class="mr-2"
-                slot="activator"
-                >add</v-icon
-              >
+              <v-icon @click="onScriptCreate" small class="mr-2" slot="activator">add</v-icon>
               <span>Create Script</span>
             </v-tooltip>
             <v-tooltip bottom>
@@ -21,21 +15,22 @@
           </condensed-toolbar>
         </v-flex>
         <v-flex xs9>
-          <condensed-toolbar
-            :title="scriptTitle"
-            v-if="this.selectedScript != null"
-          >
+          <condensed-toolbar :title="scriptTitle" v-if="this.selectedScript != null">
             <template slot="icon">
               <v-icon style="font-size: 10px;">fa-code</v-icon>
             </template>
             <v-menu v-if="selectedScript" offset-y class="mr-3" max-width="400">
               <v-btn color="primary" dark slot="activator">
-                <v-icon small class="mr-1" :color="versionColor">{{
+                <v-icon small class="mr-1" :color="versionColor">
+                  {{
                   versionIcon
-                }}</v-icon>
-                <span v-if="selectedVersion" class="white--text">{{
+                  }}
+                </v-icon>
+                <span v-if="selectedVersion" class="white--text">
+                  {{
                   formatDate(selectedVersion.createdDate)
-                }}</span>
+                  }}
+                </span>
                 <v-icon small>expand_more</v-icon>
               </v-btn>
               <script-version-list
@@ -45,21 +40,15 @@
               />
             </v-menu>
             <v-tooltip bottom>
-              <v-icon @click="onActivate" small class="mr-2" slot="activator"
-                >play_circle_outline</v-icon
-              >
+              <v-icon @click="onActivate" small class="mr-2" slot="activator">play_circle_outline</v-icon>
               <span>Make Version Active</span>
             </v-tooltip>
             <v-tooltip bottom>
-              <v-icon @click="onClone" small class="mr-2" slot="activator"
-                >note_add</v-icon
-              >
+              <v-icon @click="onClone" small class="mr-2" slot="activator">note_add</v-icon>
               <span>Clone as New Version</span>
             </v-tooltip>
             <v-tooltip bottom>
-              <v-icon @click="onSave" small slot="activator"
-                >cloud_upload</v-icon
-              >
+              <v-icon @click="onSave" small slot="activator">cloud_upload</v-icon>
               <span>Upload Changes</span>
             </v-tooltip>
           </condensed-toolbar>
@@ -75,11 +64,9 @@
           style="box-shadow: none; border-bottom: 1px solid #eee;"
           v-if="scriptsByCategory && scriptsByCategory.length"
           :expand="true"
-          value="0"
-          ><v-expansion-panel-content
-            v-for="category in scriptsByCategory"
-            :key="category.id"
-          >
+          :value="0"
+        >
+          <v-expansion-panel-content v-for="category in scriptsByCategory" :key="category.id">
             <template v-slot:header>
               <div>{{ category.name }}</div>
             </template>
@@ -92,19 +79,17 @@
               >
                 <v-list-tile-content>
                   <v-list-tile-title>
-                    <v-icon style="font-size: 12px;" color="grey" class="mr-2"
-                      >fa-code</v-icon
-                    >{{ script.name }}
+                    <v-icon style="font-size: 12px;" color="grey" class="mr-2">fa-code</v-icon>
+                    {{ script.name }}
                   </v-list-tile-title>
                 </v-list-tile-content>
-              </v-list-tile> </v-list
-            ><v-card v-else
-              ><v-card-text style="text-align: center;"
-                >No Scripts Configured</v-card-text
-              ></v-card
-            ></v-expansion-panel-content
-          ></v-expansion-panel
-        >
+              </v-list-tile>
+            </v-list>
+            <v-card v-else>
+              <v-card-text style="text-align: center;">No Scripts Configured</v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
         <v-card flat v-else class="subheading">
           <v-card-text>No scripts have been configured.</v-card-text>
         </v-card>
@@ -143,7 +128,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Refs,
+  listTenantScriptsByCategory,
+  getTenantScriptMetadata,
+  updateTenantScript,
+  cloneTenantScript,
+  activateTenantScript
+} from "sitewhere-ide-common";
 
 import CondensedToolbar from "../common/CondensedToolbar.vue";
 import ScriptVersionList, { isVersionActive } from "./ScriptVersionList.vue";
@@ -153,13 +147,6 @@ import ScriptCreateCloneDialog from "./ScriptCreateCloneDialog.vue";
 
 import { AxiosResponse } from "axios";
 import { formatDate, showMessage, showError } from "sitewhere-ide-common";
-import {
-  listTenantScriptsByCategory,
-  getTenantScriptMetadata,
-  updateTenantScript,
-  cloneTenantScript,
-  activateTenantScript
-} from "../../rest/sitewhere-scripting-api";
 import {
   IScriptCategory,
   IScriptMetadata,
@@ -206,9 +193,7 @@ export default class ScriptsManager extends Vue {
   /** Refresh list of scripts */
   async refresh() {
     try {
-      let response: AxiosResponse<
-        IScriptCategory[]
-      > = await listTenantScriptsByCategory(
+      let response: AxiosResponse<IScriptCategory[]> = await listTenantScriptsByCategory(
         this.$store,
         this.identifier,
         this.tenantToken
@@ -250,9 +235,7 @@ export default class ScriptsManager extends Vue {
   /** Called when a script is clicked */
   async onScriptClicked(script: IScriptMetadata) {
     try {
-      let response: AxiosResponse<
-        IScriptMetadata
-      > = await getTenantScriptMetadata(
+      let response: AxiosResponse<IScriptMetadata> = await getTenantScriptMetadata(
         this.$store,
         this.identifier,
         this.tenantToken,

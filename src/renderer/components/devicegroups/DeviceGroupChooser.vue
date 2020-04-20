@@ -9,13 +9,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop, listDeviceGroups } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Chooser from "../common/form/Chooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listDeviceGroups } from "../../rest/sitewhere-device-groups-api";
 import {
   IDeviceGroup,
   IDeviceGroupSearchResults,
@@ -45,9 +44,11 @@ export default class DeviceGroupChooser extends Vue {
   async refresh() {
     let format: IDeviceGroupResponseFormat = {};
     let criteria: IDeviceGroupSearchCriteria = {};
-    let response: AxiosResponse<
-      IDeviceGroupSearchResults
-    > = await listDeviceGroups(this.$store, criteria, format);
+    let response: AxiosResponse<IDeviceGroupSearchResults> = await listDeviceGroups(
+      this.$store,
+      criteria,
+      format
+    );
     this.all = response.data.results;
   }
 

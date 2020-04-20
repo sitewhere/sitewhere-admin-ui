@@ -52,9 +52,9 @@ import {
   Component,
   DialogComponent,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import { IDeviceType } from "sitewhere-rest-api";
 

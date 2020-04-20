@@ -12,11 +12,15 @@
 </template>
 
 <script lang="ts">
-import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  DeleteDialogComponent,
+  getUser,
+  deleteUser
+} from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import { IUser, IUserResponseFormat } from "sitewhere-rest-api";
-import { getUser, deleteUser } from "../../rest/sitewhere-users-api";
 
 @Component({})
 export default class UserDeleteDialog extends DeleteDialogComponent<IUser> {
@@ -30,9 +34,7 @@ export default class UserDeleteDialog extends DeleteDialogComponent<IUser> {
 
   /** Called after record is loaded */
   afterLoad(user: IUser): void {
-    this.message = `Are you sure you want to delete '${user.firstName} ${
-      user.lastName
-    }'?`;
+    this.message = `Are you sure you want to delete '${user.firstName} ${user.lastName}'?`;
   }
 
   /** Load payload */

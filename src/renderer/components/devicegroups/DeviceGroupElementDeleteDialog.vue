@@ -12,7 +12,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, DeleteDialogComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  DeleteDialogComponent,
+  listDeviceGroupElements,
+  deleteDeviceGroupElement
+} from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import {
@@ -20,10 +26,6 @@ import {
   IDeviceGroupElementSearchCriteria,
   IDeviceGroupElementSearchResults
 } from "sitewhere-rest-api";
-import {
-  listDeviceGroupElements,
-  deleteDeviceGroupElement
-} from "../../rest/sitewhere-device-groups-api";
 
 @Component({})
 export default class DeviceGroupElementDeleteDialog extends DeleteDialogComponent<

@@ -33,7 +33,7 @@ export default class ClipboardCopyField extends Vue {
 
   /** Called after failed copy */
   onFieldCopyFailed() {
-    showError(this, "Unable to copy content to clipboard.");
+    showError(this, new Error("Unable to copy content to clipboard."));
   }
 }
 </script>

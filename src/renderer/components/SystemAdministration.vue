@@ -1,13 +1,7 @@
 <template>
   <v-app v-if="user">
     <sw-in-app-system-bar style="-webkit-app-region: drag" />
-    <v-navigation-drawer
-      fixed
-      :permanent="true"
-      style="margin-top: 25px;"
-      v-model="drawer"
-      app
-    >
+    <v-navigation-drawer fixed :permanent="true" style="margin-top: 25px;" v-model="drawer" app>
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
         <div class="sitewhere-logo" />
         <v-spacer />
@@ -39,11 +33,9 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { handleError } from "sitewhere-ide-common";
+import { handleError, getJwt, NavigationIcon } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
-import { getJwt } from "../rest/sitewhere-api-wrapper";
 import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
-import { NavigationIcon } from "../libraries/constants";
 
 import Copyright from "./Copyright.vue";
 import Notifications from "./common/Notifications.vue";

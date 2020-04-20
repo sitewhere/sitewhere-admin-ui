@@ -1,5 +1,5 @@
 <template>
-  <form-select
+  <sw-form-select
     :items="assetTypes"
     :title="title || `Choose type of asset`"
     :label="label || `Asset Type`"
@@ -9,18 +9,15 @@
     icon="settings"
   >
     <slot />
-  </form-select>
+  </sw-form-select>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
-
-import FormSelect from "../common/form/FormSelect.vue";
+import { Component, Prop, listAssetTypes } from "sitewhere-ide-common";
 
 import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
-import { listAssetTypes } from "../../rest/sitewhere-asset-types-api";
 import {
   IAssetType,
   IAssetTypeResponseFormat,
@@ -28,11 +25,7 @@ import {
   IAssetTypeSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    FormSelect
-  }
-})
+@Component({})
 export default class AssetTypeSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;

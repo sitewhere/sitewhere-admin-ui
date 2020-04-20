@@ -44,16 +44,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Refs,
+  releaseAssignment,
+  missingAssignment
+} from "sitewhere-ide-common";
 import Vue from "vue";
 
 import { AxiosResponse } from "axios";
 import { IDeviceAssignment } from "sitewhere-rest-api";
-
-import {
-  releaseAssignment,
-  missingAssignment
-} from "../../rest/sitewhere-device-assignments-api";
 
 @Component({})
 export default class AssignmentStatusButton extends Vue {

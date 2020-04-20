@@ -14,14 +14,14 @@ import {
   Component,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createAreaType
 } from "sitewhere-ide-common";
 
 import AreaTypeDialog from "./AreaTypeDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IAreaType, IAreaTypeCreateRequest } from "sitewhere-rest-api";
-import { createAreaType } from "../../rest/sitewhere-area-types-api";
 
 @Component({
   components: {

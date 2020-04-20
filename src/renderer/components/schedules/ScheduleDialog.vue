@@ -32,9 +32,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import ScheduleDetailFields from "./ScheduleDetailFields.vue";
 import { ISchedule } from "sitewhere-rest-api";

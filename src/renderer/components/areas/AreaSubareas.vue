@@ -15,8 +15,7 @@
         <div>This area has no subareas.</div>
         <div class="mt-2">
           Click
-          <v-icon class="pl-1 pr-2">{{ areaIcon }}</v-icon
-          >in the toolbar to add a subarea.
+          <v-icon class="pl-1 pr-2">{{ areaIcon }}</v-icon>in the toolbar to add a subarea.
         </div>
       </no-results-panel>
     </template>
@@ -27,16 +26,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, ListComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  NavigationIcon,
+  listAreas,
+  routeTo
+} from "sitewhere-ide-common";
 
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { NavigationIcon } from "../../libraries/constants";
-import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,
   IAreaSearchCriteria,

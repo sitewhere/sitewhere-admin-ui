@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Name"
         title="Name displayed for remote."
@@ -9,10 +9,10 @@
         icon="info"
       >
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs2>
-      <form-select
+      <sw-form-select
         :items="protocols"
         title="Choose connection protocol"
         label="Protocol"
@@ -23,7 +23,7 @@
       />
     </v-flex>
     <v-flex xs6>
-      <form-text
+      <sw-form-text
         required
         class="ml-3"
         label="Hostname"
@@ -31,10 +31,10 @@
         v-model="host"
       >
         <span v-if="!$v.host.required && $v.$dirty">Hostname is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs3>
-      <form-text
+      <sw-form-text
         required
         class="ml-3"
         type="number"
@@ -43,32 +43,24 @@
         v-model="port"
       >
         <span v-if="!$v.port.required && $v.$dirty">Port is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs1>
       <v-btn class="mb-0" color="primary" icon @click="onCreateClicked">
         <v-icon>add</v-icon>
       </v-btn>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormText from "../common/form/FormText.vue";
-import FormSelect from "../common/form/FormSelect.vue";
 import { generateUniqueId, IRemoteConnection } from "sitewhere-ide-common";
 
 import { required } from "vuelidate/lib/validators";
 
 @Component({
-  components: {
-    DialogForm,
-    FormText,
-    FormSelect
-  },
   validations: {
     name: {
       required

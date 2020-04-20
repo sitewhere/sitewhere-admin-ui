@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-token
+      <sw-form-token
         required
         label="Asset type token"
         title="Unique token for referencing asset type."
@@ -10,7 +10,7 @@
       />
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Name"
         title="Name displayed for asset type."
@@ -18,10 +18,10 @@
         icon="info"
       >
         <span v-if="$v.name.$invalid && $v.$dirty">Name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text-area
+      <sw-form-text-area
         required
         v-model="description"
         title="Asset type description."
@@ -29,10 +29,10 @@
         icon="info"
       >
         <span v-if="$v.description.$invalid && $v.$dirty">Description is required.</span>
-      </form-text-area>
+      </sw-form-text-area>
     </v-flex>
     <v-flex xs12>
-      <form-select
+      <sw-form-select
         required
         title="Category asset type belongs to"
         :items="assetCatgories"
@@ -43,19 +43,13 @@
         icon="info"
       >
         <span v-if="$v.assetCategory.$invalid && $v.$dirty">Asset category is required.</span>
-      </form-select>
+      </sw-form-select>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
-import FormToken from "../common/form/FormToken.vue";
-import FormText from "../common/form/FormText.vue";
-import FormTextArea from "../common/form/FormTextArea.vue";
-import FormSelect from "../common/form/FormSelect.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -63,13 +57,6 @@ import { required, helpers } from "vuelidate/lib/validators";
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
-  components: {
-    DialogForm,
-    FormToken,
-    FormText,
-    FormTextArea,
-    FormSelect
-  },
   validations: {
     token: {
       required,

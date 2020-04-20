@@ -6,10 +6,7 @@
     <template slot="content">
       <sw-navigation-header-fields class="mt-3">
         <sw-header-field label="Token">
-          <clipboard-copy-field
-            :field="tenant.token"
-            message="Token copied to clipboard"
-          />
+          <clipboard-copy-field :field="tenant.token" message="Token copied to clipboard" />
         </sw-header-field>
         <sw-header-field label="Name">
           <span>{{ tenant.name }}</span>

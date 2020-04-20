@@ -11,27 +11,23 @@
     <template slot="items" slot-scope="props">
       <td width="50%" title="Lat/Lon/Elevation">
         {{
-          fourDecimalPlaces(props.item.latitude) +
-            ", " +
-            fourDecimalPlaces(props.item.longitude) +
-            ", " +
-            fourDecimalPlaces(props.item.elevation)
+        fourDecimalPlaces(props.item.latitude) +
+        ", " +
+        fourDecimalPlaces(props.item.longitude) +
+        ", " +
+        fourDecimalPlaces(props.item.elevation)
         }}
       </td>
       <td
         width="25%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
-      >
-        {{ formatDate(props.item.eventDate) }}
-      </td>
+      >{{ formatDate(props.item.eventDate) }}</td>
       <td
         width="25%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
-      >
-        {{ formatDate(props.item.receivedDate) }}
-      </td>
+      >{{ formatDate(props.item.receivedDate) }}</td>
     </template>
   </sw-data-table-tab>
 </template>
@@ -42,11 +38,11 @@ import {
   Prop,
   ListComponent,
   IPageSizes,
-  ITableHeaders
+  ITableHeaders,
+  listLocationsForAssignment
 } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
-import { listLocationsForAssignment } from "../../rest/sitewhere-device-assignments-api";
 import { formatDate, fourDecimalPlaces } from "sitewhere-ide-common";
 import {
   EventPageSizes,

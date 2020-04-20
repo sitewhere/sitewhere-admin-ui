@@ -16,7 +16,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createInvocationsByDeviceCriteria
 } from "sitewhere-ide-common";
 
 import InvocationByDeviceCriteriaDialog from "./InvocationByDeviceCriteriaDialog.vue";
@@ -27,7 +28,6 @@ import {
   IInvocationByDeviceCriteriaRequest,
   IBatchOperation
 } from "sitewhere-rest-api";
-import { createInvocationsByDeviceCriteria } from "../../rest/sitewhere-batch-operations-api";
 
 @Component({
   components: {

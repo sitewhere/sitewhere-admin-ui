@@ -1,5 +1,5 @@
 <template>
-  <form-select-condensed
+  <sw-form-select-condensed
     v-if="dense"
     :items="items"
     :title="title || `Choose area`"
@@ -8,7 +8,7 @@
     v-model="wrapped"
     icon="settings"
   />
-  <form-select
+  <sw-form-select
     v-else
     :items="items"
     :title="title || `Choose area`"
@@ -19,19 +19,15 @@
     icon="settings"
   >
     <slot />
-  </form-select>
+  </sw-form-select>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
-
-import FormSelect from "../common/form/FormSelect.vue";
-import FormSelectCondensed from "../common/form/FormSelectCondensed.vue";
+import { Component, Prop, listAreas } from "sitewhere-ide-common";
 
 import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
-import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,
   IAreaResponseFormat,
@@ -39,12 +35,7 @@ import {
   IAreaSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    FormSelect,
-    FormSelectCondensed
-  }
-})
+@Component({})
 export default class AreaSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;

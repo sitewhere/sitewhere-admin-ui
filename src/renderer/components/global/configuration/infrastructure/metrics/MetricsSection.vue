@@ -2,11 +2,7 @@
   <sw-content-section icon="fa-cogs" title="Metrics Configuration">
     <v-card v-if="metrics" flat>
       <sw-content-field name="enabled" :value="metrics.enabled" />
-      <sw-content-field
-        :alt="true"
-        name="http port"
-        :value="metrics.httpPort"
-      />
+      <sw-content-field :alt="true" name="http port" :value="metrics.httpPort" />
       <sw-content-link
         class="mt-3"
         icon="fa-edit"
@@ -14,11 +10,7 @@
         @linkClicked="onEdit"
       />
     </v-card>
-    <metrics-configuration-dialog
-      ref="dialog"
-      :metrics="metrics"
-      @payload="onMetricsUpdated"
-    />
+    <metrics-configuration-dialog ref="dialog" :metrics="metrics" @payload="onMetricsUpdated" />
   </sw-content-section>
 </template>
 

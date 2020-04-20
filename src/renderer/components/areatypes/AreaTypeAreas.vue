@@ -21,14 +21,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, ListComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  listAreas
+} from "sitewhere-ide-common";
 
 import AreaListEntry from "../areas/AreaListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
 import { routeTo } from "sitewhere-ide-common";
-import { listAreas } from "../../rest/sitewhere-areas-api";
 import {
   IArea,
   IAreaSearchCriteria,

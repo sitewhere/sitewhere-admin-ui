@@ -15,14 +15,14 @@ import {
   Component,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createSchedule
 } from "sitewhere-ide-common";
 
 import ScheduleDialog from "./ScheduleDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { ISchedule, IScheduleCreateRequest } from "sitewhere-rest-api";
-import { createSchedule } from "../../rest/sitewhere-schedules-api";
 
 @Component({
   components: {

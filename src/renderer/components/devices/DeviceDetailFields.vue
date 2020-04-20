@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-token
+      <sw-form-token
         required
         label="Device token"
         title="Unique token for referencing device."
@@ -15,7 +15,7 @@
       </device-type-selector>
     </v-flex>
     <v-flex xs12>
-      <form-text-area
+      <sw-form-text-area
         required
         v-model="comments"
         title="Extra comments about device."
@@ -23,16 +23,12 @@
         icon="info"
       />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormToken from "../common/form/FormToken.vue";
-import FormText from "../common/form/FormText.vue";
-import FormTextArea from "../common/form/FormTextArea.vue";
 import DeviceTypeSelector from "../devicetypes/DeviceTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
@@ -42,10 +38,6 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
   components: {
-    DialogForm,
-    FormToken,
-    FormText,
-    FormTextArea,
     DeviceTypeSelector
   },
   validations: {

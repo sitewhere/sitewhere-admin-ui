@@ -17,7 +17,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createCommandInvocationForAssignment
 } from "sitewhere-ide-common";
 
 import InvocationDialog from "./InvocationDialog.vue";
@@ -27,7 +28,6 @@ import {
   IDeviceCommandInvocation,
   IDeviceCommandInvocationCreateRequest
 } from "sitewhere-rest-api";
-import { createCommandInvocationForAssignment } from "../../rest/sitewhere-device-assignments-api";
 
 @Component({
   components: {

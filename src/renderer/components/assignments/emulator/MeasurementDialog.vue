@@ -33,9 +33,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../../libraries/constants";
 
 import MeasurementDetailFields from "./MeasurementDetailFields.vue";
 import { IDeviceMeasurement } from "sitewhere-rest-api";

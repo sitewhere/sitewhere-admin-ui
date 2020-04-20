@@ -10,9 +10,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
-
-import { NavigationIcon } from "../../libraries/constants";
+import { Component, Prop, NavigationIcon } from "sitewhere-ide-common";
 
 import { IDeviceSlot } from "sitewhere-rest-api";
 

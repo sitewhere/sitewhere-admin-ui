@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getUser,
+  updateUser
 } from "sitewhere-ide-common";
 
 import UserDialog from "./UserDialog.vue";
@@ -25,7 +27,6 @@ import {
   IUserCreateRequest,
   IUserResponseFormat
 } from "sitewhere-rest-api";
-import { getUser, updateUser } from "../../rest/sitewhere-users-api";
 
 @Component({
   components: {

@@ -36,9 +36,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import UserDetailFields from "./UserDetailFields.vue";
 import UserPermissions from "./UserPermissions.vue";

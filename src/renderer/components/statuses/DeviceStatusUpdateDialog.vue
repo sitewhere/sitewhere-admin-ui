@@ -15,7 +15,9 @@ import {
   Prop,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getDeviceStatus,
+  updateDeviceStatus
 } from "sitewhere-ide-common";
 
 import DeviceStatusDialog from "./DeviceStatusDialog.vue";
@@ -26,10 +28,6 @@ import {
   IDeviceStatusCreateRequest,
   IDeviceStatusResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getDeviceStatus,
-  updateDeviceStatus
-} from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {

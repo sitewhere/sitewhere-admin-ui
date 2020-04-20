@@ -17,11 +17,7 @@
       <v-tab key="elements">Group Elements</v-tab>
     </template>
     <template slot="tab-items">
-      <device-group-elements
-        tabkey="elements"
-        ref="list"
-        :deviceGroup="deviceGroup"
-      />
+      <device-group-elements tabkey="elements" ref="list" :deviceGroup="deviceGroup" />
     </template>
     <template slot="actions">
       <add-button tooltip="Add Group Element" @action="onAddGroupElement" />
@@ -29,21 +25,9 @@
       <delete-button tooltip="Delete Device Group" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <device-group-element-create-dialog
-        ref="create"
-        :token="token"
-        @created="onElementAdded"
-      />
-      <device-group-update-dialog
-        ref="edit"
-        :token="token"
-        @deviceGroupUpdated="refresh"
-      />
-      <device-group-delete-dialog
-        ref="delete"
-        :token="token"
-        @groupDeleted="onDeviceGroupDeleted"
-      />
+      <device-group-element-create-dialog ref="create" :token="token" @created="onElementAdded" />
+      <device-group-update-dialog ref="edit" :token="token" @deviceGroupUpdated="refresh" />
+      <device-group-delete-dialog ref="delete" :token="token" @groupDeleted="onDeviceGroupDeleted" />
     </template>
   </sw-detail-page>
 </template>
@@ -53,7 +37,9 @@ import {
   Component,
   DetailComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getDeviceGroup
 } from "sitewhere-ide-common";
 
 import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader.vue";
@@ -67,8 +53,6 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getDeviceGroup } from "../../rest/sitewhere-device-groups-api";
 import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
 
 @Component({

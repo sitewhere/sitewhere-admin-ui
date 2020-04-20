@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <v-data-table
         :headers="headers"
@@ -10,16 +10,16 @@
         <template slot="items" slot-scope="props">
           <td width="250px" :title="props.item.name">
             {{
-              props.item.name.length > 25
-                ? props.item.name.substring(0, 25) + "..."
-                : props.item.name
+            props.item.name.length > 25
+            ? props.item.name.substring(0, 25) + "..."
+            : props.item.name
             }}
           </td>
           <td width="350px" :title="props.item.type">
             {{
-              props.item.type.length > 25
-                ? props.item.type.substring(0, 25) + "..."
-                : props.item.type
+            props.item.type.length > 25
+            ? props.item.type.substring(0, 25) + "..."
+            : props.item.type
             }}
           </td>
           <td width="200px">
@@ -29,11 +29,7 @@
           </td>
           <td width="20px">
             <v-tooltip left>
-              <v-btn
-                icon
-                @click="onDeleteParameter(props.item.name)"
-                slot="activator"
-              >
+              <v-btn icon @click="onDeleteParameter(props.item.name)" slot="activator">
                 <v-icon class="grey--text">delete</v-icon>
               </v-btn>
               <span>Delete Parameter</span>
@@ -46,12 +42,7 @@
       <v-container class="pa-0 pt-5" fluid>
         <v-layout row>
           <v-flex xs4>
-            <v-text-field
-              class="pr-3"
-              placeholder=" "
-              label="Name"
-              v-model="name"
-            />
+            <v-text-field class="pr-3" placeholder=" " label="Name" v-model="name" />
           </v-flex>
           <v-flex xs4>
             <v-select
@@ -70,9 +61,7 @@
           <v-flex xs1 class="pt-2">
             <v-tooltip left>
               <v-btn icon @click="onAddParameter" slot="activator">
-                <v-icon large class="blue--text text--darken-2"
-                  >add_circle</v-icon
-                >
+                <v-icon large class="blue--text text--darken-2">add_circle</v-icon>
               </v-btn>
               <span>Add Parameter</span>
             </v-tooltip>
@@ -80,13 +69,11 @@
         </v-layout>
       </v-container>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection, ITableHeaders } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
 import { ICommandParameter, ParameterType } from "sitewhere-rest-api";
@@ -96,9 +83,6 @@ import { ParameterTypes } from "../../libraries/constants";
 const validParamName = helpers.regex("validParamName", /^[\w-]+$/);
 
 @Component({
-  components: {
-    DialogForm
-  },
   validations: {
     name: {
       required,

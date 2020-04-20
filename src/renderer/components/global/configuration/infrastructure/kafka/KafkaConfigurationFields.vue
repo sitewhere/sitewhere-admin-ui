@@ -1,29 +1,27 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs9>
-      <form-text
+      <sw-form-text
         required
         label="Hostname"
         title="Hostname used to determine bootstrap servers."
         v-model="hostname"
         icon="fa-cog"
         class="mr-3"
-      >
-      </form-text>
+      ></sw-form-text>
     </v-flex>
     <v-flex xs3>
-      <form-text
+      <sw-form-text
         required
         label="Port"
         title="Port used for bootstrap servers."
         v-model="port"
         icon="fa-cog"
         type="number"
-      >
-      </form-text>
+      ></sw-form-text>
     </v-flex>
     <v-flex xs6>
-      <form-text
+      <sw-form-text
         required
         label="Default Topic Partitions"
         title="Default number of partitions created for new topics."
@@ -31,36 +29,27 @@
         icon="fa-cog"
         type="number"
         class="mr-3"
-      >
-      </form-text>
+      ></sw-form-text>
     </v-flex>
     <v-flex xs6>
-      <form-text
+      <sw-form-text
         required
         label="Default Topic Replication Factor"
         title="Default replication factor for new topics."
         v-model="defaultTopicReplicationFactor"
         icon="fa-cog"
         type="number"
-      >
-      </form-text>
+      ></sw-form-text>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../../../../common/form/DialogForm.vue";
-import FormText from "../../../../common/form/FormText.vue";
-
 import { IKafkaConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: {
-    DialogForm,
-    FormText
-  },
   validations: {}
 })
 export default class KafkaConfigurationFields extends DialogSection {

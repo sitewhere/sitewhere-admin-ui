@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getCustomerType,
+  updateCustomerType
 } from "sitewhere-ide-common";
 
 import CustomerTypeDialog from "./CustomerTypeDialog.vue";
@@ -25,10 +27,6 @@ import {
   ICustomerTypeCreateRequest,
   ICustomerTypeResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getCustomerType,
-  updateCustomerType
-} from "../../rest/sitewhere-customer-types-api";
 
 @Component({
   components: {

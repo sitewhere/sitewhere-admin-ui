@@ -21,14 +21,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, ListComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  listCustomers
+} from "sitewhere-ide-common";
 
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
 import { AxiosPromise } from "axios";
 import { routeTo } from "sitewhere-ide-common";
-import { listCustomers } from "../../rest/sitewhere-customers-api";
 import {
   ICustomer,
   ICustomerSearchCriteria,

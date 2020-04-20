@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-token
+      <sw-form-token
         required
         label="Asset token"
         title="Unique token for referencing asset."
@@ -10,7 +10,7 @@
       />
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Name"
         title="Name displayed for asset type."
@@ -18,22 +18,19 @@
         icon="info"
       >
         <span v-if="$v.name.$invalid && $v.$dirty">Name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
       <asset-type-selector v-model="assetTypeToken" title="Type of asset being created.">
         <span v-if="$v.assetTypeToken.$invalid && $v.$dirty">Asset type is required.</span>
       </asset-type-selector>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormToken from "../common/form/FormToken.vue";
-import FormText from "../common/form/FormText.vue";
 import AssetTypeSelector from "../assettypes/AssetTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
@@ -43,9 +40,6 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
   components: {
-    DialogForm,
-    FormToken,
-    FormText,
     AssetTypeSelector
   },
   validations: {

@@ -44,7 +44,9 @@ import {
   DetailComponent,
   DialogComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getCustomerType
 } from "sitewhere-ide-common";
 
 import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader.vue";
@@ -56,8 +58,6 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getCustomerType } from "../../rest/sitewhere-customer-types-api";
 import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
 
 @Component({

@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Token"
         title="Unique token for referencing command."
@@ -10,10 +10,10 @@
       >
         <span v-if="!$v.token.required && $v.$dirty">Token is required.</span>
         <span v-if="!$v.token.validToken && $v.$dirty">Token is not valid.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Name"
         title="Name displayed for command."
@@ -21,10 +21,10 @@
         icon="info"
       >
         <span v-if="!$v.name.required && $v.$dirty">Command name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Namespace"
         title="Command namespace."
@@ -32,10 +32,10 @@
         icon="info"
       >
         <span v-if="!$v.namespace.required && $v.$dirty">Namespace is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text-area
+      <sw-form-text-area
         required
         v-model="description"
         title="Description of command."
@@ -43,15 +43,11 @@
         icon="info"
       />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
-import FormText from "../common/form/FormText.vue";
-import FormTextArea from "../common/form/FormTextArea.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -59,11 +55,6 @@ import { required, helpers } from "vuelidate/lib/validators";
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
-  components: {
-    DialogForm,
-    FormText,
-    FormTextArea
-  },
   validations: {
     token: {
       required,

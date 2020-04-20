@@ -21,16 +21,8 @@
       <asset-type-assets tabkey="assets" ref="assets" :assetTypeToken="token" />
     </template>
     <template slot="dialogs">
-      <asset-type-update-dialog
-        ref="edit"
-        :token="token"
-        @assetTypeUpdated="onAssetTypeUpdated"
-      />
-      <asset-type-delete-dialog
-        ref="delete"
-        :token="token"
-        @assetTypeDeleted="onAssetTypeDeleted"
-      />
+      <asset-type-update-dialog ref="edit" :token="token" @assetTypeUpdated="onAssetTypeUpdated" />
+      <asset-type-delete-dialog ref="delete" :token="token" @assetTypeDeleted="onAssetTypeDeleted" />
     </template>
     <template slot="actions">
       <edit-button tooltip="Edit Asset Type" @action="onEdit" />
@@ -45,7 +37,9 @@ import {
   DetailComponent,
   DialogComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getAssetType
 } from "sitewhere-ide-common";
 
 import AssetTypeDetailHeader from "./AssetTypeDetailHeader.vue";
@@ -58,8 +52,6 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getAssetType } from "../../rest/sitewhere-asset-types-api";
 import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
 
 @Component({

@@ -15,7 +15,9 @@ import {
   Prop,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getDeviceCommand,
+  updateDeviceCommand
 } from "sitewhere-ide-common";
 
 import CommandDialog from "./CommandDialog.vue";
@@ -26,10 +28,6 @@ import {
   IDeviceCommandCreateRequest,
   IDeviceCommandResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getDeviceCommand,
-  updateDeviceCommand
-} from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {

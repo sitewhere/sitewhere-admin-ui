@@ -12,11 +12,15 @@
 </template>
 
 <script lang="ts">
-import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  DeleteDialogComponent,
+  getAsset,
+  deleteAsset
+} from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import { IAsset, IAssetResponseFormat } from "sitewhere-rest-api";
-import { getAsset, deleteAsset } from "../../rest/sitewhere-assets-api";
 
 @Component({})
 export default class AssetDeleteDialog extends DeleteDialogComponent<IAsset> {

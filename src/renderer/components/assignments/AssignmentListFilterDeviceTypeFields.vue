@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <v-card-text class="subheading">
         Device types selected below will be included in results.
@@ -7,20 +7,18 @@
       </v-card-text>
       <device-type-multiselect v-model="deviceTypeTokens" />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import DeviceTypeMultiselect from "../devicetypes/DeviceTypeMultiselect.vue";
 
 import { IDeviceAssignmentSearchCriteria } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DialogForm,
     DeviceTypeMultiselect
   }
 })

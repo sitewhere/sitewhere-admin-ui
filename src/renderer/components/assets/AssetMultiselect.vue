@@ -3,13 +3,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Watch, listAssets } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Multichooser from "../common/form/Multichooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listAssets } from "../../rest/sitewhere-assets-api";
 import {
   IAsset,
   IAssetSearchResults,
@@ -36,9 +35,11 @@ export default class AssetMultiselect extends Vue {
   async refresh() {
     let format: IAssetResponseFormat = {};
     let criteria: IAssetSearchCriteria = {};
-    let response: AxiosResponse<
-      IAssetSearchResults
-    > = await listAssets(this.$store, criteria, format);
+    let response: AxiosResponse<IAssetSearchResults> = await listAssets(
+      this.$store,
+      criteria,
+      format
+    );
     this.all = response.data.results;
   }
 

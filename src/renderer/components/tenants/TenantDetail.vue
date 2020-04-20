@@ -21,28 +21,12 @@
       </v-tab-item>
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
-        icon="fa-edit"
-        tooltip="Edit Tenant"
-        @action="onEdit"
-      />
-      <sw-navigation-action-button
-        icon="fa-trash"
-        tooltip="Delete Tenant"
-        @action="onDelete"
-      />
+      <sw-navigation-action-button icon="fa-edit" tooltip="Edit Tenant" @action="onEdit" />
+      <sw-navigation-action-button icon="fa-trash" tooltip="Delete Tenant" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <tenant-update-dialog
-        ref="edit"
-        :tenantToken="token"
-        @tenantUpdated="onTenantEdited"
-      />
-      <tenant-delete-dialog
-        ref="delete"
-        :tenantToken="token"
-        @deleted="onTenantDeleted"
-      />
+      <tenant-update-dialog ref="edit" :tenantToken="token" @tenantUpdated="onTenantEdited" />
+      <tenant-delete-dialog ref="delete" :tenantToken="token" @deleted="onTenantDeleted" />
     </template>
   </sw-detail-page>
 </template>
@@ -52,7 +36,10 @@ import {
   Component,
   DetailComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getTenant,
+  getInstanceMicroservices
 } from "sitewhere-ide-common";
 
 import TenantDetailHeader from "./TenantDetailHeader.vue";
@@ -61,14 +48,11 @@ import TenantDeleteDialog from "./TenantDeleteDialog.vue";
 import MicroserviceList from "./MicroserviceList.vue";
 
 import { AxiosPromise, AxiosResponse } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getTenant } from "../../rest/sitewhere-tenants-api";
 import {
   ITenant,
   ITenantResponseFormat,
   IMicroserviceSummary
 } from "sitewhere-rest-api";
-import { getInstanceMicroservices } from "../../rest/sitewhere-instance-api";
 
 @Component({
   components: {

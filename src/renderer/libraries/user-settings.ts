@@ -15,7 +15,7 @@ export class Settings {
   // Initial application version.
   initialVersion: string = !IsDev ? remote.app.getVersion() : "2.0.0";
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Detect whether the settings file exists.

@@ -15,14 +15,14 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createDeviceStatus
 } from "sitewhere-ide-common";
 
 import DeviceStatusDialog from "./DeviceStatusDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IDeviceStatus, IDeviceStatusCreateRequest } from "sitewhere-rest-api";
-import { createDeviceStatus } from "../../rest/sitewhere-device-types-api";
 
 @Component({
   components: {

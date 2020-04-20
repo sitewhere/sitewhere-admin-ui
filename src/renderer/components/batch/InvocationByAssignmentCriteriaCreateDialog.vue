@@ -16,7 +16,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createInvocationsByAssignmentCriteria
 } from "sitewhere-ide-common";
 
 import InvocationByAssignmentCriteriaDialog from "./InvocationByAssignmentCriteriaDialog.vue";
@@ -27,7 +28,6 @@ import {
   IInvocationByAssignmentCriteriaRequest,
   IBatchOperation
 } from "sitewhere-rest-api";
-import { createInvocationsByAssignmentCriteria } from "../../rest/sitewhere-batch-operations-api";
 
 @Component({
   components: {

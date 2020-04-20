@@ -14,7 +14,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createLocationForAssignment
 } from "sitewhere-ide-common";
 
 import LocationDialog from "./LocationDialog.vue";
@@ -25,7 +26,6 @@ import {
   IDeviceLocation,
   IDeviceLocationCreateRequest
 } from "sitewhere-rest-api";
-import { createLocationForAssignment } from "../../../rest/sitewhere-device-assignments-api";
 
 @Component({
   components: {

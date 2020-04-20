@@ -1,20 +1,18 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <schedule-chooser ref="schedule"/>
+      <schedule-chooser ref="schedule" />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import ScheduleChooser from "../schedules/ScheduleChooser.vue";
 
 @Component({
   components: {
-    DialogForm,
     ScheduleChooser
   }
 })

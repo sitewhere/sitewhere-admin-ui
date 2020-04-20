@@ -37,11 +37,10 @@ import {
   DialogSection,
   ITabbedComponent,
   Refs,
-  Prop
+  Prop,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../../../../libraries/constants";
 
-import DialogForm from "../../../../common/form/DialogForm.vue";
 import Postgres95Fields from "../../../../configuration/datastore/postgres95/Postgres95Fields.vue";
 
 import {
@@ -51,7 +50,7 @@ import {
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { DialogForm, Postgres95Fields }
+  components: { Postgres95Fields }
 })
 export default class RdbDatastoreDialog extends DialogComponent<
   IDatastoreDefinition

@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <map-with-zone-overlay-panel
         style="height: 400px; border: 1px solid #ddd;"
@@ -58,7 +58,7 @@
         </v-layout>
       </v-container>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
@@ -69,8 +69,6 @@ import {
   Watch,
   Refs
 } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
 
 import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
 import {
@@ -98,7 +96,6 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
   components: {
-    DialogForm,
     MapWithZoneOverlayPanel
   },
   validations: {

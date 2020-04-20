@@ -26,9 +26,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import RemoteConnectionsList from "./RemoteConnectionsList.vue";
 import RemoteConnectionDetails from "./RemoteConnectionDetails.vue";

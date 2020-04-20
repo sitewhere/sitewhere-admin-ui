@@ -3,13 +3,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Watch,
+  listCustomerTypes
+} from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Multichooser from "../common/form/Multichooser.vue";
 
 import { AxiosResponse } from "axios";
-import { listCustomerTypes } from "../../rest/sitewhere-customer-types-api";
 import {
   ICustomerType,
   ICustomerTypeSearchResults,
@@ -37,9 +41,11 @@ export default class CustomerTypeMultiselect extends Vue {
   async refresh() {
     let format: ICustomerTypeResponseFormat = {};
     let criteria: ICustomerTypeSearchCriteria = {};
-    let response: AxiosResponse<
-      ICustomerTypeSearchResults
-    > = await listCustomerTypes(this.$store, criteria, format);
+    let response: AxiosResponse<ICustomerTypeSearchResults> = await listCustomerTypes(
+      this.$store,
+      criteria,
+      format
+    );
     this.all = response.data.results;
   }
 

@@ -13,35 +13,15 @@
       <v-tab key="assignments">Assignments</v-tab>
     </template>
     <template slot="tab-items">
-      <asset-assignments
-        tabkey="assignments"
-        ref="assignments"
-        :assetToken="token"
-      />
+      <asset-assignments tabkey="assignments" ref="assignments" :assetToken="token" />
     </template>
     <template slot="dialogs">
-      <asset-update-dialog
-        ref="edit"
-        :token="token"
-        @asseUpdated="onAssetUpdated"
-      />
-      <asset-delete-dialog
-        ref="delete"
-        :token="token"
-        @assetDeleted="onAssetDeleted"
-      />
+      <asset-update-dialog ref="edit" :token="token" @asseUpdated="onAssetUpdated" />
+      <asset-delete-dialog ref="delete" :token="token" @assetDeleted="onAssetDeleted" />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
-        icon="edit"
-        tooltip="Edit Device"
-        @action="onEdit"
-      />
-      <sw-navigation-action-button
-        icon="times"
-        tooltip="Delete Device"
-        @action="onDelete"
-      />
+      <sw-navigation-action-button icon="edit" tooltip="Edit Device" @action="onEdit" />
+      <sw-navigation-action-button icon="times" tooltip="Delete Device" @action="onDelete" />
     </template>
   </sw-detail-page>
 </template>
@@ -52,7 +32,9 @@ import {
   DetailComponent,
   DialogComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getAsset
 } from "sitewhere-ide-common";
 
 import AssetDetailHeader from "./AssetDetailHeader.vue";
@@ -62,8 +44,6 @@ import AssetUpdateDialog from "./AssetUpdateDialog.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getAsset } from "../../rest/sitewhere-assets-api";
 import {
   IAsset,
   IAssetResponseFormat,

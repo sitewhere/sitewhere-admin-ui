@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getAssetType,
+  updateAssetType
 } from "sitewhere-ide-common";
 
 import AssetTypeDialog from "./AssetTypeDialog.vue";
@@ -25,10 +27,6 @@ import {
   IAssetTypeCreateRequest,
   IAssetTypeResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getAssetType,
-  updateAssetType
-} from "../../rest/sitewhere-asset-types-api";
 
 @Component({
   components: {

@@ -14,14 +14,14 @@ import {
   Component,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createTenant
 } from "sitewhere-ide-common";
 
 import TenantDialog from "./TenantDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { ITenant, ITenantCreateRequest } from "sitewhere-rest-api";
-import { createTenant } from "../../rest/sitewhere-tenants-api";
 
 @Component({
   components: {

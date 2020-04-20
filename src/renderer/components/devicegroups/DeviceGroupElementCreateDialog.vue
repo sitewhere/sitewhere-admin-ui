@@ -15,7 +15,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createDeviceGroupElements
 } from "sitewhere-ide-common";
 
 import DeviceGroupElementDialog from "./DeviceGroupElementDialog.vue";
@@ -25,7 +26,6 @@ import {
   IDeviceGroupElement,
   IDeviceGroupElementCreateRequest
 } from "sitewhere-rest-api";
-import { createDeviceGroupElements } from "../../rest/sitewhere-device-groups-api";
 
 @Component({
   components: {

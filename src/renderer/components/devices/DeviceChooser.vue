@@ -9,13 +9,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop, listDevices } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import DeviceChooserBase from "./DeviceChooserBase.vue";
 
 import { AxiosResponse } from "axios";
-import { listDevices } from "../../rest/sitewhere-devices-api";
 import {
   IDevice,
   IDeviceSearchResults,

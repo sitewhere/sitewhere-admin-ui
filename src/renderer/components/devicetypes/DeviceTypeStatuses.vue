@@ -34,14 +34,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Refs,
+  ListComponent,
+  listDeviceStatuses
+} from "sitewhere-ide-common";
 
 import DeviceStatusListEntry from "../statuses/DeviceStatusListEntry.vue";
 import DeviceStatusUpdateDialog from "../statuses/DeviceStatusUpdateDialog.vue";
 import DeviceStatusDeleteDialog from "../statuses/DeviceStatusDeleteDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { listDeviceStatuses } from "../../rest/sitewhere-device-statuses-api";
 import {
   IDeviceStatus,
   IDeviceStatusSearchCriteria,

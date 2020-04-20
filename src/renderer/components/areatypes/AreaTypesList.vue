@@ -17,17 +17,12 @@
         <div>No area types have been created for this tenant.</div>
         <div class="mt-2">
           Click
-          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon
-          >in the toolbar to add an area type.
+          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon>in the toolbar to add an area type.
         </div>
       </no-results-panel>
     </template>
     <template slot="dialogs">
-      <area-type-create-dialog
-        ref="add"
-        @areaTypeAdded="onAreaTypeAdded"
-        :areaTypes="matches"
-      />
+      <area-type-create-dialog ref="add" @areaTypeAdded="onAreaTypeAdded" :areaTypes="matches" />
     </template>
     <template slot="actions">
       <add-button icon="plus" tooltip="Add Area Type" @action="onAddAreaType" />
@@ -36,7 +31,13 @@
 </template>
 
 <script lang="ts">
-import { Component, ListComponent, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  ListComponent,
+  Refs,
+  NavigationIcon,
+  listAreaTypes
+} from "sitewhere-ide-common";
 
 import { ListPage, ListLayout } from "sitewhere-ide-components";
 import AreaTypeListEntry from "./AreaTypeListEntry.vue";
@@ -44,10 +45,8 @@ import AreaTypeCreateDialog from "./AreaTypeCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
 import {
   IAreaType,
   IAreaTypeSearchCriteria,

@@ -36,9 +36,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import TenantDetailFields from "./TenantDetailFields.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";

@@ -11,7 +11,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <dialog-header>Choose criteria for filtering which device assignments are shown.</dialog-header>
+    <sw-dialog-header>Choose criteria for filtering which device assignments are shown.</sw-dialog-header>
     <template slot="tabs">
       <v-tab key="devicetype">Device Types</v-tab>
       <v-tab key="customer">Customers</v-tab>
@@ -41,11 +41,10 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
-import DialogHeader from "../common/dialog/DialogHeader.vue";
 import AssignmentListFilterDeviceTypeFields from "./AssignmentListFilterDeviceTypeFields.vue";
 import AssignmentListFilterCustomerFields from "./AssignmentListFilterCustomerFields.vue";
 import AssignmentListFilterAreaFields from "./AssignmentListFilterAreaFields.vue";
@@ -55,7 +54,6 @@ import { IDeviceAssignmentSearchCriteria } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DialogHeader,
     AssignmentListFilterDeviceTypeFields,
     AssignmentListFilterCustomerFields,
     AssignmentListFilterAreaFields,

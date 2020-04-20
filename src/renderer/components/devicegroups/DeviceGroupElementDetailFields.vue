@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-select
+      <sw-form-select
         required
         title="Type of element to add."
         :items="elementTypes"
@@ -12,7 +12,7 @@
         icon="info"
       >
         <span v-if="$v.elementType.$invalid && $v.$dirty">Element type is required.</span>
-      </form-select>
+      </sw-form-select>
     </v-flex>
     <v-flex xs12>
       <v-card flat>
@@ -30,14 +30,12 @@
         />
       </v-card>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormSelect from "../common/form/FormSelect.vue";
 import DeviceChooser from "../devices/DeviceChooser.vue";
 import DeviceGroupChooser from "./DeviceGroupChooser.vue";
 
@@ -45,8 +43,6 @@ import { required } from "vuelidate/lib/validators";
 
 @Component({
   components: {
-    DialogForm,
-    FormSelect,
     DeviceChooser,
     DeviceGroupChooser
   },

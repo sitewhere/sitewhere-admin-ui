@@ -40,9 +40,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import CustomerTypeDetailFields from "./CustomerTypeDetailFields.vue";
 import CustomerTypeContentFields from "./CustomerTypeContentFields.vue";

@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs6>
-      <form-text
+      <sw-form-text
         required
         label="Id"
         title="Unique identifier for script."
@@ -10,13 +10,11 @@
         class="mr-3"
       >
         <span v-if="!$v.scriptId.required && $v.$dirty">Id is required.</span>
-        <span v-if="!$v.scriptId.validId && $v.$dirty"
-          >Id must be alphanumeric with no spaces.</span
-        >
-      </form-text>
+        <span v-if="!$v.scriptId.validId && $v.$dirty">Id must be alphanumeric with no spaces.</span>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6>
-      <form-text
+      <sw-form-text
         required
         label="Name"
         title="Name displayed for script."
@@ -24,10 +22,10 @@
         icon="info"
       >
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6>
-      <form-select
+      <sw-form-select
         required
         title="Category script belongs to."
         :items="scriptCategories"
@@ -38,13 +36,11 @@
         icon="developer_board"
         class="mr-3"
       >
-        <span v-if="$v.category.$invalid && $v.$dirty"
-          >Script category is required.</span
-        >
-      </form-select>
+        <span v-if="$v.category.$invalid && $v.$dirty">Script category is required.</span>
+      </sw-form-select>
     </v-flex>
     <v-flex xs6>
-      <form-select
+      <sw-form-select
         required
         title="Script language/interpreter being used."
         :items="interpreterTypes"
@@ -54,34 +50,25 @@
         item-value="value"
         icon="fa-code"
       >
-        <span v-if="$v.interpreterType.$invalid && $v.$dirty"
-          >Script interpreter is required.</span
-        >
-      </form-select>
+        <span v-if="$v.interpreterType.$invalid && $v.$dirty">Script interpreter is required.</span>
+      </sw-form-select>
     </v-flex>
     <v-flex xs12>
-      <form-text-area
+      <sw-form-text-area
         required
         v-model="description"
         title="Script description."
         label="Description"
         icon="info"
       >
-        <span v-if="$v.description.$invalid && $v.$dirty"
-          >Description is required.</span
-        >
-      </form-text-area>
+        <span v-if="$v.description.$invalid && $v.$dirty">Description is required.</span>
+      </sw-form-text-area>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Watch, DialogSection } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
-import FormText from "../common/form/FormText.vue";
-import FormTextArea from "../common/form/FormTextArea.vue";
-import FormSelect from "../common/form/FormSelect.vue";
 
 import { IScriptCategory, IScriptCreateRequest } from "sitewhere-rest-api";
 
@@ -91,12 +78,6 @@ import { required, helpers } from "vuelidate/lib/validators";
 const validId = helpers.regex("validId", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
-  components: {
-    DialogForm,
-    FormText,
-    FormTextArea,
-    FormSelect
-  },
   validations: {
     scriptId: {
       required,

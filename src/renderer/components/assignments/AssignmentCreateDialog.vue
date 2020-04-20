@@ -15,7 +15,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createDeviceAssignment
 } from "sitewhere-ide-common";
 
 import AssignmentDialog from "./AssignmentDialog.vue";
@@ -26,7 +27,6 @@ import {
   IDeviceAssignmentCreateRequest,
   IDevice
 } from "sitewhere-rest-api";
-import { createDeviceAssignment } from "../../rest/sitewhere-device-assignments-api";
 
 @Component({
   components: {

@@ -1,18 +1,18 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-text required label="Username" v-model="username" hide-details icon="info">
+      <sw-form-text required label="Username" v-model="username" hide-details icon="info">
         <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6>
-      <form-text type="password" required label="Password" v-model="password" icon="https">
+      <sw-form-text type="password" required label="Password" v-model="password" icon="https">
         <span v-if="!$v.password.required && $v.$dirty">Password is required.</span>
         <span v-if="!$v.password.minLength && $v.$dirty">Password minimum length is 6.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6>
-      <form-text
+      <sw-form-text
         type="password"
         required
         label="Password (confirm)"
@@ -20,20 +20,20 @@
         icon="https"
       >
         <span v-if="!$v.passwordConfirm.sameAsPassword && $v.$dirty">Password does not match.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text required label="First name" v-model="firstName" icon="info">
+      <sw-form-text required label="First name" v-model="firstName" icon="info">
         <span v-if="$v.firstName.$invalid && $v.$dirty">First name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text required label="Last name" v-model="lastName" icon="info">
+      <sw-form-text required label="Last name" v-model="lastName" icon="info">
         <span v-if="$v.lastName.$invalid && $v.$dirty">Last name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-select
+      <sw-form-select
         required
         :items="statuses"
         v-model="status"
@@ -41,26 +41,17 @@
         icon="check_circle"
       >
         <span v-if="$v.status.$invalid && $v.$dirty">Account status is required.</span>
-      </form-select>
+      </sw-form-select>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormText from "../common/form/FormText.vue";
-import FormSelect from "../common/form/FormSelect.vue";
-
 import { required, sameAs, minLength } from "vuelidate/lib/validators";
 
 @Component({
-  components: {
-    DialogForm,
-    FormText,
-    FormSelect
-  },
   validations: {
     username: {
       required

@@ -20,14 +20,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs, ListComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Refs,
+  ListComponent,
+  listDeviceCommands
+} from "sitewhere-ide-common";
 
 import CommandPanel from "../commands/CommandPanel.vue";
 import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
 import CommandDeleteDialog from "../commands/CommandDeleteDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { listDeviceCommands } from "../../rest/sitewhere-device-commands-api";
 import {
   IDeviceCommand,
   IDeviceCommandSearchCriteria,

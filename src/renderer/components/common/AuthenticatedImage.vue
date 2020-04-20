@@ -1,12 +1,10 @@
 <template>
-  <img v-if="!hidden">
+  <img v-if="!hidden" />
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
-
-import { imageAuthGet } from "../../rest/sitewhere-api-wrapper";
+import { Component, Prop, imageAuthGet } from "sitewhere-ide-common";
 
 @Component({})
 export default class AuthenticatedImage extends Vue {

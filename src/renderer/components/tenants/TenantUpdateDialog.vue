@@ -15,7 +15,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getTenant,
+  updateTenant
 } from "sitewhere-ide-common";
 
 import TenantDialog from "./TenantDialog.vue";
@@ -26,7 +28,6 @@ import {
   ITenantCreateRequest,
   ITenantResponseFormat
 } from "sitewhere-rest-api";
-import { getTenant, updateTenant } from "../../rest/sitewhere-tenants-api";
 
 @Component({
   components: {

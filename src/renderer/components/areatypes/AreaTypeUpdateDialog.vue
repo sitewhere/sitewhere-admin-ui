@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getAreaType,
+  updateAreaType
 } from "sitewhere-ide-common";
 
 import AreaTypeDialog from "./AreaTypeDialog.vue";
@@ -25,10 +27,6 @@ import {
   IAreaTypeCreateRequest,
   IAreaTypeResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getAreaType,
-  updateAreaType
-} from "../../rest/sitewhere-area-types-api";
 
 @Component({
   components: {

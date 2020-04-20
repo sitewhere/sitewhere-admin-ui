@@ -21,7 +21,7 @@ import AreaDialog from "./AreaDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IArea, IAreaCreateRequest } from "sitewhere-rest-api";
-import { createArea } from "../../rest/sitewhere-areas-api";
+import { createArea } from "sitewhere-ide-common";
 
 @Component({
   components: {

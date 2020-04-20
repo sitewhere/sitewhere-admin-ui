@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <v-card flat>
         <v-checkbox label="Assign device to an area?" v-model="assign" light></v-checkbox>
@@ -12,18 +12,16 @@
         />
       </v-card>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import AreaChooser from "../areas/AreaChooser.vue";
 
 @Component({
   components: {
-    DialogForm,
     AreaChooser
   }
 })

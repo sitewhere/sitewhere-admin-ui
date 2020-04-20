@@ -14,7 +14,9 @@ import {
   Component,
   EditDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  getSchedule,
+  updateSchedule
 } from "sitewhere-ide-common";
 
 import ScheduleDialog from "./ScheduleDialog.vue";
@@ -25,10 +27,6 @@ import {
   IScheduleCreateRequest,
   IScheduleResponseFormat
 } from "sitewhere-rest-api";
-import {
-  getSchedule,
-  updateSchedule
-} from "../../rest/sitewhere-schedules-api";
 
 @Component({
   components: {

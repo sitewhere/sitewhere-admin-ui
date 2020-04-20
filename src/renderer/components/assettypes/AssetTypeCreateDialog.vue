@@ -14,14 +14,14 @@ import {
   Component,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createAssetType
 } from "sitewhere-ide-common";
 
 import AssetTypeDialog from "./AssetTypeDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IAssetType, IAssetTypeCreateRequest } from "sitewhere-rest-api";
-import { createAssetType } from "../../rest/sitewhere-asset-types-api";
 
 @Component({
   components: {

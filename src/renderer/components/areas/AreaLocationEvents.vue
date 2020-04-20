@@ -9,32 +9,26 @@
     loadingMessage="Loading area locations ..."
   >
     <template slot="items" slot-scope="props">
-      <td width="40%" :title="props.item.assetName">
-        {{ props.item.assetName }}
-      </td>
+      <td width="40%" :title="props.item.assetName">{{ props.item.assetName }}</td>
       <td width="40%" title="Lat/Lon/Elevation">
         {{
-          fourDecimalPlaces(props.item.latitude) +
-            ", " +
-            fourDecimalPlaces(props.item.longitude) +
-            ", " +
-            fourDecimalPlaces(props.item.elevation)
+        fourDecimalPlaces(props.item.latitude) +
+        ", " +
+        fourDecimalPlaces(props.item.longitude) +
+        ", " +
+        fourDecimalPlaces(props.item.elevation)
         }}
       </td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.eventDate)"
-      >
-        {{ formatDate(props.item.eventDate) }}
-      </td>
+      >{{ formatDate(props.item.eventDate) }}</td>
       <td
         width="10%"
         style="white-space: nowrap"
         :title="formatDate(props.item.receivedDate)"
-      >
-        {{ formatDate(props.item.receivedDate) }}
-      </td>
+      >{{ formatDate(props.item.receivedDate) }}</td>
     </template>
   </sw-data-table-tab>
 </template>
@@ -49,8 +43,11 @@ import {
 } from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
-import { listLocationsForArea } from "../../rest/sitewhere-areas-api";
-import { formatDate, fourDecimalPlaces } from "sitewhere-ide-common";
+import {
+  formatDate,
+  fourDecimalPlaces,
+  listLocationsForArea
+} from "sitewhere-ide-common";
 import { EventPageSizes, LocationHeaders } from "../../libraries/constants";
 import {
   IDeviceLocation,

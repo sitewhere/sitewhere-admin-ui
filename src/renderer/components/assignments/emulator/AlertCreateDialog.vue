@@ -14,7 +14,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createAlertForAssignment
 } from "sitewhere-ide-common";
 
 import AlertDialog from "./AlertDialog.vue";
@@ -25,7 +26,6 @@ import {
   IDeviceAlert,
   IDeviceAlertCreateRequest
 } from "sitewhere-rest-api";
-import { createAlertForAssignment } from "../../../rest/sitewhere-device-assignments-api";
 
 @Component({
   components: {

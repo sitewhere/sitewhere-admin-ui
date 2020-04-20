@@ -14,7 +14,8 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createMeasurementsForAssignment
 } from "sitewhere-ide-common";
 
 import MeasurementDialog from "./MeasurementDialog.vue";
@@ -25,7 +26,6 @@ import {
   IDeviceMeasurement,
   IDeviceMeasurementCreateRequest
 } from "sitewhere-rest-api";
-import { createMeasurementsForAssignment } from "../../../rest/sitewhere-device-assignments-api";
 
 @Component({
   components: {

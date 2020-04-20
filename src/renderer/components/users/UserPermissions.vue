@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <div class="tree-wrapper">
       <v-treeview
         ref="tree"
@@ -11,24 +11,22 @@
         v-model="authorities"
       />
     </div>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
-import { Component, DialogSection } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
+import {
+  Component,
+  DialogSection,
+  getAuthoritiesHierarchy
+} from "sitewhere-ide-common";
 
 import { handleError } from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
 import { IGrantedAuthorityHierarchyNode } from "sitewhere-rest-api";
-import { getAuthoritiesHierarchy } from "../../rest/sitewhere-users-api";
 
 @Component({
-  components: {
-    DialogForm
-  },
   validations: {}
 })
 export default class UserPermissions extends DialogSection {

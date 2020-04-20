@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs5>
-      <form-text
+      <sw-form-text
         required
         v-model="token"
         title="Unique token that identifies the tenant. Should be alpahanumeric with no spaces."
@@ -9,29 +9,23 @@
         icon="info"
         class="mr-3"
       >
-        <span v-if="!$v.token.required && $v.$dirty"
-          >Tenant token is required.</span
-        >
-        <span v-if="!$v.token.validToken && $v.$dirty"
-          >Tenant token is not valid.</span
-        >
-      </form-text>
+        <span v-if="!$v.token.required && $v.$dirty">Tenant token is required.</span>
+        <span v-if="!$v.token.validToken && $v.$dirty">Tenant token is not valid.</span>
+      </sw-form-text>
     </v-flex>
     <v-flex xs7>
-      <form-text
+      <sw-form-text
         required
         v-model="authToken"
         title="Token passed from clients to authenticate access to tenant."
         label="Authentication Token"
         icon="https"
       >
-        <span v-if="$v.authToken.$invalid && $v.$dirty"
-          >Authentication Token is required.</span
-        >
-      </form-text>
+        <span v-if="$v.authToken.$invalid && $v.$dirty">Authentication Token is required.</span>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         v-model="name"
         title="Name shown in user interface for tenant."
@@ -39,10 +33,10 @@
         icon="info"
       >
         <span v-if="$v.name.$invalid && $v.$dirty">Name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-select
+      <sw-form-select
         title="List of system users allowed to access tenant."
         label="Authorized users"
         :items="allUsers"
@@ -55,7 +49,7 @@
       />
     </v-flex>
     <v-flex xs6>
-      <form-select
+      <sw-form-select
         required
         title="Template used for initial tenant configuration."
         :items="templatesList"
@@ -66,13 +60,11 @@
         icon="layers"
         class="mr-3"
       >
-        <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty"
-          >Tenant template is required.</span
-        >
-      </form-select>
+        <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty">Tenant template is required.</span>
+      </sw-form-select>
     </v-flex>
     <v-flex xs6>
-      <form-select
+      <sw-form-select
         required
         title="Template for dataset initially loaded into tenant."
         :items="datasetsList"
@@ -82,20 +74,20 @@
         item-value="id"
         icon="backup"
       >
-        <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty"
-          >Dataset template is required.</span
-        >
-      </form-select>
+        <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty">Dataset template is required.</span>
+      </sw-form-select>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
-import { Component, DialogSection } from "sitewhere-ide-common";
-
-import DialogForm from "../common/form/DialogForm.vue";
-import FormText from "../common/form/FormText.vue";
-import FormSelect from "../common/form/FormSelect.vue";
+import {
+  Component,
+  DialogSection,
+  listTenantConfigurationTemplates,
+  listTenantDatasetTemplates,
+  listUsers
+} from "sitewhere-ide-common";
 
 import { required, helpers } from "vuelidate/lib/validators";
 import { handleError } from "sitewhere-ide-common";
@@ -109,21 +101,11 @@ import {
   ITenantConfigurationTemplate,
   ITenantDatasetTemplate
 } from "sitewhere-rest-api";
-import {
-  listTenantConfigurationTemplates,
-  listTenantDatasetTemplates
-} from "../../rest/sitewhere-tenants-api";
-import { listUsers } from "../../rest/sitewhere-users-api";
 
 // Validation for token.
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
-  components: {
-    DialogForm,
-    FormText,
-    FormSelect
-  },
   validations: {
     token: {
       required,

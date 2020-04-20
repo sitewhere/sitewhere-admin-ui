@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs11>
-      <form-select
+      <sw-form-select
         title="Script template to use for content."
         :items="scriptTemplates"
         v-model="template"
@@ -12,43 +12,37 @@
       />
     </v-flex>
     <v-flex xs1>
-      <v-btn icon small class="ma-3 grey--text" @click="onCopyClicked"
-        ><v-icon small>fa-copy</v-icon></v-btn
-      >
+      <v-btn icon small class="ma-3 grey--text" @click="onCopyClicked">
+        <v-icon small>fa-copy</v-icon>
+      </v-btn>
     </v-flex>
     <v-flex xs12>
-      <form-code-block
-        required
-        label="Content"
-        title="Script Content."
-        v-model="content"
-      >
-        <span v-if="$v.content.$invalid && $v.$dirty"
-          >Script content is required.</span
-        >
+      <form-code-block required label="Content" title="Script Content." v-model="content">
+        <span v-if="$v.content.$invalid && $v.$dirty">Script content is required.</span>
       </form-code-block>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, DialogSection } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Watch,
+  DialogSection,
+  listScriptTemplates
+} from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import FormCodeBlock from "../common/form/FormCodeBlock.vue";
-import FormSelect from "../common/form/FormSelect.vue";
 
 import { AxiosResponse } from "axios";
 import { required } from "vuelidate/lib/validators";
-import { listScriptTemplates } from "../../rest/sitewhere-scripting-api";
 import { IScriptTemplate } from "sitewhere-rest-api";
 import { IScriptCreateRequest } from "../../../../../sitewhere-rest-api/src";
 
 @Component({
   components: {
-    DialogForm,
-    FormCodeBlock,
-    FormSelect
+    FormCodeBlock
   },
   validations: {
     content: {

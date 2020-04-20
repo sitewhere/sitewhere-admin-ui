@@ -10,41 +10,25 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="device in matches" :key="device.token">
-        <device-list-entry
-          :device="device"
-          @assign="onAssignDevice"
-          @open="onOpenDevice"
-        />
+        <device-list-entry :device="device" @assign="onAssignDevice" @open="onOpenDevice" />
       </v-flex>
     </sw-list-layout>
     <template slot="filters">
-      <device-list-filter-bar
-        ref="filters"
-        :criteria="filter"
-        @clear="onClearFilterCriteria"
-      />
+      <device-list-filter-bar ref="filters" :criteria="filter" @clear="onClearFilterCriteria" />
     </template>
     <template slot="noresults">
       <no-results-panel>
         <div>No devices have been created for this tenant.</div>
         <div class="mt-2">
           Click
-          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon
-          >in the toolbar to add a device.
+          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon>in the toolbar to add a device.
         </div>
       </no-results-panel>
     </template>
     <template slot="dialogs">
       <device-create-dialog ref="add" @deviceAdded="onDeviceAdded" />
-      <assignment-create-dialog
-        ref="assign"
-        :device="selected"
-        @created="onAssignmentCreated"
-      />
-      <invocation-by-device-criteria-create-dialog
-        :filter="filter"
-        ref="batch"
-      />
+      <assignment-create-dialog ref="assign" :device="selected" @created="onAssignmentCreated" />
+      <invocation-by-device-criteria-create-dialog :filter="filter" ref="batch" />
       <device-list-filter-dialog ref="filter" @payload="onFilterUpdated" />
     </template>
     <template slot="actions">
@@ -54,10 +38,7 @@
         tooltip="Execute Batch Command"
         @action="onBatchCommandInvocation"
       />
-      <filter-button
-        tooltip="Filter Device List"
-        @action="onShowFilterCriteria"
-      />
+      <filter-button tooltip="Filter Device List" @action="onShowFilterCriteria" />
     </template>
   </sw-list-page>
 </template>
@@ -67,7 +48,9 @@ import {
   Component,
   ListComponent,
   IPageSizes,
-  Refs
+  Refs,
+  NavigationIcon,
+  listDevices
 } from "sitewhere-ide-common";
 
 import DeviceListEntry from "./DeviceListEntry.vue";
@@ -81,10 +64,8 @@ import DeviceCommandButton from "../common/navbuttons/DeviceCommandButton.vue";
 import FilterButton from "../common/navbuttons/FilterButton.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listDevices } from "../../rest/sitewhere-devices-api";
 import {
   IDevice,
   IDeviceSearchCriteria,

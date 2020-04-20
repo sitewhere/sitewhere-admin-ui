@@ -25,15 +25,15 @@ import {
   Component,
   DetailComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getBatchOperation
 } from "sitewhere-ide-common";
 
 import BatchOperationDetailHeader from "./BatchOperationDetailHeader.vue";
 import BatchOperationElementsList from "./BatchOperationElementsList.vue";
 
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getBatchOperation } from "../../rest/sitewhere-batch-operations-api";
 import {
   IBatchOperation,
   IBatchOperationResponseFormat

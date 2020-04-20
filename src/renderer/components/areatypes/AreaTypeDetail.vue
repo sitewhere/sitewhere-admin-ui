@@ -20,16 +20,8 @@
       <area-type-areas tabkey="areas" ref="areas" :areaTypeToken="token" />
     </template>
     <template slot="dialogs">
-      <area-type-update-dialog
-        ref="edit"
-        :token="token"
-        @areaTypeUpdated="onAreaTypeUpdated"
-      />
-      <area-type-delete-dialog
-        ref="delete"
-        :token="token"
-        @areaTypeDeleted="onAreaTypeDeleted"
-      />
+      <area-type-update-dialog ref="edit" :token="token" @areaTypeUpdated="onAreaTypeUpdated" />
+      <area-type-delete-dialog ref="delete" :token="token" @areaTypeDeleted="onAreaTypeDeleted" />
     </template>
     <template slot="actions">
       <edit-button tooltip="Edit Area Type" @action="onEdit" />
@@ -44,7 +36,9 @@ import {
   DetailComponent,
   DialogComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getAreaType
 } from "sitewhere-ide-common";
 
 import AreaTypeDetailHeader from "./AreaTypeDetailHeader.vue";
@@ -57,8 +51,6 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getAreaType } from "../../rest/sitewhere-area-types-api";
 import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
 
 @Component({

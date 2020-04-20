@@ -12,11 +12,15 @@
 </template>
 
 <script lang="ts">
-import { Component, DeleteDialogComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  DeleteDialogComponent,
+  getDevice,
+  deleteDevice
+} from "sitewhere-ide-common";
 
 import { AxiosPromise } from "axios";
 import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
-import { getDevice, deleteDevice } from "../../rest/sitewhere-devices-api";
 
 @Component({})
 export default class DeviceDeleteDialog extends DeleteDialogComponent<IDevice> {

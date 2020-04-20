@@ -6,6 +6,7 @@ import store from "./store";
 import router from "./router";
 
 import SiteWhere from "sitewhere-ide-components";
+import AdminUiPlugins from "sitewhere-admin-ui-plugins";
 import Vuetify from "vuetify";
 import Vuelidate from "vuelidate";
 import Vue2Leaflet from "vue2-leaflet";
@@ -24,6 +25,7 @@ Vue.use(Vuetify, {
 });
 
 Vue.use(SiteWhere);
+Vue.use(AdminUiPlugins);
 Vue.use(Vuelidate);
 Vue.use(VueMoment);
 Vue.use(VueClipboards);

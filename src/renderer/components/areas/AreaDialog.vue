@@ -41,9 +41,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import AreaDetailFields from "./AreaDetailFields.vue";
 import AreaBoundsPanel from "./AreaBoundsPanel.vue";

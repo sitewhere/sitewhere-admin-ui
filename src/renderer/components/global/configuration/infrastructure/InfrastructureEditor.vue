@@ -11,10 +11,7 @@
     <v-divider class="mt-4 mb-4" />
     <redis-section :configuration="configuration" @updated="onRedisUpdated" />
     <v-divider class="mt-4 mb-4" />
-    <metrics-section
-      :configuration="configuration"
-      @updated="onMetricsUpdated"
-    />
+    <metrics-section :configuration="configuration" @updated="onMetricsUpdated" />
   </instance-configuration-editor>
 </template>
 

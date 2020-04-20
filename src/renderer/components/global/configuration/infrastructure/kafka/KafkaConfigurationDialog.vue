@@ -16,8 +16,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Refs, Prop, DialogComponent } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../../../../libraries/constants";
+import {
+  Component,
+  Refs,
+  Prop,
+  DialogComponent,
+  NavigationIcon
+} from "sitewhere-ide-common";
 
 import KafkaConfigurationFields from "./KafkaConfigurationFields.vue";
 

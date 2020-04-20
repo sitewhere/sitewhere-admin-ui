@@ -1,5 +1,5 @@
 <template>
-  <form-select
+  <sw-form-select
     :items="areaTypes"
     :title="title || `Choose type of area`"
     :label="label || `Area Type`"
@@ -9,18 +9,15 @@
     icon="settings"
   >
     <slot />
-  </form-select>
+  </sw-form-select>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop, listAreaTypes } from "sitewhere-ide-common";
 
-import FormSelect from "../common/form/FormSelect.vue";
-
-import { handleError } from "sitewhere-ide-common";
+import { showError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
-import { listAreaTypes } from "../../rest/sitewhere-area-types-api";
 import {
   IAreaType,
   IAreaTypeResponseFormat,
@@ -28,11 +25,7 @@ import {
   IAreaTypeSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    FormSelect
-  }
-})
+@Component({})
 export default class AreaTypeSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;
@@ -62,7 +55,7 @@ export default class AreaTypeSelector extends Vue {
       );
       this.areaTypes = response.data.results;
     } catch (err) {
-      handleError(err);
+      showError(this, err);
     }
   }
 }

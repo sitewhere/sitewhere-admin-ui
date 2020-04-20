@@ -13,12 +13,10 @@
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import CustomerTypeMultiselect from "./CustomerTypeMultiselect.vue";
 
 @Component({
   components: {
-    DialogForm,
     CustomerTypeMultiselect
   }
 })

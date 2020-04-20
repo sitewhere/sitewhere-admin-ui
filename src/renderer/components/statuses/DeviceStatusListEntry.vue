@@ -13,11 +13,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop, NavigationIcon } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import { IDeviceStatus } from "sitewhere-rest-api";
-import { NavigationIcon } from "../../libraries/constants";
 
 @Component({})
 export default class DeviceTypeListEntry extends Vue {

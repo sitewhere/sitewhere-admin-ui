@@ -19,13 +19,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, ListComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  ListComponent,
+  listDeviceAssignments
+} from "sitewhere-ide-common";
 
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listDeviceAssignments } from "../../rest/sitewhere-device-assignments-api";
 import {
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,

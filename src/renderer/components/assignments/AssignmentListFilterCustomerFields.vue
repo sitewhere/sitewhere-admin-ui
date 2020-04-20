@@ -1,5 +1,5 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
       <v-card-text class="subheading">
         Customers selected below will be included in results.
@@ -7,20 +7,18 @@
       </v-card-text>
       <customer-multiselect v-model="customerTokens" />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
 import CustomerMultiselect from "../customers/CustomerMultiselect.vue";
 
 import { IDeviceAssignmentSearchCriteria } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DialogForm,
     CustomerMultiselect
   }
 })

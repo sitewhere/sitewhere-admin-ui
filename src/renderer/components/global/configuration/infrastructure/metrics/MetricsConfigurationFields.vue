@@ -1,43 +1,34 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs9>
-      <form-text
+      <sw-form-text
         required
         label="Enabled"
         title="Flag for enabling microservice metrics."
         v-model="enabled"
         icon="fa-cog"
         class="mr-3"
-      >
-      </form-text>
+      ></sw-form-text>
     </v-flex>
     <v-flex xs3>
-      <form-text
+      <sw-form-text
         required
         label="HTTP Port"
         title="HTTP port which serves Prometheus metrics."
         v-model="httpPort"
         icon="fa-cog"
         type="number"
-      >
-      </form-text>
+      ></sw-form-text>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../../../../common/form/DialogForm.vue";
-import FormText from "../../../../common/form/FormText.vue";
-
 import { IMetricsConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: {
-    DialogForm,
-    FormText
-  },
   validations: {}
 })
 export default class MetricsConfigurationFields extends DialogSection {

@@ -11,7 +11,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <dialog-header>Choose criteria for filtering which devices are shown</dialog-header>
+    <sw-dialog-header>Choose criteria for filtering which devices are shown</sw-dialog-header>
     <template slot="tabs">
       <v-tab key="devicetype">Device Type</v-tab>
     </template>
@@ -29,18 +29,16 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
-import DialogHeader from "../common/dialog/DialogHeader.vue";
 import DeviceListFilterDeviceTypeFields from "./DeviceListFilterDeviceTypeFields.vue";
 
 import { IDeviceSearchCriteria } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DialogHeader,
     DeviceListFilterDeviceTypeFields
   }
 })

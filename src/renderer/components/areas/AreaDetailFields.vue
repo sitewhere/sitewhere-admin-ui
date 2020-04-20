@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-token
+      <sw-form-token
         required
         label="Area token"
         title="Unique token for referencing area."
@@ -10,9 +10,15 @@
       />
     </v-flex>
     <v-flex xs12>
-      <form-text required label="Name" title="Name displayed for area." v-model="name" icon="info">
+      <sw-form-text
+        required
+        label="Name"
+        title="Name displayed for area."
+        v-model="name"
+        icon="info"
+      >
         <span v-if="!$v.name.required && $v.$dirty">Area name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
       <area-type-selector v-model="areaTypeToken" title="Type of area being created.">
@@ -20,7 +26,7 @@
       </area-type-selector>
     </v-flex>
     <v-flex xs12>
-      <form-text-area
+      <sw-form-text-area
         required
         v-model="description"
         title="Description of area."
@@ -28,16 +34,12 @@
         icon="info"
       />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormToken from "../common/form/FormToken.vue";
-import FormText from "../common/form/FormText.vue";
-import FormTextArea from "../common/form/FormTextArea.vue";
 import AreaTypeSelector from "../areatypes/AreaTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
@@ -47,10 +49,6 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
   components: {
-    DialogForm,
-    FormToken,
-    FormText,
-    FormTextArea,
     AreaTypeSelector
   },
   validations: {

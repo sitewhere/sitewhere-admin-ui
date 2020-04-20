@@ -8,7 +8,7 @@
     @pagingUpdated="onPagingUpdated"
   >
     <sw-list-layout>
-      <v-flex xs12 v-for="(tenant) in matches" :key="tenant.token">
+      <v-flex xs12 v-for="tenant in matches" :key="tenant.token">
         <tenant-list-entry
           :tenant="tenant"
           @click="onOpenTenant(tenant)"
@@ -27,14 +27,18 @@
 </template>
 
 <script lang="ts">
-import { Component, ListComponent, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  ListComponent,
+  Refs,
+  NavigationIcon,
+  listTenants
+} from "sitewhere-ide-common";
 
 import TenantListEntry from "./TenantListEntry.vue";
 import TenantCreateDialog from "./TenantCreateDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { listTenants } from "../../rest/sitewhere-tenants-api";
 import {
   ITenant,
   ITenantSearchCriteria,
@@ -96,10 +100,10 @@ export default class TenantsList extends ListComponent<
 
   // Called to open tenant detail.
   onConfigureTenant(tenant: ITenant) {
+    this.$store.commit("selectedTenant", tenant);
     this.$router.push("/system/tenants/" + tenant.token);
   }
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

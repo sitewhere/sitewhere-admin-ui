@@ -1,40 +1,36 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-text title="URL that points to image" label="Image URL" v-model="imageUrl" icon="image">
+      <sw-form-text
+        title="URL that points to image"
+        label="Image URL"
+        v-model="imageUrl"
+        icon="image"
+      >
         <span v-if="!$v.imageUrl.url && $v.$dirty">Image URL is not valid.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-icon-selector v-model="icon"/>
+      <sw-icon-selector v-model="icon" />
     </v-flex>
     <v-flex xs6>
-      <sw-color-input-field text="Border" v-model="borderColor"/>
+      <sw-color-input-field text="Border" v-model="borderColor" />
     </v-flex>
     <v-flex xs6>
-      <sw-color-input-field text="Background" v-model="backgroundColor"/>
+      <sw-color-input-field text="Background" v-model="backgroundColor" />
     </v-flex>
     <v-flex xs6>
-      <sw-color-input-field text="Foreground" v-model="foregroundColor"/>
+      <sw-color-input-field text="Foreground" v-model="foregroundColor" />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormText from "../common/form/FormText.vue";
-import FormSelect from "../common/form/FormSelect.vue";
-
 import { url } from "vuelidate/lib/validators";
 
 @Component({
-  components: {
-    DialogForm,
-    FormText,
-    FormSelect
-  },
   validations: {
     imageUrl: { url }
   }

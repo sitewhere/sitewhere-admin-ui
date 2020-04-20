@@ -52,14 +52,14 @@ import {
   Refs,
   ListComponent,
   IPageSizes,
-  ITableHeaders
+  ITableHeaders,
+  NavigationIcon,
+  listDeviceGroupElements
 } from "sitewhere-ide-common";
 
 import DeviceGroupElementDeleteDialog from "./DeviceGroupElementDeleteDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { listDeviceGroupElements } from "../../rest/sitewhere-device-groups-api";
-import { NavigationIcon } from "../../libraries/constants";
 import {
   IDeviceGroup,
   IDeviceGroupElement,

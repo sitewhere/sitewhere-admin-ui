@@ -12,7 +12,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <dialog-header>Assign a customer, area, and/or asset associated with '{{ device.token }}'.</dialog-header>
+    <sw-dialog-header>Assign a customer, area, and/or asset associated with '{{ device.token }}'.</sw-dialog-header>
     <template slot="tabs">
       <v-tab key="customer">Customer</v-tab>
       <v-tab key="area">Area</v-tab>
@@ -43,11 +43,10 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
-import DialogHeader from "../common/dialog/DialogHeader.vue";
 import AssignmentCustomerFields from "./AssignmentCustomerFields.vue";
 import AssignmentAreaFields from "./AssignmentAreaFields.vue";
 import AssignmentAssetFields from "./AssignmentAssetFields.vue";
@@ -56,7 +55,6 @@ import { IDeviceAssignment, IDevice } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DialogHeader,
     AssignmentCustomerFields,
     AssignmentAreaFields,
     AssignmentAssetFields

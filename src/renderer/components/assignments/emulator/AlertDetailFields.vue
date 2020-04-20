@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Type"
         title="Type indicator associated with alert."
@@ -9,10 +9,10 @@
         icon="info"
       >
         <span v-if="!$v.type.required && $v.$dirty">Alert type is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
-      <form-select
+      <sw-form-select
         required
         title="Indicator for alert severity"
         :items="alertLevels"
@@ -23,10 +23,10 @@
         icon="info"
       >
         <span v-if="!$v.level.required && $v.$dirty">Alert level is required.</span>
-      </form-select>
+      </sw-form-select>
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Message"
         title="Alert detail message."
@@ -34,26 +34,17 @@
         icon="info"
       >
         <span v-if="!$v.message.required && $v.$dirty">Alert message is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../../common/form/DialogForm.vue";
-import FormText from "../../common/form/FormText.vue";
-import FormSelect from "../../common/form/FormSelect.vue";
-
 import { required } from "vuelidate/lib/validators";
 
 @Component({
-  components: {
-    DialogForm,
-    FormText,
-    FormSelect
-  },
   validations: {
     type: {
       required

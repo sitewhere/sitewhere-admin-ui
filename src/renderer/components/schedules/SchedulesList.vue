@@ -16,13 +16,12 @@
       >
         <template slot="items" slot-scope="props">
           <td width="17%" :title="props.item.name">{{ props.item.name }}</td>
-          <td width="15%" :title="props.item.triggerType">
-            {{ props.item.triggerType }}
-          </td>
+          <td width="15%" :title="props.item.triggerType">{{ props.item.triggerType }}</td>
           <td width="35%" :title="props.item.token">{{ props.item.token }}</td>
-          <td width="18%" :title="formatDate(props.item.createdDate)">
-            {{ formatDate(props.item.createdDate) }}
-          </td>
+          <td
+            width="18%"
+            :title="formatDate(props.item.createdDate)"
+          >{{ formatDate(props.item.createdDate) }}</td>
           <td width="15%">
             <actions-block
               @edit="onEditSchedule(props.item.token)"
@@ -37,8 +36,7 @@
         <div>No schedules have been created for this tenant.</div>
         <div class="mt-2">
           Click
-          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon
-          >in the toolbar to add a schedule.
+          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon>in the toolbar to add a schedule.
         </div>
       </no-results-panel>
     </template>
@@ -59,7 +57,9 @@ import {
   ListComponent,
   IPageSizes,
   ITableHeaders,
-  Refs
+  Refs,
+  NavigationIcon,
+  listSchedules
 } from "sitewhere-ide-common";
 
 import ActionsBlock from "../common/ActionsBlock.vue";
@@ -69,10 +69,8 @@ import ScheduleDeleteDialog from "./ScheduleDeleteDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { NavigationIcon } from "../../libraries/constants";
 import { formatDate } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listSchedules } from "../../rest/sitewhere-schedules-api";
 import {
   ISchedule,
   IScheduleSearchCriteria,

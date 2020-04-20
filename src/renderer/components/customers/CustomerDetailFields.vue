@@ -1,7 +1,7 @@
 <template>
-  <dialog-form>
+  <sw-dialog-form>
     <v-flex xs12>
-      <form-token
+      <sw-form-token
         required
         label="Customer token"
         title="Unique token for referencing customer."
@@ -10,7 +10,7 @@
       />
     </v-flex>
     <v-flex xs12>
-      <form-text
+      <sw-form-text
         required
         label="Name"
         title="Name displayed for customer."
@@ -18,7 +18,7 @@
         icon="info"
       >
         <span v-if="!$v.name.required && $v.$dirty">Customer name is required.</span>
-      </form-text>
+      </sw-form-text>
     </v-flex>
     <v-flex xs12>
       <customer-type-selector v-model="customerTypeToken" title="Type of customer being created.">
@@ -26,7 +26,7 @@
       </customer-type-selector>
     </v-flex>
     <v-flex xs12>
-      <form-text-area
+      <sw-form-text-area
         required
         v-model="description"
         title="Description of customer."
@@ -34,16 +34,12 @@
         icon="info"
       />
     </v-flex>
-  </dialog-form>
+  </sw-dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, DialogSection } from "sitewhere-ide-common";
 
-import DialogForm from "../common/form/DialogForm.vue";
-import FormToken from "../common/form/FormToken.vue";
-import FormText from "../common/form/FormText.vue";
-import FormTextArea from "../common/form/FormTextArea.vue";
 import CustomerTypeSelector from "../customertypes/CustomerTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
@@ -53,10 +49,6 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
   components: {
-    DialogForm,
-    FormToken,
-    FormText,
-    FormTextArea,
     CustomerTypeSelector
   },
   validations: {

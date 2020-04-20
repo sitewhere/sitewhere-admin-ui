@@ -19,10 +19,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Watch,
+  Refs,
+  getTenantScriptContent
+} from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
-import { getTenantScriptContent } from "../../rest/sitewhere-scripting-api";
 import { formatDate } from "sitewhere-ide-common";
 import { IScriptMetadata, IScriptVersion } from "sitewhere-rest-api";
 

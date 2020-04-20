@@ -20,16 +20,8 @@
       <delete-button tooltip="Delete Device" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <device-update-dialog
-        ref="edit"
-        :token="token"
-        @deviceUpdated="onDeviceUpdated"
-      />
-      <device-delete-dialog
-        ref="delete"
-        :token="token"
-        @deleted="onDeviceDeleted"
-      />
+      <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated" />
+      <device-delete-dialog ref="delete" :token="token" @deleted="onDeviceDeleted" />
     </template>
   </sw-detail-page>
 </template>
@@ -39,7 +31,9 @@ import {
   Component,
   DetailComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getDevice
 } from "sitewhere-ide-common";
 
 import DeviceDetailHeader from "./DeviceDetailHeader.vue";
@@ -51,8 +45,6 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { getDevice } from "../../rest/sitewhere-devices-api";
 import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
 
 @Component({

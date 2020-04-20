@@ -68,7 +68,9 @@ import {
   Component,
   DetailComponent,
   INavigationSection,
-  Refs
+  Refs,
+  NavigationIcon,
+  getDeviceAssignment
 } from "sitewhere-ide-common";
 
 import AssignmentListEntry from "../AssignmentListEntry.vue";
@@ -79,8 +81,6 @@ import AlertCreateDialog from "./AlertCreateDialog.vue";
 import MeasurementCreateDialog from "./MeasurementCreateDialog.vue";
 
 import { AxiosPromise } from "axios";
-import { NavigationIcon } from "../../../libraries/constants";
-import { getDeviceAssignment } from "../../../rest/sitewhere-device-assignments-api";
 import { Map as LeafletMap, LatLng } from "leaflet";
 import {
   IDeviceAssignment,

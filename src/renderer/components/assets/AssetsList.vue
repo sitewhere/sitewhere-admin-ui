@@ -10,10 +10,7 @@
   >
     <sw-list-layout>
       <v-flex xs6 v-for="asset in matches" :key="asset.token">
-        <asset-list-entry
-          :asset="asset"
-          @assetOpened="onOpenAsset"
-        ></asset-list-entry>
+        <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"></asset-list-entry>
       </v-flex>
     </sw-list-layout>
     <template slot="noresults">
@@ -21,8 +18,7 @@
         <div>No assets have been created for this tenant.</div>
         <div class="mt-2">
           Click
-          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon
-          >in the toolbar to add an asset.
+          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon>in the toolbar to add an asset.
         </div>
       </no-results-panel>
     </template>
@@ -30,11 +26,7 @@
       <asset-create-dialog ref="add" @assetAdded="refresh" />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
-        icon="plus"
-        tooltip="Add Asset"
-        @action="onAddAsset"
-      />
+      <sw-navigation-action-button icon="plus" tooltip="Add Asset" @action="onAddAsset" />
     </template>
   </sw-list-page>
 </template>
@@ -44,17 +36,17 @@ import {
   Component,
   ListComponent,
   IPageSizes,
-  Refs
+  Refs,
+  NavigationIcon,
+  listAssets
 } from "sitewhere-ide-common";
 
 import AssetListEntry from "./AssetListEntry.vue";
 import AssetCreateDialog from "./AssetCreateDialog.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listAssets } from "../../rest/sitewhere-assets-api";
 import {
   IAsset,
   IAssetSearchCriteria,

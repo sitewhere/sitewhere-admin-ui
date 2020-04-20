@@ -14,14 +14,14 @@ import {
   Component,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createUser
 } from "sitewhere-ide-common";
 
 import UserDialog from "./UserDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IUser, IUserCreateRequest } from "sitewhere-rest-api";
-import { createUser } from "../../rest/sitewhere-users-api";
 
 @Component({
   components: {

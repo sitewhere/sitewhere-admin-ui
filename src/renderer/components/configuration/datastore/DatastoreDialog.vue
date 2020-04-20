@@ -11,17 +11,13 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <dialog-header class="pl-3 pr-3 pt-1">
+    <sw-dialog-header class="pl-3 pr-3 pt-1">
       <v-layout class="pl-2 pr-2 pt-0 pb-0" row wrap>
-        <v-flex xs4
-          ><v-btn-toggle mandatory class="mt-3" v-model="scope">
-            <v-btn flat>
-              Local
-            </v-btn>
-            <v-btn flat>
-              Global
-            </v-btn></v-btn-toggle
-          >
+        <v-flex xs4>
+          <v-btn-toggle mandatory class="mt-3" v-model="scope">
+            <v-btn flat>Local</v-btn>
+            <v-btn flat>Global</v-btn>
+          </v-btn-toggle>
         </v-flex>
         <v-flex xs8 v-if="isLocalScope">
           <v-select
@@ -52,13 +48,9 @@
           />
         </v-flex>
       </v-layout>
-    </dialog-header>
+    </sw-dialog-header>
     <v-divider class="mb-2" />
-    <postgres-95-fields
-      v-if="isPostgres95"
-      :readonly="isGlobalScope"
-      ref="details"
-    />
+    <postgres-95-fields v-if="isPostgres95" :readonly="isGlobalScope" ref="details" />
   </sw-base-dialog>
 </template>
 
@@ -70,13 +62,10 @@ import {
   ITabbedComponent,
   Refs,
   Prop,
-  Watch
+  Watch,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../../libraries/constants";
 
-import DialogHeader from "../../common/dialog/DialogHeader.vue";
-import DialogForm from "../../common/form/DialogForm.vue";
-import FormSelect from "../../common/form/FormSelect.vue";
 import Postgres95Fields from "./postgres95/Postgres95Fields.vue";
 
 import {
@@ -91,7 +80,7 @@ import {
 } from "sitewhere-rest-api";
 
 @Component({
-  components: { DialogHeader, DialogForm, FormSelect, Postgres95Fields }
+  components: { Postgres95Fields }
 })
 export default class DatastoreDialog extends DialogComponent<
   IDatastoreDefinition

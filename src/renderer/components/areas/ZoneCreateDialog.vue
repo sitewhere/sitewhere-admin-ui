@@ -17,14 +17,14 @@ import {
   Prop,
   CreateDialogComponent,
   DialogComponent,
-  Refs
+  Refs,
+  createZone
 } from "sitewhere-ide-common";
 
 import ZoneDialog from "./ZoneDialog.vue";
 
 import { AxiosPromise } from "axios";
 import { IZone, IZoneCreateRequest, IArea } from "sitewhere-rest-api";
-import { createZone } from "../../rest/sitewhere-zones-api";
 
 @Component({
   components: {

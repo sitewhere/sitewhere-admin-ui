@@ -21,8 +21,7 @@
         <div>No asset types have been created for this tenant.</div>
         <div class="mt-2">
           Click
-          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon
-          >in the toolbar to add an asset type.
+          <v-icon small class="pl-1 pr-2">{{ addIcon }}</v-icon>in the toolbar to add an asset type.
         </div>
       </no-results-panel>
     </template>
@@ -36,17 +35,21 @@
 </template>
 
 <script lang="ts">
-import { Component, ListComponent, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  ListComponent,
+  Refs,
+  NavigationIcon,
+  listAssetTypes
+} from "sitewhere-ide-common";
 
 import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
 import AddButton from "../common/navbuttons/AddButton.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
-import { NavigationIcon } from "../../libraries/constants";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { listAssetTypes } from "../../rest/sitewhere-asset-types-api";
 import {
   IAssetType,
   IAssetTypeSearchCriteria,

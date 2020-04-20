@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Refs, listZones } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import MapPanel from "./MapPanel.vue";
@@ -17,7 +17,6 @@ import {
 } from "leaflet";
 
 import { AxiosResponse } from "axios";
-import { listZones } from "../../../rest/sitewhere-zones-api";
 import {
   IZone,
   IZoneSearchCriteria,

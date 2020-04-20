@@ -14,10 +14,8 @@
 </template>
 
 <script lang="ts">
-import { Component } from "sitewhere-ide-common";
+import { Component, NavigationIcon } from "sitewhere-ide-common";
 import Vue from "vue";
-
-import { NavigationIcon } from "../../../libraries/constants";
 
 @Component({})
 export default class ListFilterBar extends Vue {

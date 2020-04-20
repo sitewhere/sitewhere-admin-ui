@@ -5,7 +5,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import {
+  Component,
+  Prop,
+  Refs,
+  listLocationsForAssignment
+} from "sitewhere-ide-common";
 import Vue from "vue";
 
 import {
@@ -27,7 +32,6 @@ import {
   IDeviceLocationSearchResults,
   IDeviceLocation
 } from "sitewhere-rest-api";
-import { listLocationsForAssignment } from "../../../rest/sitewhere-device-assignments-api";
 import { AxiosResponse } from "axios";
 
 @Component({
@@ -63,9 +67,7 @@ export default class AssignmentEmulatorMap extends Vue {
   async refreshLocations(fitAll: boolean = true) {
     let criteria: IDateRangeSearchCriteria = {};
     let format: IDeviceAssignmentResponseFormat = {};
-    let response: AxiosResponse<
-      IDeviceLocationSearchResults
-    > = await listLocationsForAssignment(
+    let response: AxiosResponse<IDeviceLocationSearchResults> = await listLocationsForAssignment(
       this.$store,
       this.assignment.token,
       criteria,

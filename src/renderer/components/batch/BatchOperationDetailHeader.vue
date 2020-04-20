@@ -33,13 +33,15 @@
 </template>
 
 <script lang="ts">
-import { Component, HeaderComponent } from "sitewhere-ide-common";
+import {
+  Component,
+  HeaderComponent,
+  NavigationIcon
+} from "sitewhere-ide-common";
 import { IBatchOperation } from "sitewhere-rest-api";
 
 import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
-
-import { NavigationIcon } from "../../libraries/constants";
 
 @Component({
   components: {

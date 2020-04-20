@@ -53,19 +53,21 @@ import TenantEngineSource from "./TenantEngineSource.vue";
 import UnsavedUpdatesPanel from "./UnsavedUpdatesPanel.vue";
 
 import { AxiosResponse } from "axios";
-import { NavigationIcon } from "../../libraries/constants";
-import { Component, WithRoute, Watch } from "sitewhere-ide-common";
+import {
+  Component,
+  WithRoute,
+  Watch,
+  NavigationIcon,
+  getTenantEngineConfiguration,
+  updateTenantEngineConfiguration,
+  listScriptCategories
+} from "sitewhere-ide-common";
 import {
   ITenantEngineConfiguration,
   ITenant,
   IScriptCategory,
   IMicroserviceSummary
 } from "sitewhere-rest-api";
-import {
-  getTenantEngineConfiguration,
-  updateTenantEngineConfiguration
-} from "../../rest/sitewhere-instance-api";
-import { listScriptCategories } from "../../rest/sitewhere-scripting-api";
 
 @Component({
   components: {

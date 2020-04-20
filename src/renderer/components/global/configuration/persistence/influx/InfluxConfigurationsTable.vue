@@ -5,7 +5,8 @@
     :headers="headers"
     :items="configsAsSortedArray"
     width="50%"
-    ><template v-slot:items="props">
+  >
+    <template v-slot:items="props">
       <td>
         <sw-datatable-link
           @linkClicked="onOpenDatastore(props.item.meta.name)"
@@ -15,9 +16,7 @@
       <td>{{ props.item.meta.connection }}</td>
       <td>{{ props.item.config.databaseName }}</td>
       <td>
-        <sw-content-delete-icon
-          @delete="onDeleteDatastore(props.item.meta.name)"
-        />
+        <sw-content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
       </td>
     </template>
     <template v-slot:datatable-footer>

@@ -33,9 +33,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import DeviceStatusDetailFields from "./DeviceStatusDetailFields.vue";
 import { IDeviceStatus } from "sitewhere-rest-api";

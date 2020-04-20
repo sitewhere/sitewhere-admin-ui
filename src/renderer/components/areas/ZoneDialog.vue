@@ -33,9 +33,9 @@ import {
   DialogComponent,
   DialogSection,
   ITabbedComponent,
-  Refs
+  Refs,
+  NavigationIcon
 } from "sitewhere-ide-common";
-import { NavigationIcon } from "../../libraries/constants";
 
 import ZoneDetailFields from "./ZoneDetailFields.vue";
 import { IZone, IArea } from "sitewhere-rest-api";

@@ -24,14 +24,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "sitewhere-ide-common";
-
-import FormSelect from "../common/form/FormSelect.vue";
-import FormSelectCondensed from "../common/form/FormSelectCondensed.vue";
+import { Component, Prop, listDeviceTypes } from "sitewhere-ide-common";
 
 import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
-import { listDeviceTypes } from "../../rest/sitewhere-device-types-api";
 import {
   IDeviceType,
   IDeviceTypeResponseFormat,
@@ -39,12 +35,7 @@ import {
   IDeviceTypeSearchResults
 } from "sitewhere-rest-api";
 
-@Component({
-  components: {
-    FormSelect,
-    FormSelectCondensed
-  }
-})
+@Component({})
 export default class DeviceTypeSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;
