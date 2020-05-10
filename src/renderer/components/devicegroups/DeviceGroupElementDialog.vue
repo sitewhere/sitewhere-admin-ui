@@ -27,13 +27,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import DeviceGroupElementDetailFields from "./DeviceGroupElementDetailFields.vue";
 import DeviceGroupElementRoleFields from "./DeviceGroupElementRoleFields.vue";
@@ -48,12 +44,9 @@ import { IDeviceGroupElement } from "sitewhere-rest-api";
 export default class DeviceGroupElementDialog extends DialogComponent<
   IDeviceGroupElement
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: DeviceGroupElementDetailFields;
-    roles: DeviceGroupElementRoleFields;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: DeviceGroupElementDetailFields;
+  @Ref() readonly roles!: DeviceGroupElementRoleFields;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -63,41 +56,41 @@ export default class DeviceGroupElementDialog extends DialogComponent<
   // Generate payload from UI.
   generatePayload() {
     let payload: any = {};
-    Object.assign(payload, this.$refs.details.save(), this.$refs.roles.save());
+    Object.assign(payload, this.details.save(), this.roles.save());
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.roles) {
-      this.$refs.roles.reset();
+    if (this.roles) {
+      this.roles.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
   load(payload: IDeviceGroupElement) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.roles) {
-      this.$refs.roles.load(payload);
+    if (this.roles) {
+      this.roles.load(payload);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 
-    if (!this.$refs.roles.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.roles.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
 

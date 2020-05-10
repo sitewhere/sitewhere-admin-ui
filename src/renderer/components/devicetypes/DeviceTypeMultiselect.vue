@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, listDeviceTypes } from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { listDeviceTypes } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Multichooser from "../common/form/Multichooser.vue";

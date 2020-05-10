@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { Component, DialogSection } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { DialogSection } from "sitewhere-ide-components";
 
 import AssetMultiselect from "../assets/AssetMultiselect.vue";
 

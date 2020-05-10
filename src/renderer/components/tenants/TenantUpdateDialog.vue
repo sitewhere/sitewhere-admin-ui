@@ -11,14 +11,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getTenant,
-  updateTenant
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { getTenant, updateTenant } from "sitewhere-ide-common";
+import { EditDialogComponent } from "sitewhere-ide-components";
 
 import TenantDialog from "./TenantDialog.vue";
 
@@ -38,14 +33,11 @@ export default class TenantUpdateDialog extends EditDialogComponent<
   ITenant,
   ITenantCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<ITenant>;
-  }>;
+  @Ref() readonly dialog!: TenantDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<ITenant> {
-    return this.$refs.dialog;
+  getDialog(): TenantDialog {
+    return this.dialog;
   }
 
   /** Load payload */

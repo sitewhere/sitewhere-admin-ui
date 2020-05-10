@@ -26,14 +26,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  ListComponent,
-  NavigationIcon,
-  listAreas,
-  routeTo
-} from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { NavigationIcon, listAreas, routeTo } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import AreaListEntry from "./AreaListEntry.vue";
 import AreaCreateDialog from "./AreaCreateDialog.vue";

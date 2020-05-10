@@ -10,15 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getDeviceCommand,
-  updateDeviceCommand
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { getDeviceCommand, updateDeviceCommand } from "sitewhere-ide-common";
+import { EditDialogComponent } from "sitewhere-ide-components";
 
 import CommandDialog from "./CommandDialog.vue";
 
@@ -39,15 +33,11 @@ export default class CommandUpdateDialog extends EditDialogComponent<
   IDeviceCommandCreateRequest
 > {
   @Prop() readonly deviceTypeToken!: string;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceCommand>;
-  }>;
+  @Ref() readonly dialog!: CommandDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IDeviceCommand> {
-    return this.$refs.dialog;
+  getDialog(): CommandDialog {
+    return this.dialog;
   }
 
   /** Load payload */

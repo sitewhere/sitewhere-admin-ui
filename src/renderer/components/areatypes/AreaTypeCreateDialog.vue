@@ -10,13 +10,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
+import { createAreaType } from "sitewhere-ide-common";
 import {
-  Component,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createAreaType
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import AreaTypeDialog from "./AreaTypeDialog.vue";
 
@@ -32,14 +31,11 @@ export default class AreaTypeCreateDialog extends CreateDialogComponent<
   IAreaType,
   IAreaTypeCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IAreaType>;
-  }>;
+  @Ref() readonly dialog!: AreaTypeDialog;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IAreaType> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

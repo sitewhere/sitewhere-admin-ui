@@ -53,14 +53,14 @@
 </template>
 
 <script lang="ts">
+import { Component } from "vue-property-decorator";
 import {
-  Component,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
   NavigationIcon,
   listBatchOperations
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 

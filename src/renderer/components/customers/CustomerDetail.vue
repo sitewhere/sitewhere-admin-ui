@@ -47,12 +47,14 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   NavigationIcon,
-  getCustomer
+  getCustomer,
+  INavigationSection,
+  routeTo
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import CustomerDetailHeader from "./CustomerDetailHeader.vue";
 import CustomerSubcustomers from "./CustomerSubcustomers.vue";
@@ -68,9 +70,7 @@ import UpButton from "../common/navbuttons/UpButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
-import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
-import { INavigationSection, Refs } from "sitewhere-ide-common";
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
 
 @Component({
@@ -91,15 +91,12 @@ import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class CustomerDetail extends DetailComponent<ICustomer> {
-  parentCustomer: ICustomer | null = null;
+  @Ref() readonly create!: CustomerCreateDialog;
+  @Ref() readonly edit!: CustomerUpdateDialog;
+  @Ref() readonly delete!: CustomerDeleteDialog;
+  @Ref() readonly subcustomers!: CustomerSubcustomers;
 
-  // References.
-  $refs!: Refs<{
-    create: CustomerCreateDialog;
-    edit: CustomerUpdateDialog;
-    delete: CustomerDeleteDialog;
-    subcustomers: CustomerSubcustomers;
-  }>;
+  parentCustomer: ICustomer | null = null;
 
   /** Get record as customer */
   get customer(): ICustomer | null {
@@ -147,18 +144,18 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   // Called to open area edit dialog.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
   // Called to add a subcustomer.
   onAddSubcustomer() {
-    this.$refs.create.open();
+    this.create.open();
   }
 
   // Called after subarea added.
   onSubcustomerAdded() {
-    this.$refs.subcustomers.refresh();
+    this.subcustomers.refresh();
   }
 
   // Called when customer is updated.
@@ -168,7 +165,7 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
 
   onDelete() {
     if (this.token) {
-      this.$refs.delete.open(this.token);
+      this.delete.open(this.token);
     }
   }
 

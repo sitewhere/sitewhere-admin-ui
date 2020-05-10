@@ -16,14 +16,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  DialogComponent,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import ScriptCloneFields from "./ScriptCloneFields.vue";
 import { IScriptVersion } from "sitewhere-rest-api";
@@ -39,12 +34,8 @@ export default class ScriptsDialog extends DialogComponent<IScriptVersion> {
   @Prop() readonly createLabel!: string;
   @Prop() readonly cancelLabel!: string;
   @Prop() readonly identifier!: string;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: ScriptCloneFields;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: ScriptCloneFields;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -54,30 +45,30 @@ export default class ScriptsDialog extends DialogComponent<IScriptVersion> {
   // Generate payload from UI.
   generatePayload() {
     let payload: any = {};
-    Object.assign(payload, this.$refs.details.save());
+    Object.assign(payload, this.details.save());
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
   load(payload: IScriptVersion) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 

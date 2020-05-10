@@ -20,13 +20,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Refs,
-  ListComponent,
-  listDeviceCommands
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { listDeviceCommands } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import CommandPanel from "../commands/CommandPanel.vue";
 import CommandUpdateDialog from "../commands/CommandUpdateDialog.vue";
@@ -56,12 +52,8 @@ export default class DeviceTypeCommands extends ListComponent<
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly deviceTypeToken!: string;
-
-  // References.
-  $refs!: Refs<{
-    edit: CommandUpdateDialog;
-    delete: CommandDeleteDialog;
-  }>;
+  @Ref() readonly edit!: CommandUpdateDialog;
+  @Ref() readonly delete!: CommandDeleteDialog;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceCommandSearchCriteria {
@@ -86,12 +78,12 @@ export default class DeviceTypeCommands extends ListComponent<
 
   /** Edit an existing command */
   onEditCommand(command: IDeviceCommand) {
-    this.$refs.edit.open(command.token);
+    this.edit.open(command.token);
   }
 
   /** Delete an existing command */
   onDeleteCommand(command: IDeviceCommand) {
-    this.$refs.delete.open(command.token);
+    this.delete.open(command.token);
   }
 }
 </script>

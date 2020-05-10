@@ -27,14 +27,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
   listMeasurementsForCustomer
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import { formatDate } from "sitewhere-ide-common";
 import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";

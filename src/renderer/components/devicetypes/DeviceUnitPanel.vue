@@ -80,7 +80,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, NavigationIcon } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { NavigationIcon } from "sitewhere-ide-common";
 
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 import DeviceSlotListEntry from "./DeviceSlotListEntry.vue";

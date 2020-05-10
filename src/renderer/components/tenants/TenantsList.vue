@@ -27,13 +27,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  Refs,
-  NavigationIcon,
-  listTenants
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { NavigationIcon, listTenants } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import TenantListEntry from "./TenantListEntry.vue";
 import TenantCreateDialog from "./TenantCreateDialog.vue";
@@ -58,9 +54,7 @@ export default class TenantsList extends ListComponent<
   ITenantResponseFormat,
   ITenantSearchResults
 > {
-  $refs!: Refs<{
-    add: TenantCreateDialog;
-  }>;
+  @Ref() readonly add!: TenantCreateDialog;
 
   /** Get page icon */
   get icon(): NavigationIcon {
@@ -95,7 +89,7 @@ export default class TenantsList extends ListComponent<
 
   // Called to open dialog.
   onAddTenant() {
-    this.$refs.add.open();
+    this.add.open();
   }
 
   // Called to open tenant detail.

@@ -26,14 +26,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
   listAlertsForAssignment
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import { formatDate } from "sitewhere-ide-common";
 import {

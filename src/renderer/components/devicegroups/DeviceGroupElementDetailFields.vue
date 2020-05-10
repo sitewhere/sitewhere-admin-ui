@@ -34,7 +34,8 @@
 </template>
 
 <script lang="ts">
-import { Component, DialogSection } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { DialogSection } from "sitewhere-ide-components";
 
 import DeviceChooser from "../devices/DeviceChooser.vue";
 import DeviceGroupChooser from "./DeviceGroupChooser.vue";

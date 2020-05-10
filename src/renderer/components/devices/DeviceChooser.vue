@@ -9,7 +9,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, listDevices } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { listDevices } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import DeviceChooserBase from "./DeviceChooserBase.vue";

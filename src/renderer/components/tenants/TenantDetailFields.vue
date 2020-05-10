@@ -81,13 +81,13 @@
 </template>
 
 <script lang="ts">
+import { Component } from "vue-property-decorator";
 import {
-  Component,
-  DialogSection,
   listTenantConfigurationTemplates,
   listTenantDatasetTemplates,
   listUsers
 } from "sitewhere-ide-common";
+import { DialogSection } from "sitewhere-ide-components";
 
 import { required, helpers } from "vuelidate/lib/validators";
 import { handleError } from "sitewhere-ide-common";

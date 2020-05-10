@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
 
 import MetricsConfigurationDialog from "./MetricsConfigurationDialog.vue";
 
@@ -33,11 +33,7 @@ import {
 })
 export default class RedisSection extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    dialog: MetricsConfigurationDialog;
-  }>;
+  @Ref() readonly dialog!: MetricsConfigurationDialog;
 
   /** Get infrastructure information */
   get infrastructure(): IInfrastructureConfiguration | null {
@@ -52,8 +48,8 @@ export default class RedisSection extends Vue {
   /** Called to edit Kafka configuration */
   onEdit(): void {
     if (this.metrics) {
-      this.$refs.dialog.load(this.metrics);
-      this.$refs.dialog.openDialog();
+      this.dialog.load(this.metrics);
+      this.dialog.openDialog();
     }
   }
 

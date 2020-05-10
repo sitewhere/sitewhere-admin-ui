@@ -64,14 +64,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getDeviceAssignment
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import AssignmentListEntry from "../AssignmentListEntry.vue";
 import AssignmentEmulatorMap from "./AssignmentEmulatorMap.vue";
@@ -99,19 +98,16 @@ import {
 export default class AssignmentEmulator extends DetailComponent<
   IDeviceAssignment
 > {
-  // References.
-  $refs!: Refs<{
-    map: AssignmentEmulatorMap;
-    location: LocationCreateDialog;
-    measurement: MeasurementCreateDialog;
-    alert: AlertCreateDialog;
-  }>;
+  @Ref() readonly map!: AssignmentEmulatorMap;
+  @Ref() readonly location!: LocationCreateDialog;
+  @Ref() readonly measurement!: MeasurementCreateDialog;
+  @Ref() readonly alert!: AlertCreateDialog;
 
   addLocationMode: boolean = false;
 
   /** Access the Leaflet map directly */
   getMap(): LeafletMap | null {
-    return this.$refs.map ? this.$refs.map.getMap() : null;
+    return this.map ? this.map.getMap() : null;
   }
 
   /** Record as assignment */
@@ -178,20 +174,20 @@ export default class AssignmentEmulator extends DetailComponent<
       longitude: chosen.lng,
       elevation: 0
     };
-    this.$refs.location.loadAndOpen(location as any);
+    this.location.loadAndOpen(location as any);
   }
 
   /** Called after a location has been added */
   onLocationAdded() {
     let component = this;
     setTimeout(function() {
-      component.$refs.map.refreshLocations(false);
+      component.map.refreshLocations(false);
     }, 500);
   }
 
   /** Called to open alert create dialog */
   onAddAlertClicked() {
-    this.$refs.alert.open();
+    this.alert.open();
   }
 
   /** Called after alert is added */
@@ -199,7 +195,7 @@ export default class AssignmentEmulator extends DetailComponent<
 
   /** Refresh location data */
   onRefreshLocations() {
-    this.$refs.map.refreshLocations();
+    this.map.refreshLocations();
   }
 
   /** Called when map is clicked */
@@ -210,7 +206,7 @@ export default class AssignmentEmulator extends DetailComponent<
 
   /** Called when measurement add is clicked */
   onAddMeasurementClicked() {
-    this.$refs.measurement.open();
+    this.measurement.open();
   }
 
   /** Called after measurement is added */

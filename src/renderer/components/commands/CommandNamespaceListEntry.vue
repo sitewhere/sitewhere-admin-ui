@@ -6,18 +6,14 @@
     <v-list two-line dense>
       <div v-for="(command, index) in namespace.commands" :key="command.token">
         <v-divider v-if="index > 0"></v-divider>
-        <command-panel
-          :command="command"
-          @edit="onEditCommand"
-          @delete="onDeleteCommand"
-        />
+        <command-panel :command="command" @edit="onEditCommand" @delete="onDeleteCommand" />
       </div>
     </v-list>
   </sw-list-entry>
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import CommandPanel from "../commands/CommandPanel.vue";

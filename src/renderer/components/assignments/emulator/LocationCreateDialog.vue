@@ -9,14 +9,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { createLocationForAssignment } from "sitewhere-ide-common";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createLocationForAssignment
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import LocationDialog from "./LocationDialog.vue";
 
@@ -32,20 +30,16 @@ import {
     LocationDialog
   }
 })
-export default class AlertCreateDialog extends CreateDialogComponent<
+export default class LocationCreateDialog extends CreateDialogComponent<
   IDeviceLocation,
   IDeviceLocationCreateRequest
 > {
   @Prop() readonly assignment!: IDeviceAssignment;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceLocation>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IDeviceLocation>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IDeviceLocation> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

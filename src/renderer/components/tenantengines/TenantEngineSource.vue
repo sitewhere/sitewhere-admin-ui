@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
 
 import Vue from "vue";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
@@ -33,11 +33,7 @@ import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 export default class TenantMicroserviceConfiguration extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly configuration!: ITenantEngineConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    editor: any;
-  }>;
+  @Ref() readonly editorReference!: any;
 
   jsonChoice: number = 0;
   aceOptions: {} = {
@@ -59,7 +55,7 @@ export default class TenantMicroserviceConfiguration extends Vue {
 
   /** Access the editor component */
   get editorComponent(): any {
-    return this.$refs.editor.editor;
+    return this.editorReference.editor;
   }
 
   set content(updated: string) {}

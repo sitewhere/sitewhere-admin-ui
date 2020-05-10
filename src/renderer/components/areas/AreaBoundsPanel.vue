@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Refs, DialogSection } from "sitewhere-ide-common";
+import { Component, Watch, Ref } from "vue-property-decorator";
+import { DialogSection } from "sitewhere-ide-components";
 
 import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
 import {
@@ -40,10 +41,7 @@ import { ILocation, IArea, IZoneCreateRequest } from "sitewhere-rest-api";
   }
 })
 export default class AreaBoundsPanel extends DialogSection {
-  // References.
-  $refs!: Refs<{
-    map: MapWithZoneOverlayPanel;
-  }>;
+  @Ref() readonly map!: MapWithZoneOverlayPanel;
 
   showMap: boolean = false;
   areaToken: string | undefined = undefined;
@@ -91,8 +89,8 @@ export default class AreaBoundsPanel extends DialogSection {
   /** Reset section content */
   reset(): void {
     // Refresh zones.
-    if (this.$refs.map) {
-      this.$refs.map.refresh();
+    if (this.map) {
+      this.map.refresh();
     }
 
     // Reset fields.
@@ -123,7 +121,7 @@ export default class AreaBoundsPanel extends DialogSection {
 
   /** Access the Leaflet map directly */
   getMap(): LeafletMap | null {
-    return this.$refs.map ? this.$refs.map.getMap() : null;
+    return this.map ? this.map.getMap() : null;
   }
 
   @Watch("bounds")

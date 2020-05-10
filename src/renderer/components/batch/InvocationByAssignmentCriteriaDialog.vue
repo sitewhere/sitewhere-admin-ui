@@ -31,15 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import BatchCommandDetailFields from "./BatchCommandDetailFields.vue";
 import BatchCommandScheduleFields from "./BatchCommandScheduleFields.vue";
@@ -58,14 +52,10 @@ export default class InvocationByAssignmentCriteriaDialog extends DialogComponen
   IBatchOperation
 > {
   @Prop() readonly filter!: IDeviceAssignmentSearchCriteria;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: BatchCommandDetailFields;
-    schedule: BatchCommandScheduleFields;
-    metadata: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: BatchCommandDetailFields;
+  @Ref() readonly schedule!: BatchCommandScheduleFields;
+  @Ref() readonly metadata!: DialogSection;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -101,50 +91,50 @@ export default class InvocationByAssignmentCriteriaDialog extends DialogComponen
 
     Object.assign(
       payload,
-      this.$refs.details.save(),
-      this.$refs.schedule.save(),
-      this.$refs.metadata.save()
+      this.details.save(),
+      this.schedule.save(),
+      this.metadata.save()
     );
     return payload;
   }
 
   /** Reset dialog contents */
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.schedule) {
-      this.$refs.schedule.reset();
+    if (this.schedule) {
+      this.schedule.reset();
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.reset();
+    if (this.metadata) {
+      this.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   /** Load dialog from a given payload */
   load(payload: IBatchOperation) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.schedule) {
-      this.$refs.schedule.load(payload);
+    if (this.schedule) {
+      this.schedule.load(payload);
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.load(payload);
+    if (this.metadata) {
+      this.metadata.load(payload);
     }
   }
 
   /** Called after create button is clicked */
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 
-    if (!this.$refs.schedule.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.schedule.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
 

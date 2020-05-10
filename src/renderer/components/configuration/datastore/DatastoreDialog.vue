@@ -55,16 +55,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  Prop,
-  Watch,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref, Prop, Watch } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import Postgres95Fields from "./postgres95/Postgres95Fields.vue";
 
@@ -88,17 +81,13 @@ export default class DatastoreDialog extends DialogComponent<
   @Prop() readonly instance!: IInstanceConfiguration;
   @Prop() readonly title!: string;
   @Prop() readonly createLabel!: string;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: DialogSection;
 
   scope: number = 0;
   reference: string | null = null;
   type: string = "postgres95";
   configuration: any;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: DialogSection;
-  }>;
 
   /** List of supported database types */
   databaseTypes: { text: string; value: string }[] = [
@@ -210,7 +199,7 @@ export default class DatastoreDialog extends DialogComponent<
   /** Generate configuration from detail panel */
   generateConfiguration(): any {
     let configuration: any = {};
-    Object.assign(configuration, this.$refs.details.save());
+    Object.assign(configuration, this.details.save());
     return configuration;
   }
 
@@ -228,10 +217,10 @@ export default class DatastoreDialog extends DialogComponent<
 
   /** Reset dialog content to default */
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   /** Load data from an existing configuration */
@@ -249,15 +238,15 @@ export default class DatastoreDialog extends DialogComponent<
   /** Reload details panel based on updated configuration */
   reloadDetails() {
     let config: any = this.getDatastoreConfiguration();
-    if (this.$refs.details && config) {
-      this.$refs.details.load(config);
+    if (this.details && config) {
+      this.details.load(config);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 

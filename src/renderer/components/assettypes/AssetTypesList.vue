@@ -35,13 +35,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  Refs,
-  NavigationIcon,
-  listAssetTypes
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { NavigationIcon, listAssetTypes } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
@@ -71,9 +67,7 @@ export default class AssetTypesList extends ListComponent<
   IAssetTypeResponseFormat,
   IAssetTypeSearchResults
 > {
-  $refs!: Refs<{
-    add: AssetTypeCreateDialog;
-  }>;
+  @Ref() readonly add!: AssetTypeCreateDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -109,7 +103,7 @@ export default class AssetTypesList extends ListComponent<
 
   // Called to open dialog.
   onAddAssetType() {
-    this.$refs.add.open();
+    this.add.open();
   }
 }
 </script>

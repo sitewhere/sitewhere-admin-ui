@@ -16,13 +16,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Refs,
-  Prop,
-  DialogComponent,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref, Prop } from "vue-property-decorator";
+import { NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import RedisConfigurationFields from "./RedisConfigurationFields.vue";
 
@@ -35,12 +31,8 @@ export default class RedisConfigurationDialog extends DialogComponent<
   IRedisConfiguration
 > {
   @Prop() readonly redis!: IRedisConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    dialog: any;
-    details: RedisConfigurationFields;
-  }>;
+  @Ref() readonly dialog!: any;
+  @Ref() readonly details!: RedisConfigurationFields;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -49,27 +41,27 @@ export default class RedisConfigurationDialog extends DialogComponent<
 
   /** Generate payload from UI data */
   generatePayload(): IRedisConfiguration {
-    return Object.assign({}, this.redis, this.$refs.details.save());
+    return Object.assign({}, this.redis, this.details.save());
   }
 
   /** Reset dialog content to default */
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
   }
 
   /** Load data from an existing configuration */
   load(payload: IRedisConfiguration) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
   }
 
   /** Called after update button is clicked */
   onUpdateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
+    if (!this.details.validate()) {
       return;
     }
 

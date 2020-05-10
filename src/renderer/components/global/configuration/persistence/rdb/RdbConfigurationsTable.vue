@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Ref, Watch } from "vue-property-decorator";
 
 import RdbDatastoreCreateDialog from "./RdbDatastoreCreateDialog.vue";
 import RdbDatastoreUpdateDialog from "./RdbDatastoreUpdateDialog.vue";
@@ -64,12 +64,8 @@ import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
 })
 export default class RdbConfigurationsTable extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    create: RdbDatastoreCreateDialog;
-    update: RdbDatastoreUpdateDialog;
-  }>;
+  @Ref() readonly create!: RdbDatastoreCreateDialog;
+  @Ref() readonly update!: RdbDatastoreUpdateDialog;
 
   /** RDB configurations in format for display */
   rdbConfigsAsSortedArray: any[] = [];
@@ -129,7 +125,7 @@ export default class RdbConfigurationsTable extends Vue {
 
   /** Add a new RDB datastore */
   onAddDatastore() {
-    this.$refs.create.openDialog();
+    this.create.openDialog();
   }
 
   /** Open an existing RDB datastore */
@@ -138,11 +134,11 @@ export default class RdbConfigurationsTable extends Vue {
     let configs: IRdbConfigurationMap | null = this.rdbConfigurations;
     if (configs) {
       let config: IRdbConfiguration = configs[name];
-      this.$refs.update.load({
+      this.update.load({
         type: config.type,
         configuration: config.configuration
       });
-      this.$refs.update.openDialog();
+      this.update.openDialog();
     }
   }
 

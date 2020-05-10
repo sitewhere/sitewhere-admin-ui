@@ -10,14 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getDevice,
-  updateDevice
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { getDevice, updateDevice } from "sitewhere-ide-common";
+import { EditDialogComponent } from "sitewhere-ide-components";
 
 import DeviceDialog from "./DeviceDialog.vue";
 
@@ -37,14 +32,11 @@ export default class DeviceUpdateDialog extends EditDialogComponent<
   IDevice,
   IDeviceCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDevice>;
-  }>;
+  @Ref() readonly dialog!: DeviceDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IDevice> {
-    return this.$refs.dialog;
+  getDialog(): DeviceDialog {
+    return this.dialog;
   }
 
   /** Load payload */

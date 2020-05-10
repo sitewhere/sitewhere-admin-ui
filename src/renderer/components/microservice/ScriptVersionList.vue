@@ -1,20 +1,17 @@
 <template>
   <v-list dense two-line>
     <template v-for="version in versions">
-      <v-list-tile
-        v-bind:key="version.versionId"
-        @click="onVersionClicked(version)"
-      >
+      <v-list-tile v-bind:key="version.versionId" @click="onVersionClicked(version)">
         <v-list-tile-content>
           <v-list-tile-title class="subheading">
-            <v-icon :color="versionColor(version)">{{
+            <v-icon :color="versionColor(version)">
+              {{
               versionIcon(version)
-            }}</v-icon>
+              }}
+            </v-icon>
             {{ formatDate(version.createdDate) }}
           </v-list-tile-title>
-          <v-list-tile-sub-title
-            v-html="version.comment"
-          ></v-list-tile-sub-title>
+          <v-list-tile-sub-title v-html="version.comment"></v-list-tile-sub-title>
         </v-list-tile-content>
       </v-list-tile>
       <v-divider v-bind:key="'div_' + version.versionId"></v-divider>
@@ -23,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
 import { IScriptMetadata, IScriptVersion } from "sitewhere-rest-api";
 import { formatDate } from "sitewhere-ide-common";
 import Vue from "vue";

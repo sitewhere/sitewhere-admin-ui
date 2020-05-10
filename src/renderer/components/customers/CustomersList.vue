@@ -31,13 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  Refs,
-  NavigationIcon,
-  listCustomers
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { NavigationIcon, listCustomers } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";
@@ -67,9 +63,7 @@ export default class CustomersList extends ListComponent<
   ICustomerResponseFormat,
   ICustomerSearchResults
 > {
-  $refs!: Refs<{
-    add: CustomerCreateDialog;
-  }>;
+  @Ref() readonly add!: CustomerCreateDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -106,7 +100,7 @@ export default class CustomersList extends ListComponent<
 
   // Called to open dialog.
   onAddCustomer() {
-    this.$refs.add.open();
+    this.add.open();
   }
 
   // Called when a new customer is added.

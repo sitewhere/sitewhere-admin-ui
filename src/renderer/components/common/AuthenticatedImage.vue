@@ -4,7 +4,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, imageAuthGet } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { imageAuthGet } from "sitewhere-ide-common";
 
 @Component({})
 export default class AuthenticatedImage extends Vue {

@@ -10,13 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createTenant
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { createTenant } from "sitewhere-ide-common";
+import { CreateDialogComponent } from "sitewhere-ide-components";
 
 import TenantDialog from "./TenantDialog.vue";
 
@@ -32,14 +28,11 @@ export default class TenantCreateDialog extends CreateDialogComponent<
   ITenant,
   ITenantCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<ITenant>;
-  }>;
+  @Ref() readonly dialog!: TenantDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<ITenant> {
-    return this.$refs.dialog;
+  getDialog(): TenantDialog {
+    return this.dialog;
   }
 
   /** Called on payload commit */

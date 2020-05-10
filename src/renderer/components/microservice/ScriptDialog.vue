@@ -31,14 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  DialogComponent,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import ScriptDetailFields from "./ScriptDetailFields.vue";
 import ScriptContentFields from "./ScriptContentFields.vue";
@@ -59,15 +54,11 @@ export default class ScriptDialog extends DialogComponent<
   @Prop() readonly cancelLabel!: string;
   @Prop() readonly identifier!: string;
   @Prop() readonly scriptCategories!: IScriptCategory[];
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: ScriptDetailFields;
+  @Ref() readonly content!: ScriptContentFields;
 
   category: string | null = null;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: ScriptDetailFields;
-    content: ScriptContentFields;
-  }>;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -77,33 +68,29 @@ export default class ScriptDialog extends DialogComponent<
   // Generate payload from UI.
   generatePayload() {
     let payload: any = {};
-    Object.assign(
-      payload,
-      this.$refs.details.save(),
-      this.$refs.content.save()
-    );
+    Object.assign(payload, this.details.save(), this.content.save());
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.content) {
-      this.$refs.content.reset();
+    if (this.content) {
+      this.content.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
   load(payload: IScriptCreateRequest) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.content) {
-      this.$refs.content.load(payload);
+    if (this.content) {
+      this.content.load(payload);
     }
   }
 
@@ -114,13 +101,13 @@ export default class ScriptDialog extends DialogComponent<
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 
-    if (!this.$refs.content.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.content.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
 

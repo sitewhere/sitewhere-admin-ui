@@ -132,7 +132,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Refs, Watch, getJwt, getUser } from "sitewhere-ide-common";
+import { Component, Ref, Watch } from "vue-property-decorator";
+import { getJwt, getUser } from "sitewhere-ide-common";
 
 import SocialButton from "./SocialButton.vue";
 import RemotesDropdown from "./login/RemotesDropdown.vue";
@@ -184,6 +185,8 @@ const twitterTitle: string = "Follow SiteWhere on Twitter";
   }
 })
 export default class Login extends Vue {
+  @Ref() readonly remotesDialog!: RemotesDialog;
+
   noserver: boolean = false;
   error: string | null = null;
   username: string = "";
@@ -199,11 +202,6 @@ export default class Login extends Vue {
   twitterSvgContent: string = twitterSvgContent;
   twitterTitle: string = twitterTitle;
   connection: IRemoteConnection | null = null;
-
-  // References.
-  $refs!: Refs<{
-    remotes: RemotesDialog;
-  }>;
 
   created() {
     this.getOrCreateSiteWhereSettings();
@@ -280,14 +278,14 @@ export default class Login extends Vue {
 
   /** Open dialog to edit remotes */
   onEditRemotes() {
-    this.$refs.remotes.load(this.remotes);
-    this.$refs.remotes.openDialog();
+    this.remotesDialog.load(this.remotes);
+    this.remotesDialog.openDialog();
   }
 
   /** Called after remotes are updated */
   onRemotesUpdated(updated: IRemotes) {
     this.$store.commit("remotes", updated);
-    this.$refs.remotes.closeDialog();
+    this.remotesDialog.closeDialog();
   }
 
   /** Called when connection selection is updated */

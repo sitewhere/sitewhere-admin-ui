@@ -24,7 +24,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, listAreas } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { listAreas } from "sitewhere-ide-common";
 
 import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";

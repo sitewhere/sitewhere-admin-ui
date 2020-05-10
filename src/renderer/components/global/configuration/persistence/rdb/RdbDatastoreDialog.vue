@@ -31,15 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  Prop,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref, Prop } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import Postgres95Fields from "../../../../configuration/datastore/postgres95/Postgres95Fields.vue";
 
@@ -58,15 +52,11 @@ export default class RdbDatastoreDialog extends DialogComponent<
   @Prop() readonly instance!: IInstanceConfiguration;
   @Prop() readonly title!: string;
   @Prop() readonly createLabel!: string;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: DialogSection;
 
   type: string = "postgres95";
   configuration: any;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: DialogSection;
-  }>;
 
   /** List of supported database types */
   databaseTypes: { text: string; value: string }[] = [
@@ -90,20 +80,16 @@ export default class RdbDatastoreDialog extends DialogComponent<
   generatePayload(): IDatastoreDefinitionLocal {
     return {
       type: this.type,
-      configuration: Object.assign(
-        {},
-        this.configuration,
-        this.$refs.details.save()
-      )
+      configuration: Object.assign({}, this.configuration, this.details.save())
     };
   }
 
   /** Reset dialog content to default */
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   /** Load data from an existing configuration */
@@ -112,15 +98,15 @@ export default class RdbDatastoreDialog extends DialogComponent<
     this.type = (payload as IDatastoreDefinitionLocal).type || "postgres95";
     this.configuration =
       (payload as IDatastoreDefinitionLocal).configuration || {};
-    if (this.$refs.details) {
-      this.$refs.details.load(this.configuration);
+    if (this.details) {
+      this.details.load(this.configuration);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 

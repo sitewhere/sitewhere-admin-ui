@@ -11,15 +11,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getZone,
-  updateZone
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { getZone, updateZone } from "sitewhere-ide-common";
+import { EditDialogComponent, DialogComponent } from "sitewhere-ide-components";
 
 import ZoneDialog from "./ZoneDialog.vue";
 
@@ -36,15 +30,11 @@ export default class ZoneUpdateDialog extends EditDialogComponent<
   IZoneCreateRequest
 > {
   @Prop() readonly area!: IArea;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IZone>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IZone>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IZone> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Load payload */

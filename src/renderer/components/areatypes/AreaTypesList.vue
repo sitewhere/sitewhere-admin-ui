@@ -31,13 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  Refs,
-  NavigationIcon,
-  listAreaTypes
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { NavigationIcon, listAreaTypes } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import { ListPage, ListLayout } from "sitewhere-ide-components";
 import AreaTypeListEntry from "./AreaTypeListEntry.vue";
@@ -70,9 +66,7 @@ export default class AreaTypesList extends ListComponent<
   IAreaTypeResponseFormat,
   IAreaTypeSearchResults
 > {
-  $refs!: Refs<{
-    add: AreaTypeCreateDialog;
-  }>;
+  @Ref() readonly add!: AreaTypeCreateDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -109,7 +103,7 @@ export default class AreaTypesList extends ListComponent<
 
   // Called to open dialog.
   onAddAreaType() {
-    this.$refs.add.open();
+    this.add.open();
   }
 
   // Called when a new area type is added.

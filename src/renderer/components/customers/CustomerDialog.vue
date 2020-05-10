@@ -31,14 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import CustomerDetailFields from "./CustomerDetailFields.vue";
 import BrandingPanel from "../common/BrandingPanel.vue";
@@ -51,13 +46,10 @@ import { ICustomer } from "sitewhere-rest-api";
   }
 })
 export default class CustomerDialog extends DialogComponent<ICustomer> {
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: DialogSection;
-    branding: DialogSection;
-    metadata: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: CustomerDetailFields;
+  @Ref() readonly branding!: BrandingPanel;
+  @Ref() readonly metadata!: DialogSection;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -69,50 +61,50 @@ export default class CustomerDialog extends DialogComponent<ICustomer> {
     let payload: any = {};
     Object.assign(
       payload,
-      this.$refs.details.save(),
-      this.$refs.branding.save(),
-      this.$refs.metadata.save()
+      this.details.save(),
+      this.branding.save(),
+      this.metadata.save()
     );
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.branding) {
-      this.$refs.branding.reset();
+    if (this.branding) {
+      this.branding.reset();
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.reset();
+    if (this.metadata) {
+      this.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
   load(payload: ICustomer) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.branding) {
-      this.$refs.branding.load(payload);
+    if (this.branding) {
+      this.branding.load(payload);
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.load(payload);
+    if (this.metadata) {
+      this.metadata.load(payload);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 
-    if (!this.$refs.branding.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.branding.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
 

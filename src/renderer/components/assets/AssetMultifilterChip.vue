@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { Component, getAsset } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { getAsset } from "sitewhere-ide-common";
 
 import FilterChip from "../common/search/FilterChip.vue";
 

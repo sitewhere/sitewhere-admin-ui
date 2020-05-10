@@ -35,7 +35,8 @@ import Vue from "vue";
 
 import { handleError, getJwt, NavigationIcon } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";
-import { Component, IAction, INavigationSection } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { IAction, INavigationSection } from "sitewhere-ide-common";
 
 import Copyright from "./Copyright.vue";
 import Notifications from "./common/Notifications.vue";

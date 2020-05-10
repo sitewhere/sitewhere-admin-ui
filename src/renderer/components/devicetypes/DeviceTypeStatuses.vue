@@ -34,13 +34,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Refs,
-  ListComponent,
-  listDeviceStatuses
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { listDeviceStatuses } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import DeviceStatusListEntry from "../statuses/DeviceStatusListEntry.vue";
 import DeviceStatusUpdateDialog from "../statuses/DeviceStatusUpdateDialog.vue";
@@ -70,12 +66,8 @@ export default class DeviceTypeStatuses extends ListComponent<
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly deviceTypeToken!: string;
-
-  // References.
-  $refs!: Refs<{
-    edit: DeviceStatusUpdateDialog;
-    delete: DeviceStatusDeleteDialog;
-  }>;
+  @Ref() readonly edit!: DeviceStatusUpdateDialog;
+  @Ref() readonly delete!: DeviceStatusDeleteDialog;
 
   /** Build search criteria for list */
   buildSearchCriteria(): IDeviceStatusSearchCriteria {
@@ -100,12 +92,12 @@ export default class DeviceTypeStatuses extends ListComponent<
 
   /** Open dialog to edit status */
   onEditStatus(status: IDeviceStatus) {
-    this.$refs.edit.open(status.token);
+    this.edit.open(status.token);
   }
 
   /** Open dialog to delete status */
   onDeleteStatus(status: IDeviceStatus) {
-    this.$refs.delete.open(status.token);
+    this.delete.open(status.token);
   }
 }
 </script>

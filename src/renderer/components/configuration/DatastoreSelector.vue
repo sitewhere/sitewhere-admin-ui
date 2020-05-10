@@ -3,8 +3,7 @@
     <v-card flat v-if="datastore">
       <v-card flat class="mb-3" v-if="datastoreReference">
         <v-icon small class="mr-2">fa-globe</v-icon>Configured globally as
-        <a style="color: #2255cc;">{{ datastoreReference }}</a
-        >.
+        <a style="color: #2255cc;">{{ datastoreReference }}</a>.
       </v-card>
       <postgres-95-summary v-if="isPostgres95" :configuration="configuration" />
       <sw-content-link
@@ -13,11 +12,7 @@
         text="Update datastore settings"
         @linkClicked="onUpdateDatastore"
       />
-      <sw-content-link
-        icon="fa-trash"
-        text="Unset datastore"
-        @linkClicked="onUnsetDatastore"
-      />
+      <sw-content-link icon="fa-trash" text="Unset datastore" @linkClicked="onUnsetDatastore" />
     </v-card>
     <v-card flat v-else>
       <sw-content-warning
@@ -31,22 +26,14 @@
         @linkClicked="onAddDatastore"
       />
     </v-card>
-    <datastore-create-dialog
-      :instance="instance"
-      ref="create"
-      @create="onDatastoreCreate"
-    />
-    <datastore-update-dialog
-      :instance="instance"
-      ref="update"
-      @update="onDatastoreUpdate"
-    />
+    <datastore-create-dialog :instance="instance" ref="create" @create="onDatastoreCreate" />
+    <datastore-update-dialog :instance="instance" ref="update" @update="onDatastoreUpdate" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
 import {
   IDatastoreDefinition,
   IDatastoreDefinitionLocal,
@@ -72,12 +59,8 @@ import Postgres95Summary from "./datastore/postgres95/Postgres95Summary.vue";
 export default class DatastoreSelector extends Vue {
   @Prop() readonly datastore!: IDatastoreDefinition;
   @Prop() readonly instance!: IInstanceConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    create: DatastoreCreateDialog;
-    update: DatastoreUpdateDialog;
-  }>;
+  @Ref() readonly create!: DatastoreCreateDialog;
+  @Ref() readonly update!: DatastoreUpdateDialog;
 
   /** Global RDB configurations */
   get rdbConfigurations(): IRdbConfigurationMap | null {
@@ -143,7 +126,7 @@ export default class DatastoreSelector extends Vue {
 
   /** Add datastore */
   onAddDatastore() {
-    this.$refs.create.openDialog();
+    this.create.openDialog();
   }
 
   /** Called to create datastore based on UI data */
@@ -153,7 +136,7 @@ export default class DatastoreSelector extends Vue {
 
   /** Update datastore */
   onUpdateDatastore() {
-    this.$refs.update.openDialog(this.datastore);
+    this.update.openDialog(this.datastore);
   }
 
   /** Called to update datastore based on UI data */

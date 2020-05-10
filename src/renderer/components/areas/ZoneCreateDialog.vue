@@ -12,14 +12,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { createZone } from "sitewhere-ide-common";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createZone
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import ZoneDialog from "./ZoneDialog.vue";
 
@@ -36,15 +34,11 @@ export default class ZoneCreateDialog extends CreateDialogComponent<
   IZoneCreateRequest
 > {
   @Prop() readonly area!: IArea;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IZone>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IZone>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IZone> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

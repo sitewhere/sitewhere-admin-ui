@@ -21,12 +21,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  ListComponent,
-  listAssets
-} from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { listAssets } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import AssetListEntry from "../assets/AssetListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";

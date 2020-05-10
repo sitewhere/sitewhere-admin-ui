@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Refs, listZones } from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { listZones } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import MapPanel from "./MapPanel.vue";
@@ -39,11 +40,7 @@ export default class MapWithZoneOverlayPanel extends Vue {
   })
   readonly ignoreZoneTokens!: string[];
   @Prop({ default: false }) readonly zoomToZones!: boolean;
-
-  // References.
-  $refs!: Refs<{
-    map: MapPanel;
-  }>;
+  @Ref() readonly map!: MapPanel;
 
   showMap: boolean = false;
   zonesGroup: FeatureGroup | null = null;
@@ -61,7 +58,7 @@ export default class MapWithZoneOverlayPanel extends Vue {
 
   /** Access the Leaflet map directly */
   getMap(): LeafletMap | null {
-    return this.$refs.map ? this.$refs.map.getMap() : null;
+    return this.map ? this.map.getMap() : null;
   }
 
   /** Refresh content */

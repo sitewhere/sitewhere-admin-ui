@@ -46,16 +46,14 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
-  Refs,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
   NavigationIcon,
   listDeviceGroupElements
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import DeviceGroupElementDeleteDialog from "./DeviceGroupElementDeleteDialog.vue";
 
@@ -82,12 +80,8 @@ export default class DeviceGroupElements extends ListComponent<
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly deviceGroup!: IDeviceGroup;
-
-  // References.
-  $refs!: Refs<{
-    list: DeviceGroupElements;
-    delete: DeviceGroupElementDeleteDialog;
-  }>;
+  @Ref() readonly list!: DeviceGroupElements;
+  @Ref() readonly delete!: DeviceGroupElementDeleteDialog;
 
   deviceIcon: NavigationIcon = NavigationIcon.Device;
   groupIcon: NavigationIcon = NavigationIcon.DeviceGroup;
@@ -167,7 +161,7 @@ export default class DeviceGroupElements extends ListComponent<
 
   /** Show dialog for deleting element */
   showDeleteDialog(element: IDeviceGroupElement) {
-    this.$refs.delete.open(element.id);
+    this.delete.open(element.id);
   }
 }
 </script>

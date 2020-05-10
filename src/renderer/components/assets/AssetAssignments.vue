@@ -19,12 +19,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  ListComponent,
-  listDeviceAssignments
-} from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { listDeviceAssignments } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 

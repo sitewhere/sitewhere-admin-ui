@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Refs, Prop } from "sitewhere-ide-common";
+import { Component, Ref, Prop } from "vue-property-decorator";
 
 import RdbDatastoreDialog from "./RdbDatastoreDialog.vue";
 
@@ -24,25 +24,21 @@ import { IInstanceConfiguration } from "sitewhere-rest-api";
 })
 export default class RdbDatastoreUpdateDialog extends Vue {
   @Prop() readonly instance!: IInstanceConfiguration;
+  @Ref() readonly dialog!: RdbDatastoreDialog;
 
   type: string = "postgres95";
   configuration: any;
-
-  // References.
-  $refs!: Refs<{
-    dialog: RdbDatastoreDialog;
-  }>;
 
   /** Load dialog with data */
   load(payload: IDatastoreDefinition) {
     this.type = (payload as IDatastoreDefinitionLocal).type;
     this.configuration = (payload as IDatastoreDefinitionLocal).configuration;
-    this.$refs.dialog.load(payload);
+    this.dialog.load(payload);
   }
 
   /** Open the dialog */
   openDialog(): void {
-    this.$refs.dialog.openDialog();
+    this.dialog.openDialog();
   }
 
   /** Called when update button is clicked */
@@ -50,7 +46,7 @@ export default class RdbDatastoreUpdateDialog extends Vue {
     this.type = payload.type;
     this.configuration = payload.configuration;
     this.$emit("updated", payload);
-    this.$refs.dialog.dialogVisible = false;
+    this.dialog.dialogVisible = false;
   }
 }
 </script>

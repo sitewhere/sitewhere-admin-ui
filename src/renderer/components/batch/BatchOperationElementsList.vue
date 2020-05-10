@@ -36,15 +36,14 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
   NavigationIcon,
   listBatchOperationElements
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { formatDate, routeTo } from "sitewhere-ide-common";

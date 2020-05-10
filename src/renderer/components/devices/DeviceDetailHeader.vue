@@ -29,8 +29,9 @@
 </template>
 
 <script lang="ts">
-import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
 import { IDevice, IDeviceType } from "sitewhere-rest-api";
+import { HeaderComponent } from "sitewhere-ide-components";
 
 import ClipboardCopyField from "../common/form/ClipboardCopyField.vue";
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";

@@ -32,15 +32,14 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getTenant,
   getInstanceMicroservices
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import TenantDetailHeader from "./TenantDetailHeader.vue";
 import TenantUpdateDialog from "./TenantUpdateDialog.vue";
@@ -63,13 +62,10 @@ import {
   }
 })
 export default class TenantDetail extends DetailComponent<ITenant> {
-  microservices: IMicroserviceSummary[] = [];
+  @Ref() readonly edit!: TenantUpdateDialog;
+  @Ref() readonly delete!: TenantDeleteDialog;
 
-  // References.
-  $refs!: Refs<{
-    edit: TenantUpdateDialog;
-    delete: TenantDeleteDialog;
-  }>;
+  microservices: IMicroserviceSummary[] = [];
 
   get tenant(): ITenant | null {
     return this.record;
@@ -125,7 +121,7 @@ export default class TenantDetail extends DetailComponent<ITenant> {
   // Called to edit tenant.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
@@ -137,7 +133,7 @@ export default class TenantDetail extends DetailComponent<ITenant> {
   // Called to delete tenant.
   onDelete() {
     if (this.token) {
-      this.$refs.delete.open(this.token);
+      this.delete.open(this.token);
     }
   }
 

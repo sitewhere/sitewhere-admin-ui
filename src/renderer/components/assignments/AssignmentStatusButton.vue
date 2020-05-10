@@ -44,13 +44,8 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Refs,
-  releaseAssignment,
-  missingAssignment
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { releaseAssignment, missingAssignment } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import { AxiosResponse } from "axios";
@@ -59,11 +54,7 @@ import { IDeviceAssignment } from "sitewhere-rest-api";
 @Component({})
 export default class AssignmentStatusButton extends Vue {
   @Prop() readonly assignment!: IDeviceAssignment;
-
-  // References.
-  $refs!: Refs<{
-    dialog: any;
-  }>;
+  @Ref() readonly dialog!: any;
 
   action: () => any = function() {};
   statusActiveItems: { text: string; action: () => any }[] = [
@@ -86,7 +77,7 @@ export default class AssignmentStatusButton extends Vue {
   /** Store the action and open confirmation */
   confirmFirst(action: () => any) {
     this.action = action;
-    this.$refs.dialog.open();
+    this.dialog.open();
   }
 
   /** Executes action after confirmation */

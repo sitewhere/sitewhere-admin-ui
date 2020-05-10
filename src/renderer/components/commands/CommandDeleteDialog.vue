@@ -12,13 +12,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DeleteDialogComponent,
-  Prop,
-  getDeviceCommand,
-  deleteDeviceCommand
-} from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { getDeviceCommand, deleteDeviceCommand } from "sitewhere-ide-common";
+import { DeleteDialogComponent } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import {

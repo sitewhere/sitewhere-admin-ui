@@ -53,10 +53,9 @@ import TenantEngineSource from "./TenantEngineSource.vue";
 import UnsavedUpdatesPanel from "./UnsavedUpdatesPanel.vue";
 
 import { AxiosResponse } from "axios";
+import { Component, Watch } from "vue-property-decorator";
 import {
-  Component,
   WithRoute,
-  Watch,
   NavigationIcon,
   getTenantEngineConfiguration,
   updateTenantEngineConfiguration,

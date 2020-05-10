@@ -1,9 +1,5 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="assignment"
-    :imageUrl="imageUrl"
-    height="220px"
-  >
+  <sw-navigation-header-panel v-if="assignment" :imageUrl="imageUrl" height="220px">
     <template slot="left">
       <assignment-detail-header-image :assignment="assignment" />
     </template>
@@ -33,10 +29,7 @@
           <span>{{ formatDate(assignment.releasedDate) }}</span>
         </sw-header-field>
         <sw-header-field label="Status">
-          <assignment-status-button
-            :assignment="assignment"
-            @updated="onStatusUpdated"
-          />
+          <assignment-status-button :assignment="assignment" @updated="onStatusUpdated" />
         </sw-header-field>
       </sw-navigation-header-fields>
     </template>
@@ -47,7 +40,8 @@
 </template>
 
 <script lang="ts">
-import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { HeaderComponent } from "sitewhere-ide-components";
 
 import { formatDate } from "sitewhere-ide-common";
 import { IDeviceAssignment } from "sitewhere-rest-api";

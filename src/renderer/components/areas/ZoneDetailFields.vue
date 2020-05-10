@@ -62,13 +62,8 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogSection,
-  Prop,
-  Watch,
-  Refs
-} from "sitewhere-ide-common";
+import { Component, Prop, Watch, Ref } from "vue-property-decorator";
+import { DialogSection } from "sitewhere-ide-components";
 
 import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
 import {
@@ -123,11 +118,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 export default class ZoneDetailFields extends DialogSection {
   @Prop() readonly area!: IArea;
   @Prop() readonly mapVisible!: boolean;
-
-  // References.
-  $refs!: Refs<{
-    map: MapWithZoneOverlayPanel;
-  }>;
+  @Ref() readonly map!: MapWithZoneOverlayPanel;
 
   token: string | null = null;
   name: string | null = null;
@@ -188,14 +179,14 @@ export default class ZoneDetailFields extends DialogSection {
 
   /** Access the Leaflet map directly */
   getMap(): LeafletMap | null {
-    return this.$refs.map ? this.$refs.map.getMap() : null;
+    return this.map ? this.map.getMap() : null;
   }
 
   /** Reset section content */
   reset(): void {
     // Refresh zones.
-    if (this.$refs.map) {
-      this.$refs.map.refresh();
+    if (this.map) {
+      this.map.refresh();
     }
 
     // Reset fields.

@@ -1,13 +1,12 @@
 <template>
   <sw-content-section icon="fa-cogs" title="Apache Kafka Configuration">
-    <template slot="overlay"><div class="logo"/></template>
+    <template slot="overlay">
+      <div class="logo" />
+    </template>
     <v-card v-if="kafka" flat>
       <sw-content-field name="hostname" :value="kafka.hostname" />
       <sw-content-field :alt="true" name="port" :value="kafka.port" />
-      <sw-content-field
-        name="default topic partitions"
-        :value="kafka.defaultTopicPartitions"
-      />
+      <sw-content-field name="default topic partitions" :value="kafka.defaultTopicPartitions" />
       <sw-content-field
         :alt="true"
         name="default topic relication factor"
@@ -20,17 +19,13 @@
         @linkClicked="onEdit"
       />
     </v-card>
-    <kafka-configuration-dialog
-      ref="dialog"
-      :kafka="kafka"
-      @payload="onKafkaUpdated"
-    />
+    <kafka-configuration-dialog ref="dialog" :kafka="kafka" @payload="onKafkaUpdated" />
   </sw-content-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
 
 import KafkaConfigurationDialog from "./KafkaConfigurationDialog.vue";
 
@@ -47,11 +42,7 @@ import {
 })
 export default class KafkaSection extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    dialog: KafkaConfigurationDialog;
-  }>;
+  @Ref() readonly dialog!: KafkaConfigurationDialog;
 
   /** Get infrastructure information */
   get infrastructure(): IInfrastructureConfiguration | null {
@@ -66,8 +57,8 @@ export default class KafkaSection extends Vue {
   /** Called to edit Kafka configuration */
   onEdit(): void {
     if (this.kafka) {
-      this.$refs.dialog.load(this.kafka);
-      this.$refs.dialog.openDialog();
+      this.dialog.load(this.kafka);
+      this.dialog.openDialog();
     }
   }
 

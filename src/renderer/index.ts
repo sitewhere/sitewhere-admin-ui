@@ -1,21 +1,51 @@
 import "./class-component-hooks";
 
 import Vue from "vue";
+import VueRouter from 'vue-router'
+import Vuelidate from "vuelidate"
+import Vuex from "vuex"
+import Vuetify from "vuetify/lib";
+
+import {
+  VBtn,
+  VCard,
+  VCardActions,
+  VCardText,
+  VDialog,
+  VIcon,
+  VSpacer,
+  VTabs
+} from "vuetify/lib";
+
 import App from "./App.vue";
 import store from "./store";
 import router from "./router";
 
-import SiteWhere from "sitewhere-ide-components";
 import AdminUiPlugins from "sitewhere-admin-ui-plugins";
-import Vuetify from "vuetify";
-import Vuelidate from "vuelidate";
+
 import Vue2Leaflet from "vue2-leaflet";
 import VueMoment from "vue-moment";
 import VueClipboards from "vue-clipboards";
 import VueHighlightJS from "vue-highlightjs";
 import VueFlatPickr from "vue-flatpickr-component";
 
+Vue.use(VueRouter);
+Vue.use(Vuelidate);
+Vue.use(Vuex);
+
+Vue.use(AdminUiPlugins);
+
 Vue.use(Vuetify, {
+  components: {
+    VBtn,
+    VCard,
+    VCardActions,
+    VCardText,
+    VDialog,
+    VIcon,
+    VSpacer,
+    VTabs
+  },
   theme: {
     primary: "#616161",
     secondary: "#333333",
@@ -24,9 +54,6 @@ Vue.use(Vuetify, {
   }
 });
 
-Vue.use(SiteWhere);
-Vue.use(AdminUiPlugins);
-Vue.use(Vuelidate);
 Vue.use(VueMoment);
 Vue.use(VueClipboards);
 Vue.use(VueHighlightJS);
@@ -73,4 +100,4 @@ new Vue({
   components: {
     App
   }
-} as any);
+});

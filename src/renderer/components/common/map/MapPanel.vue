@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Watch, Ref } from "vue-property-decorator";
 import Vue from "vue";
 
 import { Map as LeafletMap, Layer, TileLayer } from "leaflet";
@@ -23,13 +23,9 @@ export default class MapPanel extends Vue {
   })
   readonly center!: number[];
   @Prop({ default: 13 }) readonly zoom!: number;
+  @Ref() readonly map!: any;
 
   mapReady: boolean = false;
-
-  // References.
-  $refs!: Refs<{
-    map: any;
-  }>;
 
   @Watch("visible", { immediate: true })
   async onVisibilityUpdated(visible: boolean) {
@@ -48,7 +44,7 @@ export default class MapPanel extends Vue {
 
   /** Access the Leaflet map directly */
   getMap(): LeafletMap | null {
-    return this.$refs.map ? this.$refs.map.mapObject : null;
+    return this.map ? this.map.mapObject : null;
   }
 
   /** Reset map */

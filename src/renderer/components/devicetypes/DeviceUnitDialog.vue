@@ -48,25 +48,18 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import { IDeviceType } from "sitewhere-rest-api";
 
 @Component({})
 export default class DeviceUnitDialog extends DialogComponent<IDeviceType> {
+  @Ref() readonly dialog!: ITabbedComponent;
+
   name: string | null = null;
   path: string | null = null;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-  }>;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {

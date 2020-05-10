@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, NavigationIcon } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { NavigationIcon } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import { IDeviceStatus } from "sitewhere-rest-api";

@@ -21,12 +21,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  ListComponent,
-  listCustomers
-} from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { listCustomers } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import CustomerListEntry from "../customers/CustomerListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";

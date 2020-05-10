@@ -10,14 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getAsset,
-  updateAsset
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { getAsset, updateAsset } from "sitewhere-ide-common";
+import { EditDialogComponent, DialogComponent } from "sitewhere-ide-components";
 
 import AssetDialog from "./AssetDialog.vue";
 
@@ -37,14 +32,11 @@ export default class AssetUpdateDialog extends EditDialogComponent<
   IAsset,
   IAssetCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IAsset>;
-  }>;
+  @Ref() readonly dialog!: AssetDialog;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IAsset> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Load payload */

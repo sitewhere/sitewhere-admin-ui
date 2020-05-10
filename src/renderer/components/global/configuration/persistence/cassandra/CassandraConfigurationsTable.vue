@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 

@@ -68,7 +68,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, DialogSection } from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { DialogSection } from "sitewhere-ide-components";
 
 import { IScriptCategory, IScriptCreateRequest } from "sitewhere-rest-api";
 

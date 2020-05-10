@@ -5,12 +5,8 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Refs,
-  listLocationsForAssignment
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { listLocationsForAssignment } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import {
@@ -42,11 +38,7 @@ import { AxiosResponse } from "axios";
 export default class AssignmentEmulatorMap extends Vue {
   @Prop() readonly assignment!: IDeviceAssignment;
   @Prop({ default: false }) readonly visible!: boolean;
-
-  // References.
-  $refs!: Refs<{
-    map: MapPanel;
-  }>;
+  @Ref() readonly map!: MapPanel;
 
   locations: IDeviceLocation[] = [];
   lastLocation: LatLng | null = null;
@@ -60,7 +52,7 @@ export default class AssignmentEmulatorMap extends Vue {
 
   /** Access the Leaflet map directly */
   getMap(): LeafletMap | null {
-    return this.$refs.map ? this.$refs.map.getMap() : null;
+    return this.map ? this.map.getMap() : null;
   }
 
   /** Refresh list of locations */

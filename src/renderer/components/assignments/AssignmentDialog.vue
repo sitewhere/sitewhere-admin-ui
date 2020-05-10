@@ -37,15 +37,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import AssignmentCustomerFields from "./AssignmentCustomerFields.vue";
 import AssignmentAreaFields from "./AssignmentAreaFields.vue";
@@ -64,15 +58,11 @@ export default class AssignmentDialog extends DialogComponent<
   IDeviceAssignment
 > {
   @Prop() readonly device!: IDevice;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    customer: DialogSection;
-    area: DialogSection;
-    asset: DialogSection;
-    metadata: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly customer!: AssignmentCustomerFields;
+  @Ref() readonly area!: AssignmentAreaFields;
+  @Ref() readonly asset!: AssignmentAssetFields;
+  @Ref() readonly metadata!: DialogSection;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -84,62 +74,62 @@ export default class AssignmentDialog extends DialogComponent<
     let payload: any = {};
     Object.assign(
       payload,
-      this.$refs.customer.save(),
-      this.$refs.area.save(),
-      this.$refs.asset.save(),
-      this.$refs.metadata.save()
+      this.customer.save(),
+      this.area.save(),
+      this.asset.save(),
+      this.metadata.save()
     );
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.customer) {
-      this.$refs.customer.reset();
+    if (this.customer) {
+      this.customer.reset();
     }
-    if (this.$refs.area) {
-      this.$refs.area.reset();
+    if (this.area) {
+      this.area.reset();
     }
-    if (this.$refs.asset) {
-      this.$refs.asset.reset();
+    if (this.asset) {
+      this.asset.reset();
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.reset();
+    if (this.metadata) {
+      this.metadata.reset();
     }
-    if (this.$refs.dialog) {
-      this.$refs.dialog.setActiveTab(0);
+    if (this.dialog) {
+      this.dialog.setActiveTab(0);
     }
   }
 
   // Load dialog from a given payload.
   load(payload: IDeviceAssignment) {
     this.reset();
-    if (this.$refs.customer) {
-      this.$refs.customer.load(payload);
+    if (this.customer) {
+      this.customer.load(payload);
     }
-    if (this.$refs.area) {
-      this.$refs.area.load(payload);
+    if (this.area) {
+      this.area.load(payload);
     }
-    if (this.$refs.asset) {
-      this.$refs.asset.load(payload);
+    if (this.asset) {
+      this.asset.load(payload);
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.load(payload);
+    if (this.metadata) {
+      this.metadata.load(payload);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.customer.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.customer.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
-    if (!this.$refs.area.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.area.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
-    if (!this.$refs.asset.validate()) {
-      this.$refs.dialog.setActiveTab(2);
+    if (!this.asset.validate()) {
+      this.dialog.setActiveTab(2);
       return;
     }
 

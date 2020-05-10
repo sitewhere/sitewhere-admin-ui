@@ -25,13 +25,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Watch,
-  DialogSection,
-  listScriptTemplates
-} from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { listScriptTemplates } from "sitewhere-ide-common";
+import { DialogSection } from "sitewhere-ide-components";
 
 import FormCodeBlock from "../common/form/FormCodeBlock.vue";
 

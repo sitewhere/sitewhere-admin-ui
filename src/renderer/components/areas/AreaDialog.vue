@@ -36,14 +36,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import AreaDetailFields from "./AreaDetailFields.vue";
 import AreaBoundsPanel from "./AreaBoundsPanel.vue";
@@ -58,14 +53,11 @@ import { IArea } from "sitewhere-rest-api";
   }
 })
 export default class AreaDialog extends DialogComponent<IArea> {
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: AreaDetailFields;
-    bounds: AreaBoundsPanel;
-    branding: BrandingPanel;
-    metadata: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: AreaDetailFields;
+  @Ref() readonly bounds!: AreaBoundsPanel;
+  @Ref() readonly branding!: BrandingPanel;
+  @Ref() readonly metadata!: DialogSection;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -77,69 +69,69 @@ export default class AreaDialog extends DialogComponent<IArea> {
     let payload: any = {};
     Object.assign(
       payload,
-      this.$refs.details.save(),
-      this.$refs.bounds.save(),
-      this.$refs.branding.save(),
-      this.$refs.metadata.save()
+      this.details.save(),
+      this.bounds.save(),
+      this.branding.save(),
+      this.metadata.save()
     );
     return payload;
   }
 
   /** Reset dialog contents */
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.bounds) {
-      this.$refs.bounds.reset();
+    if (this.bounds) {
+      this.bounds.reset();
     }
-    if (this.$refs.branding) {
-      this.$refs.branding.reset();
+    if (this.branding) {
+      this.branding.reset();
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.reset();
+    if (this.metadata) {
+      this.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   /** Load dialog from a given payload */
   load(payload: IArea) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.bounds) {
-      this.$refs.bounds.load(payload);
+    if (this.bounds) {
+      this.bounds.load(payload);
     }
-    if (this.$refs.branding) {
-      this.$refs.branding.load(payload);
+    if (this.branding) {
+      this.branding.load(payload);
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.load(payload);
+    if (this.metadata) {
+      this.metadata.load(payload);
     }
   }
 
   /** Called when tab selection is updated */
   onTabSelected(updated: number) {
     if (1 === updated) {
-      this.$refs.bounds.makeMapVisible();
+      this.bounds.makeMapVisible();
     }
   }
 
   /** Called after create button is clicked */
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 
-    if (!this.$refs.bounds.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.bounds.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
 
-    if (!this.$refs.branding.validate()) {
-      this.$refs.dialog.setActiveTab(2);
+    if (!this.branding.validate()) {
+      this.dialog.setActiveTab(2);
       return;
     }
 

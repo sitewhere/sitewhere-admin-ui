@@ -13,14 +13,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { createTenantScript } from "sitewhere-ide-common";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createTenantScript
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import ScriptDialog from "./ScriptDialog.vue";
 
@@ -43,15 +41,11 @@ export default class ScriptCreateDialog extends CreateDialogComponent<
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
   @Prop() readonly scriptCategories!: IScriptCategory[];
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<any>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IScriptMetadata>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IScriptMetadata> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

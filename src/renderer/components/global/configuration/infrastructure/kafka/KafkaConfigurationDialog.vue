@@ -16,13 +16,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Refs,
-  Prop,
-  DialogComponent,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref, Prop } from "vue-property-decorator";
+import { NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import KafkaConfigurationFields from "./KafkaConfigurationFields.vue";
 
@@ -35,12 +31,8 @@ export default class KafkaConfigurationDialog extends DialogComponent<
   IKafkaConfiguration
 > {
   @Prop() readonly kafka!: IKafkaConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    dialog: any;
-    details: KafkaConfigurationFields;
-  }>;
+  @Ref() readonly dialog!: any;
+  @Ref() readonly details!: KafkaConfigurationFields;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -49,27 +41,27 @@ export default class KafkaConfigurationDialog extends DialogComponent<
 
   /** Generate payload from UI data */
   generatePayload(): IKafkaConfiguration {
-    return Object.assign({}, this.kafka, this.$refs.details.save());
+    return Object.assign({}, this.kafka, this.details.save());
   }
 
   /** Reset dialog content to default */
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
   }
 
   /** Load data from an existing configuration */
   load(payload: IKafkaConfiguration) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
   }
 
   /** Called after update button is clicked */
   onUpdateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
+    if (!this.details.validate()) {
       return;
     }
 

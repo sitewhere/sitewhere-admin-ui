@@ -52,15 +52,14 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
-  Refs,
   NavigationIcon,
   listSchedules
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import ActionsBlock from "../common/ActionsBlock.vue";
 import ScheduleCreateDialog from "./ScheduleCreateDialog.vue";
@@ -94,11 +93,9 @@ export default class SchedulesList extends ListComponent<
   IScheduleResponseFormat,
   IScheduleSearchResults
 > {
-  $refs!: Refs<{
-    add: ScheduleCreateDialog;
-    edit: ScheduleUpdateDialog;
-    delete: ScheduleDeleteDialog;
-  }>;
+  @Ref() readonly add!: ScheduleCreateDialog;
+  @Ref() readonly edit!: ScheduleUpdateDialog;
+  @Ref() readonly delete!: ScheduleDeleteDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -176,7 +173,7 @@ export default class SchedulesList extends ListComponent<
 
   /** Called to open dialog */
   onAddSchedule() {
-    this.$refs.add.open();
+    this.add.open();
   }
 
   /** Called after add */
@@ -186,12 +183,12 @@ export default class SchedulesList extends ListComponent<
 
   /** Open edit dialog */
   onEditSchedule(token: string) {
-    this.$refs.edit.open(token);
+    this.edit.open(token);
   }
 
   /** Open delete dialog */
   onDeleteSchedule(token: string) {
-    this.$refs.delete.open(token);
+    this.delete.open(token);
   }
 
   /** Format a date */

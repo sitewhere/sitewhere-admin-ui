@@ -31,15 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import CommandDetailFields from "./CommandDetailFields.vue";
 import ParametersPanel from "./ParametersPanel.vue";
@@ -53,14 +47,10 @@ import { IDeviceCommand } from "sitewhere-rest-api";
 })
 export default class CommandDialog extends DialogComponent<IDeviceCommand> {
   @Prop() readonly deviceTypeToken!: string;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: CommandDetailFields;
-    parameters: ParametersPanel;
-    metadata: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: CommandDetailFields;
+  @Ref() readonly parameters!: ParametersPanel;
+  @Ref() readonly metadata!: DialogSection;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -74,50 +64,50 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
     };
     Object.assign(
       payload,
-      this.$refs.details.save(),
-      this.$refs.parameters.save(),
-      this.$refs.metadata.save()
+      this.details.save(),
+      this.parameters.save(),
+      this.metadata.save()
     );
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.parameters) {
-      this.$refs.parameters.reset();
+    if (this.parameters) {
+      this.parameters.reset();
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.reset();
+    if (this.metadata) {
+      this.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
   load(payload: IDeviceCommand) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.parameters) {
-      this.$refs.parameters.load(payload);
+    if (this.parameters) {
+      this.parameters.load(payload);
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.load(payload);
+    if (this.metadata) {
+      this.metadata.load(payload);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 
-    if (!this.$refs.parameters.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.parameters.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
 

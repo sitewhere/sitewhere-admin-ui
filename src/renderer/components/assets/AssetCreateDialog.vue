@@ -11,13 +11,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
+import { createAsset } from "sitewhere-ide-common";
 import {
-  Component,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createAsset
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import AssetDialog from "./AssetDialog.vue";
 
@@ -33,14 +32,11 @@ export default class AssetCreateDialog extends CreateDialogComponent<
   IAsset,
   IAssetCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IAsset>;
-  }>;
+  @Ref() readonly dialog!: AssetDialog;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IAsset> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

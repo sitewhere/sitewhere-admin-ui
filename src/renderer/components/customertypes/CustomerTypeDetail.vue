@@ -39,15 +39,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
-  DialogComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getCustomerType
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader.vue";
 import CustomerTypeCustomers from "./CustomerTypeCustomers.vue";
@@ -71,11 +69,8 @@ import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
-  // References.
-  $refs!: Refs<{
-    edit: CustomerTypeUpdateDialog;
-    delete: DialogComponent<ICustomerType>;
-  }>;
+  @Ref() readonly edit!: CustomerTypeUpdateDialog;
+  @Ref() readonly delete!: CustomerTypeDeleteDialog;
 
   get customerType(): ICustomerType | null {
     return this.record;
@@ -117,7 +112,7 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
   // Called to open customer type edit dialog.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
@@ -127,7 +122,7 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
   }
 
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    (this["delete"] as any).showDeleteDialog();
   }
 
   // Called when customer type is deleted.

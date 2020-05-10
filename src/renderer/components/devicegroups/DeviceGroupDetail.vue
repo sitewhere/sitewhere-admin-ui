@@ -33,14 +33,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getDeviceGroup
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader.vue";
 import DeviceGroupUpdateDialog from "./DeviceGroupUpdateDialog.vue";
@@ -68,15 +67,12 @@ import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
-  active: string | null = null;
+  @Ref() readonly list!: DeviceGroupElements;
+  @Ref() readonly create!: DeviceGroupElementCreateDialog;
+  @Ref() readonly edit!: DeviceGroupUpdateDialog;
+  @Ref() readonly delete!: DeviceGroupDeleteDialog;
 
-  // References.
-  $refs!: Refs<{
-    list: DeviceGroupElements;
-    create: DeviceGroupElementCreateDialog;
-    edit: DeviceGroupUpdateDialog;
-    delete: DeviceGroupDeleteDialog;
-  }>;
+  active: string | null = null;
 
   get deviceGroup(): IDeviceGroup | null {
     return this.record;
@@ -115,14 +111,14 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
   // Show dialog on update requested.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
   // Show dialog on delete requested.
   onDelete() {
     if (this.token) {
-      this.$refs.delete.open(this.token);
+      this.delete.open(this.token);
     }
   }
 
@@ -133,12 +129,12 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
 
   /** Called when 'add element' button is clicked */
   onAddGroupElement() {
-    this.$refs.create.open();
+    this.create.open();
   }
 
   /** Called when an element is added */
   onElementAdded() {
-    this.$refs.list.refresh();
+    this.list.refresh();
   }
 }
 </script>

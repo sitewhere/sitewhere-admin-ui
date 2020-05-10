@@ -11,13 +11,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createSchedule
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { createSchedule } from "sitewhere-ide-common";
+import { CreateDialogComponent } from "sitewhere-ide-components";
 
 import ScheduleDialog from "./ScheduleDialog.vue";
 
@@ -33,14 +29,11 @@ export default class ScheduleCreateDialog extends CreateDialogComponent<
   ISchedule,
   IScheduleCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<ISchedule>;
-  }>;
+  @Ref() readonly dialog!: ScheduleDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<ISchedule> {
-    return this.$refs.dialog;
+  getDialog(): ScheduleDialog {
+    return this.dialog;
   }
 
   /** Called on payload commit */

@@ -1,19 +1,12 @@
 <template>
-  <sw-navigation-header-panel
-    v-if="areaType"
-    :icon="areaType.icon"
-    height="200px"
-  >
+  <sw-navigation-header-panel v-if="areaType" :icon="areaType.icon" height="200px">
     <template slot="left">
       <sw-header-branding-panel :entity="areaType" />
     </template>
     <template slot="content">
       <sw-navigation-header-fields>
         <sw-header-field label="Token">
-          <clipboard-copy-field
-            :field="areaType.token"
-            message="Token copied to clipboard"
-          />
+          <clipboard-copy-field :field="areaType.token" message="Token copied to clipboard" />
         </sw-header-field>
         <sw-header-field label="Name">
           <span>{{ areaType.name }}</span>
@@ -36,7 +29,8 @@
 </template>
 
 <script lang="ts">
-import { Component, HeaderComponent } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { HeaderComponent } from "sitewhere-ide-components";
 
 import { formatDate } from "sitewhere-ide-common";
 import { IAreaType } from "sitewhere-rest-api";

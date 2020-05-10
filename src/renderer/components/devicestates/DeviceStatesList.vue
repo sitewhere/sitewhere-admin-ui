@@ -17,12 +17,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  Component,
-  Prop,
-  searchDeviceStates,
-  IPaging
-} from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { searchDeviceStates, IPaging } from "sitewhere-ide-common";
 import {
   IDeviceStateSearchCriteria,
   IDeviceStateResponseFormat

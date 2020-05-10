@@ -10,14 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getArea,
-  updateArea
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { getArea, updateArea } from "sitewhere-ide-common";
+import { EditDialogComponent, DialogComponent } from "sitewhere-ide-components";
 
 import AreaDialog from "./AreaDialog.vue";
 
@@ -37,14 +32,11 @@ export default class AreaUpdateDialog extends EditDialogComponent<
   IArea,
   IAreaCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IArea>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IArea>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IArea> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Load payload */

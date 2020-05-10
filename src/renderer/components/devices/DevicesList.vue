@@ -44,14 +44,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  IPageSizes,
-  Refs,
-  NavigationIcon,
-  listDevices
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { IPageSizes, NavigationIcon, listDevices } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import DeviceListEntry from "./DeviceListEntry.vue";
 import DeviceListFilterBar from "./DeviceListFilterBar.vue";
@@ -93,12 +88,10 @@ export default class DevicesList extends ListComponent<
   IDeviceResponseFormat,
   IDeviceSearchResults
 > {
-  $refs!: Refs<{
-    add: DeviceCreateDialog;
-    assign: AssignmentCreateDialog;
-    filter: DeviceListFilterDialog;
-    batch: InvocationByDeviceCriteriaCreateDialog;
-  }>;
+  @Ref() readonly add!: DeviceCreateDialog;
+  @Ref() readonly assign!: AssignmentCreateDialog;
+  @Ref() readonly filterDialog!: DeviceListFilterDialog;
+  @Ref() readonly batch!: InvocationByDeviceCriteriaCreateDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -147,19 +140,19 @@ export default class DevicesList extends ListComponent<
 
   /** Called to show filter criteria dialog */
   onShowFilterCriteria() {
-    this.$refs.filter.openDialog();
+    this.filterDialog.openDialog();
   }
 
   /** Clears the filter criteria */
   onClearFilterCriteria() {
     this.filter = {};
-    this.$refs.filter.reset();
+    this.filterDialog.reset();
     this.refresh();
   }
 
   /** Called when filter criteria are updated */
   onFilterUpdated(filter: IDeviceSearchCriteria) {
-    this.$refs.filter.closeDialog();
+    this.filterDialog.closeDialog();
     this.filter = filter;
     this.refresh();
   }
@@ -167,7 +160,7 @@ export default class DevicesList extends ListComponent<
   /** Open device assignment dialog */
   onAssignDevice(device: IDevice) {
     this.selected = device;
-    this.$refs.assign.open();
+    this.assign.open();
   }
 
   /** Called after new assignment is created */
@@ -187,12 +180,12 @@ export default class DevicesList extends ListComponent<
 
   /** Called to open dialog */
   onAddDevice() {
-    this.$refs.add.open();
+    this.add.open();
   }
 
   /** Called to invoke a batch command */
   onBatchCommandInvocation() {
-    this.$refs.batch.open();
+    this.batch.open();
   }
 }
 </script>

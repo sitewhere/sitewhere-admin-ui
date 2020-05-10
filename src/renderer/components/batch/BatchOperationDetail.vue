@@ -21,14 +21,13 @@
 </template>
 
 <script lang="ts">
+import { Component } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getBatchOperation
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import BatchOperationDetailHeader from "./BatchOperationDetailHeader.vue";
 import BatchOperationElementsList from "./BatchOperationElementsList.vue";
@@ -48,9 +47,6 @@ import {
 export default class BatchOperationDetail extends DetailComponent<
   IBatchOperation
 > {
-  // References.
-  $refs!: Refs<{}>;
-
   get operation(): IBatchOperation | null {
     return this.record;
   }

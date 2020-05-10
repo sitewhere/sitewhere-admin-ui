@@ -12,12 +12,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DeleteDialogComponent,
-  getTenant,
-  deleteTenant
-} from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { getTenant, deleteTenant } from "sitewhere-ide-common";
+import { DeleteDialogComponent } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { ITenant, ITenantResponseFormat } from "sitewhere-rest-api";

@@ -21,14 +21,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import RemoteConnectionsList from "./RemoteConnectionsList.vue";
 import RemoteConnectionDetails from "./RemoteConnectionDetails.vue";
@@ -42,13 +37,10 @@ import { IRemotes, IRemoteConnection } from "sitewhere-ide-common";
   }
 })
 export default class RemotesDialog extends DialogComponent<IRemotes> {
-  remotes: IRemotes | null = null;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly connections!: DialogSection;
 
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    connections: DialogSection;
-  }>;
+  remotes: IRemotes | null = null;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -57,8 +49,8 @@ export default class RemotesDialog extends DialogComponent<IRemotes> {
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.details) {
-      this.$refs.connections.reset();
+    if (this.connections) {
+      this.connections.reset();
     }
   }
 
@@ -66,8 +58,8 @@ export default class RemotesDialog extends DialogComponent<IRemotes> {
   load(payload: IRemotes) {
     this.remotes = JSON.parse(JSON.stringify(payload));
     this.reset();
-    if (this.$refs.connections) {
-      this.$refs.connections.load(payload);
+    if (this.connections) {
+      this.connections.load(payload);
     }
   }
 

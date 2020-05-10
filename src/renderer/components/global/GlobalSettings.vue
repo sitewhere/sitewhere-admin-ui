@@ -40,9 +40,8 @@
 import Vue from "vue";
 
 import { AxiosResponse } from "axios";
+import { Component, Watch } from "vue-property-decorator";
 import {
-  Component,
-  Watch,
   NavigationIcon,
   getInstanceConfiguration,
   updateInstanceConfiguration

@@ -12,14 +12,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { createCommandInvocationForAssignment } from "sitewhere-ide-common";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createCommandInvocationForAssignment
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import InvocationDialog from "./InvocationDialog.vue";
 
@@ -40,15 +38,11 @@ export default class InvocationCreateDialog extends CreateDialogComponent<
 > {
   @Prop() readonly assignmentToken!: string;
   @Prop() readonly deviceTypeToken!: string;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceCommandInvocation>;
-  }>;
+  @Ref() readonly dialog!: InvocationDialog;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IDeviceCommandInvocation> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

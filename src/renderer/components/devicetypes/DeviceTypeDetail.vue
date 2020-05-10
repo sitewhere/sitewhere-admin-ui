@@ -49,14 +49,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getDeviceType
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import DeviceTypeDetailHeader from "./DeviceTypeDetailHeader.vue";
 import DeviceTypeCommands from "./DeviceTypeCommands.vue";
@@ -96,15 +95,14 @@ import {
   }
 })
 export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
-  active: string | null = null;
+  @Ref() readonly commands!: DeviceTypeCommands;
+  @Ref() readonly statuses!: DeviceTypeStatuses;
+  @Ref() readonly command!: CommandCreateDialog;
+  @Ref() readonly status!: DeviceStatusCreateDialog;
+  @Ref() readonly edit!: DeviceTypeUpdateDialog;
+  @Ref() readonly delete!: DeviceTypeDeleteDialog;
 
-  // References.
-  $refs!: Refs<{
-    command: CommandCreateDialog;
-    status: DeviceStatusCreateDialog;
-    edit: DeviceTypeUpdateDialog;
-    delete: DeviceTypeDeleteDialog;
-  }>;
+  active: string | null = null;
 
   get deviceType(): IDeviceType | null {
     return this.record;
@@ -149,18 +147,18 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
 
   // Called on command create.
   onCommandCreate() {
-    this.$refs.command.open();
+    this.command.open();
   }
 
   // Called on status create.
   onStatusCreate() {
-    this.$refs.status.open();
+    this.status.open();
   }
 
   // Called to open area edit dialog.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
@@ -171,7 +169,7 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
 
   onDelete() {
     if (this.token) {
-      this.$refs.delete.open(this.token);
+      this.delete.open(this.token);
     }
   }
 
@@ -182,12 +180,12 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
 
   // Called after a command is added.
   onCommandAdded() {
-    (this.$refs["commands"] as any).refresh();
+    this.commands.refresh();
   }
 
   // Called after a status is added.
   onStatusAdded() {
-    (this.$refs["statuses"] as any).refresh();
+    this.statuses.refresh();
   }
 }
 </script>

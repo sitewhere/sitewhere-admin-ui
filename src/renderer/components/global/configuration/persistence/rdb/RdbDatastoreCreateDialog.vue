@@ -5,8 +5,8 @@
     createLabel="Create"
     @payload="onCreateClicked"
   >
-    <v-card color="#f5f5f5" flat class="pl-3 pr-3 pt-1 pb-2"
-      ><v-text-field
+    <v-card color="#f5f5f5" flat class="pl-3 pr-3 pt-1 pb-2">
+      <v-text-field
         :required="true"
         title="Global datasource id"
         label="Datasource Id"
@@ -14,16 +14,15 @@
         v-model="name"
         hide-details
         prepend-icon="fa-cog"
-      /><span v-if="$v.name.$invalid && $v.$dirty"
-        >Datasource id is required.</span
-      ></v-card
-    >
+      />
+      <span v-if="$v.name.$invalid && $v.$dirty">Datasource id is required.</span>
+    </v-card>
   </rdb-datastore-dialog>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Refs, Prop } from "sitewhere-ide-common";
+import { Component, Ref, Prop } from "vue-property-decorator";
 
 import RdbDatastoreDialog from "./RdbDatastoreDialog.vue";
 
@@ -46,20 +45,16 @@ import { IInstanceConfiguration } from "sitewhere-rest-api";
 })
 export default class RdbDatastoreUpdateDialog extends Vue {
   @Prop() readonly instance!: IInstanceConfiguration;
+  @Ref() readonly dialog!: RdbDatastoreDialog;
 
   name: string = "";
   type: string = "postgres95";
   configuration: any = {};
 
-  // References.
-  $refs!: Refs<{
-    dialog: RdbDatastoreDialog;
-  }>;
-
   /** Open the dialog */
   openDialog(): void {
-    this.$refs.dialog.reset();
-    this.$refs.dialog.openDialog();
+    this.dialog.reset();
+    this.dialog.openDialog();
   }
 
   /** Called when create button is clicked */
@@ -75,7 +70,7 @@ export default class RdbDatastoreUpdateDialog extends Vue {
       name: this.name,
       definition: { type: this.type, configuration: this.configuration }
     });
-    this.$refs.dialog.dialogVisible = false;
+    this.dialog.dialogVisible = false;
   }
 }
 </script>

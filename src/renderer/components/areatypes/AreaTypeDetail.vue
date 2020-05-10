@@ -31,15 +31,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
-  DialogComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getAreaType
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import AreaTypeDetailHeader from "./AreaTypeDetailHeader.vue";
 import AreaTypeAreas from "./AreaTypeAreas.vue";
@@ -65,11 +63,8 @@ import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class AreaTypeDetail extends DetailComponent<IAreaType> {
-  // References.
-  $refs!: Refs<{
-    edit: AreaTypeUpdateDialog;
-    delete: DialogComponent<IAreaType>;
-  }>;
+  @Ref() readonly edit!: AreaTypeUpdateDialog;
+  @Ref() readonly delete!: AreaTypeDeleteDialog;
 
   /** Record as area type */
   get areaType(): IAreaType | null {
@@ -109,7 +104,7 @@ export default class AreaTypeDetail extends DetailComponent<IAreaType> {
   // Called to open area type edit dialog.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
@@ -119,7 +114,7 @@ export default class AreaTypeDetail extends DetailComponent<IAreaType> {
   }
 
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    (this["delete"] as any).showDeleteDialog();
   }
 
   // Called when area type is deleted.

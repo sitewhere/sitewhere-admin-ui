@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
 import { arrayMove, IRemotes, IRemoteConnection } from "sitewhere-ide-common";

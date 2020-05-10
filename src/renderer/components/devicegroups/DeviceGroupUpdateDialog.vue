@@ -10,14 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getDeviceGroup,
-  updateDeviceGroup
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { getDeviceGroup, updateDeviceGroup } from "sitewhere-ide-common";
+import { EditDialogComponent } from "sitewhere-ide-components";
 
 import DeviceGroupDialog from "./DeviceGroupDialog.vue";
 
@@ -37,14 +32,11 @@ export default class DeviceGroupUpdateDialog extends EditDialogComponent<
   IDeviceGroup,
   IDeviceGroupCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceGroup>;
-  }>;
+  @Ref() readonly dialog!: DeviceGroupDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IDeviceGroup> {
-    return this.$refs.dialog;
+  getDialog(): DeviceGroupDialog {
+    return this.dialog;
   }
 
   /** Load payload */

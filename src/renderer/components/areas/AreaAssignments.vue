@@ -23,7 +23,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, ListComponent } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { ListComponent } from "sitewhere-ide-components";
 
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";

@@ -12,12 +12,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DeleteDialogComponent,
-  getAsset,
-  deleteAsset
-} from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { getAsset, deleteAsset } from "sitewhere-ide-common";
+import { DeleteDialogComponent } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { IAsset, IAssetResponseFormat } from "sitewhere-rest-api";

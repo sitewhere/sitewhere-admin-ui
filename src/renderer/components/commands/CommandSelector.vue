@@ -14,12 +14,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  Component,
-  Prop,
-  Watch,
-  listDeviceCommands
-} from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { listDeviceCommands } from "sitewhere-ide-common";
 
 import { handleError } from "sitewhere-ide-common";
 import { AxiosResponse } from "axios";

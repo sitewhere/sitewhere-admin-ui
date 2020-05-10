@@ -15,11 +15,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogSection,
-  getAuthoritiesHierarchy
-} from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { getAuthoritiesHierarchy } from "sitewhere-ide-common";
+import { DialogSection } from "sitewhere-ide-components";
 
 import { handleError } from "sitewhere-ide-common";
 

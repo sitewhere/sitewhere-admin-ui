@@ -16,10 +16,17 @@
     "strictFunctionTypes": false,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": ["node"],
+    "types": [
+      "vuetify"
+    ],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
-    "lib": ["es2018", "dom"]
+    "lib": [
+      "es2018",
+      "dom"
+    ]
   }
 }

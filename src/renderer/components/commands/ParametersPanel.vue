@@ -73,7 +73,9 @@
 </template>
 
 <script lang="ts">
-import { Component, DialogSection, ITableHeaders } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { ITableHeaders } from "sitewhere-ide-common";
+import { DialogSection } from "sitewhere-ide-components";
 
 import { required, helpers } from "vuelidate/lib/validators";
 import { ICommandParameter, ParameterType } from "sitewhere-rest-api";
@@ -185,14 +187,16 @@ export default class ParametersPanel extends DialogSection {
     }
     this.$v.$touch();
     if (!this.$v.$invalid) {
-      var parameter: ICommandParameter = {
-        name: this.name,
-        type: this.type,
-        required: this.required
-      };
-      this.parameters.push(parameter);
-      this.$emit("parameterAdded", parameter);
-      this.resetSubform();
+      if (this.name && this.type) {
+        // var parameter: ICommandParameter = {
+        //   name: this.name,
+        //   type: this.type,
+        //   required: this.required
+        // };
+        // this.parameters.push(parameter);
+        // this.$emit("parameterAdded", parameter);
+        // this.resetSubform();
+      }
     }
   }
 }

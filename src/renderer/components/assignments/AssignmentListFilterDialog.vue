@@ -36,14 +36,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import AssignmentListFilterDeviceTypeFields from "./AssignmentListFilterDeviceTypeFields.vue";
 import AssignmentListFilterCustomerFields from "./AssignmentListFilterCustomerFields.vue";
@@ -63,14 +58,11 @@ import { IDeviceAssignmentSearchCriteria } from "sitewhere-rest-api";
 export default class AssignmentListFilterDialog extends DialogComponent<
   IDeviceAssignmentSearchCriteria
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    devicetype: DialogSection;
-    customer: DialogSection;
-    area: DialogSection;
-    asset: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly devicetype!: AssignmentListFilterDeviceTypeFields;
+  @Ref() readonly customer!: AssignmentListFilterCustomerFields;
+  @Ref() readonly area!: AssignmentListFilterAreaFields;
+  @Ref() readonly asset!: AssignmentListFilterAssetFields;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -80,65 +72,65 @@ export default class AssignmentListFilterDialog extends DialogComponent<
   /** Generate payload from UI */
   generatePayload(): IDeviceAssignmentSearchCriteria {
     let payload: IDeviceAssignmentSearchCriteria = {};
-    Object.assign(payload, this.$refs.devicetype.save());
-    Object.assign(payload, this.$refs.customer.save());
-    Object.assign(payload, this.$refs.area.save());
-    Object.assign(payload, this.$refs.asset.save());
+    Object.assign(payload, this.devicetype.save());
+    Object.assign(payload, this.customer.save());
+    Object.assign(payload, this.area.save());
+    Object.assign(payload, this.asset.save());
     return payload;
   }
 
   /** Reset dialog contents */
   reset() {
-    if (this.$refs.devicetype) {
-      this.$refs.devicetype.reset();
+    if (this.devicetype) {
+      this.devicetype.reset();
     }
-    if (this.$refs.customer) {
-      this.$refs.customer.reset();
+    if (this.customer) {
+      this.customer.reset();
     }
-    if (this.$refs.area) {
-      this.$refs.area.reset();
+    if (this.area) {
+      this.area.reset();
     }
-    if (this.$refs.asset) {
-      this.$refs.asset.reset();
+    if (this.asset) {
+      this.asset.reset();
     }
-    if (this.$refs.dialog) {
-      this.$refs.dialog.setActiveTab(0);
+    if (this.dialog) {
+      this.dialog.setActiveTab(0);
     }
   }
 
   /** Load dialog from a given payload */
   load(payload: IDeviceAssignmentSearchCriteria) {
     this.reset();
-    if (this.$refs.devicetype) {
-      this.$refs.devicetype.load(payload);
+    if (this.devicetype) {
+      this.devicetype.load(payload);
     }
-    if (this.$refs.customer) {
-      this.$refs.customer.load(payload);
+    if (this.customer) {
+      this.customer.load(payload);
     }
-    if (this.$refs.area) {
-      this.$refs.area.load(payload);
+    if (this.area) {
+      this.area.load(payload);
     }
-    if (this.$refs.asset) {
-      this.$refs.asset.load(payload);
+    if (this.asset) {
+      this.asset.load(payload);
     }
   }
 
   /** Called after create button is clicked */
   onCreateClicked(e: any) {
-    if (!this.$refs.devicetype.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.devicetype.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
-    if (!this.$refs.customer.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.customer.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
-    if (!this.$refs.area.validate()) {
-      this.$refs.dialog.setActiveTab(2);
+    if (!this.area.validate()) {
+      this.dialog.setActiveTab(2);
       return;
     }
-    if (!this.$refs.asset.validate()) {
-      this.$refs.dialog.setActiveTab(3);
+    if (!this.asset.validate()) {
+      this.dialog.setActiveTab(3);
       return;
     }
 

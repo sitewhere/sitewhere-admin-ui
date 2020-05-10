@@ -11,14 +11,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { createInvocationsByDeviceCriteria } from "sitewhere-ide-common";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createInvocationsByDeviceCriteria
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import InvocationByDeviceCriteriaDialog from "./InvocationByDeviceCriteriaDialog.vue";
 
@@ -39,15 +37,11 @@ export default class InvocationByDeviceCriteriaCreateDialog extends CreateDialog
   IInvocationByDeviceCriteriaRequest
 > {
   @Prop() readonly filter!: IDeviceSearchCriteria;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IBatchOperation>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IBatchOperation>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IBatchOperation> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

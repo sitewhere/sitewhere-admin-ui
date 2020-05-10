@@ -9,14 +9,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { createAlertForAssignment } from "sitewhere-ide-common";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createAlertForAssignment
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import AlertDialog from "./AlertDialog.vue";
 
@@ -37,15 +35,11 @@ export default class AlertCreateDialog extends CreateDialogComponent<
   IDeviceAlertCreateRequest
 > {
   @Prop() readonly assignment!: IDeviceAssignment;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceAlert>;
-  }>;
+  @Ref() readonly dialog!: AlertDialog;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IDeviceAlert> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

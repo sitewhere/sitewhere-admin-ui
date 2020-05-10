@@ -9,14 +9,12 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { createMeasurementsForAssignment } from "sitewhere-ide-common";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createMeasurementsForAssignment
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import MeasurementDialog from "./MeasurementDialog.vue";
 
@@ -37,15 +35,11 @@ export default class MeasurementCreateDialog extends CreateDialogComponent<
   IDeviceMeasurementCreateRequest
 > {
   @Prop() readonly assignment!: IDeviceAssignment;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceMeasurement>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IDeviceMeasurement>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IDeviceMeasurement> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

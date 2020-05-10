@@ -27,14 +27,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getDevice
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import DeviceDetailHeader from "./DeviceDetailHeader.vue";
 import DeviceAssignmentHistory from "./DeviceAssignmentHistory.vue";
@@ -58,11 +57,8 @@ import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class DeviceDetail extends DetailComponent<IDevice> {
-  // References.
-  $refs!: Refs<{
-    edit: DeviceUpdateDialog;
-    delete: DeviceDeleteDialog;
-  }>;
+  @Ref() readonly edit!: DeviceUpdateDialog;
+  @Ref() readonly delete!: DeviceDeleteDialog;
 
   get device(): IDevice | null {
     return this.record;
@@ -101,7 +97,7 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
   // Open dialog to edit device.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
@@ -113,7 +109,7 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
   // Open dialog to delete device.
   onDelete() {
     if (this.token) {
-      this.$refs.delete.open(this.token);
+      this.delete.open(this.token);
     }
   }
 

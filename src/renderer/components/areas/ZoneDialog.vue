@@ -27,15 +27,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import ZoneDetailFields from "./ZoneDetailFields.vue";
 import { IZone, IArea } from "sitewhere-rest-api";
@@ -47,15 +41,11 @@ import { IZone, IArea } from "sitewhere-rest-api";
 })
 export default class ZoneDialog extends DialogComponent<IZone> {
   @Prop() readonly area!: IArea;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: DialogSection;
+  @Ref() readonly metadata!: DialogSection;
 
   mapVisible: boolean = false;
-
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: DialogSection;
-    metadata: DialogSection;
-  }>;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -65,41 +55,37 @@ export default class ZoneDialog extends DialogComponent<IZone> {
   /** Generate payload from UI */
   generatePayload() {
     let payload: any = {};
-    Object.assign(
-      payload,
-      this.$refs.details.save(),
-      this.$refs.metadata.save()
-    );
+    Object.assign(payload, this.details.save(), this.metadata.save());
     return payload;
   }
 
   /** Reset dialog contents */
   reset() {
     this.mapVisible = true;
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.reset();
+    if (this.metadata) {
+      this.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   /** Load dialog from a given payload */
   load(payload: IZone) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.load(payload);
+    if (this.metadata) {
+      this.metadata.load(payload);
     }
   }
 
   /** Called after create button is clicked */
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 

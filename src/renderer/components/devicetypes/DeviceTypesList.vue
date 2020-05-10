@@ -31,13 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  Refs,
-  NavigationIcon,
-  listDeviceTypes
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { NavigationIcon, listDeviceTypes } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import DeviceTypeListEntry from "./DeviceTypeListEntry.vue";
 import DeviceTypeCreateDialog from "./DeviceTypeCreateDialog.vue";
@@ -68,9 +64,7 @@ export default class DeviceTypesList extends ListComponent<
   IDeviceTypeResponseFormat,
   IDeviceTypeSearchResults
 > {
-  $refs!: Refs<{
-    add: DeviceTypeCreateDialog;
-  }>;
+  @Ref() readonly add!: DeviceTypeCreateDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -107,7 +101,7 @@ export default class DeviceTypesList extends ListComponent<
 
   // Called to open dialog.
   onAddDeviceType() {
-    this.$refs.add.open();
+    this.add.open();
   }
 
   // Called when a new device type is added.

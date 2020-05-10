@@ -1,6 +1,8 @@
 <template>
   <sw-content-section icon="fa-cogs" title="gRPC Configuration">
-    <template slot="overlay"><div class="logo"/></template>
+    <template slot="overlay">
+      <div class="logo" />
+    </template>
     <v-card v-if="grpc" flat>
       <sw-content-field name="max retry count" :value="grpc.maxRetryCount" />
       <sw-content-field
@@ -8,15 +10,8 @@
         name="initial backoff seconds"
         :value="grpc.initialBackoffSeconds"
       />
-      <sw-content-field
-        name="max backoff seconds"
-        :value="grpc.maxBackoffSeconds"
-      />
-      <sw-content-field
-        :alt="true"
-        name="backoff multiplier"
-        :value="grpc.backoffMultiplier"
-      />
+      <sw-content-field name="max backoff seconds" :value="grpc.maxBackoffSeconds" />
+      <sw-content-field :alt="true" name="backoff multiplier" :value="grpc.backoffMultiplier" />
       <sw-content-field name="resolve fqdn" :value="grpc.resolveFQDN" />
       <sw-content-link
         class="mt-3"
@@ -25,17 +20,13 @@
         @linkClicked="onEdit"
       />
     </v-card>
-    <grpc-configuration-dialog
-      ref="dialog"
-      :grpc="grpc"
-      @payload="onGrpcUpdated"
-    />
+    <grpc-configuration-dialog ref="dialog" :grpc="grpc" @payload="onGrpcUpdated" />
   </sw-content-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
 
 import GrpcConfigurationDialog from "./GrpcConfigurationDialog.vue";
 
@@ -52,11 +43,7 @@ import {
 })
 export default class KafkaSection extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
-
-  // References.
-  $refs!: Refs<{
-    dialog: GrpcConfigurationDialog;
-  }>;
+  @Ref() readonly dialog!: GrpcConfigurationDialog;
 
   /** Get infrastructure information */
   get infrastructure(): IInfrastructureConfiguration | null {
@@ -71,8 +58,8 @@ export default class KafkaSection extends Vue {
   /** Called to edit gRPC configuration */
   onEdit(): void {
     if (this.grpc) {
-      this.$refs.dialog.load(this.grpc);
-      this.$refs.dialog.openDialog();
+      this.dialog.load(this.grpc);
+      this.dialog.openDialog();
     }
   }
 

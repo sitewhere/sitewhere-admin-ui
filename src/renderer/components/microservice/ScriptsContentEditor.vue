@@ -19,13 +19,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  Component,
-  Prop,
-  Watch,
-  Refs,
-  getTenantScriptContent
-} from "sitewhere-ide-common";
+import { Component, Prop, Watch, Ref } from "vue-property-decorator";
+import { getTenantScriptContent } from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
 import { formatDate } from "sitewhere-ide-common";
@@ -41,11 +36,7 @@ export default class ScriptsContentEditor extends Vue {
   @Prop() readonly tenantToken!: string;
   @Prop() readonly script!: IScriptMetadata;
   @Prop() readonly version!: IScriptVersion;
-
-  /** References */
-  $refs!: Refs<{
-    editor: any;
-  }>;
+  @Ref() readonly editorReference!: any;
 
   selectedScript: any = null;
   selectedVersion: any = null;
@@ -76,7 +67,7 @@ export default class ScriptsContentEditor extends Vue {
 
   /** Get handle to embedded Ace editor */
   get editor(): any {
-    return this.$refs.editor.editor;
+    return this.editorReference.editor;
   }
 
   /** Initialize code editor by requiring dependencies */

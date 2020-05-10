@@ -10,7 +10,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, listAssetTypes } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { listAssetTypes } from "sitewhere-ide-common";
 import Vue from "vue";
 
 import Chooser from "../common/form/Chooser.vue";

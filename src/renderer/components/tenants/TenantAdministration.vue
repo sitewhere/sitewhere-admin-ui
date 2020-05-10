@@ -40,8 +40,8 @@
 import Vue from "vue";
 
 import { AxiosResponse } from "axios";
+import { Component } from "vue-property-decorator";
 import {
-  Component,
   IAction,
   INavigationSection,
   getTenant,
@@ -49,7 +49,6 @@ import {
   getJwt,
   NavigationIcon
 } from "sitewhere-ide-common";
-
 import Copyright from "../Copyright.vue";
 import Notifications from "../common/Notifications.vue";
 

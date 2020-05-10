@@ -31,14 +31,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent, DialogSection } from "sitewhere-ide-components";
 
 import UserDetailFields from "./UserDetailFields.vue";
 import UserPermissions from "./UserPermissions.vue";
@@ -51,13 +46,10 @@ import { IUser } from "sitewhere-rest-api";
   }
 })
 export default class UserDialog extends DialogComponent<IUser> {
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    details: DialogSection;
-    permissions: DialogSection;
-    metadata: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly details!: UserDetailFields;
+  @Ref() readonly permissions!: UserPermissions;
+  @Ref() readonly metadata!: DialogSection;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -69,50 +61,50 @@ export default class UserDialog extends DialogComponent<IUser> {
     let payload: any = {};
     Object.assign(
       payload,
-      this.$refs.details.save(),
-      this.$refs.permissions.save(),
-      this.$refs.metadata.save()
+      this.details.save(),
+      this.permissions.save(),
+      this.metadata.save()
     );
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
-    if (this.$refs.permissions) {
-      this.$refs.permissions.reset();
+    if (this.permissions) {
+      this.permissions.reset();
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.reset();
+    if (this.metadata) {
+      this.metadata.reset();
     }
-    this.$refs.dialog.setActiveTab(0);
+    this.dialog.setActiveTab(0);
   }
 
   // Load dialog from a given payload.
   load(payload: IUser) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
-    if (this.$refs.permissions) {
-      this.$refs.permissions.load(payload);
+    if (this.permissions) {
+      this.permissions.load(payload);
     }
-    if (this.$refs.metadata) {
-      this.$refs.metadata.load(payload);
+    if (this.metadata) {
+      this.metadata.load(payload);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.details.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 
-    if (!this.$refs.permissions.validate()) {
-      this.$refs.dialog.setActiveTab(1);
+    if (!this.permissions.validate()) {
+      this.dialog.setActiveTab(1);
       return;
     }
 

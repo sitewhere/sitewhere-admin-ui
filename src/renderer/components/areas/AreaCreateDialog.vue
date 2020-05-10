@@ -9,13 +9,11 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
   CreateDialogComponent,
-  DialogComponent,
-  Refs
-} from "sitewhere-ide-common";
+  DialogComponent
+} from "sitewhere-ide-components";
 
 import AreaDialog from "./AreaDialog.vue";
 
@@ -33,15 +31,11 @@ export default class AreaCreateDialog extends CreateDialogComponent<
   IAreaCreateRequest
 > {
   @Prop() readonly parentArea!: IArea;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IArea>;
-  }>;
+  @Ref() readonly dialog!: DialogComponent<IArea>;
 
   /** Get wrapped dialog */
   getDialog(): DialogComponent<IArea> {
-    return this.$refs.dialog;
+    return this.dialog;
   }
 
   /** Called on payload commit */

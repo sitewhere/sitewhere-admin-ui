@@ -35,13 +35,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  Refs,
-  NavigationIcon,
-  listDeviceGroups
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { NavigationIcon, listDeviceGroups } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import DeviceGroupListEntry from "./DeviceGroupListEntry.vue";
 import DeviceGroupCreateDialog from "./DeviceGroupCreateDialog.vue";
@@ -71,9 +67,7 @@ export default class DeviceGroupsList extends ListComponent<
   IDeviceGroupResponseFormat,
   IDeviceGroupSearchResults
 > {
-  $refs!: Refs<{
-    add: DeviceGroupCreateDialog;
-  }>;
+  @Ref() readonly add!: DeviceGroupCreateDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -109,7 +103,7 @@ export default class DeviceGroupsList extends ListComponent<
 
   // Called to open dialog.
   onAddDeviceGroup() {
-    this.$refs.add.open();
+    this.add.open();
   }
 }
 </script>

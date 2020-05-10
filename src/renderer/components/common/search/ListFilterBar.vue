@@ -14,7 +14,8 @@
 </template>
 
 <script lang="ts">
-import { Component, NavigationIcon } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { NavigationIcon } from "sitewhere-ide-common";
 import Vue from "vue";
 
 @Component({})

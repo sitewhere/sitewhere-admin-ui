@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
 import { showMessage, showError } from "sitewhere-ide-common";
 import Vue from "vue";
 

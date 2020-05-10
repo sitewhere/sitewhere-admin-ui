@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
 import { IDeviceType } from "sitewhere-rest-api";
 
 import Vue from "vue";

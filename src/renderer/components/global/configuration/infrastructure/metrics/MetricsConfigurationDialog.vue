@@ -16,13 +16,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Refs,
-  Prop,
-  DialogComponent,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref, Prop } from "vue-property-decorator";
+import { NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import MetricsConfigurationFields from "./MetricsConfigurationFields.vue";
 
@@ -35,12 +31,8 @@ export default class MetricsConfigurationDialog extends DialogComponent<
   IMetricsConfiguration
 > {
   @Prop() readonly metrics!: IMetricsConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    dialog: any;
-    details: MetricsConfigurationFields;
-  }>;
+  @Ref() readonly dialog!: any;
+  @Ref() readonly details!: MetricsConfigurationFields;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -49,27 +41,27 @@ export default class MetricsConfigurationDialog extends DialogComponent<
 
   /** Generate payload from UI data */
   generatePayload(): IMetricsConfiguration {
-    return Object.assign({}, this.metrics, this.$refs.details.save());
+    return Object.assign({}, this.metrics, this.details.save());
   }
 
   /** Reset dialog content to default */
   reset() {
-    if (this.$refs.details) {
-      this.$refs.details.reset();
+    if (this.details) {
+      this.details.reset();
     }
   }
 
   /** Load data from an existing configuration */
   load(payload: IMetricsConfiguration) {
     this.reset();
-    if (this.$refs.details) {
-      this.$refs.details.load(payload);
+    if (this.details) {
+      this.details.load(payload);
     }
   }
 
   /** Called after update button is clicked */
   onUpdateClicked(e: any) {
-    if (!this.$refs.details.validate()) {
+    if (!this.details.validate()) {
       return;
     }
 

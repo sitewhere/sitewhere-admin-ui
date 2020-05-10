@@ -45,14 +45,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getDeviceAssignment
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import AssignmentDetailHeader from "./AssignmentDetailHeader.vue";
 import AssignmentLocationEvents from "./AssignmentLocationEvents.vue";
@@ -93,12 +92,7 @@ import {
 export default class AssignmentDetail extends DetailComponent<
   IDeviceAssignment
 > {
-  // References.
-  $refs!: Refs<{
-    edit: null;
-    delete: null;
-    invoke: InvocationCreateDialog;
-  }>;
+  @Ref() readonly invoke!: InvocationCreateDialog;
 
   /** Record as assignment */
   get assignment(): IDeviceAssignment | null {
@@ -166,7 +160,7 @@ export default class AssignmentDetail extends DetailComponent<
 
   /** Called to create command invocation */
   onAddCommandInvocation() {
-    this.$refs.invoke.open();
+    this.invoke.open();
   }
 
   /** Called after invocation is added */

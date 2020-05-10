@@ -47,14 +47,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getArea
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import AreaDetailHeader from "./AreaDetailHeader.vue";
 import AreaSubareas from "./AreaSubareas.vue";
@@ -98,17 +97,14 @@ import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class AreaDetail extends DetailComponent<IArea> {
-  parentArea: IArea | null = null;
+  @Ref() readonly create!: AreaCreateDialog;
+  @Ref() readonly edit!: AreaUpdateDialog;
+  @Ref() readonly delete!: AreaDeleteDialog;
+  @Ref() readonly subareas!: AreaSubareas;
+  @Ref() readonly zoneCreate!: ZoneCreateDialog;
+  @Ref() readonly zones!: AreaZones;
 
-  // References.
-  $refs!: Refs<{
-    create: AreaCreateDialog;
-    edit: AreaUpdateDialog;
-    delete: AreaDeleteDialog;
-    subareas: AreaSubareas;
-    zoneCreate: ZoneCreateDialog;
-    zones: AreaZones;
-  }>;
+  parentArea: IArea | null = null;
 
   /** Record as area */
   get area(): IArea | null {
@@ -155,28 +151,28 @@ export default class AreaDetail extends DetailComponent<IArea> {
   // Called to open area edit dialog.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
   /** Called to add a subarea */
   onAddSubarea() {
-    this.$refs.create.open();
+    this.create.open();
   }
 
   /** Called after subarea added */
   onSubareaAdded() {
-    this.$refs.subareas.refresh();
+    this.subareas.refresh();
   }
 
   /** Called to add a zone */
   onAddZone() {
-    this.$refs.zoneCreate.open();
+    this.zoneCreate.open();
   }
 
   /** Called after zone added */
   onZoneAdded() {
-    this.$refs.zones.refresh();
+    this.zones.refresh();
     this.refresh();
   }
 
@@ -188,7 +184,7 @@ export default class AreaDetail extends DetailComponent<IArea> {
   /** Called to open the delete dialog */
   onDelete() {
     if (this.token) {
-      this.$refs.delete.open(this.token);
+      this.delete.open(this.token);
     }
   }
 

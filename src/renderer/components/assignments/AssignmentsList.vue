@@ -42,14 +42,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  ListComponent,
   IPageSizes,
-  Refs,
   NavigationIcon,
   searchDeviceAssignments
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import AssignmentListEntry from "./AssignmentListEntry.vue";
 import AssignmentListFilterBar from "./AssignmentListFilterBar.vue";
@@ -87,10 +86,8 @@ export default class AssignmentsList extends ListComponent<
   IDeviceAssignmentResponseFormat,
   IDeviceAssignmentSearchResults
 > {
-  $refs!: Refs<{
-    filter: AssignmentListFilterDialog;
-    batch: InvocationByAssignmentCriteriaCreateDialog;
-  }>;
+  @Ref() readonly filterDialog!: AssignmentListFilterDialog;
+  @Ref() readonly batch!: InvocationByAssignmentCriteriaCreateDialog;
 
   filter: IDeviceAssignmentSearchCriteria = {};
   pageSizes: IPageSizes = [
@@ -145,8 +142,8 @@ export default class AssignmentsList extends ListComponent<
 
   /** Called to show filter criteria dialog */
   onShowFilterCriteria() {
-    this.$refs.filter.load(this.filter);
-    this.$refs.filter.openDialog();
+    this.filterDialog.load(this.filter);
+    this.filterDialog.openDialog();
   }
 
   /** Update filter criteria */
@@ -158,13 +155,13 @@ export default class AssignmentsList extends ListComponent<
   /** Clears the filter criteria */
   onClearFilterCriteria() {
     this.filter = {};
-    this.$refs.filter.reset();
+    this.filterDialog.reset();
     this.refresh();
   }
 
   /** Called when filter criteria are updated */
   onFilterUpdated(filter: IDeviceAssignmentSearchCriteria) {
-    this.$refs.filter.closeDialog();
+    this.filterDialog.closeDialog();
     this.filter = filter;
     this.refresh();
   }
@@ -176,7 +173,7 @@ export default class AssignmentsList extends ListComponent<
 
   /** Called to invoke a batch command */
   onBatchCommandInvocation() {
-    this.$refs.batch.open();
+    this.batch.open();
   }
 }
 </script>

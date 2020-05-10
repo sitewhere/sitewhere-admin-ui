@@ -12,13 +12,8 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  CreateDialogComponent,
-  DialogComponent,
-  Refs
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { CreateDialogComponent } from "sitewhere-ide-components";
 
 import ScriptCloneDialog from "./ScriptCloneDialog.vue";
 
@@ -35,15 +30,11 @@ export default class ScriptCreateCloneDialog extends CreateDialogComponent<
 > {
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<any>;
-  }>;
+  @Ref() readonly dialog!: ScriptCloneDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IScriptVersion> {
-    return this.$refs.dialog;
+  getDialog(): ScriptCloneDialog {
+    return this.dialog;
   }
 
   /** Called on payload commit */

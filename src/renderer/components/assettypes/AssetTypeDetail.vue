@@ -32,15 +32,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
-  DialogComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getAssetType
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import AssetTypeDetailHeader from "./AssetTypeDetailHeader.vue";
 import AssetTypeAssets from "./AssetTypeAssets.vue";
@@ -66,11 +64,8 @@ import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
   }
 })
 export default class AssetTypeDetail extends DetailComponent<IAssetType> {
-  // References.
-  $refs!: Refs<{
-    edit: AssetTypeUpdateDialog;
-    delete: DialogComponent<IAssetType>;
-  }>;
+  @Ref() readonly edit!: AssetTypeUpdateDialog;
+  @Ref() readonly delete!: AssetTypeDeleteDialog;
 
   /** Record as asset type */
   get assetType(): IAssetType | null {
@@ -110,7 +105,7 @@ export default class AssetTypeDetail extends DetailComponent<IAssetType> {
   // Called to open edit dialog.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
@@ -120,7 +115,7 @@ export default class AssetTypeDetail extends DetailComponent<IAssetType> {
   }
 
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    (this["delete"] as any).showDeleteDialog();
   }
 
   // Called when asset type is deleted.

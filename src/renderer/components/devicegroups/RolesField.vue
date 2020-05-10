@@ -21,7 +21,7 @@
             <v-flex xs1>
               <v-tooltip left>
                 <v-btn icon @click="onRolesAdded" slot="activator">
-                  <font-awesome-icon class="blue--text text--darken-2" icon="plus" size="lg"/>
+                  <font-awesome-icon class="blue--text text--darken-2" icon="plus" size="lg" />
                 </v-btn>
                 <span>Add Role</span>
               </v-tooltip>
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class RolesField extends Vue {

@@ -10,14 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getCustomer,
-  updateCustomer
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { getCustomer, updateCustomer } from "sitewhere-ide-common";
+import { EditDialogComponent } from "sitewhere-ide-components";
 
 import CustomerDialog from "./CustomerDialog.vue";
 
@@ -37,14 +32,11 @@ export default class CustomerUpdateDialog extends EditDialogComponent<
   ICustomer,
   ICustomerCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<ICustomer>;
-  }>;
+  @Ref() readonly dialog!: CustomerDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<ICustomer> {
-    return this.$refs.dialog;
+  getDialog(): CustomerDialog {
+    return this.dialog;
   }
 
   /** Load payload */

@@ -27,13 +27,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  ListComponent,
-  IPageSizes,
-  ITableHeaders
-} from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { IPageSizes, ITableHeaders } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 import { AxiosPromise } from "axios";
 import { formatDate, listMeasurementsForArea } from "sitewhere-ide-common";
 import { EventPageSizes, MeasurementHeaders } from "../../libraries/constants";

@@ -1,15 +1,13 @@
 <template>
   <sw-content-section icon="fa-cogs" title="Redis Configuration">
-    <template slot="overlay"><div class="logo"/></template>
+    <template slot="overlay">
+      <div class="logo" />
+    </template>
     <v-card v-if="redis" flat>
       <sw-content-field name="hostname" :value="redis.hostname" />
       <sw-content-field :alt="true" name="sentinel port" :value="redis.port" />
       <sw-content-field name="node count" :value="redis.nodeCount" />
-      <sw-content-field
-        :alt="true"
-        name="master group name"
-        :value="redis.masterGroupName"
-      />
+      <sw-content-field :alt="true" name="master group name" :value="redis.masterGroupName" />
       <sw-content-link
         class="mt-3"
         icon="fa-edit"
@@ -17,17 +15,13 @@
         @linkClicked="onEdit"
       />
     </v-card>
-    <redis-configuration-dialog
-      ref="dialog"
-      :redis="redis"
-      @payload="onRedisUpdated"
-    />
+    <redis-configuration-dialog ref="dialog" :redis="redis" @payload="onRedisUpdated" />
   </sw-content-section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Refs } from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
 
 import RedisConfigurationDialog from "./RedisConfigurationDialog.vue";
 
@@ -44,11 +38,7 @@ import {
 })
 export default class RedisSection extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
-
-  /** References */
-  $refs!: Refs<{
-    dialog: RedisConfigurationDialog;
-  }>;
+  @Ref() readonly dialog!: RedisConfigurationDialog;
 
   /** Get infrastructure information */
   get infrastructure(): IInfrastructureConfiguration | null {
@@ -63,8 +53,8 @@ export default class RedisSection extends Vue {
   /** Called to edit Kafka configuration */
   onEdit(): void {
     if (this.redis) {
-      this.$refs.dialog.load(this.redis);
-      this.$refs.dialog.openDialog();
+      this.dialog.load(this.redis);
+      this.dialog.openDialog();
     }
   }
 

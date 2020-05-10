@@ -48,15 +48,14 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
-  Refs,
   NavigationIcon,
   listUsers
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import ActionsBlock from "../common/ActionsBlock.vue";
 import UserCreateDialog from "./UserCreateDialog.vue";
@@ -87,11 +86,9 @@ export default class UsersList extends ListComponent<
   IUserResponseFormat,
   IUserSearchResults
 > {
-  $refs!: Refs<{
-    add: UserCreateDialog;
-    edit: UserUpdateDialog;
-    delete: UserDeleteDialog;
-  }>;
+  @Ref() readonly add!: UserCreateDialog;
+  @Ref() readonly edit!: UserUpdateDialog;
+  @Ref() readonly delete!: UserDeleteDialog;
 
   headers: ITableHeaders = [
     {
@@ -179,17 +176,17 @@ export default class UsersList extends ListComponent<
 
   // Called to open dialog.
   onAddUser() {
-    this.$refs.add.open();
+    this.add.open();
   }
 
   // Called to open edit dialog.
   onEditUser(username: string) {
-    this.$refs.edit.open(username);
+    this.edit.open(username);
   }
 
   // Called to open delete dialog.
   onDeleteUser(username: string) {
-    this.$refs.delete.open(username);
+    this.delete.open(username);
   }
 
   // Format a date.

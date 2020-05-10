@@ -26,13 +26,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  ListComponent,
-  NavigationIcon,
-  listCustomers
-} from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { NavigationIcon, listCustomers } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import CustomerListEntry from "./CustomerListEntry.vue";
 import CustomerCreateDialog from "./CustomerCreateDialog.vue";

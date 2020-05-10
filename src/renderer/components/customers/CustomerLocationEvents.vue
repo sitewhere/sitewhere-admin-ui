@@ -34,14 +34,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
   listLocationsForCustomer
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import { formatDate, fourDecimalPlaces } from "sitewhere-ide-common";
 import { EventPageSizes, LocationHeaders } from "../../libraries/constants";

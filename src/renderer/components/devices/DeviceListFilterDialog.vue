@@ -24,14 +24,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  DialogComponent,
-  DialogSection,
-  ITabbedComponent,
-  Refs,
-  NavigationIcon
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
+import { DialogComponent } from "sitewhere-ide-components";
 
 import DeviceListFilterDeviceTypeFields from "./DeviceListFilterDeviceTypeFields.vue";
 
@@ -45,11 +40,8 @@ import { IDeviceSearchCriteria } from "sitewhere-rest-api";
 export default class DeviceListFilterDialog extends DialogComponent<
   IDeviceSearchCriteria
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: ITabbedComponent;
-    devicetype: DialogSection;
-  }>;
+  @Ref() readonly dialog!: ITabbedComponent;
+  @Ref() readonly devicetype!: DeviceListFilterDeviceTypeFields;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -59,32 +51,32 @@ export default class DeviceListFilterDialog extends DialogComponent<
   // Generate payload from UI.
   generatePayload() {
     let payload: any = {};
-    Object.assign(payload, this.$refs.devicetype.save());
+    Object.assign(payload, this.devicetype.save());
     return payload;
   }
 
   // Reset dialog contents.
   reset() {
-    if (this.$refs.devicetype) {
-      this.$refs.devicetype.reset();
+    if (this.devicetype) {
+      this.devicetype.reset();
     }
-    if (this.$refs.dialog) {
-      this.$refs.dialog.setActiveTab(0);
+    if (this.dialog) {
+      this.dialog.setActiveTab(0);
     }
   }
 
   // Load dialog from a given payload.
   load(payload: IDeviceSearchCriteria) {
     this.reset();
-    if (this.$refs.devicetype) {
-      this.$refs.devicetype.load(payload);
+    if (this.devicetype) {
+      this.devicetype.load(payload);
     }
   }
 
   // Called after create button is clicked.
   onCreateClicked(e: any) {
-    if (!this.$refs.devicetype.validate()) {
-      this.$refs.dialog.setActiveTab(0);
+    if (!this.devicetype.validate()) {
+      this.dialog.setActiveTab(0);
       return;
     }
 

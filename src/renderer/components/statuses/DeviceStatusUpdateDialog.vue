@@ -10,15 +10,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  EditDialogComponent,
-  DialogComponent,
-  Refs,
-  getDeviceStatus,
-  updateDeviceStatus
-} from "sitewhere-ide-common";
+import { Component, Prop, Ref } from "vue-property-decorator";
+import { getDeviceStatus, updateDeviceStatus } from "sitewhere-ide-common";
+import { EditDialogComponent } from "sitewhere-ide-components";
 
 import DeviceStatusDialog from "./DeviceStatusDialog.vue";
 
@@ -39,15 +33,11 @@ export default class DeviceStatusUpdateDialog extends EditDialogComponent<
   IDeviceStatusCreateRequest
 > {
   @Prop() readonly deviceTypeToken!: string;
-
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceStatus>;
-  }>;
+  @Ref() readonly dialog!: DeviceStatusDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IDeviceStatus> {
-    return this.$refs.dialog;
+  getDialog(): DeviceStatusDialog {
+    return this.dialog;
   }
 
   /** Load payload */

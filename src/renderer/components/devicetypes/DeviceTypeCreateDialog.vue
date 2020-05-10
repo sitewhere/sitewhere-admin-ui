@@ -11,13 +11,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  CreateDialogComponent,
-  DialogComponent,
-  Refs,
-  createDeviceType
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { createDeviceType } from "sitewhere-ide-common";
+import { CreateDialogComponent } from "sitewhere-ide-components";
 
 import DeviceTypeDialog from "./DeviceTypeDialog.vue";
 
@@ -32,14 +28,11 @@ export default class DeviceTypeCreateDialog extends CreateDialogComponent<
   IDeviceType,
   IDeviceTypeCreateRequest
 > {
-  // References.
-  $refs!: Refs<{
-    dialog: DialogComponent<IDeviceType>;
-  }>;
+  @Ref() readonly dialog!: DeviceTypeDialog;
 
   /** Get wrapped dialog */
-  getDialog(): DialogComponent<IDeviceType> {
-    return this.$refs.dialog;
+  getDialog(): DeviceTypeDialog {
+    return this.dialog;
   }
 
   /** Called on payload commit */

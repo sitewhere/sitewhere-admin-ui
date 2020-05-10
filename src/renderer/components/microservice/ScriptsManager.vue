@@ -128,10 +128,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Component, Prop, Ref } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
-  Refs,
   listTenantScriptsByCategory,
   getTenantScriptMetadata,
   updateTenantScript,
@@ -167,6 +165,9 @@ export default class ScriptsManager extends Vue {
   @Prop() readonly identifier!: string;
   @Prop() readonly tenantToken!: string;
   @Prop() readonly scriptCategories!: IScriptCategory[];
+  @Ref() readonly create!: ScriptCreateDialog;
+  @Ref() readonly contentEditor!: ScriptsContentEditor;
+  @Ref() readonly clone!: ScriptCreateCloneDialog;
 
   scriptsByCategory: IScriptCategory[] = [];
   selectedScript: IScriptMetadata | null = null;
@@ -182,13 +183,6 @@ export default class ScriptsManager extends Vue {
     this.refresh();
     this.loaded = true;
   }
-
-  // References.
-  $refs!: Refs<{
-    create: ScriptCreateDialog;
-    content: ScriptsContentEditor;
-    clone: ScriptCreateCloneDialog;
-  }>;
 
   /** Refresh list of scripts */
   async refresh() {
@@ -223,7 +217,7 @@ export default class ScriptsManager extends Vue {
 
   /** Called when script create button is pressed */
   onScriptCreate() {
-    this.$refs.create.open();
+    this.create.open();
   }
 
   /** Indicates that a new script was added */
@@ -310,7 +304,7 @@ export default class ScriptsManager extends Vue {
 
   /** Show dialog for creating clone */
   onClone() {
-    this.$refs.clone.open();
+    this.clone.open();
   }
 
   /** Create clone of edited version */

@@ -50,16 +50,14 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Ref } from "vue-property-decorator";
 import {
-  Component,
-  Prop,
-  ListComponent,
   IPageSizes,
   ITableHeaders,
-  Refs,
   formatDate,
   listZones
 } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import ActionsBlock from "../common/ActionsBlock.vue";
 import ZoneUpdateDialog from "./ZoneUpdateDialog.vue";
@@ -90,12 +88,8 @@ export default class AreaZones extends ListComponent<
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
   @Prop() readonly area!: IArea;
-
-  // References.
-  $refs!: Refs<{
-    update: ZoneUpdateDialog;
-    delete: ZoneDeleteDialog;
-  }>;
+  @Ref() readonly update!: ZoneUpdateDialog;
+  @Ref() readonly delete!: ZoneDeleteDialog;
 
   pageSizes: IPageSizes = [
     {
@@ -173,7 +167,7 @@ export default class AreaZones extends ListComponent<
 
   /** Called to open zone update dialog */
   onEditZone(token: string) {
-    this.$refs.update.open(token);
+    this.update.open(token);
   }
 
   /** Called when a zone is updated */
@@ -183,7 +177,7 @@ export default class AreaZones extends ListComponent<
 
   /** Called to open zone delete dialog */
   onDeleteZone(token: string) {
-    this.$refs.delete.open(token);
+    this.delete.open(token);
   }
 
   /** Called when a zone is deleted */

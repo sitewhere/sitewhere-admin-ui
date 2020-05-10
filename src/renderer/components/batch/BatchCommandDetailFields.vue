@@ -32,13 +32,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Watch,
-  DialogSection,
-  listDeviceCommands
-} from "sitewhere-ide-common";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { listDeviceCommands } from "sitewhere-ide-common";
+import { DialogSection } from "sitewhere-ide-components";
 
 import { AxiosResponse } from "axios";
 import {

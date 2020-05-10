@@ -27,15 +27,13 @@
 </template>
 
 <script lang="ts">
+import { Component, Ref } from "vue-property-decorator";
 import {
-  Component,
-  DetailComponent,
-  DialogComponent,
   INavigationSection,
-  Refs,
   NavigationIcon,
   getAsset
 } from "sitewhere-ide-common";
+import { DetailComponent } from "sitewhere-ide-components";
 
 import AssetDetailHeader from "./AssetDetailHeader.vue";
 import AssetAssignments from "./AssetAssignments.vue";
@@ -59,11 +57,8 @@ import {
   }
 })
 export default class AssetDetail extends DetailComponent<IAsset> {
-  // References.
-  $refs!: Refs<{
-    edit: AssetUpdateDialog;
-    delete: DialogComponent<IAsset>;
-  }>;
+  @Ref() readonly edit!: AssetUpdateDialog;
+  @Ref() readonly delete!: AssetDeleteDialog;
 
   /** Record as asset */
   get asset(): IAsset | null {
@@ -103,7 +98,7 @@ export default class AssetDetail extends DetailComponent<IAsset> {
   // Called to open edit dialog.
   onEdit() {
     if (this.token) {
-      this.$refs.edit.open(this.token);
+      this.edit.open(this.token);
     }
   }
 
@@ -113,7 +108,7 @@ export default class AssetDetail extends DetailComponent<IAsset> {
   }
 
   onDelete() {
-    (this.$refs["delete"] as any).showDeleteDialog();
+    (this["delete"] as any).showDeleteDialog();
   }
 
   // Called when asset is deleted.

@@ -16,7 +16,8 @@
 </template>
 
 <script lang="ts">
-import { Component, DialogSection } from "sitewhere-ide-common";
+import { Component } from "vue-property-decorator";
+import { DialogSection } from "sitewhere-ide-components";
 
 import AreaChooser from "../areas/AreaChooser.vue";
 

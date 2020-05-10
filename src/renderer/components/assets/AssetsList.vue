@@ -32,14 +32,9 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  ListComponent,
-  IPageSizes,
-  Refs,
-  NavigationIcon,
-  listAssets
-} from "sitewhere-ide-common";
+import { Component, Ref } from "vue-property-decorator";
+import { IPageSizes, NavigationIcon, listAssets } from "sitewhere-ide-common";
+import { ListComponent } from "sitewhere-ide-components";
 
 import AssetListEntry from "./AssetListEntry.vue";
 import AssetCreateDialog from "./AssetCreateDialog.vue";
@@ -67,9 +62,7 @@ export default class AssetsList extends ListComponent<
   IAssetResponseFormat,
   IAssetSearchResults
 > {
-  $refs!: Refs<{
-    add: AssetCreateDialog;
-  }>;
+  @Ref() readonly add!: AssetCreateDialog;
 
   addIcon: string = NavigationIcon.Add;
 
@@ -121,7 +114,7 @@ export default class AssetsList extends ListComponent<
 
   // Called to open dialog.
   onAddAsset() {
-    this.$refs.add.open();
+    this.add.open();
   }
 }
 </script>

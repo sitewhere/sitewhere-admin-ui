@@ -17,9 +17,12 @@ app.on("ready", () => {
     height: 900,
     minHeight: 768,
     title: `SiteWhere Admininstration (${version} CE)`,
-    frame: false,
+    frame: true,
     titleBarStyle: "hidden",
-    webPreferences: { webSecurity: false }
+    webPreferences: {
+      nodeIntegration: true,
+      webSecurity: false
+    }
   };
 
   // Create splash screen.
@@ -39,7 +42,8 @@ app.on("ready", () => {
   });
 
   if (isDevelopment) {
-    window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`);
+    let url = `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`;
+    window.loadURL(url);
   } else {
     window.loadURL(
       formatURL({

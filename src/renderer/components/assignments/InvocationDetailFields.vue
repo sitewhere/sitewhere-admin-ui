@@ -29,7 +29,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, DialogSection } from "sitewhere-ide-common";
+import { Component, Prop } from "vue-property-decorator";
+import { DialogSection } from "sitewhere-ide-components";
 import { IDeviceCommand } from "sitewhere-rest-api";
 
 import CommandSelector from "../commands/CommandSelector.vue";
