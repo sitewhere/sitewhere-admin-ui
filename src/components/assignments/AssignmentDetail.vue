@@ -1,5 +1,5 @@
 <template>
-  <sw-detail-page
+  <detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading assignment ..."
@@ -13,8 +13,8 @@
       <v-tab key="locations">Locations</v-tab>
       <v-tab key="measurements">Measurements</v-tab>
       <v-tab key="alerts">Alerts</v-tab>
-      <v-tab key="invocations">Command Invocations</v-tab>
-      <v-tab key="responses">Command Responses</v-tab>
+      <v-tab key="invocations">Commands</v-tab>
+      <v-tab key="responses">Responses</v-tab>
     </template>
     <template slot="tab-items">
       <assignment-location-events tabkey="locations" :token="token" />
@@ -41,17 +41,13 @@
       <emulator-button tooltip="Device Emulator" @action="onOpenEmulator" />
       <delete-button tooltip="Delete Assignment" @action="onAssignmentDelete" />
     </template>
-  </sw-detail-page>
+  </detail-page>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getDeviceAssignment
-} from "sitewhere-ide-common";
-import { DetailComponent } from "sitewhere-ide-components";
+import { NavigationIcon, getDeviceAssignment } from "sitewhere-ide-common";
+import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import AssignmentDetailHeader from "./AssignmentDetailHeader.vue";
 import AssignmentLocationEvents from "./AssignmentLocationEvents.vue";
@@ -73,9 +69,11 @@ import {
   IDeviceAssignment,
   IDeviceAssignmentResponseFormat
 } from "sitewhere-rest-api";
+import { DeviceAssignmentsSection } from "../../libraries/constants";
 
 @Component({
   components: {
+    DetailPage,
     AssignmentDetailHeader,
     AssignmentLocationEvents,
     AssignmentMeasurementEvents,
@@ -132,23 +130,16 @@ export default class AssignmentDetail extends DetailComponent<
     return getDeviceAssignment(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(assignment: IDeviceAssignment) {
-    const section: INavigationSection = {
-      id: "assignments",
-      title: "Assignments",
-      icon: NavigationIcon.DeviceAssignment,
-      route: "/admin/assignments/" + assignment.token,
-      longTitle: "Manage Assignment: " + assignment.token
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", DeviceAssignmentsSection);
   }
 
   onAssignmentDelete() {
     console.log("Would be deleting assignment");
   }
 
-  // Called when site is deleted.
+  /** Called when site is deleted */
   onAssignmentDeleted() {
     routeTo(this, "/areas");
   }

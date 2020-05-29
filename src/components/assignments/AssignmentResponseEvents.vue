@@ -1,5 +1,5 @@
 <template>
-  <sw-data-table-tab
+  <data-table-tab
     :tabkey="tabkey"
     :loaded="loaded"
     :headers="headers"
@@ -8,21 +8,23 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading assignment command responses ..."
   >
-    <template slot="items" slot-scope="props">
-      <td width="20%" :title="props.item.originatingEventId">{{ props.item.originatingEventId }}</td>
-      <td width="30%" :title="props.item.response">{{ props.item.response }}</td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+    <template slot="item" slot-scope="props">
+      <tr>
+        <td width="20%" :title="props.item.originatingEventId">{{ props.item.originatingEventId }}</td>
+        <td width="30%" :title="props.item.response">{{ props.item.response }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.eventDate)"
+        >{{ formatDate(props.item.eventDate) }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.receivedDate)"
+        >{{ formatDate(props.item.receivedDate) }}</td>
+      </tr>
     </template>
-  </sw-data-table-tab>
+  </data-table-tab>
 </template>
 
 <script lang="ts">
@@ -32,7 +34,7 @@ import {
   ITableHeaders,
   listCommandResponsesForAssignment
 } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+import { ListComponent, DataTableTab } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { formatDate } from "sitewhere-ide-common";
@@ -44,7 +46,7 @@ import {
   IDateRangeSearchCriteria
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { DataTableTab } })
 export default class AssignmentResponseEvents extends ListComponent<
   IDeviceCommandResponse,
   IDateRangeSearchCriteria,

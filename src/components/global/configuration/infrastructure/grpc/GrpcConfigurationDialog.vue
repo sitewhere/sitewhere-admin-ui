@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     title="Edit gRPC Configuration"
@@ -12,20 +12,20 @@
     @cancelClicked="onCancelClicked"
   >
     <grpc-configuration-fields ref="details" />
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref, Prop } from "vue-property-decorator";
 import { NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent } from "sitewhere-ide-components";
+import { DialogComponent, BaseDialog } from "sitewhere-ide-components";
 
 import GrpcConfigurationFields from "./GrpcConfigurationFields.vue";
 
 import { IGrpcConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { GrpcConfigurationFields }
+  components: { BaseDialog, GrpcConfigurationFields }
 })
 export default class GrpcConfigurationDialog extends DialogComponent<
   IGrpcConfiguration

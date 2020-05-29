@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -24,19 +24,21 @@
         <branding-panel ref="branding" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata" />
+        <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
+  BaseDialog,
   DialogComponent,
   DialogSection,
-  BrandingPanel
+  BrandingPanel,
+  MetadataPanel
 } from "sitewhere-ide-components";
 
 import AssetTypeDetailFields from "./AssetTypeDetailFields.vue";
@@ -44,8 +46,10 @@ import { IAssetType } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    BaseDialog,
     AssetTypeDetailFields,
-    BrandingPanel
+    BrandingPanel,
+    MetadataPanel
   }
 })
 export default class AssetTypeDialog extends DialogComponent<IAssetType> {

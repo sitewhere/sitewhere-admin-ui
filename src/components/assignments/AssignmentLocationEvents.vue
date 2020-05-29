@@ -1,5 +1,5 @@
 <template>
-  <sw-data-table-tab
+  <data-table-tab
     :tabkey="tabkey"
     :loaded="loaded"
     :headers="headers"
@@ -8,28 +8,30 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading assignment locations ..."
   >
-    <template slot="items" slot-scope="props">
-      <td width="50%" title="Lat/Lon/Elevation">
-        {{
-        fourDecimalPlaces(props.item.latitude) +
-        ", " +
-        fourDecimalPlaces(props.item.longitude) +
-        ", " +
-        fourDecimalPlaces(props.item.elevation)
-        }}
-      </td>
-      <td
-        width="25%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
-      <td
-        width="25%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+    <template slot="item" slot-scope="props">
+      <tr>
+        <td width="50%" title="Lat/Lon/Elevation">
+          {{
+          fourDecimalPlaces(props.item.latitude) +
+          ", " +
+          fourDecimalPlaces(props.item.longitude) +
+          ", " +
+          fourDecimalPlaces(props.item.elevation)
+          }}
+        </td>
+        <td
+          width="25%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.eventDate)"
+        >{{ formatDate(props.item.eventDate) }}</td>
+        <td
+          width="25%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.receivedDate)"
+        >{{ formatDate(props.item.receivedDate) }}</td>
+      </tr>
     </template>
-  </sw-data-table-tab>
+  </data-table-tab>
 </template>
 
 <script lang="ts">
@@ -39,7 +41,7 @@ import {
   ITableHeaders,
   listLocationsForAssignment
 } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+import { ListComponent, DataTableTab } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { formatDate, fourDecimalPlaces } from "sitewhere-ide-common";
@@ -54,7 +56,7 @@ import {
   IDateRangeSearchCriteria
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { DataTableTab } })
 export default class AssignmentLocationEvents extends ListComponent<
   IDeviceLocation,
   IDateRangeSearchCriteria,

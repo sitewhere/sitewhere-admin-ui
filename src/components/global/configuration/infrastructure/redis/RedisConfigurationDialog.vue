@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     title="Edit Redis Configuration"
@@ -12,20 +12,20 @@
     @cancelClicked="onCancelClicked"
   >
     <redis-configuration-fields ref="details" />
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref, Prop } from "vue-property-decorator";
 import { NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent } from "sitewhere-ide-components";
+import { DialogComponent, BaseDialog } from "sitewhere-ide-components";
 
 import RedisConfigurationFields from "./RedisConfigurationFields.vue";
 
 import { IRedisConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { RedisConfigurationFields }
+  components: { BaseDialog, RedisConfigurationFields }
 })
 export default class RedisConfigurationDialog extends DialogComponent<
   IRedisConfiguration

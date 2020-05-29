@@ -6,20 +6,20 @@
         <a style="color: #2255cc;">{{ datastoreReference }}</a>.
       </v-card>
       <postgres-95-summary v-if="isPostgres95" :configuration="configuration" />
-      <sw-content-link
+      <content-link
         class="mt-3"
         icon="fa-edit"
         text="Update datastore settings"
         @linkClicked="onUpdateDatastore"
       />
-      <sw-content-link icon="fa-trash" text="Unset datastore" @linkClicked="onUnsetDatastore" />
+      <content-link icon="fa-trash" text="Unset datastore" @linkClicked="onUnsetDatastore" />
     </v-card>
     <v-card flat v-else>
-      <sw-content-warning
+      <content-warning
         text="No datastore is set. This will cause
     tenant engine startup to fail!"
       />
-      <sw-content-link
+      <content-link
         class="mt-3"
         icon="fa-plus-circle"
         text="Add datastore information."
@@ -49,8 +49,12 @@ import DatastoreCreateDialog from "./datastore/DatastoreCreateDialog.vue";
 import DatastoreUpdateDialog from "./datastore/DatastoreUpdateDialog.vue";
 import Postgres95Summary from "./datastore/postgres95/Postgres95Summary.vue";
 
+import { ContentLink, ContentWarning } from "sitewhere-ide-components";
+
 @Component({
   components: {
+    ContentLink,
+    ContentWarning,
     DatastoreCreateDialog,
     DatastoreUpdateDialog,
     Postgres95Summary

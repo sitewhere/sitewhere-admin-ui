@@ -25,11 +25,12 @@
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+import { DialogSection, DialogForm, FormText } from "sitewhere-ide-components";
 
 import { IMetricsConfiguration } from "sitewhere-rest-api";
 
 @Component({
+  components: { DialogForm, FormText },
   validations: {}
 })
 export default class MetricsConfigurationFields extends DialogSection {

@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     title="Edit Kafka Configuration"
@@ -12,20 +12,20 @@
     @cancelClicked="onCancelClicked"
   >
     <kafka-configuration-fields ref="details" />
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref, Prop } from "vue-property-decorator";
 import { NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent } from "sitewhere-ide-components";
+import { DialogComponent, BaseDialog } from "sitewhere-ide-components";
 
 import KafkaConfigurationFields from "./KafkaConfigurationFields.vue";
 
 import { IKafkaConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { KafkaConfigurationFields }
+  components: { BaseDialog, KafkaConfigurationFields }
 })
 export default class KafkaConfigurationDialog extends DialogComponent<
   IKafkaConfiguration

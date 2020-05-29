@@ -1,7 +1,7 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs9>
-      <sw-form-text
+      <form-text
         required
         :readonly="readonly"
         label="Hostname"
@@ -13,10 +13,10 @@
         <!--span v-if="$v.hostname.$invalid && $v.$dirty"
           >Hostname is required.</span
         -->
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs3>
-      <sw-form-text
+      <form-text
         required
         :readonly="readonly"
         label="Port"
@@ -27,10 +27,10 @@
         <!--span v-if="$v.hostname.$invalid && $v.$dirty"
           >Hostname is required.</span
         -->
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs12>
-      <sw-form-text
+      <form-text
         required
         :readonly="readonly"
         label="Max Connections"
@@ -42,10 +42,10 @@
         <!--span v-if="$v.hostname.$invalid && $v.$dirty"
           >Hostname is required.</span
         -->
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         :readonly="readonly"
         label="Username"
@@ -57,10 +57,10 @@
         <!--span v-if="$v.hostname.$invalid && $v.$dirty"
           >Hostname is required.</span
         -->
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         :readonly="readonly"
         label="Password"
@@ -72,18 +72,19 @@
         <!--span v-if="$v.hostname.$invalid && $v.$dirty"
           >Hostname is required.</span
         -->
-      </sw-form-text>
+      </form-text>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+import { DialogSection, DialogForm, FormText } from "sitewhere-ide-components";
 
 import { required } from "vuelidate/lib/validators";
 
 @Component({
+  components: { DialogForm, FormText },
   validations: {
     hostname: {
       required

@@ -1,19 +1,19 @@
 <template>
-  <sw-content-section icon="fa-cogs" title="gRPC Configuration">
+  <content-section icon="fa-cogs" title="gRPC Configuration">
     <template slot="overlay">
       <div class="logo" />
     </template>
     <v-card v-if="grpc" flat>
-      <sw-content-field name="max retry count" :value="grpc.maxRetryCount" />
-      <sw-content-field
+      <content-field name="max retry count" :value="grpc.maxRetryCount" />
+      <content-field
         :alt="true"
         name="initial backoff seconds"
         :value="grpc.initialBackoffSeconds"
       />
-      <sw-content-field name="max backoff seconds" :value="grpc.maxBackoffSeconds" />
-      <sw-content-field :alt="true" name="backoff multiplier" :value="grpc.backoffMultiplier" />
-      <sw-content-field name="resolve fqdn" :value="grpc.resolveFQDN" />
-      <sw-content-link
+      <content-field name="max backoff seconds" :value="grpc.maxBackoffSeconds" />
+      <content-field :alt="true" name="backoff multiplier" :value="grpc.backoffMultiplier" />
+      <content-field name="resolve fqdn" :value="grpc.resolveFQDN" />
+      <content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit gRPC configuration."
@@ -21,7 +21,7 @@
       />
     </v-card>
     <grpc-configuration-dialog ref="dialog" :grpc="grpc" @payload="onGrpcUpdated" />
-  </sw-content-section>
+  </content-section>
 </template>
 
 <script lang="ts">
@@ -36,8 +36,17 @@ import {
   IGrpcConfiguration
 } from "sitewhere-rest-api";
 
+import {
+  ContentSection,
+  ContentField,
+  ContentLink
+} from "sitewhere-ide-components";
+
 @Component({
   components: {
+    ContentSection,
+    ContentField,
+    ContentLink,
     GrpcConfigurationDialog
   }
 })

@@ -1,10 +1,10 @@
 <template>
-  <sw-content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
+  <content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
     <v-card flat style="height: 100%">
       <v-card-text>
         <div class="flex-rows">
           <div v-if="configuration" class="config-header">
-            <sw-page-header :text="header" />
+            <page-header :text="header" />
           </div>
           <div class="config-content">
             <slot />
@@ -16,17 +16,19 @@
       </v-card-text>
       <slot name="dialogs"></slot>
     </v-card>
-  </sw-content-tab>
+  </content-tab>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import Vue from "vue";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
+import { ContentTab, PageHeader } from "sitewhere-ide-components";
+
 @Component({
-  components: {}
+  components: { ContentTab, PageHeader }
 })
 export default class InstanceConfigurationEditor extends Vue {
   @Prop() readonly tabkey!: string;

@@ -265,7 +265,7 @@ export default class Login extends Vue {
     this.loggingIn = false;
   }
 
-  // Get user for username and route to system page.
+  /** Get user for username and route to system page */
   async onJwtAcquired() {
     try {
       this.loggingIn = true;
@@ -284,7 +284,7 @@ export default class Login extends Vue {
     this.loggingIn = false;
   }
 
-  // Load or create the SiteWhere settings file.
+  /** Load or create the SiteWhere settings file */
   getOrCreateSiteWhereSettings() {
     const settings = Settings.load();
     this.settings = settings;

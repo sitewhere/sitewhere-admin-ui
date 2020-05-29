@@ -1,5 +1,5 @@
 <template>
-  <sw-list-tab
+  <list-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -7,23 +7,23 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading assets ..."
   >
-    <sw-list-layout>
+    <list-layout>
       <v-flex xs6 v-for="(asset) in matches" :key="asset.token">
         <asset-list-entry :asset="asset"></asset-list-entry>
       </v-flex>
-    </sw-list-layout>
+    </list-layout>
     <template slot="noresults">
       <no-results-panel>
         <div>There are no assets of this type.</div>
       </no-results-panel>
     </template>
-  </sw-list-tab>
+  </list-tab>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import { listAssets } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+import { ListComponent, ListTab, ListLayout } from "sitewhere-ide-components";
 
 import AssetListEntry from "../assets/AssetListEntry.vue";
 import NoResultsPanel from "../common/NoResultsPanel.vue";
@@ -38,6 +38,8 @@ import {
 
 @Component({
   components: {
+    ListTab,
+    ListLayout,
     AssetListEntry,
     NoResultsPanel
   }

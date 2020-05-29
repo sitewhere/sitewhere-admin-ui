@@ -1,27 +1,27 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs9>
-      <sw-form-text
+      <form-text
         required
         label="Hostname"
         title="Base hostname for computing Sentinel servers."
         v-model="hostname"
         icon="fa-cog"
         class="mr-3"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
     <v-flex xs3>
-      <sw-form-text
+      <form-text
         required
         label="Port"
         title="Sentinel server port."
         v-model="port"
         icon="fa-cog"
         type="number"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Node Count"
         title="Number of nodes to list for Sentinel."
@@ -29,27 +29,28 @@
         icon="fa-cog"
         type="number"
         class="mr-3"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Master Group Name"
         title="Mater group name for Redis client connection."
         v-model="masterGroupName"
         icon="fa-cog"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+import { DialogSection, DialogForm, FormText } from "sitewhere-ide-components";
 
 import { IRedisConfiguration } from "sitewhere-rest-api";
 
 @Component({
+  components: { DialogForm, FormText },
   validations: {}
 })
 export default class KafkaConfigurationFields extends DialogSection {
@@ -92,5 +93,3 @@ export default class KafkaConfigurationFields extends DialogSection {
   }
 }
 </script>
-
-<style scoped></style>

@@ -1,33 +1,35 @@
 <template>
-  <sw-datatable-section
+  <datatable-section
     icon="fa-database"
     title="Cassandra Global Configurations"
     :headers="headers"
     :items="configsAsSortedArray"
     width="50%"
   >
-    <template v-slot:items="props">
-      <td>
-        <sw-datatable-link
-          @linkClicked="onOpenDatastore(props.item.meta.name)"
-          :text="props.item.meta.name"
-        />
-      </td>
-      <td>{{ props.item.config.contactPoints }}</td>
-      <td>{{ props.item.config.keyspace }}</td>
-      <td>
-        <sw-content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
-      </td>
+    <template v-slot:item="props">
+      <tr>
+        <td>
+          <datatable-link
+            @linkClicked="onOpenDatastore(props.item.meta.name)"
+            :text="props.item.meta.name"
+          />
+        </td>
+        <td>{{ props.item.config.contactPoints }}</td>
+        <td>{{ props.item.config.keyspace }}</td>
+        <td>
+          <content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
+        </td>
+      </tr>
     </template>
     <template v-slot:datatable-footer>
-      <sw-content-link
+      <content-link
         class="mt-3"
         icon="fa-plus-circle"
         text="Add new Cassandra database global configuration."
         @linkClicked="onAddDatastore"
       />
     </template>
-  </sw-datatable-section>
+  </datatable-section>
 </template>
 
 <script lang="ts">
@@ -36,8 +38,20 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
+import {
+  DatatableSection,
+  DatatableLink,
+  ContentDeleteIcon,
+  ContentLink
+} from "sitewhere-ide-components";
+
 @Component({
-  components: {}
+  components: {
+    DatatableSection,
+    DatatableLink,
+    ContentDeleteIcon,
+    ContentLink
+  }
 })
 export default class InfluxConfigurationsTable extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;

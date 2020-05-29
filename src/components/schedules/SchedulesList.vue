@@ -1,5 +1,5 @@
 <template>
-  <sw-list-page
+  <list-page
     :icon="icon"
     title="Schedules"
     loadingMessage="Loading schedules ..."
@@ -11,23 +11,25 @@
       <v-data-table
         :headers="headers"
         :items="matches"
-        :hide-actions="true"
+        :hide-default-footer="true"
         no-data-text="No Schedules Found"
       >
-        <template slot="items" slot-scope="props">
-          <td width="17%" :title="props.item.name">{{ props.item.name }}</td>
-          <td width="15%" :title="props.item.triggerType">{{ props.item.triggerType }}</td>
-          <td width="35%" :title="props.item.token">{{ props.item.token }}</td>
-          <td
-            width="18%"
-            :title="formatDate(props.item.createdDate)"
-          >{{ formatDate(props.item.createdDate) }}</td>
-          <td width="15%">
-            <actions-block
-              @edit="onEditSchedule(props.item.token)"
-              @delete="onDeleteSchedule(props.item.token)"
-            />
-          </td>
+        <template slot="item" slot-scope="props">
+          <tr>
+            <td width="17%" :title="props.item.name">{{ props.item.name }}</td>
+            <td width="15%" :title="props.item.triggerType">{{ props.item.triggerType }}</td>
+            <td width="35%" :title="props.item.token">{{ props.item.token }}</td>
+            <td
+              width="18%"
+              :title="formatDate(props.item.createdDate)"
+            >{{ formatDate(props.item.createdDate) }}</td>
+            <td width="15%">
+              <actions-block
+                @edit="onEditSchedule(props.item.token)"
+                @delete="onDeleteSchedule(props.item.token)"
+              />
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-flex>
@@ -48,7 +50,7 @@
     <template slot="actions">
       <add-button tooltip="Add Schedule" @action="onAddSchedule" />
     </template>
-  </sw-list-page>
+  </list-page>
 </template>
 
 <script lang="ts">
@@ -59,7 +61,7 @@ import {
   NavigationIcon,
   listSchedules
 } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+import { ListComponent, ListPage } from "sitewhere-ide-components";
 
 import ActionsBlock from "../common/ActionsBlock.vue";
 import ScheduleCreateDialog from "./ScheduleCreateDialog.vue";
@@ -79,6 +81,7 @@ import {
 
 @Component({
   components: {
+    ListPage,
     ActionsBlock,
     ScheduleCreateDialog,
     ScheduleUpdateDialog,

@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -11,7 +11,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <sw-dialog-header class="pl-3 pr-3 pt-1">
+    <dialog-header class="pl-3 pr-3 pt-1">
       <v-layout class="pl-2 pr-2 pt-0 pb-0" row wrap>
         <v-flex xs4>
           <v-btn-toggle mandatory class="mt-3" v-model="scope">
@@ -48,16 +48,21 @@
           />
         </v-flex>
       </v-layout>
-    </sw-dialog-header>
+    </dialog-header>
     <v-divider class="mb-2" />
     <postgres-95-fields v-if="isPostgres95" :readonly="isGlobalScope" ref="details" />
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref, Prop, Watch } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent, DialogSection } from "sitewhere-ide-components";
+import {
+  DialogComponent,
+  DialogSection,
+  BaseDialog,
+  DialogHeader
+} from "sitewhere-ide-components";
 
 import Postgres95Fields from "./postgres95/Postgres95Fields.vue";
 
@@ -73,7 +78,7 @@ import {
 } from "sitewhere-rest-api";
 
 @Component({
-  components: { Postgres95Fields }
+  components: { BaseDialog, DialogHeader, Postgres95Fields }
 })
 export default class DatastoreDialog extends DialogComponent<
   IDatastoreDefinition

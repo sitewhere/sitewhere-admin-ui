@@ -1,9 +1,9 @@
 <template>
-  <sw-content-section icon="fa-cogs" title="Metrics Configuration">
+  <content-section icon="fa-cogs" title="Metrics Configuration">
     <v-card v-if="metrics" flat>
-      <sw-content-field name="enabled" :value="metrics.enabled" />
-      <sw-content-field :alt="true" name="http port" :value="metrics.httpPort" />
-      <sw-content-link
+      <content-field name="enabled" :value="metrics.enabled" />
+      <content-field :alt="true" name="http port" :value="metrics.httpPort" />
+      <content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit metrics configuration."
@@ -11,7 +11,7 @@
       />
     </v-card>
     <metrics-configuration-dialog ref="dialog" :metrics="metrics" @payload="onMetricsUpdated" />
-  </sw-content-section>
+  </content-section>
 </template>
 
 <script lang="ts">
@@ -26,8 +26,17 @@ import {
   IMetricsConfiguration
 } from "sitewhere-rest-api";
 
+import {
+  ContentSection,
+  ContentField,
+  ContentLink
+} from "sitewhere-ide-components";
+
 @Component({
   components: {
+    ContentSection,
+    ContentField,
+    ContentLink,
     MetricsConfigurationDialog
   }
 })

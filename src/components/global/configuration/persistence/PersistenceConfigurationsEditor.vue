@@ -11,9 +11,9 @@
       @datastoreUpdated="onRdbDatastoreUpdated"
       @datastoreDeleted="onRdbDatastoreDeleted"
     />
-    <v-divider class="mt-4 mb-4" />
+    <v-divider class="mt-6 mb-6" />
     <influx-configurations-table :configuration="configuration" />
-    <v-divider class="mt-4 mb-4" />
+    <v-divider class="mt-6 mb-6" />
     <cassandra-configurations-table :configuration="configuration" />
   </instance-configuration-editor>
 </template>

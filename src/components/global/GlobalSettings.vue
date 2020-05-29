@@ -1,5 +1,5 @@
 <template>
-  <sw-detail-page
+  <detail-page
     :icon="icon"
     :tabsOnBottom="true"
     title="Instance Settings"
@@ -33,7 +33,7 @@
       <instance-configuration-source tabkey="json" :configuration="workingCopy" />
     </template>
     <template slot="actions" />
-  </sw-detail-page>
+  </detail-page>
 </template>
 
 <script lang="ts">
@@ -46,6 +46,7 @@ import {
   getInstanceConfiguration,
   updateInstanceConfiguration
 } from "sitewhere-ide-common";
+import { DetailPage } from "sitewhere-ide-components";
 
 import InfrastructureEditor from "./configuration/infrastructure/InfrastructureEditor.vue";
 import PersistenceConfigurationsEditor from "./configuration/persistence/PersistenceConfigurationsEditor.vue";
@@ -56,6 +57,7 @@ import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    DetailPage,
     InfrastructureEditor,
     PersistenceConfigurationsEditor,
     InstanceConfigurationSource,

@@ -1,5 +1,5 @@
 <template>
-  <sw-detail-page
+  <detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading asset type ..."
@@ -28,17 +28,13 @@
       <edit-button tooltip="Edit Asset Type" @action="onEdit" />
       <delete-button tooltip="Delete Asset Type" @action="onDelete" />
     </template>
-  </sw-detail-page>
+  </detail-page>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getAssetType
-} from "sitewhere-ide-common";
-import { DetailComponent } from "sitewhere-ide-components";
+import { NavigationIcon, getAssetType } from "sitewhere-ide-common";
+import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import AssetTypeDetailHeader from "./AssetTypeDetailHeader.vue";
 import AssetTypeAssets from "./AssetTypeAssets.vue";
@@ -51,9 +47,11 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { IAssetType, IAssetTypeResponseFormat } from "sitewhere-rest-api";
+import { AssetTypesSection } from "../../libraries/constants";
 
 @Component({
   components: {
+    DetailPage,
     AssetTypeDetailHeader,
     AssetTypeAssets,
     AssetListEntry,
@@ -90,35 +88,31 @@ export default class AssetTypeDetail extends DetailComponent<IAssetType> {
     return getAssetType(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(assetType: IAssetType) {
-    const section: INavigationSection = {
-      id: "assettypes",
-      title: "Asset Types",
-      icon: NavigationIcon.AssetType,
-      route: "/admin/assettypes/" + assetType.token,
-      longTitle: "Manage Asset Type: " + assetType.name
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", AssetTypesSection);
   }
 
-  // Called to open edit dialog.
+  /** Called to open edit dialog */
   onEdit() {
     if (this.token) {
       this.edit.open(this.token);
     }
   }
 
-  // Called when asset type is updated.
+  /** Called when asset type is updated */
   onAssetTypeUpdated() {
     this.refresh();
   }
 
+  /** Open delete dialog */
   onDelete() {
-    (this["delete"] as any).showDeleteDialog();
+    if (this.token) {
+      this.delete.open(this.token);
+    }
   }
 
-  // Called when asset type is deleted.
+  /** Called when asset type is deleted */
   onAssetTypeDeleted() {
     routeTo(this, "/assettypes");
   }

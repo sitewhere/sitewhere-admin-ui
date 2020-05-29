@@ -40,11 +40,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getCustomerType
-} from "sitewhere-ide-common";
+import { NavigationIcon, getCustomerType } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import CustomerTypeDetailHeader from "./CustomerTypeDetailHeader.vue";
@@ -57,6 +53,7 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { ICustomerType, ICustomerTypeResponseFormat } from "sitewhere-rest-api";
+import { CustomerTypesSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -99,15 +96,8 @@ export default class CustomerTypeDetail extends DetailComponent<ICustomerType> {
   }
 
   /** Called after data is loaded */
-  afterRecordLoaded(customerType: ICustomerType) {
-    const section: INavigationSection = {
-      id: "customertypes",
-      title: "Customer Types",
-      icon: "cog",
-      route: "/admin/customertypes/" + customerType.token,
-      longTitle: "Manage Customer Type: " + customerType.name
-    };
-    this.$store.commit("currentSection", section);
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", CustomerTypesSection);
   }
 
   /** Called to open customer type edit dialog */

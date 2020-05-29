@@ -1,12 +1,12 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
-      <sw-form-text required label="Name" title="Measurement name." v-model="name" icon="info">
+      <form-text required label="Name" title="Measurement name." v-model="name" icon="info">
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs12>
-      <sw-form-text
+      <form-text
         required
         label="Value"
         title="Measurement value."
@@ -15,18 +15,19 @@
         icon="info"
       >
         <span v-if="!$v.value.required && $v.$dirty">Value is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+import { DialogSection, DialogForm, FormText } from "sitewhere-ide-components";
 
 import { required } from "vuelidate/lib/validators";
 
 @Component({
+  components: { DialogForm, FormText },
   validations: {
     name: {
       required

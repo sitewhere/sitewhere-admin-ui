@@ -1,5 +1,5 @@
 <template>
-  <sw-data-table-tab
+  <data-table-tab
     :tabkey="tabkey"
     :loaded="loaded"
     :headers="headers"
@@ -8,21 +8,23 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading assignment measurements ..."
   >
-    <template slot="items" slot-scope="props">
-      <td width="35%" :title="props.item.name">{{ props.item.name }}</td>
-      <td width="35%" :title="props.item.value">{{ props.item.value }}</td>
-      <td
-        width="15%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
-      <td
-        width="15%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+    <template slot="item" slot-scope="props">
+      <tr>
+        <td width="35%" :title="props.item.name">{{ props.item.name }}</td>
+        <td width="35%" :title="props.item.value">{{ props.item.value }}</td>
+        <td
+          width="15%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.eventDate)"
+        >{{ formatDate(props.item.eventDate) }}</td>
+        <td
+          width="15%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.receivedDate)"
+        >{{ formatDate(props.item.receivedDate) }}</td>
+      </tr>
     </template>
-  </sw-data-table-tab>
+  </data-table-tab>
 </template>
 
 <script lang="ts">
@@ -32,7 +34,7 @@ import {
   ITableHeaders,
   listMeasurementsForAssignment
 } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+import { ListComponent, DataTableTab } from "sitewhere-ide-components";
 import { AxiosPromise } from "axios";
 import { formatDate } from "sitewhere-ide-common";
 import {
@@ -46,7 +48,7 @@ import {
   IDateRangeSearchCriteria
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { DataTableTab } })
 export default class AreaMeasurementEvents extends ListComponent<
   IDeviceMeasurement,
   IDateRangeSearchCriteria,

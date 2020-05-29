@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -28,16 +28,21 @@
         <schedule-chooser-section ref="schedule" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata" />
+        <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent, DialogSection } from "sitewhere-ide-components";
+import {
+  DialogComponent,
+  DialogSection,
+  BaseDialog,
+  MetadataPanel
+} from "sitewhere-ide-components";
 
 import InvocationDetailFields from "./InvocationDetailFields.vue";
 import ScheduleChooserSection from "./ScheduleChooserSection.vue";
@@ -45,8 +50,10 @@ import { IDeviceCommandInvocation, IUser } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    BaseDialog,
     InvocationDetailFields,
-    ScheduleChooserSection
+    ScheduleChooserSection,
+    MetadataPanel
   }
 })
 export default class InvocationDialog extends DialogComponent<

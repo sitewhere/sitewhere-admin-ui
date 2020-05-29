@@ -48,11 +48,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getArea
-} from "sitewhere-ide-common";
+import { NavigationIcon, getArea } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import AreaDetailHeader from "./AreaDetailHeader.vue";
@@ -75,6 +71,7 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
+import { AreasSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -136,20 +133,12 @@ export default class AreaDetail extends DetailComponent<IArea> {
     return getArea(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(area: IArea) {
-    this.parentArea = (area as any).parentArea;
-    const section: INavigationSection = {
-      id: "areas",
-      title: "Areas",
-      icon: NavigationIcon.Area,
-      route: "/admin/areas/" + area.token,
-      longTitle: "Manage Area: " + area.name
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", AreasSection);
   }
 
-  // Called to open area edit dialog.
+  /** Called to open area edit dialog */
   onEdit() {
     if (this.token) {
       this.edit.open(this.token);
@@ -194,7 +183,7 @@ export default class AreaDetail extends DetailComponent<IArea> {
     routeTo(this, "/areas");
   }
 
-  // Move up one level in the area hierarchy.
+  /** Move up one level in the area hierarchy */
   onUpOneLevel() {
     if (this.parentArea) {
       routeTo(this, "/areas/" + this.parentArea.token);

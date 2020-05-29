@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -20,22 +20,27 @@
         <schedule-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata" />
+        <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent, DialogSection } from "sitewhere-ide-components";
+import {
+  DialogComponent,
+  DialogSection,
+  BaseDialog
+} from "sitewhere-ide-components";
 
 import ScheduleDetailFields from "./ScheduleDetailFields.vue";
 import { ISchedule } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    BaseDialog,
     ScheduleDetailFields
   }
 })

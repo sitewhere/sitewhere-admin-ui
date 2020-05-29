@@ -1,6 +1,12 @@
 <template>
   <v-app v-if="tenant">
-    <in-app-system-bar style="-webkit-app-region: drag" />
+    <in-app-system-bar
+      style="-webkit-app-region: drag"
+      @openWebTools="onOpenWebTools"
+      @minimize="onMinWindow"
+      @maximize="onMaxWindow"
+      @close="onCloseWindow"
+    />
     <v-navigation-drawer :width="300" style="margin-top: 25px;" v-model="drawer" app>
       <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
         <div class="tenant-logo" :style="tenantLogoStyle" />
@@ -50,8 +56,7 @@ import {
   INavigationSection,
   getTenant,
   handleError,
-  getJwt,
-  NavigationIcon
+  getJwt
 } from "sitewhere-ide-common";
 import {
   InAppSystemBar,
@@ -62,6 +67,17 @@ import Copyright from "../Copyright.vue";
 import Notifications from "../common/Notifications.vue";
 
 import { ITenant, ITenantResponseFormat } from "sitewhere-rest-api";
+import {
+  DevicesGroup,
+  DevicesSection,
+  CustomersGroup,
+  AreasGroup,
+  AssetsGroup,
+  BatchOperationsGroup,
+  SchedulesGroup
+} from "../../libraries/constants";
+
+import Electron from "electron";
 
 @Component({
   components: {
@@ -76,128 +92,18 @@ export default class TenantAdministration extends Vue {
   tenant!: ITenant;
   tenantToken!: string;
   drawer = true;
+
+  /** Navigation sections */
   sections: INavigationSection[] = [
-    {
-      id: "deviceGroup",
-      title: "Device Management",
-      icon: NavigationIcon.Device,
-      route: "devices",
-      longTitle: "Manage Devices",
-      subsections: [
-        {
-          id: "devicetypes",
-          title: "Device Types",
-          icon: NavigationIcon.DeviceType,
-          route: "devicetypes",
-          longTitle: "Manage Device Types"
-        },
-        {
-          id: "devices",
-          title: "Devices",
-          icon: NavigationIcon.Device,
-          route: "devices",
-          longTitle: "Manage Devices"
-        },
-        {
-          id: "assignments",
-          title: "Device Assignments",
-          icon: NavigationIcon.DeviceAssignment,
-          route: "assignments",
-          longTitle: "Manage Assignments"
-        },
-        {
-          id: "groups",
-          title: "Device Groups",
-          icon: NavigationIcon.DeviceGroup,
-          route: "groups",
-          longTitle: "Manage Device Groups"
-        }
-      ]
-    },
-    {
-      id: "customersGroup",
-      title: "Customer Management",
-      icon: NavigationIcon.Customer,
-      route: "customers",
-      longTitle: "Manage Customers",
-      subsections: [
-        {
-          id: "customertypes",
-          title: "Customer Types",
-          icon: NavigationIcon.CustomerType,
-          route: "customertypes",
-          longTitle: "Manage Customer Types"
-        },
-        {
-          id: "customers",
-          title: "Customers",
-          icon: NavigationIcon.Customer,
-          route: "customers",
-          longTitle: "Manage Customers"
-        }
-      ]
-    },
-    {
-      id: "areasGroup",
-      title: "Area Management",
-      icon: NavigationIcon.Area,
-      route: "areas",
-      longTitle: "Manage Areas",
-      subsections: [
-        {
-          id: "areatypes",
-          title: "Area Types",
-          icon: NavigationIcon.AreaType,
-          route: "areatypes",
-          longTitle: "Manage Area Types"
-        },
-        {
-          id: "areas",
-          title: "Areas",
-          icon: NavigationIcon.Area,
-          route: "areas",
-          longTitle: "Manage Areas"
-        }
-      ]
-    },
-    {
-      id: "assetGroup",
-      title: "Asset Management",
-      icon: NavigationIcon.Asset,
-      route: "assets",
-      longTitle: "Manage Assets",
-      subsections: [
-        {
-          id: "assettypes",
-          title: "Asset Types",
-          icon: NavigationIcon.AssetType,
-          route: "assettypes",
-          longTitle: "Manage Asset Types"
-        },
-        {
-          id: "assets",
-          title: "Assets",
-          icon: NavigationIcon.Asset,
-          route: "assets",
-          longTitle: "Manage Assets"
-        }
-      ]
-    },
-    {
-      id: "batch",
-      title: "Batch Operations",
-      icon: NavigationIcon.BatchOperation,
-      route: "batch",
-      longTitle: "Manage Batch Operations"
-    },
-    {
-      id: "schedules",
-      title: "Schedules",
-      icon: NavigationIcon.Schedule,
-      route: "schedules",
-      longTitle: "Manage Schedules"
-    }
+    DevicesGroup,
+    CustomersGroup,
+    AreasGroup,
+    AssetsGroup,
+    BatchOperationsGroup,
+    SchedulesGroup
   ];
+
+  /** Available user actions */
   userActions: IAction[] = [
     {
       id: "sysadmin",
@@ -236,8 +142,7 @@ export default class TenantAdministration extends Vue {
       this.loadTenant();
     } else {
       this.tenant = tenant;
-      console.log(tenant);
-      this.onSectionClicked(this.$data.sections[0]);
+      this.onSectionClicked(DevicesSection);
     }
   }
 
@@ -316,11 +221,10 @@ export default class TenantAdministration extends Vue {
   /** Called after tenant is loaded */
   onTenantLoaded(tenant: ITenant) {
     this.tenant = tenant;
-    console.log(this.tenant);
     this.$store.commit("selectedTenant", tenant);
 
-    // Select first section from list.
-    this.onSectionClicked(this.$data.sections[0]);
+    // Select devices section from list.
+    this.onSectionClicked(DevicesSection);
   }
 
   /** Route to instance settings */
@@ -328,7 +232,7 @@ export default class TenantAdministration extends Vue {
     this.$router.push("/system");
   }
 
-  // Set up timer for reloading JWT.
+  /** Set up timer for reloading JWT */
   async refreshJwt() {
     const component = this;
     try {
@@ -344,6 +248,27 @@ export default class TenantAdministration extends Vue {
       console.log("Could not update JWT.");
       component.onLogOut();
     }
+  }
+
+  /** Open Web Tools */
+  onOpenWebTools() {
+    Electron.remote.getCurrentWebContents().openDevTools();
+  }
+
+  /** Minimize window */
+  onMinWindow() {
+    Electron.remote.getCurrentWindow().minimize();
+  }
+
+  /** Maximize window */
+  onMaxWindow() {
+    Electron.remote.getCurrentWindow().maximize();
+  }
+
+  /** Close window */
+  onCloseWindow() {
+    Electron.remote.getCurrentWindow().close();
+    Electron.app.quit();
   }
 }
 </script>

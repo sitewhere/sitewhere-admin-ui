@@ -46,9 +46,9 @@ import { AxiosResponse } from "axios";
 import { Component } from "vue-property-decorator";
 import { IAction, INavigationSection } from "sitewhere-ide-common";
 import {
-  Navigation,
   InAppSystemBar,
-  InAppFooter
+  InAppFooter,
+  Navigation
 } from "sitewhere-ide-components";
 
 import Copyright from "./Copyright.vue";
@@ -109,17 +109,17 @@ export default class SystemAdministration extends Vue {
     this.onSectionClicked(this.$data.sections[0]);
   }
 
-  // Get logged in user.
+  /** Get logged in user */
   get user() {
     return this.$store.getters.user;
   }
 
-  // Get currently selected section.
+  /** Get currently selected section */
   get section() {
     return this.$store.getters.currentSection;
   }
 
-  // Get user full name.
+  /** Get user full name */
   get fullname() {
     const user = this.$store.getters.user;
     if (user) {
@@ -134,17 +134,17 @@ export default class SystemAdministration extends Vue {
     return "Not Logged In";
   }
 
-  // Get global loading indicator.
+  /** Get global loading indicator */
   get loading() {
     return this.$store.getters.loading;
   }
 
-  // Get global error indicator.
+  /** Get global error indicator */
   get error() {
     return this.$store.getters.error;
   }
 
-  // Called when a section is clicked.
+  /** Called when a section is clicked */
   onSectionClicked(section: INavigationSection) {
     this.$store.commit("currentSection", section);
     this.$router.push("/" + section.route);
@@ -156,7 +156,7 @@ export default class SystemAdministration extends Vue {
     }
   }
 
-  // Called when user requests log out.
+  /** Called when user requests log out */
   onLogOut() {
     this.$store.commit("logOut");
     this.$router.push("/");

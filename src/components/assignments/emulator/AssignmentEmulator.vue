@@ -1,5 +1,5 @@
 <template>
-  <sw-detail-page
+  <detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading assignment ..."
@@ -35,42 +35,42 @@
       />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
+      <navigation-action-button
         icon="warning"
         :material="true"
         tooltip="Add Alert"
         @action="onAddAlertClicked"
       />
-      <sw-navigation-action-button
+      <navigation-action-button
         icon="room"
         :material="true"
         tooltip="Add Location"
         @action="onEnterAddLocationMode"
       />
-      <sw-navigation-action-button
+      <navigation-action-button
         icon="assessment"
         :material="true"
         tooltip="Add Measurement"
         @action="onAddMeasurementClicked"
       />
-      <sw-navigation-action-button
+      <navigation-action-button
         icon="cached"
         :material="true"
         tooltip="Refresh Locations"
         @action="onRefreshLocations"
       />
     </template>
-  </sw-detail-page>
+  </detail-page>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
+import { NavigationIcon, getDeviceAssignment } from "sitewhere-ide-common";
 import {
-  INavigationSection,
-  NavigationIcon,
-  getDeviceAssignment
-} from "sitewhere-ide-common";
-import { DetailComponent } from "sitewhere-ide-components";
+  DetailComponent,
+  DetailPage,
+  NavigationActionButton
+} from "sitewhere-ide-components";
 
 import AssignmentListEntry from "../AssignmentListEntry.vue";
 import AssignmentEmulatorMap from "./AssignmentEmulatorMap.vue";
@@ -85,9 +85,12 @@ import {
   IDeviceAssignment,
   IDeviceAssignmentResponseFormat
 } from "sitewhere-rest-api";
+import { AssignmentEmulatorSection } from "../../../libraries/constants";
 
 @Component({
   components: {
+    DetailPage,
+    NavigationActionButton,
     AssignmentListEntry,
     AssignmentEmulatorMap,
     LocationCreateDialog,
@@ -122,7 +125,10 @@ export default class AssignmentEmulator extends DetailComponent<
 
   /** Get page title */
   get title(): string {
-    return this.assignment ? this.assignment.token : "";
+    return (
+      "Emulating " +
+      (this.assignment ? this.assignment.token : " Device Assignment")
+    );
   }
 
   /** Load record */
@@ -133,16 +139,9 @@ export default class AssignmentEmulator extends DetailComponent<
     return getDeviceAssignment(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(assignment: IDeviceAssignment) {
-    const section: INavigationSection = {
-      id: "emulator",
-      title: "Assignment Emulator",
-      icon: NavigationIcon.DeviceAssignment,
-      route: "/admin/assignments/emulator/" + assignment.token,
-      longTitle: "Assignment Emulator: " + assignment.token
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", AssignmentEmulatorSection);
   }
 
   /** Enter mode where next click adds a location */

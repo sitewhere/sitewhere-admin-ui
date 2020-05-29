@@ -32,11 +32,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getAreaType
-} from "sitewhere-ide-common";
+import { NavigationIcon, getAreaType } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import AreaTypeDetailHeader from "./AreaTypeDetailHeader.vue";
@@ -50,6 +46,7 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { IAreaType, IAreaTypeResponseFormat } from "sitewhere-rest-api";
+import { AreaTypesSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -91,15 +88,8 @@ export default class AreaTypeDetail extends DetailComponent<IAreaType> {
   }
 
   /** Called after data is loaded */
-  afterRecordLoaded(areaType: IAreaType) {
-    const section: INavigationSection = {
-      id: "areatypes",
-      title: "Area Types",
-      icon: NavigationIcon.AreaType,
-      route: "/admin/areatypes/" + areaType.token,
-      longTitle: "Manage Area Type: " + areaType.name
-    };
-    this.$store.commit("currentSection", section);
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", AreaTypesSection);
   }
 
   /** Called to open area type edit dialog */

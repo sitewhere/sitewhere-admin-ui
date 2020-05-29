@@ -1,6 +1,6 @@
 <template>
   <v-card flat style="position: relative; height: 100%;">
-    <sw-image-zoom-on-hover v-if="imageUrl" :imageUrl="imageUrl" />
+    <image-zoom-on-hover v-if="imageUrl" :imageUrl="imageUrl" />
     <span v-else>{{ assignment }}</span>
   </v-card>
 </template>
@@ -9,6 +9,8 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
+import { ImageZoomOnHover } from "sitewhere-ide-components";
+
 import {
   IDeviceAssignment,
   IDevice,
@@ -16,7 +18,7 @@ import {
   IAsset
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { ImageZoomOnHover } })
 export default class AssignmentDetailHeaderImage extends Vue {
   @Prop() readonly assignment!: IDeviceAssignment;
 

@@ -1,5 +1,5 @@
 <template>
-  <sw-list-entry>
+  <list-entry>
     <v-container fluid @click="onAssetTypeClicked">
       <v-layout row>
         <v-flex xs3>
@@ -8,12 +8,12 @@
         <v-flex xs9>
           <div>
             <div class="title ellipsis mb-1">{{ assetType.name }}</div>
-            <div class="atdesc">{{ assetType.description }}</div>
+            <div class="atdesc caption mb-3">{{ assetType.description }}</div>
           </div>
         </v-flex>
       </v-layout>
     </v-container>
-  </sw-list-entry>
+  </list-entry>
 </template>
 
 <script lang="ts">
@@ -21,12 +21,14 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
 import BrandingImage from "../common/BrandingImage.vue";
+import { ListEntry } from "sitewhere-ide-components";
 
 import { IAssetType } from "sitewhere-rest-api";
 import { IStyle } from "../common/Style";
 
 @Component({
   components: {
+    ListEntry,
     BrandingImage
   }
 })
@@ -51,7 +53,7 @@ export default class AssetTypeListEntry extends Vue {
 
 <style scoped>
 .atdesc {
-  height: 80px;
+  height: 65px;
   overflow-y: hidden;
 }
 </style>

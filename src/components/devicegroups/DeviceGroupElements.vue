@@ -10,30 +10,32 @@
     loadingMessage="Loading device group elements ..."
   >
     <template slot="item" slot-scope="props">
-      <td
-        v-if="props.item.device"
-        width="40%"
-        :title="props.item.device.token"
-        :class="elementClassFor(props.item)"
-      >
-        <v-icon class="grey--text text--darken-2 type-icon">{{deviceIcon}}</v-icon>
-        {{ props.item.device.token }}
-      </td>
-      <td v-else width="40%" :title="props.item.groupId" :class="elementClassFor(props.item)">
-        <v-icon class="grey--text text--darken-2 type-icon">{{groupIcon}}</v-icon>
-        {{ props.item.groupId }}
-      </td>
-      <td v-if="props.item.device" width="40%">{{ props.item.device.deviceType.name }}</td>
-      <td v-else width="40%">{{ props.item.deviceGroup.name }}</td>
-      <td width="10%" :title="props.item.roles">{{ props.item.roles.join(', ') }}</td>
-      <td width="10%" title>
-        <v-tooltip left>
-          <v-btn class="ma-0" icon slot="activator" @click.stop="showDeleteDialog(props.item)">
-            <v-icon class="grey--text">delete</v-icon>
-          </v-btn>
-          <span>Delete</span>
-        </v-tooltip>
-      </td>
+      <tr>
+        <td
+          v-if="props.item.device"
+          width="40%"
+          :title="props.item.device.token"
+          :class="elementClassFor(props.item)"
+        >
+          <v-icon class="grey--text text--darken-2 type-icon">{{deviceIcon}}</v-icon>
+          {{ props.item.device.token }}
+        </td>
+        <td v-else width="40%" :title="props.item.groupId" :class="elementClassFor(props.item)">
+          <v-icon class="grey--text text--darken-2 type-icon">{{groupIcon}}</v-icon>
+          {{ props.item.groupId }}
+        </td>
+        <td v-if="props.item.device" width="40%">{{ props.item.device.deviceType.name }}</td>
+        <td v-else width="40%">{{ props.item.deviceGroup.name }}</td>
+        <td width="10%" :title="props.item.roles">{{ props.item.roles.join(', ') }}</td>
+        <td width="10%" title>
+          <v-tooltip left>
+            <v-btn class="ma-0" icon slot="activator" @click.stop="showDeleteDialog(props.item)">
+              <v-icon class="grey--text">delete</v-icon>
+            </v-btn>
+            <span>Delete</span>
+          </v-tooltip>
+        </td>
+      </tr>
     </template>
     <template slot="dialogs">
       <device-group-element-delete-dialog

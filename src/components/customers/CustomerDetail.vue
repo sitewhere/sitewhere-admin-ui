@@ -48,12 +48,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  NavigationIcon,
-  getCustomer,
-  INavigationSection,
-  routeTo
-} from "sitewhere-ide-common";
+import { NavigationIcon, getCustomer, routeTo } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import CustomerDetailHeader from "./CustomerDetailHeader.vue";
@@ -72,6 +67,7 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { AxiosPromise } from "axios";
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
+import { CustomersSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -129,37 +125,29 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
     return getCustomer(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(customer: ICustomer) {
-    this.parentCustomer = (customer as any).parentCustomer;
-    const section: INavigationSection = {
-      id: "customers",
-      title: "Customers",
-      icon: "building",
-      route: "/admin/customers/" + customer.token,
-      longTitle: "Manage Customer: " + customer.name
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", CustomersSection);
   }
 
-  // Called to open area edit dialog.
+  /** Called to open area edit dialog */
   onEdit() {
     if (this.token) {
       this.edit.open(this.token);
     }
   }
 
-  // Called to add a subcustomer.
+  /** Called to add a subcustomer */
   onAddSubcustomer() {
     this.create.open();
   }
 
-  // Called after subarea added.
+  /** Called after subcustomer added */
   onSubcustomerAdded() {
     this.subcustomers.refresh();
   }
 
-  // Called when customer is updated.
+  /** Called when customer is updated */
   onCustomerUpdated() {
     this.refresh();
   }
@@ -170,12 +158,12 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
     }
   }
 
-  // Called when customer is deleted.
+  /** Called when customer is deleted */
   onCustomerDeleted() {
     routeTo(this, "/customers");
   }
 
-  // Move up one level in the area hierarchy.
+  /** Move up one level in the area hierarchy */
   onUpOneLevel() {
     routeTo(this, "/customers/" + (this.customer as any).parentCustomer.token);
   }

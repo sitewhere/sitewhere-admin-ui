@@ -28,11 +28,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getDevice
-} from "sitewhere-ide-common";
+import { NavigationIcon, getDevice } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import DeviceDetailHeader from "./DeviceDetailHeader.vue";
@@ -45,6 +41,7 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { IDevice, IDeviceResponseFormat } from "sitewhere-rest-api";
+import { DevicesSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -83,42 +80,33 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
     return getDevice(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(device: IDevice) {
-    const section: INavigationSection = {
-      id: "devices",
-      title: "Devices",
-      icon: NavigationIcon.Device,
-      route: "/admin/devices/" + device.token,
-      longTitle: "Manage Device: " + device.token
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", DevicesSection);
   }
 
-  // Open dialog to edit device.
+  /** Open dialog to edit device */
   onEdit() {
     if (this.token) {
       this.edit.open(this.token);
     }
   }
 
-  // Called after update.
+  /** Called after update */
   onDeviceUpdated() {
     this.refresh();
   }
 
-  // Open dialog to delete device.
+  /** Open dialog to delete device */
   onDelete() {
     if (this.token) {
       this.delete.open(this.token);
     }
   }
 
-  // Called after device is deleted.
+  /** Called after device is deleted */
   onDeviceDeleted() {
     routeTo(this, "/devices");
   }
 }
 </script>
-
-<style scoped></style>

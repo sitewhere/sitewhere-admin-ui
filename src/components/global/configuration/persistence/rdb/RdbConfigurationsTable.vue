@@ -1,26 +1,28 @@
 <template>
-  <sw-datatable-section
+  <datatable-section
     icon="fa-database"
     title="Relational Database Global Configurations"
     :headers="headers"
     :items="rdbConfigsAsSortedArray"
     width="50%"
   >
-    <template v-slot:items="props">
-      <td>
-        <sw-datatable-link
-          @linkClicked="onOpenDatastore(props.item.meta.name)"
-          :text="props.item.meta.name"
-        />
-      </td>
-      <td>{{ props.item.meta.type }}</td>
-      <td>{{ props.item.meta.connection }}</td>
-      <td>
-        <sw-content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
-      </td>
+    <template v-slot:item="props">
+      <tr>
+        <td>
+          <datatable-link
+            @linkClicked="onOpenDatastore(props.item.meta.name)"
+            :text="props.item.meta.name"
+          />
+        </td>
+        <td>{{ props.item.meta.type }}</td>
+        <td>{{ props.item.meta.connection }}</td>
+        <td>
+          <content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
+        </td>
+      </tr>
     </template>
     <template v-slot:datatable-footer>
-      <sw-content-link
+      <content-link
         class="mt-3"
         icon="fa-plus-circle"
         text="Add new relational database global configuration."
@@ -39,7 +41,7 @@
         @updated="onDatastoreUpdated"
       />
     </template>
-  </sw-datatable-section>
+  </datatable-section>
 </template>
 
 <script lang="ts">
@@ -56,8 +58,19 @@ import {
 import { IRdbConfiguration } from "sitewhere-rest-api";
 import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
 
+import {
+  DatatableSection,
+  DatatableLink,
+  ContentDeleteIcon,
+  ContentLink
+} from "sitewhere-ide-components";
+
 @Component({
   components: {
+    DatatableSection,
+    DatatableLink,
+    ContentDeleteIcon,
+    ContentLink,
     RdbDatastoreCreateDialog,
     RdbDatastoreUpdateDialog
   }

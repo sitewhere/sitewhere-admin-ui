@@ -1,14 +1,14 @@
 <template>
-  <sw-content-section icon="fa-cogs" title="Redis Configuration">
+  <content-section icon="fa-cogs" title="Redis Configuration">
     <template slot="overlay">
       <div class="logo" />
     </template>
     <v-card v-if="redis" flat>
-      <sw-content-field name="hostname" :value="redis.hostname" />
-      <sw-content-field :alt="true" name="sentinel port" :value="redis.port" />
-      <sw-content-field name="node count" :value="redis.nodeCount" />
-      <sw-content-field :alt="true" name="master group name" :value="redis.masterGroupName" />
-      <sw-content-link
+      <content-field name="hostname" :value="redis.hostname" />
+      <content-field :alt="true" name="sentinel port" :value="redis.port" />
+      <content-field name="node count" :value="redis.nodeCount" />
+      <content-field :alt="true" name="master group name" :value="redis.masterGroupName" />
+      <content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit Redis configuration."
@@ -16,7 +16,7 @@
       />
     </v-card>
     <redis-configuration-dialog ref="dialog" :redis="redis" @payload="onRedisUpdated" />
-  </sw-content-section>
+  </content-section>
 </template>
 
 <script lang="ts">
@@ -31,8 +31,17 @@ import {
   IRedisConfiguration
 } from "sitewhere-rest-api";
 
+import {
+  ContentSection,
+  ContentField,
+  ContentLink
+} from "sitewhere-ide-components";
+
 @Component({
   components: {
+    ContentSection,
+    ContentField,
+    ContentLink,
     RedisConfigurationDialog
   }
 })

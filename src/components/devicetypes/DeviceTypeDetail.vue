@@ -50,11 +50,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getDeviceType
-} from "sitewhere-ide-common";
+import { NavigationIcon, getDeviceType } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import DeviceTypeDetailHeader from "./DeviceTypeDetailHeader.vue";
@@ -77,6 +73,7 @@ import {
   IDeviceTypeResponseFormat,
   DeviceContainerPolicy
 } from "sitewhere-rest-api";
+import { DeviceTypesSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -134,36 +131,29 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
     return getDeviceType(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(deviceType: IDeviceType) {
-    const section: INavigationSection = {
-      id: "devicetypes",
-      title: "Device Types",
-      icon: "map",
-      route: "/admin/devicetypes/" + deviceType.token,
-      longTitle: "Manage Device Type: " + deviceType.name
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", DeviceTypesSection);
   }
 
-  // Called on command create.
+  /** Called on command create */
   onCommandCreate() {
     this.command.open();
   }
 
-  // Called on status create.
+  /** Called on status create */
   onStatusCreate() {
     this.status.open();
   }
 
-  // Called to open area edit dialog.
+  /** Called to open area edit dialog */
   onEdit() {
     if (this.token) {
       this.edit.open(this.token);
     }
   }
 
-  // Called after update.
+  /** Called after update */
   onUpdated() {
     this.refresh();
   }
@@ -174,21 +164,19 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
     }
   }
 
-  // Called after delete.
+  /** Called after delete */
   onDeleted() {
     routeTo(this, "/devicetypes");
   }
 
-  // Called after a command is added.
+  /** Called after a command is added */
   onCommandAdded() {
     this.commands.refresh();
   }
 
-  // Called after a status is added.
+  /** Called after a status is added */
   onStatusAdded() {
     this.statuses.refresh();
   }
 }
 </script>
-
-<style scoped></style>

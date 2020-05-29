@@ -1,5 +1,5 @@
 <template>
-  <sw-content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
+  <content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
     <editor
       class="editor"
       v-model="json"
@@ -10,17 +10,20 @@
       width="100%"
       height="100%"
     ></editor>
-  </sw-content-tab>
+  </content-tab>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import Vue from "vue";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
+
+import { ContentTab } from "sitewhere-ide-components";
 
 @Component({
   components: {
+    ContentTab,
     editor: require("vue2-ace-editor")
   }
 })

@@ -1,7 +1,7 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
-      <sw-form-token
+      <form-token
         required
         label="Asset type token"
         title="Unique token for referencing asset type."
@@ -10,7 +10,7 @@
       />
     </v-flex>
     <v-flex xs12>
-      <sw-form-text
+      <form-text
         required
         label="Name"
         title="Name displayed for asset type."
@@ -18,10 +18,10 @@
         icon="info"
       >
         <span v-if="$v.name.$invalid && $v.$dirty">Name is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs12>
-      <sw-form-text-area
+      <form-text-area
         required
         v-model="description"
         title="Asset type description."
@@ -29,10 +29,10 @@
         icon="info"
       >
         <span v-if="$v.description.$invalid && $v.$dirty">Description is required.</span>
-      </sw-form-text-area>
+      </form-text-area>
     </v-flex>
     <v-flex xs12>
-      <sw-form-select
+      <form-select
         required
         title="Category asset type belongs to"
         :items="assetCatgories"
@@ -43,14 +43,21 @@
         icon="info"
       >
         <span v-if="$v.assetCategory.$invalid && $v.$dirty">Asset category is required.</span>
-      </sw-form-select>
+      </form-select>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+import {
+  DialogSection,
+  DialogForm,
+  FormToken,
+  FormText,
+  FormTextArea,
+  FormSelect
+} from "sitewhere-ide-components";
 
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -58,6 +65,7 @@ import { required, helpers } from "vuelidate/lib/validators";
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
+  components: { DialogForm, FormToken, FormText, FormTextArea, FormSelect },
   validations: {
     token: {
       required,

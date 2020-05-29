@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     title="Edit Metrics Configuration"
@@ -12,20 +12,20 @@
     @cancelClicked="onCancelClicked"
   >
     <metrics-configuration-fields ref="details" />
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref, Prop } from "vue-property-decorator";
 import { NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent } from "sitewhere-ide-components";
+import { DialogComponent, BaseDialog } from "sitewhere-ide-components";
 
 import MetricsConfigurationFields from "./MetricsConfigurationFields.vue";
 
 import { IMetricsConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { MetricsConfigurationFields }
+  components: { BaseDialog, MetricsConfigurationFields }
 })
 export default class MetricsConfigurationDialog extends DialogComponent<
   IMetricsConfiguration

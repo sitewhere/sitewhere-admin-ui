@@ -1,18 +1,18 @@
 <template>
-  <sw-content-section icon="fa-cogs" title="Apache Kafka Configuration">
+  <content-section icon="fa-cogs" title="Apache Kafka Configuration">
     <template slot="overlay">
       <div class="logo" />
     </template>
     <v-card v-if="kafka" flat>
-      <sw-content-field name="hostname" :value="kafka.hostname" />
-      <sw-content-field :alt="true" name="port" :value="kafka.port" />
-      <sw-content-field name="default topic partitions" :value="kafka.defaultTopicPartitions" />
-      <sw-content-field
+      <content-field name="hostname" :value="kafka.hostname" />
+      <content-field :alt="true" name="port" :value="kafka.port" />
+      <content-field name="default topic partitions" :value="kafka.defaultTopicPartitions" />
+      <content-field
         :alt="true"
         name="default topic relication factor"
         :value="kafka.defaultTopicReplicationFactor"
       />
-      <sw-content-link
+      <content-link
         class="mt-3"
         icon="fa-edit"
         text="Edit Kafka configuration."
@@ -20,7 +20,7 @@
       />
     </v-card>
     <kafka-configuration-dialog ref="dialog" :kafka="kafka" @payload="onKafkaUpdated" />
-  </sw-content-section>
+  </content-section>
 </template>
 
 <script lang="ts">
@@ -30,6 +30,12 @@ import { Component, Prop, Ref } from "vue-property-decorator";
 import KafkaConfigurationDialog from "./KafkaConfigurationDialog.vue";
 
 import {
+  ContentSection,
+  ContentField,
+  ContentLink
+} from "sitewhere-ide-components";
+
+import {
   IInstanceConfiguration,
   IInfrastructureConfiguration,
   IKafkaConfiguration
@@ -37,6 +43,9 @@ import {
 
 @Component({
   components: {
+    ContentSection,
+    ContentField,
+    ContentLink,
     KafkaConfigurationDialog
   }
 })

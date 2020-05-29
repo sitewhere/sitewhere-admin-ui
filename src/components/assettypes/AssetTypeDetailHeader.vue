@@ -1,36 +1,43 @@
 <template>
-  <sw-navigation-header-panel v-if="assetType" height="190px">
+  <navigation-header-panel v-if="assetType" height="190px">
     <template slot="left">
-      <sw-header-branding-panel :entity="assetType" />
+      <header-branding-panel :entity="assetType" />
     </template>
     <template slot="content">
-      <sw-navigation-header-fields>
-        <sw-header-field label="Token">
+      <navigation-header-fields>
+        <header-field label="Token">
           <clipboard-copy-field :field="assetType.token" message="Token copied to clipboard" />
-        </sw-header-field>
-        <sw-header-field label="Name">
+        </header-field>
+        <header-field label="Name">
           <span>{{ assetType.name }}</span>
-        </sw-header-field>
-        <sw-header-field label="Description">
+        </header-field>
+        <header-field label="Description">
           <span>{{ assetType.description }}</span>
-        </sw-header-field>
-        <sw-header-field label="Created">
+        </header-field>
+        <header-field label="Created">
           <span>{{ formatDate(assetType.createdDate) }}</span>
-        </sw-header-field>
-        <sw-header-field label="Updated">
+        </header-field>
+        <header-field label="Updated">
           <span>{{ formatDate(assetType.updatedDate) }}</span>
-        </sw-header-field>
-      </sw-navigation-header-fields>
+        </header-field>
+      </navigation-header-fields>
     </template>
     <template slot="right">
       <authenticated-image :url="qrCodeUrl" />
     </template>
-  </sw-navigation-header-panel>
+  </navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { HeaderComponent, ClipboardCopyField } from "sitewhere-ide-components";
+import {
+  HeaderComponent,
+  ClipboardCopyField,
+  NavigationHeaderPanel,
+  HeaderBrandingPanel,
+  NavigationHeaderFields,
+  HeaderField
+} from "sitewhere-ide-components";
 
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
 
@@ -39,6 +46,10 @@ import { IAssetType } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    NavigationHeaderPanel,
+    HeaderBrandingPanel,
+    NavigationHeaderFields,
+    HeaderField,
     ClipboardCopyField,
     AuthenticatedImage
   }

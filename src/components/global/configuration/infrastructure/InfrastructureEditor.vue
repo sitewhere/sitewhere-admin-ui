@@ -6,11 +6,11 @@
     header="Configure Connectivity to Instance Infrastructure"
   >
     <grpc-section :configuration="configuration" @updated="onGrpcUpdated" />
-    <v-divider class="mt-4 mb-4" />
+    <v-divider class="mt-6 mb-6" />
     <kafka-section :configuration="configuration" @updated="onKafkaUpdated" />
-    <v-divider class="mt-4 mb-4" />
+    <v-divider class="mt-6 mb-6" />
     <redis-section :configuration="configuration" @updated="onRedisUpdated" />
-    <v-divider class="mt-4 mb-4" />
+    <v-divider class="mt-6 mb-6" />
     <metrics-section :configuration="configuration" @updated="onMetricsUpdated" />
   </instance-configuration-editor>
 </template>

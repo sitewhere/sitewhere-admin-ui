@@ -28,11 +28,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getAsset
-} from "sitewhere-ide-common";
+import { NavigationIcon, getAsset } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import AssetDetailHeader from "./AssetDetailHeader.vue";
@@ -49,6 +45,7 @@ import {
   IAssetResponseFormat,
   IDeviceAssignment
 } from "sitewhere-rest-api";
+import { AssetsSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -88,16 +85,9 @@ export default class AssetDetail extends DetailComponent<IAsset> {
     return getAsset(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(asset: IAsset) {
-    const section: INavigationSection = {
-      id: "assets",
-      title: "Assets",
-      icon: NavigationIcon.Asset,
-      route: "/admin/assets/" + asset.token,
-      longTitle: "Manage Asset: " + asset.name
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", AssetsSection);
   }
 
   /** Called to open edit dialog */

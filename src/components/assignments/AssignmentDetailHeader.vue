@@ -1,47 +1,54 @@
 <template>
-  <sw-navigation-header-panel v-if="assignment" :imageUrl="imageUrl" height="220px">
+  <navigation-header-panel v-if="assignment" :imageUrl="imageUrl" height="220px">
     <template slot="left">
       <assignment-detail-header-image :assignment="assignment" />
     </template>
     <template slot="content">
-      <sw-navigation-header-fields>
-        <sw-header-field label="Assignment token">
+      <navigation-header-fields>
+        <header-field label="Assignment token">
           <clipboard-copy-field
             :field="assignment.token"
             message="Assignment token copied to clipboard"
           />
-        </sw-header-field>
-        <sw-linked-header-field
+        </header-field>
+        <linked-header-field
           label="Assigned device"
           :text="assignment.device.deviceType.name"
           :url="'/devices/' + assignment.device.token"
         />
-        <sw-header-field label="Created date">
+        <header-field label="Created date">
           <span>{{ formatDate(assignment.createdDate) }}</span>
-        </sw-header-field>
-        <sw-header-field label="Last updated date">
+        </header-field>
+        <header-field label="Last updated date">
           <span>{{ formatDate(assignment.updatedDate) }}</span>
-        </sw-header-field>
-        <sw-header-field label="Active date">
+        </header-field>
+        <header-field label="Active date">
           <span>{{ formatDate(assignment.activeDate) }}</span>
-        </sw-header-field>
-        <sw-header-field label="Released date">
+        </header-field>
+        <header-field label="Released date">
           <span>{{ formatDate(assignment.releasedDate) }}</span>
-        </sw-header-field>
-        <sw-header-field label="Status">
+        </header-field>
+        <header-field label="Status">
           <assignment-status-button :assignment="assignment" @updated="onStatusUpdated" />
-        </sw-header-field>
-      </sw-navigation-header-fields>
+        </header-field>
+      </navigation-header-fields>
     </template>
     <template slot="right">
       <authenticated-image :url="qrCodeUrl" />
     </template>
-  </sw-navigation-header-panel>
+  </navigation-header-panel>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { HeaderComponent, ClipboardCopyField } from "sitewhere-ide-components";
+import {
+  HeaderComponent,
+  ClipboardCopyField,
+  NavigationHeaderPanel,
+  NavigationHeaderFields,
+  HeaderField,
+  LinkedHeaderField
+} from "sitewhere-ide-components";
 
 import { formatDate } from "sitewhere-ide-common";
 import { IDeviceAssignment } from "sitewhere-rest-api";
@@ -52,6 +59,10 @@ import AssignmentStatusButton from "./AssignmentStatusButton.vue";
 
 @Component({
   components: {
+    NavigationHeaderPanel,
+    NavigationHeaderFields,
+    HeaderField,
+    LinkedHeaderField,
     ClipboardCopyField,
     AuthenticatedImage,
     AssignmentDetailHeaderImage,

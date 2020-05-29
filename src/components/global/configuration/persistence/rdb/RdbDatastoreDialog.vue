@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -27,13 +27,17 @@
     </v-card>
     <v-divider class="mb-2" />
     <postgres-95-fields v-if="isPostgres95" ref="details" />
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref, Prop } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent, DialogSection } from "sitewhere-ide-components";
+import {
+  DialogComponent,
+  DialogSection,
+  BaseDialog
+} from "sitewhere-ide-components";
 
 import Postgres95Fields from "../../../../configuration/datastore/postgres95/Postgres95Fields.vue";
 
@@ -44,7 +48,7 @@ import {
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { Postgres95Fields }
+  components: { BaseDialog, Postgres95Fields }
 })
 export default class RdbDatastoreDialog extends DialogComponent<
   IDatastoreDefinition

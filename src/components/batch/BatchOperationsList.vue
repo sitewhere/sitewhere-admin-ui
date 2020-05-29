@@ -1,5 +1,5 @@
 <template>
-  <sw-list-page
+  <list-page
     :icon="icon"
     title="Batch Operations"
     loadingMessage="Loading batch operations ..."
@@ -14,33 +14,35 @@
         :hide-actions="true"
         no-data-text="No Batch Operations Found"
       >
-        <template slot="items" slot-scope="props">
-          <td width="15%" :title="props.item.operationType">{{ props.item.operationType }}</td>
-          <td width="15%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
-          <td
-            width="20%"
-            style="white-space: nowrap"
-            :title="formatDate(props.item.createdDate)"
-          >{{ formatDate(props.item.createdDate) }}</td>
-          <td
-            width="20%"
-            style="white-space: nowrap"
-            :title="formatDate(props.item.processingStartedDate)"
-          >{{ formatDate(props.item.processingStartedDate) }}</td>
-          <td
-            width="20%"
-            style="white-space: nowrap"
-            :title="formatDate(props.item.processingEndedDate)"
-          >{{ formatDate(props.item.processingEndedDate) }}</td>
-          <td width="10%" title="View Batch Operation">
-            <v-tooltip left>
-              <v-icon
-                slot="activator"
-                @click.stop="openBatchOperation(props.item.token)"
-              >navigate_next</v-icon>
-              <span>Batch Operation Detail</span>
-            </v-tooltip>
-          </td>
+        <template slot="item" slot-scope="props">
+          <tr>
+            <td width="15%" :title="props.item.operationType">{{ props.item.operationType }}</td>
+            <td width="15%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
+            <td
+              width="20%"
+              style="white-space: nowrap"
+              :title="formatDate(props.item.createdDate)"
+            >{{ formatDate(props.item.createdDate) }}</td>
+            <td
+              width="20%"
+              style="white-space: nowrap"
+              :title="formatDate(props.item.processingStartedDate)"
+            >{{ formatDate(props.item.processingStartedDate) }}</td>
+            <td
+              width="20%"
+              style="white-space: nowrap"
+              :title="formatDate(props.item.processingEndedDate)"
+            >{{ formatDate(props.item.processingEndedDate) }}</td>
+            <td width="10%" title="View Batch Operation">
+              <v-tooltip left>
+                <v-icon
+                  slot="activator"
+                  @click.stop="openBatchOperation(props.item.token)"
+                >navigate_next</v-icon>
+                <span>Batch Operation Detail</span>
+              </v-tooltip>
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-flex>
@@ -49,7 +51,7 @@
         <div>No batch operations have been created for this tenant.</div>
       </no-results-panel>
     </template>
-  </sw-list-page>
+  </list-page>
 </template>
 
 <script lang="ts">
@@ -60,7 +62,7 @@ import {
   NavigationIcon,
   listBatchOperations
 } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+import { ListComponent, ListPage } from "sitewhere-ide-components";
 
 import NoResultsPanel from "../common/NoResultsPanel.vue";
 
@@ -75,6 +77,7 @@ import {
 
 @Component({
   components: {
+    ListPage,
     NoResultsPanel
   }
 })

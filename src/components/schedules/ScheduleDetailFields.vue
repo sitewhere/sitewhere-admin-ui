@@ -1,7 +1,7 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
-      <sw-form-token
+      <form-token
         required
         label="Schedule token"
         title="Unique token for referencing schedule."
@@ -10,9 +10,9 @@
       />
     </v-flex>
     <v-flex xs12>
-      <sw-form-text required label="Name" title="Schedule name." v-model="name" icon="info">
+      <form-text required label="Name" title="Schedule name." v-model="name" icon="info">
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs6 class="pr-5">
       <form-date-time-picker
@@ -33,7 +33,7 @@
       />
     </v-flex>
     <v-flex xs12>
-      <sw-form-select
+      <form-select
         required
         title="Schedule trigger type."
         :items="triggerTypes"
@@ -44,10 +44,10 @@
         icon="flash_on"
       >
         <span v-if="$v.triggerType.$invalid && $v.$dirty">Trigger type is required.</span>
-      </sw-form-select>
+      </form-select>
     </v-flex>
     <v-flex xs12 v-if="triggerType === 'CronTrigger'">
-      <sw-form-text
+      <form-text
         required
         label="Cron expression"
         title="Expression used to configure cron trigger."
@@ -55,10 +55,10 @@
         icon="info"
       >
         <span v-if="!$v.cronExpression.reqIfCron && $v.$dirty">Cron expression is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs6 v-if="triggerType === 'SimpleTrigger'">
-      <sw-form-text
+      <form-text
         required
         label="Interval (ms)"
         title="Schedule interval in milliseconds."
@@ -66,10 +66,10 @@
         icon="alarm"
       >
         <span v-if="!$v.repeatInterval.reqIfSimple && $v.$dirty">Repeat interval is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs6 v-if="triggerType === 'SimpleTrigger'">
-      <sw-form-text
+      <form-text
         required
         label="Repetitions"
         title="Number of times trigger will be executed."
@@ -77,16 +77,21 @@
         icon="autorenew"
       >
         <span v-if="!$v.repeatCount.reqIfSimple && $v.$dirty">Repeat count is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
-
-import FormDateTimePicker from "../common/form/FormDateTimePicker.vue";
+import {
+  DialogSection,
+  DialogForm,
+  FormToken,
+  FormDateTimePicker,
+  FormSelect,
+  FormText
+} from "sitewhere-ide-components";
 
 import { formatIso8601 } from "sitewhere-ide-common";
 import { required, requiredIf, helpers } from "vuelidate/lib/validators";
@@ -108,6 +113,10 @@ const reqIfSimple = requiredIf((vm: ScheduleDetailFields) => {
 
 @Component({
   components: {
+    DialogForm,
+    FormToken,
+    FormSelect,
+    FormText,
     FormDateTimePicker
   },
   validations: {

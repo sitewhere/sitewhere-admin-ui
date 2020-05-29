@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sw-confirm-dialog
+    <confirm-dialog
       ref="dialog"
       buttonText="Update"
       title="Update Assignment Status"
@@ -8,50 +8,50 @@
       @confirmed="onExecuteAction"
     >
       <v-card-text>Are you sure you want to update the assignment status?</v-card-text>
-    </sw-confirm-dialog>
+    </confirm-dialog>
     <span v-if="assignment.status === 'Released'">Released</span>
     <v-menu offset-y v-else-if="assignment.status === 'Active'">
-      <v-tooltip left slot="activator">
-        <v-btn small class="green darken-2 white--text pa-0 ma-0" slot="activator">Active</v-btn>
-        <span>Update Status</span>
-      </v-tooltip>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" small class="green darken-2 white--text" slot="activator">Active</v-btn>
+      </template>
       <v-list>
-        <v-list-tile
+        <v-list-item
           @click.stop="confirmFirst(item.action)"
           v-for="item in statusActiveItems"
           :key="item.text"
         >
-          <v-list-tile-title>{{ item.text }}</v-list-tile-title>
-        </v-list-tile>
+          <v-list-item-title>{{ item.text }}</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
     <v-menu offset-y v-else-if="assignment.status === 'Missing'">
-      <v-tooltip left slot="activator">
-        <v-btn small class="red darken-2 white--text pa-0 ma-0" slot="activator">Missing</v-btn>
-        <span>Update Status</span>
-      </v-tooltip>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" small class="red darken-2 white--text" slot="activator">Missing</v-btn>
+      </template>
       <v-list>
-        <v-list-tile
+        <v-list-item
           @click.stop="confirmFirst(item.action)"
           v-for="item in statusMissingItems"
           :key="item.text"
         >
-          <v-list-tile-title>{{ item.text }}</v-list-tile-title>
-        </v-list-tile>
+          <v-list-item-title>{{ item.text }}</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
   </div>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Component, Prop, Ref } from "vue-property-decorator";
 import { releaseAssignment, missingAssignment } from "sitewhere-ide-common";
-import Vue from "vue";
+
+import { ConfirmDialog } from "sitewhere-ide-components";
 
 import { AxiosResponse } from "axios";
 import { IDeviceAssignment } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { ConfirmDialog } })
 export default class AssignmentStatusButton extends Vue {
   @Prop() readonly assignment!: IDeviceAssignment;
   @Ref() readonly dialog!: any;

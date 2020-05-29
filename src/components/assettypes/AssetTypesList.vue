@@ -1,5 +1,5 @@
 <template>
-  <sw-list-page
+  <list-page
     :icon="icon"
     title="Asset Types"
     loadingMessage="Loading asset types ..."
@@ -7,7 +7,7 @@
     :results="results"
     @pagingUpdated="onPagingUpdated"
   >
-    <sw-list-layout>
+    <list-layout>
       <v-flex xs6 v-for="assetType in matches" :key="assetType.token">
         <asset-type-list-entry
           :assetType="assetType"
@@ -15,7 +15,7 @@
           @assetTypeDeleted="refresh"
         ></asset-type-list-entry>
       </v-flex>
-    </sw-list-layout>
+    </list-layout>
     <template slot="noresults">
       <no-results-panel>
         <div>No asset types have been created for this tenant.</div>
@@ -31,13 +31,13 @@
     <template slot="actions">
       <add-button tooltip="Add Asset Type" @action="onAddAssetType" />
     </template>
-  </sw-list-page>
+  </list-page>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
 import { NavigationIcon, listAssetTypes } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+import { ListComponent, ListPage, ListLayout } from "sitewhere-ide-components";
 
 import AssetTypeListEntry from "./AssetTypeListEntry.vue";
 import AssetTypeCreateDialog from "./AssetTypeCreateDialog.vue";
@@ -55,6 +55,8 @@ import {
 
 @Component({
   components: {
+    ListPage,
+    ListLayout,
     AssetTypeListEntry,
     AssetTypeCreateDialog,
     AddButton,

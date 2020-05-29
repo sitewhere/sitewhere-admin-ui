@@ -34,11 +34,7 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import {
-  INavigationSection,
-  NavigationIcon,
-  getDeviceGroup
-} from "sitewhere-ide-common";
+import { NavigationIcon, getDeviceGroup } from "sitewhere-ide-common";
 import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import DeviceGroupDetailHeader from "./DeviceGroupDetailHeader.vue";
@@ -53,6 +49,7 @@ import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { IDeviceGroup, IDeviceGroupResponseFormat } from "sitewhere-rest-api";
+import { DeviceGroupsSection } from "../../libraries/constants";
 
 @Component({
   components: {
@@ -97,33 +94,26 @@ export default class DeviceGroupDetail extends DetailComponent<IDeviceGroup> {
     return getDeviceGroup(this.$store, token, format);
   }
 
-  // Called after data is loaded.
-  afterRecordLoaded(deviceGroup: IDeviceGroup) {
-    const section: INavigationSection = {
-      id: "groups",
-      title: "Device Group",
-      icon: "cubes",
-      route: "/admin/groups/" + deviceGroup.token,
-      longTitle: "Manage Device Group: " + deviceGroup.token
-    };
-    this.$store.commit("currentSection", section);
+  /** Called after data is loaded */
+  afterRecordLoaded() {
+    this.$store.commit("currentSection", DeviceGroupsSection);
   }
 
-  // Show dialog on update requested.
+  /** Show dialog on update requested */
   onEdit() {
     if (this.token) {
       this.edit.open(this.token);
     }
   }
 
-  // Show dialog on delete requested.
+  /** Show dialog on delete requested */
   onDelete() {
     if (this.token) {
       this.delete.open(this.token);
     }
   }
 
-  // Called after device group is deleted.
+  /** Called after device group is deleted */
   onDeviceGroupDeleted() {
     routeTo(this, "/groups");
   }

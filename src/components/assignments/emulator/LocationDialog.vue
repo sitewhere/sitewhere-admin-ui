@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -21,23 +21,30 @@
         <location-detail-fields ref="details" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata" />
+        <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent, DialogSection } from "sitewhere-ide-components";
+import {
+  DialogComponent,
+  DialogSection,
+  BaseDialog,
+  MetadataPanel
+} from "sitewhere-ide-components";
 
 import LocationDetailFields from "./LocationDetailFields.vue";
 import { IDeviceAlert } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    LocationDetailFields
+    BaseDialog,
+    LocationDetailFields,
+    MetadataPanel
   }
 })
 export default class AlertDialog extends DialogComponent<IDeviceAlert> {

@@ -1,7 +1,7 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Max Retry Count"
         title="Max number of retries when establishing gRPC connection."
@@ -9,10 +9,10 @@
         icon="fa-cog"
         type="number"
         class="mr-3"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Initial Backoff in Seconds"
         title="Initial backoff period in seconds."
@@ -20,10 +20,10 @@
         icon="fa-cog"
         type="number"
         class="mr-3"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Max Backoff Seconds"
         title="Maximum backoff time in seconds."
@@ -31,10 +31,10 @@
         icon="fa-cog"
         type="number"
         class="mr-3"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Backoff Multiplier"
         title="Mulitplier used to increase backoff for retries."
@@ -42,18 +42,19 @@
         icon="fa-cog"
         type="number"
         class="mr-3"
-      ></sw-form-text>
+      ></form-text>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+import { DialogSection, DialogForm, FormText } from "sitewhere-ide-components";
 
 import { IGrpcConfiguration } from "sitewhere-rest-api";
 
 @Component({
+  components: { DialogForm, FormText },
   validations: {}
 })
 export default class GrpcConfigurationFields extends DialogSection {
