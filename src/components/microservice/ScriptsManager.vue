@@ -1,5 +1,5 @@
 <template>
-  <sw-content-tab :tabkey="tabkey" :loaded="loaded" loadingMessage="Loading...">
+  <content-tab :tabkey="tabkey" :loaded="loaded" loadingMessage="Loading...">
     <template slot="header">
       <v-layout row>
         <v-flex xs3>
@@ -123,7 +123,7 @@
       :tenantToken="tenantToken"
       @save="onSaveClone"
     />
-  </sw-content-tab>
+  </content-tab>
 </template>
 
 <script lang="ts">
@@ -137,6 +137,7 @@ import {
   activateTenantScript
 } from "sitewhere-ide-common";
 
+import { ContentTab } from "sitewhere-ide-components";
 import CondensedToolbar from "../common/CondensedToolbar.vue";
 import ScriptVersionList from "./ScriptVersionList.vue";
 import ScriptsContentEditor from "./ScriptsContentEditor.vue";
@@ -153,6 +154,7 @@ import {
 
 @Component({
   components: {
+    ContentTab,
     CondensedToolbar,
     ScriptVersionList,
     ScriptsContentEditor,

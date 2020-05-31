@@ -1,5 +1,5 @@
 <template>
-  <sw-detail-page
+  <detail-page
     :icon="icon"
     :title="title"
     :tabsOnBottom="true"
@@ -35,25 +35,27 @@
       <tenant-engine-source :configuration="workingCopy" tabkey="json" />
     </template>
     <template slot="actions">
-      <sw-navigation-action-button
+      <navigation-action-button
         icon="fa-arrow-left"
         tooltip="Back To Tenant Microservices"
         @action="onBackToList"
       />
     </template>
-  </sw-detail-page>
+  </detail-page>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { Component, Watch } from "vue-property-decorator";
 
 import ScriptsManager from "../microservice/ScriptsManager.vue";
 import TenantEngineConfiguration from "./TenantEngineConfiguration.vue";
 import TenantEngineSource from "./TenantEngineSource.vue";
 import UnsavedUpdatesPanel from "./UnsavedUpdatesPanel.vue";
 
+import { DetailPage, NavigationActionButton } from "sitewhere-ide-components";
+
 import { AxiosResponse } from "axios";
-import { Component, Watch } from "vue-property-decorator";
 import {
   WithRoute,
   NavigationIcon,
@@ -70,6 +72,8 @@ import {
 
 @Component({
   components: {
+    DetailPage,
+    NavigationActionButton,
     ScriptsManager,
     TenantEngineConfiguration,
     TenantEngineSource,

@@ -1,5 +1,5 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
       <v-select
         :items="commands"
@@ -28,13 +28,14 @@
         </v-card-text>
       </v-card>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { listDeviceCommands } from "sitewhere-ide-common";
-import { DialogSection } from "sitewhere-ide-components";
+
+import { DialogSection, DialogForm } from "sitewhere-ide-components";
 
 import { AxiosResponse } from "axios";
 import {
@@ -44,7 +45,7 @@ import {
   IDeviceCommandSearchResults
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { DialogForm } })
 export default class BatchCommandDetailFields extends DialogSection {
   @Prop() readonly deviceTypeToken!: string;
 

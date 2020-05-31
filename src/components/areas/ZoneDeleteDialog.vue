@@ -1,5 +1,5 @@
 <template>
-  <sw-delete-dialog
+  <delete-dialog
     ref="dialog"
     title="Delete Zone"
     width="400"
@@ -8,18 +8,19 @@
     @cancel="onCancel"
   >
     <v-card-text>{{ message }}</v-card-text>
-  </sw-delete-dialog>
+  </delete-dialog>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import { getZone, deleteZone } from "sitewhere-ide-common";
-import { DeleteDialogComponent } from "sitewhere-ide-components";
+
+import { DeleteDialogComponent, DeleteDialog } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { IZone } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { DeleteDialog } })
 export default class ZoneDeleteDialog extends DeleteDialogComponent<IZone> {
   message: string | null = null;
 

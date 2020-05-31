@@ -1,5 +1,5 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
       <v-card flat>
         <v-checkbox label="Assign device to an asset?" v-model="assign" light></v-checkbox>
@@ -12,17 +12,19 @@
         />
       </v-card>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+
+import { DialogSection, DialogForm } from "sitewhere-ide-components";
 
 import AssetChooser from "../assets/AssetChooser.vue";
 
 @Component({
   components: {
+    DialogForm,
     AssetChooser
   }
 })

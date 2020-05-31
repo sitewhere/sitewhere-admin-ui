@@ -1,5 +1,5 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
       <command-selector
         :deviceTypeToken="deviceTypeToken"
@@ -25,20 +25,21 @@
         </v-card-text>
       </v-card>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
-import { IDeviceCommand } from "sitewhere-rest-api";
 
+import { DialogSection, DialogForm } from "sitewhere-ide-components";
 import CommandSelector from "../commands/CommandSelector.vue";
 
+import { IDeviceCommand } from "sitewhere-rest-api";
 import { required } from "vuelidate/lib/validators";
 
 @Component({
   components: {
+    DialogForm,
     CommandSelector
   },
   validations: {

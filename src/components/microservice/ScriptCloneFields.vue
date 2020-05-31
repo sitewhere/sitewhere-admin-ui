@@ -1,7 +1,7 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
-      <sw-form-text
+      <form-text
         required
         label="Comment"
         title="Comment for new version."
@@ -9,18 +9,20 @@
         icon="info"
       >
         <span v-if="!$v.comment.required && $v.$dirty">Id is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+
+import { DialogSection, DialogForm, FormText } from "sitewhere-ide-components";
 
 import { required } from "vuelidate/lib/validators";
 
 @Component({
+  components: { DialogForm, FormText },
   validations: {
     comment: {
       required

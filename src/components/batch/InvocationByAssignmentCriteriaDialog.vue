@@ -24,7 +24,7 @@
         <batch-command-schedule-fields ref="schedule" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata" />
+        <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </base-dialog>
@@ -36,7 +36,8 @@ import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
   DialogSection,
-  BaseDialog
+  BaseDialog,
+  MetadataPanel
 } from "sitewhere-ide-components";
 
 import BatchCommandDetailFields from "./BatchCommandDetailFields.vue";
@@ -50,7 +51,8 @@ import {
   components: {
     BaseDialog,
     BatchCommandDetailFields,
-    BatchCommandScheduleFields
+    BatchCommandScheduleFields,
+    MetadataPanel
   }
 })
 export default class InvocationByAssignmentCriteriaDialog extends DialogComponent<

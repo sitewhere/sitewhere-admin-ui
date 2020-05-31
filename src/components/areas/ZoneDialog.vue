@@ -20,7 +20,7 @@
         <zone-detail-fields :area="area" :mapVisible="mapVisible" ref="details" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata" />
+        <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
   </base-dialog>
@@ -32,7 +32,8 @@ import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
   DialogSection,
-  BaseDialog
+  BaseDialog,
+  MetadataPanel
 } from "sitewhere-ide-components";
 
 import ZoneDetailFields from "./ZoneDetailFields.vue";
@@ -41,7 +42,8 @@ import { IZone, IArea } from "sitewhere-rest-api";
 @Component({
   components: {
     BaseDialog,
-    ZoneDetailFields
+    ZoneDetailFields,
+    MetadataPanel
   }
 })
 export default class ZoneDialog extends DialogComponent<IZone> {

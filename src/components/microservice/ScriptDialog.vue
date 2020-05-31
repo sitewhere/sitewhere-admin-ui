@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -27,13 +27,14 @@
         <script-content-fields :identifier="identifier" :category="category" ref="content" />
       </v-tab-item>
     </template>
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent } from "sitewhere-ide-components";
+
+import { DialogComponent, BaseDialog } from "sitewhere-ide-components";
 
 import ScriptDetailFields from "./ScriptDetailFields.vue";
 import ScriptContentFields from "./ScriptContentFields.vue";
@@ -41,6 +42,7 @@ import { IScriptCreateRequest, IScriptCategory } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    BaseDialog,
     ScriptDetailFields,
     ScriptContentFields
   }

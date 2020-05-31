@@ -1,7 +1,7 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Id"
         title="Unique identifier for script."
@@ -11,10 +11,10 @@
       >
         <span v-if="!$v.scriptId.required && $v.$dirty">Id is required.</span>
         <span v-if="!$v.scriptId.validId && $v.$dirty">Id must be alphanumeric with no spaces.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-text
+      <form-text
         required
         label="Name"
         title="Name displayed for script."
@@ -22,10 +22,10 @@
         icon="info"
       >
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
-      </sw-form-text>
+      </form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-form-select
+      <form-select
         required
         title="Category script belongs to."
         :items="scriptCategories"
@@ -37,10 +37,10 @@
         class="mr-3"
       >
         <span v-if="$v.category.$invalid && $v.$dirty">Script category is required.</span>
-      </sw-form-select>
+      </form-select>
     </v-flex>
     <v-flex xs6>
-      <sw-form-select
+      <form-select
         required
         title="Script language/interpreter being used."
         :items="interpreterTypes"
@@ -51,10 +51,10 @@
         icon="fa-code"
       >
         <span v-if="$v.interpreterType.$invalid && $v.$dirty">Script interpreter is required.</span>
-      </sw-form-select>
+      </form-select>
     </v-flex>
     <v-flex xs12>
-      <sw-form-text-area
+      <form-text-area
         required
         v-model="description"
         title="Script description."
@@ -62,14 +62,21 @@
         icon="info"
       >
         <span v-if="$v.description.$invalid && $v.$dirty">Description is required.</span>
-      </sw-form-text-area>
+      </form-text-area>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+
+import {
+  DialogSection,
+  DialogForm,
+  FormText,
+  FormSelect,
+  FormTextArea
+} from "sitewhere-ide-components";
 
 import { IScriptCategory, IScriptCreateRequest } from "sitewhere-rest-api";
 
@@ -79,6 +86,7 @@ import { required, helpers } from "vuelidate/lib/validators";
 const validId = helpers.regex("validId", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
+  components: { DialogForm, FormText, FormSelect, FormTextArea },
   validations: {
     scriptId: {
       required,

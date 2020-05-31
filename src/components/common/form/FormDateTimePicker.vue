@@ -1,6 +1,6 @@
 <template>
   <div class="mb-3">
-    <sw-date-time-picker v-model="wrapped" :title="title" :label="label" />
+    <date-time-picker v-model="wrapped" :title="title" :label="label" />
     <div class="verror">
       <slot />
     </div>
@@ -11,7 +11,9 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-@Component({})
+import { DateTimePicker } from "sitewhere-ide-components";
+
+@Component({ components: { DateTimePicker } })
 export default class FormDateTimePicker extends Vue {
   @Prop() readonly title!: string;
   @Prop() readonly label!: string;

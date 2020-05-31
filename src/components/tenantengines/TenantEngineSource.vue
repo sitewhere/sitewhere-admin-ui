@@ -1,5 +1,5 @@
 <template>
-  <sw-content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
+  <content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
     <v-btn-toggle class="overlay" v-model="jsonChoice">
       <v-btn flat small>Tenant Engine</v-btn>
       <v-btn flat small>Microservice</v-btn>
@@ -16,17 +16,20 @@
       width="100%"
       height="100%"
     ></editor>
-  </sw-content-tab>
+  </content-tab>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Component, Prop, Ref } from "vue-property-decorator";
 
-import Vue from "vue";
+import { ContentTab } from "sitewhere-ide-components";
+
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    ContentTab,
     editor: require("vue2-ace-editor")
   }
 })

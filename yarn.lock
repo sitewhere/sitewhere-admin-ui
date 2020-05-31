@@ -8656,9 +8656,9 @@ single-line-log@^1.1.2:
     string-width "^1.0.1"
 
 sitewhere-admin-ui-plugins@^3.0.0-alpha.5:
-  version "3.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-alpha.5.tgz#3a0b834fd3b6029b7971c4ff5dfca0ecc9eb4ba2"
-  integrity sha512-EI89XzwtJ22gAnC73wJQOx9gRG5JS8LV0YhdNQadq5IwfYwGc6ifVHkd2G47lESEtkRe51etUJKD0ZAgQtdOKQ==
+  version "3.0.0-alpha.11"
+  resolved "http://localhost:4873/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-alpha.11.tgz#b1f00742b102cd397c48e138b61ebb935559a4d3"
+  integrity sha512-h31H4i5BBjplbU1odwqUmNPlXEDvBglnxBITSzIBPngsWhNQq2DtgSBfrV9JieytXrqAwWoyfKwZNqL2C66G7g==
   dependencies:
     axios "^0.19.2"
     sitewhere-configuration-model "^3.0.0-alpha.2"
@@ -8690,7 +8690,7 @@ sitewhere-ide-common@3.0.0-alpha.2:
 
 sitewhere-ide-common@^3.0.0-alpha.3:
   version "3.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/sitewhere-ide-common/-/sitewhere-ide-common-3.0.0-alpha.3.tgz#fda8a0da4df6c5381b560aa74d38085395c19d4c"
+  resolved "http://localhost:4873/sitewhere-ide-common/-/sitewhere-ide-common-3.0.0-alpha.3.tgz#fda8a0da4df6c5381b560aa74d38085395c19d4c"
   integrity sha512-YHjKfvyCpyUiU+9/HsLA+C+nfiv8QYW/Us08GfZJz6uo/FS9cUoPXkuF4TKc7yR9SrpImbmDnYLyWZovpKVGnQ==
   dependencies:
     axios "^0.19.2"
@@ -8715,9 +8715,9 @@ sitewhere-ide-components@^3.0.0-alpha.14:
     vuex "^3.3.0"
 
 sitewhere-ide-components@^3.0.0-alpha.7:
-  version "3.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-alpha.10.tgz#14f61ee273e91090869e28092949cba1b8893fb6"
-  integrity sha512-Ittljdl/CN+NwNZQdBCl/JnRlEQT9JqwrbjYiUxOiRY/HzyOV48heElN7ox4C9XVYi8D8GBJhib1XvXR9ErRDg==
+  version "3.0.0-alpha.19"
+  resolved "http://localhost:4873/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-alpha.19.tgz#fb59316909ec8f0c4553f96b58027c553cc69166"
+  integrity sha512-h7mtWZUynSB7h91mIIdOTn74kk1+YygLBNAQL3nD0WszuayaqR7v8tAGTAmxmEbwyNzjE9YLbrudwUFjYKdqhw==
   dependencies:
     axios "^0.19.2"
     sitewhere-ide-common "^3.0.0-alpha.3"
@@ -8733,7 +8733,7 @@ sitewhere-ide-components@^3.0.0-alpha.7:
 
 sitewhere-rest-api@3.0.0-alpha.2, sitewhere-rest-api@^3.0.0-alpha.2:
   version "3.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/sitewhere-rest-api/-/sitewhere-rest-api-3.0.0-alpha.2.tgz#2f2c2cd7340e65b9764899838df80ffe19bb9706"
+  resolved "http://localhost:4873/sitewhere-rest-api/-/sitewhere-rest-api-3.0.0-alpha.2.tgz#2f2c2cd7340e65b9764899838df80ffe19bb9706"
   integrity sha512-Nv2lf50QecV0+gbLQPzeKU07LdZmDIRMi0XP8dJgnJUMdQQli8IR9iUCZLufJdixBkBO4KURLFavu+p7ZWXpIg==
   dependencies:
     axios "^0.19.2"
@@ -10100,7 +10100,7 @@ vue-moment@^3.2.0:
 
 vue-property-decorator@^8.4.1, vue-property-decorator@^8.4.2:
   version "8.4.2"
-  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-8.4.2.tgz#016e17f259f73bc547e77a50ce282ba18db4ee41"
+  resolved "http://localhost:4873/vue-property-decorator/-/vue-property-decorator-8.4.2.tgz#016e17f259f73bc547e77a50ce282ba18db4ee41"
   integrity sha512-IqbARlvgPE2pzKfbecKxsu2yEH0Wv7hfHR6m4eZA3LTnNw9hveAX77vDfLFyTeMISS5N7Kucp/xRSHjcQ6bAfQ==
   dependencies:
     vue-class-component "^7.1.0"
@@ -10177,7 +10177,7 @@ vuex-persistedstate@^2.7.1:
 
 vuex@^3.1.3, vuex@^3.3.0:
   version "3.4.0"
-  resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.4.0.tgz#20cc086062d750769fce1febb34e7fceeaebde45"
+  resolved "http://localhost:4873/vuex/-/vuex-3.4.0.tgz#20cc086062d750769fce1febb34e7fceeaebde45"
   integrity sha512-ajtqwEW/QhnrBZQsZxCLHThZZaa+Db45c92Asf46ZDXu6uHXgbfVuBaJ4gzD2r4UX0oMJHstFwd2r2HM4l8umg==
 
 watchpack-chokidar2@^2.0.0:

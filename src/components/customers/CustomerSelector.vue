@@ -1,5 +1,5 @@
 <template>
-  <sw-form-select-condensed
+  <form-select-condensed
     v-if="dense"
     :items="customers"
     :title="title || `Choose customer`"
@@ -8,7 +8,7 @@
     v-model="wrapped"
     icon="settings"
   />
-  <sw-form-select
+  <form-select
     v-else
     :items="customers"
     :title="title || `Choose customer`"
@@ -19,15 +19,16 @@
     icon="settings"
   >
     <slot />
-  </sw-form-select>
+  </form-select>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { listCustomers } from "sitewhere-ide-common";
+import { listCustomers, handleError } from "sitewhere-ide-common";
 
-import { handleError } from "sitewhere-ide-common";
+import { FormSelectCondensed, FormSelect } from "sitewhere-ide-components";
+
 import { AxiosResponse } from "axios";
 import {
   ICustomer,
@@ -36,7 +37,7 @@ import {
   ICustomerSearchResults
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { FormSelectCondensed, FormSelect } })
 export default class CustomerSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;

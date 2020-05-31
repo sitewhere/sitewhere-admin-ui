@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -12,19 +12,21 @@
     @cancelClicked="onCancelClicked"
   >
     <script-clone-fields ref="details" />
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent } from "sitewhere-ide-components";
+
+import { DialogComponent, BaseDialog } from "sitewhere-ide-components";
 
 import ScriptCloneFields from "./ScriptCloneFields.vue";
 import { IScriptVersion } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    BaseDialog,
     ScriptCloneFields
   }
 })

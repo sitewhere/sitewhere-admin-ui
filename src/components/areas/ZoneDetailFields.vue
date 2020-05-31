@@ -1,5 +1,5 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
       <map-with-zone-overlay-panel
         style="height: 400px; border: 1px solid #ddd;"
@@ -40,7 +40,7 @@
             </div>
           </v-flex>
           <v-flex xs2>
-            <sw-color-picker
+            <color-picker
               text="Border"
               v-model="borderColor"
               :opacity="borderOpacity"
@@ -48,7 +48,7 @@
             />
           </v-flex>
           <v-flex xs2>
-            <sw-color-picker
+            <color-picker
               text="Fill"
               v-model="fillColor"
               :opacity="fillOpacity"
@@ -58,12 +58,17 @@
         </v-layout>
       </v-container>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Watch, Ref } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+
+import {
+  DialogSection,
+  DialogForm,
+  ColorPicker
+} from "sitewhere-ide-components";
 
 import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
 import {
@@ -91,6 +96,9 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
   components: {
+    DialogSection,
+    DialogForm,
+    ColorPicker,
     MapWithZoneOverlayPanel
   },
   validations: {

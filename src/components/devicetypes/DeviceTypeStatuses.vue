@@ -7,7 +7,7 @@
     loadingMessage="Loading device commands..."
     :results="results"
   >
-    <sw-list-layout>
+    <list-layout>
       <v-flex xs3 v-for="status in matches" :key="status.code">
         <div>
           <device-status-list-entry
@@ -17,7 +17,7 @@
           />
         </div>
       </v-flex>
-    </sw-list-layout>
+    </list-layout>
     <template slot="dialogs">
       <device-status-update-dialog
         ref="edit"
@@ -36,7 +36,8 @@
 <script lang="ts">
 import { Component, Prop, Ref } from "vue-property-decorator";
 import { listDeviceStatuses } from "sitewhere-ide-common";
-import { ListComponent, ListTab } from "sitewhere-ide-components";
+
+import { ListComponent, ListTab, ListLayout } from "sitewhere-ide-components";
 
 import DeviceStatusListEntry from "../statuses/DeviceStatusListEntry.vue";
 import DeviceStatusUpdateDialog from "../statuses/DeviceStatusUpdateDialog.vue";
@@ -53,6 +54,7 @@ import {
 @Component({
   components: {
     ListTab,
+    ListLayout,
     DeviceStatusListEntry,
     DeviceStatusUpdateDialog,
     DeviceStatusDeleteDialog

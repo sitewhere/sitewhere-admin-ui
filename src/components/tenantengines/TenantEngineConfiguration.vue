@@ -1,44 +1,64 @@
 <template>
-  <sw-content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
-    <sw-asset-management-config-plugin
+  <content-tab :tabkey="tabkey" :loaded="true" loadingMessage="Loading...">
+    <asset-management-plugin
       :configuration="configuration"
       v-if="functionalArea == 'asset-management'"
       @dirty="markDirty"
     />
-    <sw-batch-operations-config-plugin
+    <batch-operations-plugin
       :configuration="configuration"
       v-else-if="functionalArea == 'batch-operations'"
       @dirty="markDirty"
     />
-    <sw-command-delivery-config-plugin
+    <command-delivery-plugin
       :configuration="configuration"
       v-else-if="functionalArea == 'command-delivery'"
       @dirty="markDirty"
     />
-    <sw-device-management-config-plugin
+    <device-management-plugin
       :configuration="configuration"
       v-else-if="functionalArea == 'device-management'"
       @dirty="markDirty"
     />
-    <sw-event-sources-config-plugin
+    <event-sources-plugin
       :configuration="configuration"
       v-else-if="functionalArea == 'event-sources'"
       @dirty="markDirty"
     />
-    <sw-tenant-engine-plugin v-else :configuration="configuration">
+    <tenant-engine-plugin v-else :configuration="configuration">
       No Plugin Found for Functional Area:
       {{ functionalArea }}
-    </sw-tenant-engine-plugin>
-  </sw-content-tab>
+    </tenant-engine-plugin>
+  </content-tab>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import Vue from "vue";
+import { ContentTab } from "sitewhere-ide-components";
+import {
+  AssetManagementPlugin,
+  BatchOperationsPlugin,
+  CommandDeliveryPlugin,
+  DeviceManagementPlugin,
+  EventSourcesPlugin,
+  TenantEnginePlugin
+} from "sitewhere-admin-ui-plugins";
+
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 
-@Component({})
+@Component({
+  components: {
+    ContentTab,
+    AssetManagementPlugin,
+    BatchOperationsPlugin,
+    CommandDeliveryPlugin,
+    DeviceManagementPlugin,
+    EventSourcesPlugin,
+    TenantEnginePlugin
+  }
+})
 export default class TenantMicroserviceConfiguration extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly configuration!: ITenantEngineConfiguration;

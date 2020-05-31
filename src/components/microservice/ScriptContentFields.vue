@@ -1,7 +1,7 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs11>
-      <sw-form-select
+      <form-select
         title="Script template to use for content."
         :items="scriptTemplates"
         v-model="template"
@@ -21,14 +21,18 @@
         <span v-if="$v.content.$invalid && $v.$dirty">Script content is required.</span>
       </form-code-block>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { listScriptTemplates } from "sitewhere-ide-common";
-import { DialogSection } from "sitewhere-ide-components";
 
+import {
+  DialogSection,
+  DialogForm,
+  FormSelect
+} from "sitewhere-ide-components";
 import FormCodeBlock from "../common/form/FormCodeBlock.vue";
 
 import { AxiosResponse } from "axios";
@@ -36,9 +40,7 @@ import { required } from "vuelidate/lib/validators";
 import { IScriptTemplate, IScriptCreateRequest } from "sitewhere-rest-api";
 
 @Component({
-  components: {
-    FormCodeBlock
-  },
+  components: { DialogForm, FormSelect, FormCodeBlock },
   validations: {
     content: {
       required

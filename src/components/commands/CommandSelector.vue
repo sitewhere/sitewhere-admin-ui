@@ -1,5 +1,5 @@
 <template>
-  <sw-form-select
+  <form-select
     :items="commands"
     :title="title || `Choose command`"
     :label="label || `Command`"
@@ -9,15 +9,16 @@
     icon="settings"
   >
     <slot />
-  </sw-form-select>
+  </form-select>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { listDeviceCommands } from "sitewhere-ide-common";
+import { listDeviceCommands, handleError } from "sitewhere-ide-common";
 
-import { handleError } from "sitewhere-ide-common";
+import { FormSelect } from "sitewhere-ide-components";
+
 import { AxiosResponse } from "axios";
 import {
   IDeviceCommand,
@@ -26,7 +27,7 @@ import {
   IDeviceCommandSearchResults
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { FormSelect } })
 export default class CommandSelector extends Vue {
   @Prop(String) readonly value!: string;
   @Prop(String) readonly title!: string;

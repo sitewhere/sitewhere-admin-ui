@@ -1,5 +1,5 @@
 <template>
-  <sw-navigation-page
+  <navigation-page
     icon="fa-microchip"
     title="Manage Device States"
     loadingMessage="Loading device states ..."
@@ -10,21 +10,24 @@
       <v-card>
         <v-card-text>Device States</v-card-text>
       </v-card>
-      <sw-pager :results="results" @pagingUpdated="updatePaging" />
+      <pager :results="results" @pagingUpdated="updatePaging" />
     </div>
-  </sw-navigation-page>
+  </navigation-page>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { searchDeviceStates, IPaging } from "sitewhere-ide-common";
+
+import { NavigationPage, Pager } from "sitewhere-ide-components";
+
 import {
   IDeviceStateSearchCriteria,
   IDeviceStateResponseFormat
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { NavigationPage, Pager } })
 export default class DeviceStatesList extends Vue {
   results: any = null;
   paging: IPaging | null = null;

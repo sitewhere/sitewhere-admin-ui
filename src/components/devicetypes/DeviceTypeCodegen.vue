@@ -1,5 +1,5 @@
 <template>
-  <sw-content-tab :tabkey="tabkey" :id="id" :loaded="loaded" loadingMessage="Loading...">
+  <content-tab :tabkey="tabkey" :id="id" :loaded="loaded" loadingMessage="Loading...">
     <v-container class="pa-2" fluid grid-list-md fill-height>
       <v-layout row wrap>
         <v-flex xs12>
@@ -29,16 +29,17 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </sw-content-tab>
+  </content-tab>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { IDeviceType } from "sitewhere-rest-api";
 
-import Vue from "vue";
+import { ContentTab } from "sitewhere-ide-components";
 
-@Component({})
+@Component({ components: { ContentTab } })
 export default class DeviceTypeCodegen extends Vue {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;

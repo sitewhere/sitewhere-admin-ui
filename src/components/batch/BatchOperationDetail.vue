@@ -1,5 +1,5 @@
 <template>
-  <sw-detail-page
+  <detail-page
     :icon="icon"
     :title="title"
     loadingMessage="Loading batch operation ..."
@@ -17,7 +17,7 @@
     </template>
     <template slot="actions"></template>
     <template slot="dialogs"></template>
-  </sw-detail-page>
+  </detail-page>
 </template>
 
 <script lang="ts">
@@ -27,7 +27,8 @@ import {
   NavigationIcon,
   getBatchOperation
 } from "sitewhere-ide-common";
-import { DetailComponent } from "sitewhere-ide-components";
+
+import { DetailComponent, DetailPage } from "sitewhere-ide-components";
 
 import BatchOperationDetailHeader from "./BatchOperationDetailHeader.vue";
 import BatchOperationElementsList from "./BatchOperationElementsList.vue";
@@ -40,6 +41,7 @@ import {
 
 @Component({
   components: {
+    DetailPage,
     BatchOperationDetailHeader,
     BatchOperationElementsList
   }

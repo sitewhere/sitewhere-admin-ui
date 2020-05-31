@@ -1,5 +1,5 @@
 <template>
-  <sw-data-table-tab
+  <data-table-tab
     :tabkey="tabkey"
     :id="id"
     :loaded="loaded"
@@ -9,30 +9,32 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading batch elements ..."
   >
-    <template slot="items" slot-scope="props">
-      <td
-        width="40%"
-        style="cursor: pointer;"
-        @click="onOpenDevice(props.item.device)"
-        :title="props.item.device.token"
-      >
-        <v-icon small class="grey--text">{{ deviceIcon }}</v-icon>
-        {{ props.item.device.token }}
-      </td>
-      <td width="20%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
-      <td
-        width="20%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.processedDate)"
-      >{{ formatDate(props.item.processedDate) }}</td>
-      <td
-        width="20%"
-        style="white-space: nowrap"
-        :title="props.item.metadata.invocation"
-      >{{ props.item.metadata.invocation }}</td>
+    <template slot="item" slot-scope="props">
+      <tr>
+        <td
+          width="40%"
+          style="cursor: pointer;"
+          @click="onOpenDevice(props.item.device)"
+          :title="props.item.device.token"
+        >
+          <v-icon small class="grey--text">{{ deviceIcon }}</v-icon>
+          {{ props.item.device.token }}
+        </td>
+        <td width="20%" :title="props.item.processingStatus">{{ props.item.processingStatus }}</td>
+        <td
+          width="20%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.processedDate)"
+        >{{ formatDate(props.item.processedDate) }}</td>
+        <td
+          width="20%"
+          style="white-space: nowrap"
+          :title="props.item.metadata.invocation"
+        >{{ props.item.metadata.invocation }}</td>
+      </tr>
     </template>
     <template slot="dialogs"></template>
-  </sw-data-table-tab>
+  </data-table-tab>
 </template>
 
 <script lang="ts">
@@ -43,7 +45,8 @@ import {
   NavigationIcon,
   listBatchOperationElements
 } from "sitewhere-ide-common";
-import { ListComponent } from "sitewhere-ide-components";
+
+import { ListComponent, DataTableTab } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { formatDate, routeTo } from "sitewhere-ide-common";
@@ -56,7 +59,7 @@ import {
   IBatchElementSearchResults
 } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { DataTableTab } })
 export default class BatchOperationsElementsList extends ListComponent<
   IBatchElement,
   IBatchElementSearchCriteria,

@@ -29,23 +29,30 @@
       </form-text>
     </v-flex>
     <v-flex xs6>
-      <sw-icon-selector v-model="icon" />
+      <icon-selector v-model="icon" />
     </v-flex>
     <v-flex xs6>
-      <sw-color-input-field text="Border" v-model="borderColor" />
+      <color-input-field text="Border" v-model="borderColor" />
     </v-flex>
     <v-flex xs6>
-      <sw-color-input-field text="Background" v-model="backgroundColor" />
+      <color-input-field text="Background" v-model="backgroundColor" />
     </v-flex>
     <v-flex xs6>
-      <sw-color-input-field text="Foreground" v-model="foregroundColor" />
+      <color-input-field text="Foreground" v-model="foregroundColor" />
     </v-flex>
   </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection, DialogForm, FormText } from "sitewhere-ide-components";
+
+import {
+  DialogSection,
+  DialogForm,
+  FormText,
+  IconSelector,
+  ColorInputField
+} from "sitewhere-ide-components";
 
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -53,7 +60,7 @@ import { required, helpers } from "vuelidate/lib/validators";
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
-  components: { DialogForm, FormText },
+  components: { DialogForm, FormText, IconSelector, ColorInputField },
   validations: {
     token: {
       required,

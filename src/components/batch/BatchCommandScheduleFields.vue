@@ -1,5 +1,5 @@
 <template>
-  <sw-dialog-form>
+  <dialog-form>
     <v-flex xs12>
       <v-card>
         <v-card-text>
@@ -8,17 +8,19 @@
         </v-card-text>
       </v-card>
     </v-flex>
-  </sw-dialog-form>
+  </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+
+import { DialogSection, DialogForm } from "sitewhere-ide-components";
 
 import ScheduleChooser from "../schedules/ScheduleChooser.vue";
 
 @Component({
   components: {
+    DialogForm,
     ScheduleChooser
   }
 })

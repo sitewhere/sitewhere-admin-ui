@@ -1,5 +1,5 @@
 <template>
-  <sw-delete-dialog
+  <delete-dialog
     ref="dialog"
     title="Delete Device Unit"
     width="400"
@@ -8,18 +8,19 @@
     @cancel="onCancel"
   >
     <v-card-text>{{ message }}</v-card-text>
-  </sw-delete-dialog>
+  </delete-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import { getDeviceType, deleteDeviceType } from "sitewhere-ide-common";
-import { DeleteDialogComponent } from "sitewhere-ide-components";
+
+import { DeleteDialogComponent, DeleteDialog } from "sitewhere-ide-components";
 
 import { AxiosPromise } from "axios";
 import { IDeviceType, IDeviceTypeResponseFormat } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { DeleteDialog } })
 export default class DeviceUnitDeleteDialog extends DeleteDialogComponent<
   IDeviceType
 > {

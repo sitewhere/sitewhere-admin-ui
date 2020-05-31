@@ -1,5 +1,5 @@
 <template>
-  <sw-list-entry>
+  <list-entry>
     <v-toolbar flat color="#363" dense dark>
       <v-toolbar-title>{{ namespace.value }}</v-toolbar-title>
     </v-toolbar>
@@ -9,19 +9,21 @@
         <command-panel :command="command" @edit="onEditCommand" @delete="onDeleteCommand" />
       </div>
     </v-list>
-  </sw-list-entry>
+  </list-entry>
 </template>
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 
+import { ListEntry } from "sitewhere-ide-components";
 import CommandPanel from "../commands/CommandPanel.vue";
 
 import { IDeviceCommand, IDeviceCommandNamespace } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    ListEntry,
     CommandPanel
   }
 })

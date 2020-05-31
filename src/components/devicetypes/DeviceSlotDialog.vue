@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     :icon="icon"
     :title="title"
@@ -44,17 +44,18 @@
         </v-card>
       </v-tab-item>
     </template>
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent } from "sitewhere-ide-components";
+
+import { DialogComponent, BaseDialog } from "sitewhere-ide-components";
 
 import { IDeviceType } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { BaseDialog } })
 export default class DeviceSlotDialog extends DialogComponent<IDeviceType> {
   @Ref() readonly dialog!: ITabbedComponent;
 

@@ -1,5 +1,5 @@
 <template>
-  <sw-base-dialog
+  <base-dialog
     ref="dialog"
     v-if="device"
     :icon="icon"
@@ -12,7 +12,7 @@
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
-    <sw-dialog-header>Assign a customer, area, and/or asset associated with '{{ device.token }}'.</sw-dialog-header>
+    <dialog-header>Assign a customer, area, and/or asset associated with '{{ device.token }}'.</dialog-header>
     <template slot="tabs">
       <v-tab key="customer">Customer</v-tab>
       <v-tab key="area">Area</v-tab>
@@ -30,16 +30,22 @@
         <assignment-asset-fields ref="asset" />
       </v-tab-item>
       <v-tab-item key="metadata">
-        <sw-metadata-panel ref="metadata" />
+        <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
-  </sw-base-dialog>
+  </base-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
-import { DialogComponent, DialogSection } from "sitewhere-ide-components";
+
+import {
+  DialogComponent,
+  DialogSection,
+  BaseDialog,
+  DialogHeader
+} from "sitewhere-ide-components";
 
 import AssignmentCustomerFields from "./AssignmentCustomerFields.vue";
 import AssignmentAreaFields from "./AssignmentAreaFields.vue";
@@ -49,6 +55,8 @@ import { IDeviceAssignment, IDevice } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    BaseDialog,
+    DialogHeader,
     AssignmentCustomerFields,
     AssignmentAreaFields,
     AssignmentAssetFields

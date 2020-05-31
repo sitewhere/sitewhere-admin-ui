@@ -1,5 +1,5 @@
 <template>
-  <sw-list-entry>
+  <list-entry>
     <v-toolbar flat dark dense card @click="onEditStatus" :style="cardStyle">
       <font-awesome-icon :icon="icon" size="lg" />
       <v-toolbar-title :style="textStyle">{{ name }}</v-toolbar-title>
@@ -9,17 +9,19 @@
         <span>Delete Device Status</span>
       </v-tooltip>
     </v-toolbar>
-  </sw-list-entry>
+  </list-entry>
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { NavigationIcon } from "sitewhere-ide-common";
-import Vue from "vue";
+
+import { ListEntry } from "sitewhere-ide-components";
 
 import { IDeviceStatus } from "sitewhere-rest-api";
 
-@Component({})
+@Component({ components: { ListEntry } })
 export default class DeviceTypeListEntry extends Vue {
   @Prop() readonly deviceStatus!: IDeviceStatus;
 
