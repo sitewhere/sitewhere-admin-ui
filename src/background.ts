@@ -18,9 +18,6 @@ let win: BrowserWindow | null
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
-/** Placeholder for static asset base */
-const __static = '';
-
 /**
  * Create splash screen, then browser window.
  */
@@ -42,10 +39,19 @@ function createWindow() {
     }
   };
 
+  let logoUrl = '';
+  if (process.env.WEBPACK_DEV_SERVER_URL) {
+    logoUrl = process.env.WEBPACK_DEV_SERVER_URL;
+  } else {
+    createProtocol('app')
+    logoUrl = "app://./"
+  }
+  logoUrl = path.join(logoUrl, "icon.svg");
+
   // Create splash screen.
   const window = initSplashScreen({
     windowOpts: windowOptions,
-    templateUrl: path.join(__static, "/icon.svg"),
+    templateUrl: logoUrl,
     delay: 0,
     minVisible: 1000,
     splashScreenOpts: {
@@ -60,10 +66,9 @@ function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    window.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
+    window.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) window.webContents.openDevTools()
   } else {
-    createProtocol('app')
     // Load the index.html when not in development
     window.loadURL('app://./index.html')
   }

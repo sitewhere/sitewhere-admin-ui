@@ -43,6 +43,7 @@ import {
 
 import TenantDetailFields from "./TenantDetailFields.vue";
 import { ITenant } from "sitewhere-rest-api";
+import { IBrandedEntity } from "../../../../sitewhere-rest-api/src";
 
 @Component({
   components: {
@@ -96,7 +97,21 @@ export default class TenantDialog extends DialogComponent<ITenant> {
       this.details.load(payload);
     }
     if (this.branding) {
-      this.branding.load(payload);
+      const bpayload: IBrandedEntity = {
+        id: payload.token,
+        token: payload.token,
+        createdDate: new Date(),
+        createdBy: "",
+        backgroundColor: payload.backgroundColor,
+        foregroundColor: payload.foregroundColor,
+        borderColor: payload.borderColor,
+        icon: payload.icon,
+        imageUrl: payload.imageUrl,
+        updatedDate: undefined,
+        updatedBy: "",
+        metadata: payload.metadata
+      };
+      this.branding.load(bpayload);
     }
     if (this.metadata) {
       this.metadata.load(payload);
@@ -116,11 +131,7 @@ export default class TenantDialog extends DialogComponent<ITenant> {
     }
 
     const payload = this.generatePayload();
-    console.log("Before payload emit:", this);
     this.$emit("payload", payload);
   }
 }
 </script>
-
-<style scoped>
-</style>
