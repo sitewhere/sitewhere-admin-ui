@@ -57,7 +57,13 @@
           <v-card flat tile color="transparent">
             <v-layout row wrap>
               <v-flex xs12 class="mb-2">
-                <v-text-field placeholder=" " hide-details label="Username" v-model="username"></v-text-field>
+                <v-text-field
+                  placeholder=" "
+                  hide-details
+                  label="Username"
+                  v-model="username"
+                  autofocus
+                />
                 <div class="validation-error">
                   <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
                 </div>

@@ -20,16 +20,16 @@
       <v-tab key="metadata">Metadata</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="customer">
+      <v-tab-item key="customer" eager>
         <assignment-customer-fields ref="customer" />
       </v-tab-item>
-      <v-tab-item key="area">
+      <v-tab-item key="area" eager>
         <assignment-area-fields ref="area" />
       </v-tab-item>
-      <v-tab-item key="asset">
+      <v-tab-item key="asset" eager>
         <assignment-asset-fields ref="asset" />
       </v-tab-item>
-      <v-tab-item key="metadata">
+      <v-tab-item key="metadata" eager>
         <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>

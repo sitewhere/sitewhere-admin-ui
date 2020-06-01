@@ -18,16 +18,16 @@
       <v-tab key="metadata">Metadata</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details">
+      <v-tab-item key="details" eager>
         <area-detail-fields ref="details" />
       </v-tab-item>
-      <v-tab-item key="bounds">
+      <v-tab-item key="bounds" eager>
         <area-bounds-panel ref="bounds" />
       </v-tab-item>
-      <v-tab-item key="branding">
+      <v-tab-item key="branding" eager>
         <branding-panel ref="branding" />
       </v-tab-item>
-      <v-tab-item key="metadata">
+      <v-tab-item key="metadata" eager>
         <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>

@@ -24,10 +24,10 @@
           ref="details"
         />
       </v-tab-item>
-      <v-tab-item key="schedule">
+      <v-tab-item key="schedule" eager>
         <schedule-chooser-section ref="schedule" />
       </v-tab-item>
-      <v-tab-item key="metadata">
+      <v-tab-item key="metadata" eager>
         <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>

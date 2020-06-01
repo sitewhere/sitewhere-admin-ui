@@ -16,10 +16,10 @@
       <v-tab key="metadata">Metadata</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details">
+      <v-tab-item key="details" eager>
         <device-detail-fields ref="details" />
       </v-tab-item>
-      <v-tab-item key="metadata">
+      <v-tab-item key="metadata" eager>
         <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>

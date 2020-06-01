@@ -20,10 +20,10 @@
       <v-tab-item key="details">
         <batch-command-detail-fields :deviceTypeToken="deviceTypeToken" ref="details" />
       </v-tab-item>
-      <v-tab-item key="schedule">
+      <v-tab-item key="schedule" eager>
         <batch-command-schedule-fields ref="schedule" />
       </v-tab-item>
-      <v-tab-item key="metadata">
+      <v-tab-item key="metadata" eager>
         <metadata-panel ref="metadata" />
       </v-tab-item>
     </template>
