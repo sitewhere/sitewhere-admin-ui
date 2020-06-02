@@ -188,7 +188,6 @@ export default class SystemAdministration extends Vue {
     const component = this;
     try {
       const response: AxiosResponse<any> = await getJwt(this.$store);
-      console.log("Refreshed JWT.");
       const jwt = response.headers["x-sitewhere-jwt"];
       this.$store.commit("jwt", jwt);
       setTimeout(function() {

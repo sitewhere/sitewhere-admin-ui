@@ -45,7 +45,6 @@ import {
   EventSourcesPlugin,
   TenantEnginePlugin
 } from "sitewhere-admin-ui-plugins";
-
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 
 @Component({

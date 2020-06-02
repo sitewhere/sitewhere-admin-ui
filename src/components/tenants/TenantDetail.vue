@@ -9,7 +9,7 @@
     <template slot="header">
       <tenant-detail-header :record="tenant" />
       <v-divider />
-      <v-btn dark tile block color="#060" @click="onOpenTenant(tenant)">
+      <v-btn dark depressed tile block color="#060" @click="onOpenTenant(tenant)">
         View Tenant Data
         <v-icon class="pl-4">fa-chevron-right</v-icon>
       </v-btn>

@@ -66,6 +66,3 @@ export default class DeviceUpdateDialog extends EditDialogComponent<
   }
 }
 </script>
-
-<style scoped>
-</style>

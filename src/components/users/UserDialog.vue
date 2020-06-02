@@ -36,7 +36,8 @@ import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
   DialogSection,
-  BaseDialog
+  BaseDialog,
+  MetadataPanel
 } from "sitewhere-ide-components";
 
 import UserDetailFields from "./UserDetailFields.vue";
@@ -47,7 +48,8 @@ import { IUser } from "sitewhere-rest-api";
   components: {
     BaseDialog,
     UserDetailFields,
-    UserPermissions
+    UserPermissions,
+    MetadataPanel
   }
 })
 export default class UserDialog extends DialogComponent<IUser> {

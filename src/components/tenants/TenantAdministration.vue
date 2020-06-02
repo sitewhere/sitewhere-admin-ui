@@ -13,11 +13,11 @@
         <v-spacer />
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn small v-on="on" class="ma-0" icon @click="onInstanceSettings" slot="activator">
+            <v-btn small v-on="on" class="ma-0" icon @click="onTenantSettings" slot="activator">
               <v-icon class="grey--text text--darken-1">settings</v-icon>
             </v-btn>
           </template>
-          <span>Instance Settings</span>
+          <span>Tenant Settings</span>
         </v-tooltip>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
@@ -227,9 +227,11 @@ export default class TenantAdministration extends Vue {
     this.onSectionClicked(DevicesSection);
   }
 
-  /** Route to instance settings */
-  onInstanceSettings() {
-    this.$router.push("/system");
+  /** Route to tenant settings */
+  onTenantSettings() {
+    const url = `/system/tenants/${this.tenant.token}`;
+    console.log("routing to", url);
+    this.$router.push(url);
   }
 
   /** Set up timer for reloading JWT */
@@ -237,7 +239,6 @@ export default class TenantAdministration extends Vue {
     const component = this;
     try {
       const response: AxiosResponse<any> = await getJwt(this.$store);
-      console.log("Refreshed JWT.");
       const jwt = response.headers["x-sitewhere-jwt"];
       this.$store.commit("jwt", jwt);
       setTimeout(function() {
