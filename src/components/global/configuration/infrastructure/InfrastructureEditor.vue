@@ -6,11 +6,11 @@
     header="Configure Connectivity to Instance Infrastructure"
   >
     <grpc-section :configuration="configuration" @updated="onGrpcUpdated" />
-    <v-divider class="mt-6 mb-6" />
+    <content-divider />
     <kafka-section :configuration="configuration" @updated="onKafkaUpdated" />
-    <v-divider class="mt-6 mb-6" />
+    <content-divider />
     <redis-section :configuration="configuration" @updated="onRedisUpdated" />
-    <v-divider class="mt-6 mb-6" />
+    <content-divider />
     <metrics-section :configuration="configuration" @updated="onMetricsUpdated" />
   </instance-configuration-editor>
 </template>
@@ -27,6 +27,8 @@ import {
   IMetricsConfiguration
 } from "sitewhere-rest-api";
 
+import { ContentDivider } from "sitewhere-ide-components";
+
 import InstanceConfigurationEditor from "../InstanceConfigurationEditor.vue";
 import RedisSection from "./redis/RedisSection.vue";
 import KafkaSection from "./kafka/KafkaSection.vue";
@@ -35,6 +37,7 @@ import MetricsSection from "./metrics/MetricsSection.vue";
 
 @Component({
   components: {
+    ContentDivider,
     InstanceConfigurationEditor,
     RedisSection,
     KafkaSection,

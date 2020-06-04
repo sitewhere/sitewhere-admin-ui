@@ -11,9 +11,9 @@
       @datastoreUpdated="onRdbDatastoreUpdated"
       @datastoreDeleted="onRdbDatastoreDeleted"
     />
-    <v-divider class="mt-6 mb-6" />
+    <content-divider />
     <influx-configurations-table :configuration="configuration" />
-    <v-divider class="mt-6 mb-6" />
+    <content-divider />
     <cassandra-configurations-table :configuration="configuration" />
   </instance-configuration-editor>
 </template>
@@ -24,6 +24,8 @@ import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
+import { ContentDivider } from "sitewhere-ide-components";
+
 import InstanceConfigurationEditor from "../InstanceConfigurationEditor.vue";
 import RdbConfigurationsTable from "./rdb/RdbConfigurationsTable.vue";
 import InfluxConfigurationsTable from "./influx/InfluxConfigurationsTable.vue";
@@ -31,6 +33,7 @@ import CassandraConfigurationsTable from "./cassandra/CassandraConfigurationsTab
 
 @Component({
   components: {
+    ContentDivider,
     InstanceConfigurationEditor,
     RdbConfigurationsTable,
     InfluxConfigurationsTable,

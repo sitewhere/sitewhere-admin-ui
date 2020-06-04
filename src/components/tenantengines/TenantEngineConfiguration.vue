@@ -40,12 +40,13 @@ import { ContentTab } from "sitewhere-ide-components";
 import {
   AssetManagementPlugin,
   BatchOperationsPlugin,
-  CommandDeliveryPlugin,
   DeviceManagementPlugin,
   EventSourcesPlugin,
   TenantEnginePlugin
 } from "sitewhere-admin-ui-plugins";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
+
+import CommandDeliveryPlugin from "../temp/commanddelivery/CommandDeliveryPlugin.vue";
 
 @Component({
   components: {

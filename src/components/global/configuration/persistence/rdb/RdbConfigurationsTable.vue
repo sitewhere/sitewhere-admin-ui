@@ -1,47 +1,43 @@
 <template>
-  <datatable-section
-    icon="fa-database"
-    title="Relational Database Global Configurations"
-    :headers="headers"
-    :items="rdbConfigsAsSortedArray"
-    width="50%"
-  >
-    <template v-slot:item="props">
-      <tr>
-        <td>
-          <datatable-link
-            @linkClicked="onOpenDatastore(props.item.meta.name)"
-            :text="props.item.meta.name"
-          />
-        </td>
-        <td>{{ props.item.meta.type }}</td>
-        <td>{{ props.item.meta.connection }}</td>
-        <td>
-          <content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
-        </td>
-      </tr>
-    </template>
-    <template v-slot:datatable-footer>
-      <content-link
-        class="mt-3"
-        icon="fa-plus-circle"
-        text="Add new relational database global configuration."
-        @linkClicked="onAddDatastore"
-      />
-    </template>
-    <template v-slot:datatable-dialogs>
-      <rdb-datastore-create-dialog
-        ref="create"
-        :configuration="configuration"
-        @created="onDatastoreCreated"
-      />
-      <rdb-datastore-update-dialog
-        ref="update"
-        :configuration="configuration"
-        @updated="onDatastoreUpdated"
-      />
-    </template>
-  </datatable-section>
+  <content-section icon="fa-database" title="Relational Database Global Configurations">
+    <datatable-section :headers="headers" :items="rdbConfigsAsSortedArray" width="50%">
+      <template v-slot:item="props">
+        <tr>
+          <td>
+            <datatable-link
+              @linkClicked="onOpenDatastore(props.item.meta.name)"
+              :text="props.item.meta.name"
+            />
+          </td>
+          <td>{{ props.item.meta.type }}</td>
+          <td>{{ props.item.meta.connection }}</td>
+          <td>
+            <content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
+          </td>
+        </tr>
+      </template>
+      <template v-slot:datatable-footer>
+        <content-link
+          class="mt-3"
+          icon="fa-plus-circle"
+          text="Add new relational database global configuration."
+          @linkClicked="onAddDatastore"
+        />
+      </template>
+      <template v-slot:datatable-dialogs>
+        <rdb-datastore-create-dialog
+          ref="create"
+          :configuration="configuration"
+          @created="onDatastoreCreated"
+        />
+        <rdb-datastore-update-dialog
+          ref="update"
+          :configuration="configuration"
+          @updated="onDatastoreUpdated"
+        />
+      </template>
+    </datatable-section>
+  </content-section>
 </template>
 
 <script lang="ts">
@@ -59,6 +55,7 @@ import { IRdbConfiguration } from "sitewhere-rest-api";
 import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
 
 import {
+  ContentSection,
   DatatableSection,
   DatatableLink,
   ContentDeleteIcon,
@@ -67,6 +64,7 @@ import {
 
 @Component({
   components: {
+    ContentSection,
     DatatableSection,
     DatatableLink,
     ContentDeleteIcon,

@@ -1,35 +1,31 @@
 <template>
-  <datatable-section
-    icon="fa-database"
-    title="Cassandra Global Configurations"
-    :headers="headers"
-    :items="configsAsSortedArray"
-    width="50%"
-  >
-    <template v-slot:item="props">
-      <tr>
-        <td>
-          <datatable-link
-            @linkClicked="onOpenDatastore(props.item.meta.name)"
-            :text="props.item.meta.name"
-          />
-        </td>
-        <td>{{ props.item.config.contactPoints }}</td>
-        <td>{{ props.item.config.keyspace }}</td>
-        <td>
-          <content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
-        </td>
-      </tr>
-    </template>
-    <template v-slot:datatable-footer>
-      <content-link
-        class="mt-3"
-        icon="fa-plus-circle"
-        text="Add new Cassandra database global configuration."
-        @linkClicked="onAddDatastore"
-      />
-    </template>
-  </datatable-section>
+  <content-section icon="fa-database" title="Cassandra Global Configurations">
+    <datatable-section :headers="headers" :items="configsAsSortedArray" width="50%">
+      <template v-slot:item="props">
+        <tr>
+          <td>
+            <datatable-link
+              @linkClicked="onOpenDatastore(props.item.meta.name)"
+              :text="props.item.meta.name"
+            />
+          </td>
+          <td>{{ props.item.config.contactPoints }}</td>
+          <td>{{ props.item.config.keyspace }}</td>
+          <td>
+            <content-delete-icon @delete="onDeleteDatastore(props.item.meta.name)" />
+          </td>
+        </tr>
+      </template>
+      <template v-slot:datatable-footer>
+        <content-link
+          class="mt-3"
+          icon="fa-plus-circle"
+          text="Add new Cassandra database global configuration."
+          @linkClicked="onAddDatastore"
+        />
+      </template>
+    </datatable-section>
+  </content-section>
 </template>
 
 <script lang="ts">
@@ -39,6 +35,7 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 import {
+  ContentSection,
   DatatableSection,
   DatatableLink,
   ContentDeleteIcon,
@@ -47,6 +44,7 @@ import {
 
 @Component({
   components: {
+    ContentSection,
     DatatableSection,
     DatatableLink,
     ContentDeleteIcon,
