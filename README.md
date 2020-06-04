@@ -5,24 +5,13 @@
 # SiteWhere Administrative User Interface
 
 The SiteWhere Administrative UI is an [Electron](https://electronjs.org/) application that
-provides management features for remote SiteWhere instances. 
+provides management features for remote SiteWhere instances. As of SiteWhere 2.0.0, this
+application is the preferred method of administering a SiteWhere instance and the embedded
+web application is being deprecated.
 
-# Building the Application
+## Build and run the application
 
-After cloning the source code repository, execute the following command to install the dependencies:
-
-```
+```console
 yarn install
-```
-
-To run the application in development mode, execute:
-
-```
-yarn electron:serve
-```
-
-To build an installable executable, execute:
-
-```
-yarn electron:build
+yarn run electron:serve
 ```
