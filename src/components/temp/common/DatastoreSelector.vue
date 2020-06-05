@@ -7,7 +7,7 @@
       </v-card>
       <postgres-95-summary v-if="isPostgres95" :configuration="configuration" />
       <content-link
-        class="mt-5"
+        class="mt-5 mb-2"
         icon="fa-edit"
         text="Update datastore settings"
         @linkClicked="onUpdateDatastore"

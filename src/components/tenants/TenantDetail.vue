@@ -18,7 +18,7 @@
       <v-tab key="microservices">Microservices</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="microservices">
+      <v-tab-item key="microservices" eager>
         <microservice-list
           :microservices="microservices"
           @microserviceClicked="onMicroserviceClicked"

@@ -16,7 +16,7 @@
       <v-tab key="devicetype">Device Type</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="devicetype">
+      <v-tab-item key="devicetype" eager>
         <device-list-filter-device-type-fields ref="devicetype" />
       </v-tab-item>
     </template>

@@ -16,14 +16,14 @@
       <v-tab key="content">Content</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details">
+      <v-tab-item key="details" eager>
         <script-detail-fields
           ref="details"
           :scriptCategories="scriptCategories"
           @categoryUpdated="onCategoryUpdated"
         />
       </v-tab-item>
-      <v-tab-item key="content">
+      <v-tab-item key="content" eager>
         <script-content-fields :identifier="identifier" :category="category" ref="content" />
       </v-tab-item>
     </template>

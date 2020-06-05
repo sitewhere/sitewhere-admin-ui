@@ -15,7 +15,7 @@
       <v-tab key="settings">Device Slot Settings</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="settings">
+      <v-tab-item key="settings" eager>
         <v-card flat>
           <v-card-text>
             <v-container fluid>

@@ -16,10 +16,10 @@
       <v-tab key="roles">Roles</v-tab>
     </template>
     <template slot="tab-items">
-      <v-tab-item key="details">
+      <v-tab-item key="details" eager>
         <device-group-element-detail-fields ref="details" />
       </v-tab-item>
-      <v-tab-item key="roles">
+      <v-tab-item key="roles" eager>
         <device-group-element-role-fields ref="roles" />
       </v-tab-item>
     </template>
