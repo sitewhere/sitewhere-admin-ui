@@ -193,5 +193,3 @@ export default class TenantEngineEditor extends Vue implements WithRoute {
   }
 }
 </script>
-
-<style></style>

@@ -8655,14 +8655,14 @@ single-line-log@^1.1.2:
   dependencies:
     string-width "^1.0.1"
 
-sitewhere-admin-ui-plugins@3.0.0-alpha.27:
-  version "3.0.0-alpha.27"
-  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-alpha.27.tgz#c7624ed6f25e08c903273d1b78caa3cb0d895296"
-  integrity sha512-BVMn2nACUdpJxVY2dW1152sezWCHFwILHfSjz8NFuNDK5GiwTSVa9c5tpUV+2r9SFq44I+fG4IrDle3yAE10uw==
+sitewhere-admin-ui-plugins@3.0.0-alpha.34:
+  version "3.0.0-alpha.34"
+  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-alpha.34.tgz#f6283d13508024ab704707739bf218eb7553938b"
+  integrity sha512-EL8oDMhJeWh1n+R3VXKcgL7ICAEVf54fo4GtozbNrGxBx3M5L4+Q90hDXIGXKegb7r+TPgGVYtputZehzZNlvw==
   dependencies:
     axios "^0.19.2"
-    sitewhere-configuration-model "3.0.0-alpha.4"
-    sitewhere-ide-components "3.0.0-alpha.25"
+    sitewhere-configuration-model "3.0.0-alpha.6"
+    sitewhere-ide-components "3.0.0-alpha.26"
     vue "^2.6.11"
     vue-class-component "^7.2.3"
     vue-color "^2.7.1"
@@ -8672,10 +8672,10 @@ sitewhere-admin-ui-plugins@3.0.0-alpha.27:
     vuetify "^2.2.11"
     vuex "^3.3.0"
 
-sitewhere-configuration-model@3.0.0-alpha.4:
-  version "3.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/sitewhere-configuration-model/-/sitewhere-configuration-model-3.0.0-alpha.4.tgz#e1241dc84f767b46978c70a1c9a2b09fadd7abfc"
-  integrity sha512-m5sIwBGy/LDBOsFxsLyFotXMaQiUFnbYk5iW9R4gvtTIthB+i+1a7i60LzzlraVFY+dw7pv2tW0xy37X/4vlzA==
+sitewhere-configuration-model@3.0.0-alpha.6:
+  version "3.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/sitewhere-configuration-model/-/sitewhere-configuration-model-3.0.0-alpha.6.tgz#8b6ffb8918a88b0b2bd75e31350fc0885e89c02a"
+  integrity sha512-zs6ou6zBdIf/aJ/tSGsDXjA3bC7YrvXKPwgA4s53aRFFDwDWFE3x9XFJbiu6RhyJdQ0L1TYLJcugfO4IixRE5A==
 
 sitewhere-ide-common@3.0.0-alpha.4:
   version "3.0.0-alpha.4"
@@ -8686,10 +8686,10 @@ sitewhere-ide-common@3.0.0-alpha.4:
     moment "^2.25.1"
     sitewhere-rest-api "^3.0.0-alpha.3"
 
-sitewhere-ide-components@3.0.0-alpha.25:
-  version "3.0.0-alpha.25"
-  resolved "https://registry.yarnpkg.com/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-alpha.25.tgz#5771cf640c98f6f8a631c9cffb885e381b09ff80"
-  integrity sha512-JcmT4oO9xaUqAfKPz8hyfabnpY+E5oVd+19WO3J/T2VAIqjx4E+F2l2OF9Bw8xCMTWjE7lolEyJRDt5MnwEHBw==
+sitewhere-ide-components@3.0.0-alpha.26:
+  version "3.0.0-alpha.26"
+  resolved "https://registry.yarnpkg.com/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-alpha.26.tgz#0883e2316f7e79c82153fbb95dfb756e03b22188"
+  integrity sha512-6BwTJCGG1tBmMxoKIB7YgDIaxA66ZJGuFmmyEg28edfqy+a9oStA/b5JcXFSNEk0YhER/qNPDe4QFpiP0c+n+Q==
   dependencies:
     axios "^0.19.2"
     sitewhere-ide-common "3.0.0-alpha.4"

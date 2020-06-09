@@ -15,9 +15,19 @@
       v-else-if="functionalArea == 'command-delivery'"
       @dirty="markDirty"
     />
+    <device-registration-plugin
+      :configuration="configuration"
+      v-else-if="functionalArea == 'device-registration'"
+      @dirty="markDirty"
+    />
     <device-management-plugin
       :configuration="configuration"
       v-else-if="functionalArea == 'device-management'"
+      @dirty="markDirty"
+    />
+    <device-state-plugin
+      :configuration="configuration"
+      v-else-if="functionalArea == 'device-state'"
       @dirty="markDirty"
     />
     <event-sources-plugin
@@ -42,6 +52,8 @@ import {
   BatchOperationsPlugin,
   CommandDeliveryPlugin,
   DeviceManagementPlugin,
+  DeviceRegistrationPlugin,
+  DeviceStatePlugin,
   EventSourcesPlugin,
   TenantEnginePlugin
 } from "sitewhere-admin-ui-plugins";
@@ -54,6 +66,8 @@ import { ITenantEngineConfiguration } from "sitewhere-rest-api";
     BatchOperationsPlugin,
     CommandDeliveryPlugin,
     DeviceManagementPlugin,
+    DeviceRegistrationPlugin,
+    DeviceStatePlugin,
     EventSourcesPlugin,
     TenantEnginePlugin
   }
@@ -96,5 +110,3 @@ export default class TenantMicroserviceConfiguration extends Vue {
   }
 }
 </script>
-
-<style scoped></style>
