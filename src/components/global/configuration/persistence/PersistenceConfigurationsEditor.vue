@@ -12,9 +12,12 @@
       @datastoreDeleted="onRdbDatastoreDeleted"
     />
     <content-divider />
-    <influx-configurations-table :configuration="configuration" />
-    <content-divider />
-    <cassandra-configurations-table :configuration="configuration" />
+    <ts-configurations-table
+      :configuration="configuration"
+      @datastoreCreated="onTsDatastoreCreated"
+      @datastoreUpdated="onTsDatastoreUpdated"
+      @datastoreDeleted="onTsDatastoreDeleted"
+    />
   </instance-configuration-editor>
 </template>
 
@@ -28,16 +31,14 @@ import { ContentDivider } from "sitewhere-ide-components";
 
 import InstanceConfigurationEditor from "../InstanceConfigurationEditor.vue";
 import RdbConfigurationsTable from "./rdb/RdbConfigurationsTable.vue";
-import InfluxConfigurationsTable from "./influx/InfluxConfigurationsTable.vue";
-import CassandraConfigurationsTable from "./cassandra/CassandraConfigurationsTable.vue";
+import TsConfigurationsTable from "./timeseries/TsConfigurationsTable.vue";
 
 @Component({
   components: {
     ContentDivider,
     InstanceConfigurationEditor,
     RdbConfigurationsTable,
-    InfluxConfigurationsTable,
-    CassandraConfigurationsTable
+    TsConfigurationsTable
   }
 })
 export default class PersistenceConfigurationsEditor extends Vue {
@@ -55,6 +56,20 @@ export default class PersistenceConfigurationsEditor extends Vue {
   }
   /** Notifies when an RDB datastore is deleted */
   onRdbDatastoreDeleted(): void {
+    this.$emit("updated");
+  }
+
+  /** Notifies when an TS datastore is created */
+  onTsDatastoreCreated(): void {
+    this.$emit("updated");
+  }
+
+  /** Notifies when an TS datastore is updated */
+  onTsDatastoreUpdated(): void {
+    this.$emit("updated");
+  }
+  /** Notifies when an TS datastore is deleted */
+  onTsDatastoreDeleted(): void {
     this.$emit("updated");
   }
 }

@@ -1,6 +1,7 @@
 <template>
-  <v-list v-if="microservices" two-line dense>
+  <v-list class="pa-0" v-if="microservices" two-line dense>
     <template v-for="microservice in microservices">
+      <v-divider :key="'div-' + microservice.id" />
       <v-list-item :key="microservice.id" @click="onMicroserviceClicked(microservice)">
         <v-list-item-avatar>
           <v-icon>{{ microservice.icon }}</v-icon>
@@ -10,7 +11,6 @@
           <v-list-item-subtitle v-html="microservice.description" />
         </v-list-item-content>
       </v-list-item>
-      <v-divider :key="'div-' + microservice.id" />
     </template>
   </v-list>
 </template>

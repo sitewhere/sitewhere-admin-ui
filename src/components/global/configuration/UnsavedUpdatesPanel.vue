@@ -1,13 +1,15 @@
 <template>
   <v-card flat color="#ffffee">
-    <v-card-text class="panel-bg">
-      <div style="display: flex; line-height: 1.3em;" class="subheading">
-        <v-icon class="mr-2" style="font-size: 20px;">fa-exclamation-circle</v-icon>Instance Configuration Has Unsaved Updates!
+    <v-card-text>
+      <div style="display: flex;">
+        <v-icon class="mr-2" style="font-size: 20px;">fa-exclamation-circle</v-icon>
+        <span class="subtitle-2 mt-1">Instance Configuration Has Unsaved Updates!</span>
         <v-spacer />
-        <v-btn class="tiny-button caption" dark outlined color="#666" @click="onRevert">Revert</v-btn>
-        <v-btn class="tiny-button caption ml-2" outlined dark color="#090" @click="onSave">Save</v-btn>
+        <v-btn small class="caption" dark outlined color="#666" @click="onRevert">Revert</v-btn>
+        <v-btn small class="caption ml-2" outlined dark color="#090" @click="onSave">Save</v-btn>
       </div>
     </v-card-text>
+    <v-divider />
   </v-card>
 </template>
 
@@ -31,15 +33,3 @@ export default class UnsavedUpdatesPanel extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.panel-bg {
-  border-bottom: 1px solid #eed;
-  border-top: 1px solid #ddd;
-}
-.tiny-button {
-  height: 20px;
-  padding: 0;
-  margin: 0;
-}
-</style>

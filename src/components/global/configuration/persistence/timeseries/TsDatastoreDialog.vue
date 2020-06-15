@@ -12,7 +12,7 @@
     @cancelClicked="onCancelClicked"
   >
     <slot />
-    <v-card color="#f5f5f5" flat class="pl-3 pr-3 pt-1">
+    <dialog-header>
       <v-select
         :required="true"
         title="Choose database type"
@@ -24,9 +24,10 @@
         prepend-icon="fa-database"
         placeholder=" "
       />
-    </v-card>
+    </dialog-header>
     <v-divider class="mb-2" />
-    <postgres-95-fields v-show="isPostgres95" ref="postgres95" />
+    <warp-10-fields v-show="isWarp10" ref="warp10" />
+    <influx-db-fields v-show="isInfluxDB" ref="influxdb" />
     <no-fields v-show="isUnknown" ref="unknown" />
   </base-dialog>
 </template>
@@ -41,7 +42,11 @@ import {
   BaseDialog
 } from "sitewhere-ide-components";
 
-import { Postgres95Fields, NoFields } from "sitewhere-admin-ui-plugins";
+import {
+  Warp10Fields,
+  InfluxDbFields,
+  NoFields
+} from "sitewhere-admin-ui-plugins";
 
 import {
   IDatastoreDefinition,
@@ -50,9 +55,15 @@ import {
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { BaseDialog, DialogHeader, Postgres95Fields, NoFields }
+  components: {
+    BaseDialog,
+    DialogHeader,
+    Warp10Fields,
+    InfluxDbFields,
+    NoFields
+  }
 })
-export default class RdbDatastoreDialog extends DialogComponent<
+export default class TsDatastoreDialog extends DialogComponent<
   IDatastoreDefinition
 > {
   @Prop() readonly instance!: IInstanceConfiguration;
@@ -60,24 +71,31 @@ export default class RdbDatastoreDialog extends DialogComponent<
   @Prop() readonly createLabel!: string;
   @Ref() readonly dialog!: ITabbedComponent;
 
-  @Ref() readonly postgres95!: Postgres95Fields;
+  @Ref() readonly warp10!: Warp10Fields;
+  @Ref() readonly influxdb!: InfluxDbFields;
   @Ref() readonly unknown!: NoFields;
 
-  type = "postgres95";
+  type = "warp10";
   configuration: any;
 
   /** List of supported database types */
   databaseTypes: { text: string; value: string }[] = [
     {
-      text: "PostgreSQL",
-      value: "postgres95"
+      text: "Warp 10",
+      value: "warp10"
+    },
+    {
+      text: "InfluxDB",
+      value: "influxdb"
     }
   ];
 
   /** Get displayed summary panel */
   get details(): DialogSection {
-    if (this.isPostgres95) {
-      return this.postgres95;
+    if (this.isWarp10) {
+      return this.warp10;
+    } else if (this.isInfluxDB) {
+      return this.influxdb;
     } else {
       return this.unknown;
     }
@@ -88,14 +106,19 @@ export default class RdbDatastoreDialog extends DialogComponent<
     return NavigationIcon.Datastore;
   }
 
-  /** Indicates whether database is Postgres95 */
-  get isPostgres95(): boolean {
-    return this.type == "postgres95";
+  /** Indicates whether database is Warp 10 */
+  get isWarp10(): boolean {
+    return this.type == "warp10";
+  }
+
+  /** Indicates whether database is InfluxDB */
+  get isInfluxDB(): boolean {
+    return this.type == "influxdb";
   }
 
   /** Indicates whether database is unknown */
   get isUnknown(): boolean {
-    return !this.isPostgres95;
+    return !this.isWarp10 && !this.isInfluxDB;
   }
 
   /** Generate payload from UI data */
@@ -137,3 +160,4 @@ export default class RdbDatastoreDialog extends DialogComponent<
   }
 }
 </script>
+

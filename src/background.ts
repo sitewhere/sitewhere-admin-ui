@@ -2,7 +2,6 @@
 
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import { initSplashScreen } from "@trodi/electron-splashscreen";
 import IsDev from "electron-is-dev";
 import path from "path";
 
@@ -30,40 +29,21 @@ function createWindow() {
     minWidth: 1024,
     height: 900,
     minHeight: 768,
+    backgroundColor: '#ffffff',
     title: `SiteWhere Admininstration (${version} CE)`,
     frame: false,
     titleBarStyle: "hidden",
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false
-    }
+    },
+    show: false
   };
 
-  let logoUrl = '';
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    logoUrl = process.env.WEBPACK_DEV_SERVER_URL;
-  } else {
-    createProtocol('app')
-    logoUrl = "app://./"
-  }
-  logoUrl = path.join(logoUrl, "icon.svg");
+  // Create browser window.
+  const window = new BrowserWindow(windowOptions);
 
-  // Create splash screen.
-  const window = initSplashScreen({
-    windowOpts: windowOptions,
-    templateUrl: logoUrl,
-    delay: 0,
-    minVisible: 1000,
-    splashScreenOpts: {
-      height: 350,
-      width: 350,
-      transparent: true,
-      webPreferences: {
-        webSecurity: false
-      }
-    }
-  });
-
+  // Load correct URL based on whether in dev mode.
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     window.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
@@ -76,6 +56,12 @@ function createWindow() {
   // Check for updates.
   autoUpdater.checkForUpdatesAndNotify();
 
+  // Only show after browser content rendered.
+  window.once('ready-to-show', () => {
+    window.show()
+  })
+
+  // Handle window closed.
   window.on('closed', () => {
     win = null
   })

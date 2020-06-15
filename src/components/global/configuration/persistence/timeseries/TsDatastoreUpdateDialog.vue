@@ -1,7 +1,7 @@
 <template>
-  <rdb-datastore-dialog
+  <ts-datastore-dialog
     ref="dialog"
-    title="Update Relational Datastore"
+    title="Update Time Series Datastore"
     createLabel="Update"
     @payload="onUpdateClicked"
   />
@@ -11,7 +11,7 @@
 import Vue from "vue";
 import { Component, Ref, Prop } from "vue-property-decorator";
 
-import RdbDatastoreDialog from "./RdbDatastoreDialog.vue";
+import TsDatastoreDialog from "./TsDatastoreDialog.vue";
 
 import {
   IDatastoreDefinition,
@@ -20,13 +20,13 @@ import {
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { RdbDatastoreDialog }
+  components: { TsDatastoreDialog }
 })
-export default class RdbDatastoreUpdateDialog extends Vue {
+export default class TsDatastoreUpdateDialog extends Vue {
   @Prop() readonly instance!: IInstanceConfiguration;
-  @Ref() readonly dialog!: RdbDatastoreDialog;
+  @Ref() readonly dialog!: TsDatastoreDialog;
 
-  type = "postgres95";
+  type: string | null = null;
   configuration: any;
 
   /** Load dialog with data */

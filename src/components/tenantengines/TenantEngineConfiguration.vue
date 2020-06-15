@@ -30,6 +30,11 @@
       v-else-if="functionalArea == 'device-state'"
       @dirty="markDirty"
     />
+    <event-management-plugin
+      :configuration="configuration"
+      v-else-if="functionalArea == 'event-management'"
+      @dirty="markDirty"
+    />
     <event-sources-plugin
       :configuration="configuration"
       v-else-if="functionalArea == 'event-sources'"
@@ -54,6 +59,7 @@ import {
   DeviceManagementPlugin,
   DeviceRegistrationPlugin,
   DeviceStatePlugin,
+  EventManagementPlugin,
   EventSourcesPlugin,
   TenantEnginePlugin
 } from "sitewhere-admin-ui-plugins";
@@ -68,6 +74,7 @@ import { ITenantEngineConfiguration } from "sitewhere-rest-api";
     DeviceManagementPlugin,
     DeviceRegistrationPlugin,
     DeviceStatePlugin,
+    EventManagementPlugin,
     EventSourcesPlugin,
     TenantEnginePlugin
   }

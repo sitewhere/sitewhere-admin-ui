@@ -1,7 +1,7 @@
 <template>
-  <rdb-datastore-dialog
+  <ts-datastore-dialog
     ref="dialog"
-    title="Create Relational Datastore"
+    title="Create Time Series Datastore"
     createLabel="Create"
     @payload="onCreateClicked"
   >
@@ -17,14 +17,14 @@
       />
       <span v-if="$v.name.$invalid && $v.$dirty">Datasource id is required.</span>
     </v-card>
-  </rdb-datastore-dialog>
+  </ts-datastore-dialog>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Ref, Prop } from "vue-property-decorator";
 
-import RdbDatastoreDialog from "./RdbDatastoreDialog.vue";
+import TsDatastoreDialog from "./TsDatastoreDialog.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
 
@@ -35,7 +35,7 @@ import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
 import { IInstanceConfiguration } from "sitewhere-rest-api";
 
 @Component({
-  components: { RdbDatastoreDialog },
+  components: { TsDatastoreDialog },
   validations: {
     name: {
       required,
@@ -43,12 +43,12 @@ import { IInstanceConfiguration } from "sitewhere-rest-api";
     }
   }
 })
-export default class RdbDatastoreUpdateDialog extends Vue {
+export default class TsDatastoreUpdateDialog extends Vue {
   @Prop() readonly instance!: IInstanceConfiguration;
-  @Ref() readonly dialog!: RdbDatastoreDialog;
+  @Ref() readonly dialog!: TsDatastoreDialog;
 
   name = "";
-  type = "postgres95";
+  type = "warp10";
   configuration: any = {};
 
   /** Open the dialog */

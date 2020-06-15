@@ -1,6 +1,6 @@
 <template>
-  <content-section icon="fa-database" title="Relational Database Global Configurations">
-    <datatable-section :headers="headers" :items="rdbConfigsAsSortedArray" width="50%">
+  <content-section icon="fa-database" title="Time Series Database Global Configurations">
+    <datatable-section :headers="headers" :items="tsConfigsAsSortedArray" width="50%">
       <template v-slot:item="props">
         <tr>
           <td width="15%" class="truncate" :title="props.item.meta.name">
@@ -24,17 +24,17 @@
         <content-link
           class="mt-5"
           icon="fa-plus-circle"
-          text="Add new relational database global configuration."
+          text="Add new timeseries database global configuration."
           @linkClicked="onAddDatastore"
         />
       </template>
       <template v-slot:datatable-dialogs>
-        <rdb-datastore-create-dialog
+        <ts-datastore-create-dialog
           ref="create"
           :configuration="configuration"
           @created="onDatastoreCreated"
         />
-        <rdb-datastore-update-dialog
+        <ts-datastore-update-dialog
           ref="update"
           :configuration="configuration"
           @updated="onDatastoreUpdated"
@@ -48,14 +48,11 @@
 import Vue from "vue";
 import { Component, Prop, Ref, Watch } from "vue-property-decorator";
 
-import RdbDatastoreCreateDialog from "./RdbDatastoreCreateDialog.vue";
-import RdbDatastoreUpdateDialog from "./RdbDatastoreUpdateDialog.vue";
-
 import {
   IInstanceConfiguration,
-  IRdbConfigurationMap
+  ITimeSeriesConfiguration,
+  ITimeSeriesConfigurationMap
 } from "sitewhere-rest-api";
-import { IRdbConfiguration } from "sitewhere-rest-api";
 import { IDatastoreDefinitionLocal } from "sitewhere-configuration-model";
 
 import {
@@ -66,6 +63,9 @@ import {
   ContentLink
 } from "sitewhere-ide-components";
 
+import TsDatastoreCreateDialog from "./TsDatastoreCreateDialog.vue";
+import TsDatastoreUpdateDialog from "./TsDatastoreUpdateDialog.vue";
+
 @Component({
   components: {
     ContentSection,
@@ -73,17 +73,17 @@ import {
     DatatableLink,
     ContentDeleteIcon,
     ContentLink,
-    RdbDatastoreCreateDialog,
-    RdbDatastoreUpdateDialog
+    TsDatastoreCreateDialog,
+    TsDatastoreUpdateDialog
   }
 })
-export default class RdbConfigurationsTable extends Vue {
+export default class TsConfigurationsTable extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
-  @Ref() readonly create!: RdbDatastoreCreateDialog;
-  @Ref() readonly update!: RdbDatastoreUpdateDialog;
+  @Ref() readonly create!: TsDatastoreCreateDialog;
+  @Ref() readonly update!: TsDatastoreUpdateDialog;
 
-  /** RDB configurations in format for display */
-  rdbConfigsAsSortedArray: any[] = [];
+  /** Time series configurations in format for display */
+  tsConfigsAsSortedArray: any[] = [];
 
   /** Name of RDB entry being updated */
   updating: string | null = null;
@@ -95,22 +95,22 @@ export default class RdbConfigurationsTable extends Vue {
     { text: "", value: "delete" }
   ];
 
-  @Watch("rdbConfigurations", { immediate: true })
+  @Watch("tsConfigurations", { immediate: true })
   onRdbConfigurationsUpdated() {
-    this.calculateRdbConfigsAsSortedArray();
+    this.calculateTsConfigsAsSortedArray();
   }
 
-  /** Global RDB configurations */
-  get rdbConfigurations(): IRdbConfigurationMap | null {
+  /** Global timeseries configurations */
+  get tsConfigurations(): ITimeSeriesConfigurationMap | null {
     return this.configuration && this.configuration.persistenceConfigurations
-      ? this.configuration.persistenceConfigurations.rdbConfigurations
+      ? this.configuration.persistenceConfigurations.timeSeriesConfigurations
       : null;
   }
 
-  /** Get RDB configs as a sorted array */
-  calculateRdbConfigsAsSortedArray(): void {
+  /** Get timeseries configs as a sorted array */
+  calculateTsConfigsAsSortedArray(): void {
     const configs: any[] = [];
-    const hashed: IRdbConfigurationMap | null = this.rdbConfigurations;
+    const hashed: ITimeSeriesConfigurationMap | null = this.tsConfigurations;
     if (hashed) {
       const keys: string[] = Object.keys(hashed);
       keys.forEach(key => {
@@ -127,28 +127,30 @@ export default class RdbConfigurationsTable extends Vue {
     configs.sort(function(a, b) {
       return a.meta.name.localeCompare(b.meta.name);
     });
-    this.rdbConfigsAsSortedArray = configs;
+    this.tsConfigsAsSortedArray = configs;
   }
 
   /** Determine connection info based on type */
   connectionForType(meta: any, config: any): string {
-    if (meta.type == "postgres95") {
+    if (meta.type == "warp10") {
+      return `${config.hostname}:${config.port}`;
+    } else if (meta.type == "influxdb") {
       return `${config.hostname}:${config.port}`;
     }
     return "Unknown";
   }
 
-  /** Add a new RDB datastore */
+  /** Add a new timeseries datastore */
   onAddDatastore() {
     this.create.openDialog();
   }
 
-  /** Open an existing RDB datastore */
+  /** Open an existing timeseries datastore */
   onOpenDatastore(name: string) {
     this.updating = name;
-    const configs: IRdbConfigurationMap | null = this.rdbConfigurations;
+    const configs: ITimeSeriesConfigurationMap | null = this.tsConfigurations;
     if (configs) {
-      const config: IRdbConfiguration = configs[name];
+      const config: ITimeSeriesConfiguration = configs[name];
       this.update.load({
         type: config.type,
         configuration: config.configuration
@@ -160,12 +162,12 @@ export default class RdbConfigurationsTable extends Vue {
   /** Called to remove a datastore from the list */
   onDeleteDatastore(name: string) {
     this.updating = name;
-    const configs: IRdbConfigurationMap | null = this.rdbConfigurations;
+    const configs: ITimeSeriesConfigurationMap | null = this.tsConfigurations;
     if (configs) {
       delete configs[name];
     }
     this.$emit("datastoreDeleted");
-    this.calculateRdbConfigsAsSortedArray();
+    this.calculateTsConfigsAsSortedArray();
   }
 
   /** Called with creation information */
@@ -173,31 +175,31 @@ export default class RdbConfigurationsTable extends Vue {
     const name: string = created.name;
     const definition: IDatastoreDefinitionLocal = created.definition;
 
-    const configs: IRdbConfigurationMap | null = this.rdbConfigurations;
+    const configs: ITimeSeriesConfigurationMap | null = this.tsConfigurations;
     if (configs) {
-      const rdb: IRdbConfiguration = {
+      const ts: ITimeSeriesConfiguration = {
         type: definition.type,
         configuration: definition.configuration
       };
-      configs[name] = rdb;
+      configs[name] = ts;
     }
     this.$emit("datastoreCreated");
-    this.calculateRdbConfigsAsSortedArray();
+    this.calculateTsConfigsAsSortedArray();
   }
 
   /** Called with updated information */
   onDatastoreUpdated(updated: IDatastoreDefinitionLocal) {
-    const configs: IRdbConfigurationMap | null = this.rdbConfigurations;
+    const configs: ITimeSeriesConfigurationMap | null = this.tsConfigurations;
     if (configs && this.updating) {
-      const rdb: IRdbConfiguration = {
+      const ts: ITimeSeriesConfiguration = {
         type: updated.type,
         configuration: updated.configuration
       };
-      configs[this.updating] = rdb;
+      configs[this.updating] = ts;
     }
     this.updating = null;
     this.$emit("datastoreUpdated");
-    this.calculateRdbConfigsAsSortedArray();
+    this.calculateTsConfigsAsSortedArray();
   }
 }
 </script>
