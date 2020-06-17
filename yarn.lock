@@ -8662,10 +8662,10 @@ single-line-log@^1.1.2:
   dependencies:
     string-width "^1.0.1"
 
-sitewhere-admin-ui-plugins@3.0.0-beta.3:
-  version "3.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.3.tgz#61bf4b7912e63ab5c804dd2cd3685b7ff44b50d4"
-  integrity sha512-bo+KYs8YTHGXk/IhNMiva2VY0X9NZe34InqVR1W1nMk8U52Mp59hUV9njUxLmxcT2JOJt9rV3NQUukoAhMyopw==
+sitewhere-admin-ui-plugins@3.0.0-beta.4:
+  version "3.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.4.tgz#536788301a55fa8efb7a546b39ce634471f23617"
+  integrity sha512-d0BzkmspHNZ9/E2uAbg0Mg5y83nmITvWuwoRULlhWllzgopglw7iDZ3IizyYaxaiBp/A5s8JAWFhfTPcGQ5o8Q==
   dependencies:
     axios "^0.19.2"
     sitewhere-configuration-model "3.0.0-beta.1"

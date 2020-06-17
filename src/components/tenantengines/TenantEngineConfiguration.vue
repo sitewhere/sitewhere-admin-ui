@@ -40,6 +40,11 @@
       v-else-if="functionalArea == 'event-sources'"
       @dirty="markDirty"
     />
+    <inbound-processing-plugin
+      :configuration="configuration"
+      v-else-if="functionalArea == 'inbound-processing'"
+      @dirty="markDirty"
+    />
     <tenant-engine-plugin v-else :configuration="configuration">
       No Plugin Found for Functional Area:
       {{ functionalArea }}
@@ -61,6 +66,7 @@ import {
   DeviceStatePlugin,
   EventManagementPlugin,
   EventSourcesPlugin,
+  InboundProcessingPlugin,
   TenantEnginePlugin
 } from "sitewhere-admin-ui-plugins";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
@@ -76,6 +82,7 @@ import { ITenantEngineConfiguration } from "sitewhere-rest-api";
     DeviceStatePlugin,
     EventManagementPlugin,
     EventSourcesPlugin,
+    InboundProcessingPlugin,
     TenantEnginePlugin
   }
 })
