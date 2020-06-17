@@ -3,7 +3,6 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import IsDev from "electron-is-dev";
-import path from "path";
 
 /* eslint-disable-next-line @typescript-eslint/no-var-requires */
 const { autoUpdater } = require("electron-updater");
@@ -14,8 +13,8 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null
 
-// Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
+// Regsiter "app" as a privileged scheme.
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 /**
  * Create splash screen, then browser window.
@@ -49,7 +48,7 @@ function createWindow() {
     window.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) window.webContents.openDevTools()
   } else {
-    // Load the index.html when not in development
+    createProtocol('app')
     window.loadURL('app://./index.html')
   }
 
