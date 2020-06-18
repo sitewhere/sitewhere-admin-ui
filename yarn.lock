@@ -8662,14 +8662,14 @@ single-line-log@^1.1.2:
   dependencies:
     string-width "^1.0.1"
 
-sitewhere-admin-ui-plugins@3.0.0-beta.4:
-  version "3.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.4.tgz#536788301a55fa8efb7a546b39ce634471f23617"
-  integrity sha512-d0BzkmspHNZ9/E2uAbg0Mg5y83nmITvWuwoRULlhWllzgopglw7iDZ3IizyYaxaiBp/A5s8JAWFhfTPcGQ5o8Q==
+sitewhere-admin-ui-plugins@3.0.0-beta.7:
+  version "3.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.7.tgz#2d61b9ed69ca2d59d61095c48e5d5ce4ae048053"
+  integrity sha512-I/BoAtpv1qoarsmLQob1EelX32Ft2MrQRLR9e5/OtqbSho+COb5kpDtFT4nZ0uVSn2pIkkgkPd56mZ4IfbdOxQ==
   dependencies:
     axios "^0.19.2"
-    sitewhere-configuration-model "3.0.0-beta.1"
-    sitewhere-ide-components "3.0.0-beta.1"
+    sitewhere-configuration-model "3.0.0-beta.2"
+    sitewhere-ide-components "3.0.0-beta.2"
     vue "^2.6.11"
     vue-class-component "^7.2.3"
     vue-color "^2.7.1"
@@ -8679,10 +8679,10 @@ sitewhere-admin-ui-plugins@3.0.0-beta.4:
     vuetify "^2.2.11"
     vuex "^3.3.0"
 
-sitewhere-configuration-model@3.0.0-beta.1:
-  version "3.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/sitewhere-configuration-model/-/sitewhere-configuration-model-3.0.0-beta.1.tgz#9ad0ab6d34b5fe26aa18573895c820478c0d6783"
-  integrity sha512-c7K9h10jBpR8nY5wL9UbUvl51SJ4ykzphZMXiMMy13HltTXlES4cdzuqfwDfFxVEHAdTUf9GJW/Hrg1B7ALntQ==
+sitewhere-configuration-model@3.0.0-beta.2:
+  version "3.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/sitewhere-configuration-model/-/sitewhere-configuration-model-3.0.0-beta.2.tgz#e3d5c6957ef4c0f7a8d81dbb84c4e5b6e131cc26"
+  integrity sha512-/lbN7Q/vHpvQYZ9Z4rl5sTjR5VqxQ2bCiVitInVnczP1AmLCkWhxEijjzGuSkHyOvrckJB7JrzkxxJopHoqxpw==
 
 sitewhere-ide-common@3.0.0-beta.1:
   version "3.0.0-beta.1"
@@ -8693,10 +8693,10 @@ sitewhere-ide-common@3.0.0-beta.1:
     moment "^2.25.1"
     sitewhere-rest-api "3.0.0-beta.1"
 
-sitewhere-ide-components@3.0.0-beta.1:
-  version "3.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-beta.1.tgz#08654a35c42fb1d2007cbc1396b81675eba5a115"
-  integrity sha512-hbQOGt9oHqn2to9N5v/WIT9Jk5EAwvGPpwAuMeCMXR5TnaEJA/KjwaAhQ1Mp0/z2GfuU0rB1CvFgmO5hR/TYhw==
+sitewhere-ide-components@3.0.0-beta.2:
+  version "3.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-beta.2.tgz#61b33c0f141cd96ff148b960b456c76f3a37d638"
+  integrity sha512-m3uS15mhBmu8kXgp1Ey7soEniBdAWdaw25Ii9kxsD1Rxhgw9Kg5aEdxYo1EduurG9IPX7tqQTkRkQRGPhOUa9w==
   dependencies:
     axios "^0.19.2"
     sitewhere-ide-common "3.0.0-beta.1"

@@ -45,6 +45,11 @@
       v-else-if="functionalArea == 'inbound-processing'"
       @dirty="markDirty"
     />
+    <label-generation-plugin
+      :configuration="configuration"
+      v-else-if="functionalArea == 'label-generation'"
+      @dirty="markDirty"
+    />
     <tenant-engine-plugin v-else :configuration="configuration">
       No Plugin Found for Functional Area:
       {{ functionalArea }}
@@ -67,6 +72,7 @@ import {
   EventManagementPlugin,
   EventSourcesPlugin,
   InboundProcessingPlugin,
+  LabelGenerationPlugin,
   TenantEnginePlugin
 } from "sitewhere-admin-ui-plugins";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
@@ -83,6 +89,7 @@ import { ITenantEngineConfiguration } from "sitewhere-rest-api";
     EventManagementPlugin,
     EventSourcesPlugin,
     InboundProcessingPlugin,
+    LabelGenerationPlugin,
     TenantEnginePlugin
   }
 })
