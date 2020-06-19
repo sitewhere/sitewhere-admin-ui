@@ -21,7 +21,7 @@
       <tenant-create-dialog ref="add" @tenantAdded="refresh" />
     </template>
     <template slot="actions">
-      <navigation-action-button icon="plus" tooltip="Add Tenant" @action="onAddTenant" />
+      <add-button tooltip="Add Tenant" @action="onAddTenant" />
     </template>
   </list-page>
 </template>
@@ -29,6 +29,8 @@
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
 import { NavigationIcon, listTenants } from "sitewhere-ide-common";
+
+import AddButton from "../common/navbuttons/AddButton.vue";
 import {
   ListPage,
   ListComponent,
@@ -49,6 +51,7 @@ import {
 
 @Component({
   components: {
+    AddButton,
     TenantListEntry,
     TenantCreateDialog,
     ListPage,

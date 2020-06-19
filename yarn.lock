@@ -8662,13 +8662,13 @@ single-line-log@^1.1.2:
   dependencies:
     string-width "^1.0.1"
 
-sitewhere-admin-ui-plugins@3.0.0-beta.7:
-  version "3.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.7.tgz#2d61b9ed69ca2d59d61095c48e5d5ce4ae048053"
-  integrity sha512-I/BoAtpv1qoarsmLQob1EelX32Ft2MrQRLR9e5/OtqbSho+COb5kpDtFT4nZ0uVSn2pIkkgkPd56mZ4IfbdOxQ==
+sitewhere-admin-ui-plugins@3.0.0-beta.11:
+  version "3.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.11.tgz#729ae44febd3cf87f12b596864de52a8c8069a9b"
+  integrity sha512-9uoPcvyVcAzO5JWJDFDeCoDtlwGHFVqoCNU2FTaJNicmZOF8/uA07c8s1xYg10hvCe3k+g/sbaS/0rXnctPSmQ==
   dependencies:
     axios "^0.19.2"
-    sitewhere-configuration-model "3.0.0-beta.2"
+    sitewhere-configuration-model "3.0.0-beta.3"
     sitewhere-ide-components "3.0.0-beta.2"
     vue "^2.6.11"
     vue-class-component "^7.2.3"
@@ -8679,10 +8679,10 @@ sitewhere-admin-ui-plugins@3.0.0-beta.7:
     vuetify "^2.2.11"
     vuex "^3.3.0"
 
-sitewhere-configuration-model@3.0.0-beta.2:
-  version "3.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/sitewhere-configuration-model/-/sitewhere-configuration-model-3.0.0-beta.2.tgz#e3d5c6957ef4c0f7a8d81dbb84c4e5b6e131cc26"
-  integrity sha512-/lbN7Q/vHpvQYZ9Z4rl5sTjR5VqxQ2bCiVitInVnczP1AmLCkWhxEijjzGuSkHyOvrckJB7JrzkxxJopHoqxpw==
+sitewhere-configuration-model@3.0.0-beta.3:
+  version "3.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/sitewhere-configuration-model/-/sitewhere-configuration-model-3.0.0-beta.3.tgz#843d0d58fb9f3beb12946f09feb826feaf67a81f"
+  integrity sha512-W5EJHhCg7navQu2bck03Q4HJ1ZDTAleO5j723I15SOEojqfQjIZJEptP3hvgHktfSpHA6HzVWGJt0NZVFyGhmg==
 
 sitewhere-ide-common@3.0.0-beta.1:
   version "3.0.0-beta.1"
