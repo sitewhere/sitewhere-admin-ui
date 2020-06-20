@@ -35,7 +35,6 @@ import { Component, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
-  DialogSection,
   BaseDialog,
   BrandingPanel,
   MetadataPanel
@@ -57,7 +56,7 @@ export default class TenantDialog extends DialogComponent<ITenant> {
   @Ref() readonly dialog!: ITabbedComponent;
   @Ref() readonly details!: TenantDetailFields;
   @Ref() readonly branding!: BrandingPanel;
-  @Ref() readonly metadata!: DialogSection;
+  @Ref() readonly metadata!: MetadataPanel;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {

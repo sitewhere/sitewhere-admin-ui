@@ -53,14 +53,14 @@
         required
         title="Template used for initial tenant configuration."
         :items="templatesList"
-        v-model="tenantTemplateId"
+        v-model="configurationTemplateId"
         label="Tenant Template"
         item-text="name"
         item-value="id"
         icon="layers"
         class="mr-3"
       >
-        <span v-if="$v.tenantTemplateId.$invalid && $v.$dirty">Tenant template is required.</span>
+        <span v-if="$v.configurationTemplateId.$invalid && $v.$dirty">Tenant template is required.</span>
       </form-select>
     </v-flex>
     <v-flex xs6>
@@ -104,7 +104,8 @@ import {
   IUserResponseFormat,
   IUserSearchResults,
   ITenantConfigurationTemplate,
-  ITenantDatasetTemplate
+  ITenantDatasetTemplate,
+  ITenantCreateRequest
 } from "sitewhere-rest-api";
 
 // Validation for token.
@@ -126,7 +127,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     authUsers: {
       required
     },
-    tenantTemplateId: {
+    configurationTemplateId: {
       required
     },
     datasetTemplateId: {
@@ -139,7 +140,7 @@ export default class TenantDetailFields extends DialogSection {
   name: string | null = null;
   authToken: string | null = null;
   authUsers: string[] = [];
-  tenantTemplateId: string | null = null;
+  configurationTemplateId: string | null = null;
   datasetTemplateId: string | null = null;
 
   /** Content for dropdowns */
@@ -153,7 +154,7 @@ export default class TenantDetailFields extends DialogSection {
     this.name = null;
     this.authToken = null;
     this.authUsers = [];
-    this.tenantTemplateId = null;
+    this.configurationTemplateId = null;
     this.datasetTemplateId = null;
     this.$v.$reset();
     this.refreshDropdownContent();
@@ -166,13 +167,13 @@ export default class TenantDetailFields extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: {}): void {
-    this.token = (input as any).token;
-    this.name = (input as any).name;
-    this.authToken = (input as any).authenticationToken;
-    this.authUsers = (input as any).authorizedUserIds;
-    this.tenantTemplateId = (input as any).tenantTemplateId;
-    this.datasetTemplateId = (input as any).datasetTemplateId;
+  load(input: ITenantCreateRequest): void {
+    this.token = input.token;
+    this.name = input.name;
+    this.authToken = input.authenticationToken;
+    this.authUsers = input.authorizedUserIds;
+    this.configurationTemplateId = input.configurationTemplateId;
+    this.datasetTemplateId = input.datasetTemplateId;
   }
 
   /** Save form data to an object */
@@ -182,7 +183,7 @@ export default class TenantDetailFields extends DialogSection {
       name: this.name,
       authenticationToken: this.authToken,
       authorizedUserIds: this.authUsers,
-      tenantTemplateId: this.tenantTemplateId,
+      configurationTemplateId: this.configurationTemplateId,
       datasetTemplateId: this.datasetTemplateId
     };
   }
