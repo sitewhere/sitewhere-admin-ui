@@ -18,7 +18,7 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details" eager>
-        <device-type-detail-fields ref="details" />
+        <device-type-detail-fields ref="details" :editMode="editMode"/>
       </v-tab-item>
       <v-tab-item key="branding" eager>
         <branding-panel ref="branding" />
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref } from "vue-property-decorator";
+  import {Component, Prop, Ref} from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   BaseDialog,
@@ -53,6 +53,7 @@ import { IDeviceType } from "sitewhere-rest-api";
   }
 })
 export default class DeviceTypeDialog extends DialogComponent<IDeviceType> {
+  @Prop({ default: false}) readonly editMode!: boolean;
   @Ref() readonly dialog!: ITabbedComponent;
   @Ref() readonly details!: DeviceTypeDetailFields;
   @Ref() readonly branding!: BrandingPanel;

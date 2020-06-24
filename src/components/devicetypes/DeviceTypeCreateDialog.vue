@@ -7,6 +7,7 @@
     createLabel="Create"
     cancelLabel="Cancel"
     @payload="onCommit"
+    :editMode="editMode"
   />
 </template>
 
@@ -29,6 +30,7 @@ export default class DeviceTypeCreateDialog extends CreateDialogComponent<
   IDeviceTypeCreateRequest
 > {
   @Ref() readonly dialog!: DeviceTypeDialog;
+  editMode = false;
 
   /** Get wrapped dialog */
   getDialog(): DeviceTypeDialog {

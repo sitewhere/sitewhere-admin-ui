@@ -44,6 +44,7 @@ export default class DeviceTypeDeleteDialog extends DeleteDialogComponent<
   /** Called after create button is clicked */
   onDelete() {
     this.delete();
+    this.$emit('deviceTypeDeleted')
   }
 
   /** Called after cancel button is clicked */

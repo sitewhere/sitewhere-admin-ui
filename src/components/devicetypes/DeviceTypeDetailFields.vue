@@ -2,6 +2,14 @@
   <dialog-form>
     <v-flex xs12>
       <form-token
+        v-show="editMode"
+        label="Device type token"
+        title="Unique token for referencing device type."
+        v-model="token"
+        readonly
+      />
+      <form-token
+        v-show="!editMode"
         required
         label="Device type token"
         title="Unique token for referencing device type."
@@ -49,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+  import {Component, Prop} from "vue-property-decorator";
 import {
   DialogSection,
   DialogForm,
@@ -83,6 +91,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
   }
 })
 export default class DeviceTypeDetailFields extends DialogSection {
+  @Prop({ default: false}) readonly editMode!: boolean;
   token: string | null = null;
   name: string | null = null;
   description: string | null = null;
