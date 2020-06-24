@@ -18,7 +18,7 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details" eager>
-        <user-detail-fields ref="details" />
+        <user-detail-fields ref="details" :editMode="editMode" />
       </v-tab-item>
       <v-tab-item key="permissions" eager>
         <user-permissions ref="permissions" />
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref } from "vue-property-decorator";
+  import {Component, Prop, Ref} from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
@@ -57,6 +57,7 @@ export default class UserDialog extends DialogComponent<IUser> {
   @Ref() readonly details!: UserDetailFields;
   @Ref() readonly permissions!: UserPermissions;
   @Ref() readonly metadata!: DialogSection;
+  @Prop({ default: false}) readonly editMode!: boolean;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {

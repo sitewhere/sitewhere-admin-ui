@@ -6,6 +6,7 @@
     createLabel="Update"
     cancelLabel="Cancel"
     @payload="onSave"
+    :editMode="editMode"
   />
 </template>
 
@@ -33,6 +34,7 @@ export default class UserUpdateDialog extends EditDialogComponent<
   IUserCreateRequest
 > {
   @Ref() readonly dialog!: UserDialog;
+  editMode = true;
 
   /** Get wrapped dialog */
   getDialog(): UserDialog {

@@ -6,6 +6,7 @@
     createLabel="Create"
     cancelLabel="Cancel"
     @payload="onCommit"
+    :editMode="editMode"
   />
 </template>
 
@@ -29,6 +30,7 @@ export default class UserCreateDialog extends CreateDialogComponent<
   IUserCreateRequest
 > {
   @Ref() readonly dialog!: UserDialog;
+  editMode = false;
 
   /** Get wrapped dialog */
   getDialog(): UserDialog {

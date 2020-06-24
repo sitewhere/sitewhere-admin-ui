@@ -1,7 +1,11 @@
 <template>
   <dialog-form>
-    <v-flex xs12>
-      <form-text required label="Username" v-model="username" hide-details icon="info">
+    <v-flex xs12 >
+      <form-text v-show="editMode" label="Username" v-model="username" hide-details icon="info" readonly >
+        <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
+      </form-text>
+
+      <form-text v-show="!editMode" required label="Username" v-model="username" hide-details icon="info" >
         <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
       </form-text>
     </v-flex>
@@ -47,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+  import {Component, Prop} from "vue-property-decorator";
 
 import {
   DialogSection,
@@ -83,6 +87,7 @@ import { required, sameAs, minLength } from "vuelidate/lib/validators";
   }
 })
 export default class TenantDetailFields extends DialogSection {
+  @Prop() readonly editMode!: boolean;
   username: string | null = null;
   password: string | null = null;
   passwordConfirm: string | null = null;
