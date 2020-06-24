@@ -4,7 +4,7 @@
       <v-data-table
         :headers="headers"
         :items="parameters"
-        :rows-per-page-items="pagesize"
+        footer-props.items-per-page-options="pagesize"
         no-data-text="Command has no existing parameters"
       >
         <template slot="items" slot-scope="props">
