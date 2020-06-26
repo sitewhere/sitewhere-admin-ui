@@ -1,11 +1,19 @@
 <template>
   <list-entry>
-    <v-toolbar flat dark dense card @click="onEditStatus" :style="cardStyle">
+    <v-toolbar flat dark dense card :style="cardStyle">
       <font-awesome-icon :icon="icon" size="lg" />
       <v-toolbar-title :style="textStyle">{{ name }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-tooltip top>
-        <v-icon :style="deleteStyle" @click="onDeleteStatus" slot="activator">{{ deleteIcon }}</v-icon>
+        <template v-slot:activator="{on}">
+          <v-icon :style="deleteStyle" @click="onEditStatus" v-on="on">{{ editIcon }}</v-icon>
+        </template>
+        <span>Edit Device Status</span>
+      </v-tooltip>
+      <v-tooltip top>
+        <template v-slot:activator="{on}">
+          <v-icon :style="deleteStyle" @click="onDeleteStatus" v-on="on">{{ deleteIcon }}</v-icon>
+        </template>
         <span>Delete Device Status</span>
       </v-tooltip>
     </v-toolbar>
@@ -33,6 +41,11 @@ export default class DeviceTypeListEntry extends Vue {
   /** Icon for delete */
   get deleteIcon() {
     return NavigationIcon.Delete;
+  }
+
+  /** Icon for edit */
+  get editIcon() {
+    return NavigationIcon.Edit;
   }
 
   /** Name for status */
