@@ -9,7 +9,7 @@
           v-for="role in editedRoles"
           :key="role"
           class="grey white--text"
-          @input="onRoleDeleted(role)"
+          @click:close="onRoleDeleted(role)"
         >{{ role }}</v-chip>
       </div>
       <div>
@@ -61,13 +61,20 @@ export default class RolesField extends Vue {
 
   /** Called when roles are added */
   onRolesAdded() {
-    const roles = this.newRoles.split(" ");
-    roles.forEach(role => {
-      if (this.editedRoles.indexOf(role) === -1) {
-        this.editedRoles.push(role);
-      }
-    });
-    this.newRoles = "";
+    if (this.newRoles.length === 0 || !this.newRoles.trim()) {
+      // empty role
+      // do nothing?
+
+    } else {
+      const roles = this.newRoles.split(" ");
+      roles.forEach(role => {
+        if (this.editedRoles.indexOf(role) === -1) {
+          this.editedRoles.push(role);
+        }
+      });
+      this.newRoles = "";
+    }
+
   }
 
   /** Called when a role is deleted */
