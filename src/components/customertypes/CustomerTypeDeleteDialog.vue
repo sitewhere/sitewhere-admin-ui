@@ -44,6 +44,7 @@ export default class CustomerTypeDeleteDialog extends DeleteDialogComponent<
   /** Called after create button is clicked */
   onDelete() {
     this.delete();
+    this.$emit('customerTypeDeleted');
   }
 
   /** Called after cancel button is clicked */

@@ -44,6 +44,7 @@ export default class AreaTypeDeleteDialog extends DeleteDialogComponent<
   /** Called after delete button is clicked */
   onDelete() {
     this.delete();
+    this.$emit('areaTypeDeleted')
   }
 
   /** Called after cancel button is clicked */

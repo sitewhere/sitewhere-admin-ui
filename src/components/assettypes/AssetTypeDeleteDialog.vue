@@ -45,6 +45,7 @@ export default class AssetTypeDeleteDialog extends DeleteDialogComponent<
   /** Called after create button is clicked */
   onDelete() {
     this.delete();
+    this.$emit('assetTypeDeleted')
   }
 
   /** Called after cancel button is clicked */
