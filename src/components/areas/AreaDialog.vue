@@ -13,7 +13,7 @@
   >
     <template slot="tabs">
       <v-tab key="details">Details</v-tab>
-      <v-tab key="bounds">Bounds</v-tab>
+      <v-tab key="bounds" @click="updateSize()">Bounds</v-tab>
       <v-tab key="branding">Branding</v-tab>
       <v-tab key="metadata">Metadata</v-tab>
     </template>
@@ -64,6 +64,11 @@ export default class AreaDialog extends DialogComponent<IArea> {
   @Ref() readonly bounds!: AreaBoundsPanel;
   @Ref() readonly branding!: BrandingPanel;
   @Ref() readonly metadata!: DialogSection;
+
+  /** Solve 'map container size not valid at map initialization' resizing browser **/
+  updateSize() {
+    window.dispatchEvent(new Event('resize'));
+  }
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
