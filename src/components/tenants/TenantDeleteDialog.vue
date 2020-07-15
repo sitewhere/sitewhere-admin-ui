@@ -7,7 +7,15 @@
     @delete="onDelete"
     @cancel="onCancel"
   >
-    <v-card-text>{{ message }}</v-card-text>
+    <v-card-text>
+      {{ message }}
+      <v-card outlined class="caption pa-2 mt-3">
+        Note: This will delete the Kubernetes resource for the tenant
+        along with any current microservice-specific configurations.
+        It will not delete the underlying persistent data associated
+        with the microservices.
+      </v-card>
+    </v-card-text>
   </delete-dialog>
 </template>
 
@@ -51,5 +59,3 @@ export default class TenantDeleteDialog extends DeleteDialogComponent<ITenant> {
 }
 </script>
 
-<style scoped>
-</style>
