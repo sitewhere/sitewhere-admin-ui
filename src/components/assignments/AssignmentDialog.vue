@@ -44,7 +44,8 @@ import {
   DialogComponent,
   DialogSection,
   BaseDialog,
-  DialogHeader
+  DialogHeader,
+  MetadataPanel
 } from "sitewhere-ide-components";
 
 import AssignmentCustomerFields from "./AssignmentCustomerFields.vue";
@@ -59,7 +60,8 @@ import { IDeviceAssignment, IDevice } from "sitewhere-rest-api";
     DialogHeader,
     AssignmentCustomerFields,
     AssignmentAreaFields,
-    AssignmentAssetFields
+    AssignmentAssetFields,
+    MetadataPanel
   }
 })
 export default class AssignmentDialog extends DialogComponent<

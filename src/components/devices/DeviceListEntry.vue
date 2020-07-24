@@ -3,11 +3,15 @@
     <v-container @click="onOpenDevice">
       <v-layout row>
         <v-flex xs3>
-          <branding-image :style="logoStyle" :entity="deviceType" iconSize="4x" />
+          <branding-image
+            :style="logoStyle"
+            :entityImageUrl="device.deviceTypeImageUrl"
+            iconSize="4x"
+          />
         </v-flex>
         <v-flex xs8>
           <div>
-            <div class="title ellipsis mb-2">{{ device.deviceType.name }}</div>
+            <div class="title ellipsis mb-2">{{ device.deviceTypeName }}</div>
             <div class="subtitle-2 mb-2">{{ device.token }}</div>
             <div class="caption dvcomm">{{ device.comments }}</div>
           </div>
@@ -32,9 +36,7 @@
           </div>
           <div v-if="hasAssignments">
             <v-btn :disabled="true" icon small class="mt-3 ml-1">
-              <v-avatar size="40">
-                <img :src="firstAssignment.assetImageUrl" />
-              </v-avatar>
+              <assignment-avatar :assignment="firstAssignment" />
             </v-btn>
           </div>
         </v-flex>
@@ -50,29 +52,26 @@ import Vue from "vue";
 import { ListEntry } from "sitewhere-ide-components";
 
 import BrandingImage from "../common/BrandingImage.vue";
+import AssignmentAvatar from "./AssignmentAvatar.vue";
 
 import { IStyle } from "../common/Style";
-import { IDevice, IDeviceType, IDeviceAssignment } from "sitewhere-rest-api";
+import { IDeviceSummary, IDeviceAssignmentSummary } from "sitewhere-rest-api";
 
 @Component({
-  components: { ListEntry, BrandingImage }
+  components: { ListEntry, BrandingImage, AssignmentAvatar }
 })
 export default class DeviceListEntry extends Vue {
-  @Prop() readonly device!: IDevice;
+  @Prop() readonly device!: IDeviceSummary;
 
-  get deviceType(): IDeviceType {
-    return (this.device as any).deviceType;
-  }
-
-  get assignments(): IDeviceAssignment[] {
-    return (this.device as any).activeDeviceAssignments;
+  get assignments(): IDeviceAssignmentSummary[] {
+    return this.device.deviceAssignmentSummaries;
   }
 
   get hasAssignments() {
     return this.assignments && this.assignments.length > 0;
   }
 
-  get firstAssignment(): IDeviceAssignment | null {
+  get firstAssignment(): IDeviceAssignmentSummary | null {
     return this.hasAssignments ? this.assignments[0] : null;
   }
 

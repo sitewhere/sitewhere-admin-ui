@@ -2,81 +2,96 @@
   <dialog-form>
     <v-flex xs12>
       <v-data-table
+        hide-default-footer
         :headers="headers"
         :items="parameters"
-        :rows-per-page-items="pagesize"
         no-data-text="Command has no existing parameters"
       >
-        <template slot="items" slot-scope="props">
-          <td width="250px" :title="props.item.name">
-            {{
-            props.item.name.length > 25
-            ? props.item.name.substring(0, 25) + "..."
-            : props.item.name
-            }}
-          </td>
-          <td width="350px" :title="props.item.type">
-            {{
-            props.item.type.length > 25
-            ? props.item.type.substring(0, 25) + "..."
-            : props.item.type
-            }}
-          </td>
-          <td width="200px">
-            <span v-if="props.item.required">
-              <font-awesome-icon color="#666" icon="check-circle" />
-            </span>
-          </td>
-          <td width="20px">
-            <v-tooltip left>
-              <v-btn icon @click="onDeleteParameter(props.item.name)" slot="activator">
-                <v-icon class="grey--text">delete</v-icon>
-              </v-btn>
-              <span>Delete Parameter</span>
-            </v-tooltip>
-          </td>
+        <template slot="item" slot-scope="props">
+          <tr>
+            <td width="40%" :title="props.item.name">
+              {{
+              props.item.name.length > 25
+              ? props.item.name.substring(0, 25) + "..."
+              : props.item.name
+              }}
+            </td>
+            <td width="40%" :title="props.item.type">
+              {{
+              props.item.type.length > 25
+              ? props.item.type.substring(0, 25) + "..."
+              : props.item.type
+              }}
+            </td>
+            <td width="10%">
+              <span v-if="props.item.required">
+                <v-icon small class="green--text">fa-check-circle</v-icon>
+              </span>
+            </td>
+            <td width="10%">
+              <v-tooltip left>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    icon
+                    small
+                    @click="onDeleteParameter(props.item.name)"
+                    slot="activator"
+                  >
+                    <v-icon small class="grey--text">fa-trash</v-icon>
+                  </v-btn>
+                </template>
+                <span>Delete Parameter</span>
+              </v-tooltip>
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-flex>
     <v-flex xs12>
-      <v-container class="pa-0 pt-5" fluid>
-        <v-layout row>
-          <v-flex xs4>
-            <v-text-field class="pr-3" placeholder=" " label="Name" v-model="name" />
-          </v-flex>
-          <v-flex xs4>
-            <v-select
-              class="pr-3"
-              :items="types"
-              placeholder=" "
-              v-model="type"
-              item-text="text"
-              item-value="datatype"
-              label="Parameter Type"
-            />
-          </v-flex>
-          <v-flex xs3>
-            <v-checkbox label="Required" v-model="required" />
-          </v-flex>
-          <v-flex xs1 class="pt-2">
-            <v-tooltip left>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  v-on="on"
-                  icon
-                  outlined
-                  color="primary"
-                  class="mt-1 ml-2"
-                  @click="onAddParameter"
-                >
-                  <v-icon>add</v-icon>
-                </v-btn>
-              </template>
-              <span>Add Parameter</span>
-            </v-tooltip>
-          </v-flex>
-        </v-layout>
-      </v-container>
+      <v-divider class="mb-5" />
+    </v-flex>
+    <v-flex xs12>
+      <v-card color="#eee" outlined>
+        <v-container fluid>
+          <v-layout class="pl-4 pr-4 pt-2 pb-2" row>
+            <v-flex xs4>
+              <v-text-field class="pr-3" placeholder=" " label="Name" v-model="name" />
+            </v-flex>
+            <v-flex xs4>
+              <v-select
+                class="pr-3"
+                :items="types"
+                placeholder=" "
+                v-model="type"
+                item-text="text"
+                item-value="datatype"
+                label="Parameter Type"
+              />
+            </v-flex>
+            <v-flex xs3>
+              <v-checkbox dense label="Required" v-model="required" />
+            </v-flex>
+            <v-flex xs1 class="pt-2">
+              <v-tooltip left>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    icon
+                    outlined
+                    color="primary"
+                    class="mt-1 ml-2"
+                    @click="onAddParameter"
+                  >
+                    <v-icon>add</v-icon>
+                  </v-btn>
+                </template>
+                <span>Add Parameter</span>
+              </v-tooltip>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card>
     </v-flex>
   </dialog-form>
 </template>
@@ -98,16 +113,14 @@ const validParamName = helpers.regex("validParamName", /^[\w-]+$/);
   validations: {
     name: {
       required,
-      validParamName
+      validParamName,
     },
     type: {
-      required
-    }
-  }
+      required,
+    },
+  },
 })
 export default class ParametersPanel extends DialogSection {
-  pagesize: number[] = [5];
-
   parameters: ICommandParameter[] = [];
 
   name: string | null = null;
@@ -119,26 +132,26 @@ export default class ParametersPanel extends DialogSection {
       align: "left",
       sortable: false,
       text: "Parameter Name",
-      value: "name"
+      value: "name",
     },
     {
       align: "left",
       sortable: false,
       text: "Parameter Type",
-      value: "type"
+      value: "type",
     },
     {
       align: "left",
       sortable: false,
       text: "Required",
-      value: "required"
+      value: "required",
     },
     {
       align: "left",
       sortable: false,
       text: "",
-      value: "delete"
-    }
+      value: "delete",
+    },
   ];
   types: {
     text: string;
@@ -181,7 +194,7 @@ export default class ParametersPanel extends DialogSection {
   /** Save form data to an object */
   save(): {} {
     return {
-      parameters: this.parameters
+      parameters: this.parameters,
     };
   }
 
@@ -198,14 +211,14 @@ export default class ParametersPanel extends DialogSection {
     this.$v.$touch();
     if (!this.$v.$invalid) {
       if (this.name && this.type) {
-        // var parameter: ICommandParameter = {
-        //   name: this.name,
-        //   type: this.type,
-        //   required: this.required
-        // };
-        // this.parameters.push(parameter);
-        // this.$emit("parameterAdded", parameter);
-        // this.resetSubform();
+        const parameter: ICommandParameter = {
+          name: this.name,
+          type: this.type,
+          required: this.required,
+        };
+        this.parameters.push(parameter);
+        this.$emit("parameterAdded", parameter);
+        this.resetSubform();
       }
     }
   }

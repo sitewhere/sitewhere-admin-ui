@@ -37,7 +37,7 @@ import {
   DialogComponent,
   DialogSection,
   BaseDialog,
-  MetadataPanel
+  MetadataPanel,
 } from "sitewhere-ide-components";
 
 import CommandDetailFields from "./CommandDetailFields.vue";
@@ -49,15 +49,15 @@ import { IDeviceCommand } from "sitewhere-rest-api";
     BaseDialog,
     CommandDetailFields,
     ParametersPanel,
-    MetadataPanel
-  }
+    MetadataPanel,
+  },
 })
 export default class CommandDialog extends DialogComponent<IDeviceCommand> {
   @Prop() readonly deviceTypeToken!: string;
   @Ref() readonly dialog!: ITabbedComponent;
   @Ref() readonly details!: CommandDetailFields;
   @Ref() readonly parameters!: ParametersPanel;
-  @Ref() readonly metadata!: DialogSection;
+  @Ref() readonly metadata!: MetadataPanel;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -67,7 +67,7 @@ export default class CommandDialog extends DialogComponent<IDeviceCommand> {
   /** Generate payload from UI */
   generatePayload() {
     const payload: any = {
-      deviceTypeToken: this.deviceTypeToken
+      deviceTypeToken: this.deviceTypeToken,
     };
     Object.assign(
       payload,

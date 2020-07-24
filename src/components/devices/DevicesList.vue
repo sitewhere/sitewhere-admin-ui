@@ -45,7 +45,11 @@
 
 <script lang="ts">
 import { Component, Ref } from "vue-property-decorator";
-import { IPageSizes, NavigationIcon, listDevices } from "sitewhere-ide-common";
+import {
+  IPageSizes,
+  NavigationIcon,
+  listDeviceSummaries,
+} from "sitewhere-ide-common";
 import { ListComponent, ListPage, ListLayout } from "sitewhere-ide-components";
 
 import DeviceListEntry from "./DeviceListEntry.vue";
@@ -62,10 +66,10 @@ import NoResultsPanel from "../common/NoResultsPanel.vue";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import {
-  IDevice,
+  IDeviceSummary,
   IDeviceSearchCriteria,
   IDeviceResponseFormat,
-  IDeviceSearchResults
+  IDeviceSummarySearchResults,
 } from "sitewhere-rest-api";
 
 @Component({
@@ -81,14 +85,14 @@ import {
     AddButton,
     DeviceCommandButton,
     FilterButton,
-    NoResultsPanel
-  }
+    NoResultsPanel,
+  },
 })
 export default class DevicesList extends ListComponent<
-  IDevice,
+  IDeviceSummary,
   IDeviceSearchCriteria,
   IDeviceResponseFormat,
-  IDeviceSearchResults
+  IDeviceSummarySearchResults
 > {
   @Ref() readonly add!: DeviceCreateDialog;
   @Ref() readonly assign!: AssignmentCreateDialog;
@@ -97,21 +101,21 @@ export default class DevicesList extends ListComponent<
 
   addIcon: string = NavigationIcon.Add;
 
-  selected: IDevice | null = null;
+  selected: IDeviceSummary | null = null;
   filter: IDeviceSearchCriteria = {};
   pageSizes: IPageSizes = [
     {
       text: "20",
-      value: 20
+      value: 20,
     },
     {
       text: "50",
-      value: 50
+      value: 50,
     },
     {
       text: "100",
-      value: 100
-    }
+      value: 100,
+    },
   ];
 
   /** Get page icon */
@@ -134,10 +138,9 @@ export default class DevicesList extends ListComponent<
 
   /** Perform search */
   performSearch(
-    criteria: IDeviceSearchCriteria,
-    format: IDeviceResponseFormat
-  ): AxiosPromise<IDeviceSearchResults> {
-    return listDevices(this.$store, criteria, format);
+    criteria: IDeviceSearchCriteria
+  ): AxiosPromise<IDeviceSummarySearchResults> {
+    return listDeviceSummaries(this.$store, criteria);
   }
 
   /** Called to show filter criteria dialog */
@@ -160,7 +163,7 @@ export default class DevicesList extends ListComponent<
   }
 
   /** Open device assignment dialog */
-  onAssignDevice(device: IDevice) {
+  onAssignDevice(device: IDeviceSummary) {
     this.selected = device;
     this.assign.open();
   }
@@ -176,7 +179,7 @@ export default class DevicesList extends ListComponent<
   }
 
   /** Called to open detail page for device */
-  onOpenDevice(device: IDevice) {
+  onOpenDevice(device: IDeviceSummary) {
     routeTo(this, "/devices/" + device.token);
   }
 

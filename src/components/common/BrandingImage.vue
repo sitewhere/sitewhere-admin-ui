@@ -16,15 +16,17 @@ import { IBrandedEntity } from "sitewhere-rest-api";
 @Component({ components: { ImageZoomOnHover } })
 export default class BrandingImage extends Vue {
   @Prop() readonly entity!: IBrandedEntity;
+  @Prop() readonly entityImageUrl!: string;
+  @Prop() readonly entityIcon!: string;
 
   /** Accessor for image URL */
   get imageUrl() {
-    return this.entity ? this.entity.imageUrl : null;
+    return this.entity ? this.entity.imageUrl : this.entityImageUrl;
   }
 
   /** Accessor for icon */
   get icon() {
-    return this.entity ? this.entity.icon : null;
+    return this.entity ? this.entity.icon : this.entityIcon;
   }
 }
 </script>

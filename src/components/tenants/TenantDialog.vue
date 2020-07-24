@@ -41,8 +41,7 @@ import {
 } from "sitewhere-ide-components";
 
 import TenantDetailFields from "./TenantDetailFields.vue";
-import { ITenant } from "sitewhere-rest-api";
-import { IBrandedEntity } from "../../../../sitewhere-rest-api/src";
+import { ITenant, IBrandedEntity } from "sitewhere-rest-api";
 
 @Component({
   components: {
