@@ -1,10 +1,9 @@
 <template>
   <div class="command-content body-2">
-    <div class="command-desc">/** {{ command.description }} **/</div>
     <span class="command-name">{{ command.name }}</span>
     (
     <span v-for="(parameter, index) in command.parameters" :key="parameter.name">
-      <span v-if="index > 0">,</span>
+      <span class="pr-1" v-if="index > 0">,</span>
       <strong v-if="parameter.required">
         <span class="command-param-name">{{ parameter.name }}</span>:
         <span class="command-param-type">{{ parameter.type }}</span>
@@ -24,7 +23,7 @@ export default {
 
   props: ["command"],
 
-  methods: {}
+  methods: {},
 };
 </script>
 
@@ -39,12 +38,6 @@ export default {
   background-color: #eee;
   padding: 10px;
   border: 1px solid #ccc;
-}
-
-.command-desc {
-  color: #060;
-  font-style: italic;
-  max-width: 90%;
 }
 
 .command-name {

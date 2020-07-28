@@ -16,12 +16,14 @@
       <device-assignment-history tabkey="assignments" :deviceToken="token" />
     </template>
     <template slot="actions">
+      <device-assignment-button tooltip="Assign Device" @action="onAssign" />
       <edit-button tooltip="Edit Device" @action="onEdit" />
       <delete-button tooltip="Delete Device" @action="onDelete" />
     </template>
     <template slot="dialogs">
       <device-update-dialog ref="edit" :token="token" @deviceUpdated="onDeviceUpdated" />
       <device-delete-dialog ref="delete" :token="token" @deleted="onDeviceDeleted" />
+      <assignment-create-dialog ref="assign" :device="device" @created="onAssignmentCreated" />
     </template>
   </detail-page>
 </template>
@@ -35,8 +37,10 @@ import DeviceDetailHeader from "./DeviceDetailHeader.vue";
 import DeviceAssignmentHistory from "./DeviceAssignmentHistory.vue";
 import DeviceUpdateDialog from "./DeviceUpdateDialog.vue";
 import DeviceDeleteDialog from "./DeviceDeleteDialog.vue";
+import AssignmentCreateDialog from "../assignments/AssignmentCreateDialog.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
+import DeviceAssignmentButton from "../common/navbuttons/DeviceAssignmentButton.vue";
 
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
@@ -50,13 +54,16 @@ import { DevicesSection } from "../../libraries/constants";
     DeviceAssignmentHistory,
     DeviceUpdateDialog,
     DeviceDeleteDialog,
+    AssignmentCreateDialog,
     EditButton,
-    DeleteButton
-  }
+    DeleteButton,
+    DeviceAssignmentButton,
+  },
 })
 export default class DeviceDetail extends DetailComponent<IDevice> {
   @Ref() readonly edit!: DeviceUpdateDialog;
   @Ref() readonly delete!: DeviceDeleteDialog;
+  @Ref() readonly assign!: AssignmentCreateDialog;
 
   get device(): IDevice | null {
     return this.record;
@@ -75,7 +82,7 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
   loadRecord(token: string): AxiosPromise<IDevice> {
     const format: IDeviceResponseFormat = {
       includeDeviceType: true,
-      includeAssignment: true
+      includeAssignment: true,
     };
     return getDevice(this.$store, token, format);
   }
@@ -108,5 +115,15 @@ export default class DeviceDetail extends DetailComponent<IDevice> {
   onDeviceDeleted() {
     routeTo(this, "/devices");
   }
+
+  /** Open dialog to assign device */
+  onAssign() {
+    if (this.token) {
+      this.assign.open();
+    }
+  }
+
+  /** Called after new assignment is created */
+  onAssignmentCreated() {}
 }
 </script>

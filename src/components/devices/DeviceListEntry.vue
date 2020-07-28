@@ -28,7 +28,7 @@
                   @click.stop="onAssignDevice"
                   slot="activator"
                 >
-                  <v-icon>link</v-icon>
+                  <v-icon small>fa-link</v-icon>
                 </v-btn>
               </template>
               <span>Create New Assignment</span>
@@ -58,7 +58,7 @@ import { IStyle } from "../common/Style";
 import { IDeviceSummary, IDeviceAssignmentSummary } from "sitewhere-rest-api";
 
 @Component({
-  components: { ListEntry, BrandingImage, AssignmentAvatar }
+  components: { ListEntry, BrandingImage, AssignmentAvatar },
 })
 export default class DeviceListEntry extends Vue {
   @Prop() readonly device!: IDeviceSummary;
@@ -79,7 +79,7 @@ export default class DeviceListEntry extends Vue {
   get logoStyle(): IStyle {
     return {
       height: "110px",
-      width: "110px"
+      width: "110px",
     };
   }
 

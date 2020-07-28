@@ -1,5 +1,5 @@
 <template>
-  <navigation-header-panel v-if="deviceType" height="220px">
+  <navigation-header-panel v-if="deviceType" height="200px">
     <template slot="left">
       <header-branding-panel :entity="deviceType" />
     </template>
@@ -13,9 +13,6 @@
         </header-field>
         <header-field label="Description">
           <span>{{ deviceType.description }}</span>
-        </header-field>
-        <header-field label="Image URL">
-          <span>{{ deviceType.imageUrl }}</span>
         </header-field>
         <header-field label="Container Policy">
           <span>{{ deviceType.containerPolicy }}</span>
@@ -43,7 +40,7 @@ import {
   NavigationHeaderFields,
   HeaderComponent,
   HeaderField,
-  ClipboardCopyField
+  ClipboardCopyField,
 } from "sitewhere-ide-components";
 
 import AuthenticatedImage from "../common/AuthenticatedImage.vue";
@@ -55,8 +52,8 @@ import AuthenticatedImage from "../common/AuthenticatedImage.vue";
     NavigationHeaderFields,
     HeaderField,
     ClipboardCopyField,
-    AuthenticatedImage
-  }
+    AuthenticatedImage,
+  },
 })
 export default class DeviceTypeDetailHeader extends HeaderComponent<
   IDeviceType

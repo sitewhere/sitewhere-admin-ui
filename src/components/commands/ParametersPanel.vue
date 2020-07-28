@@ -200,7 +200,15 @@ export default class ParametersPanel extends DialogSection {
 
   // Called when a parameter is deleted.
   onDeleteParameter(name: string) {
-    this.$emit("parameterDeleted", name);
+    let found: number | null = null;
+    this.parameters.forEach((param, index) => {
+      if (param.name === name) {
+        found = index;
+      }
+    });
+    if (found != null) {
+      this.parameters.splice(found, 1);
+    }
   }
 
   // Called when a parameter is added.
@@ -217,7 +225,6 @@ export default class ParametersPanel extends DialogSection {
           required: this.required,
         };
         this.parameters.push(parameter);
-        this.$emit("parameterAdded", parameter);
         this.resetSubform();
       }
     }

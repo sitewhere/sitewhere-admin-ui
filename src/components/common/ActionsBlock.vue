@@ -1,22 +1,22 @@
 <template>
-  <span class="actions-block">
-    <navigation-action-button v-if="showEdit" icon="edit" tooltip="Edit" @action="onEditClicked" />
-    <navigation-action-button
-      v-if="showDelete"
-      icon="delete"
-      tooltip="Delete"
-      @action="onDeleteClicked"
-    />
-  </span>
+  <div class="actions-block">
+    <span class="edit-button">
+      <edit-button v-if="showEdit" tooltip="Edit" @action="onEditClicked" />
+    </span>
+    <span class="delete-button">
+      <delete-button v-if="showDelete" tooltip="Delete" @action="onDeleteClicked" />
+    </span>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 
-import { NavigationActionButton } from "sitewhere-ide-components";
+import EditButton from "./navbuttons/EditButton.vue";
+import DeleteButton from "./navbuttons/DeleteButton.vue";
 
-@Component({ components: { NavigationActionButton } })
+@Component({ components: { EditButton, DeleteButton } })
 export default class ActionsBlock extends Vue {
   @Prop({ default: true }) readonly showEdit!: boolean;
   @Prop({ default: true }) readonly showDelete!: boolean;
@@ -32,3 +32,18 @@ export default class ActionsBlock extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.actions-block {
+  position: relative;
+  width: 55px;
+}
+.edit-button {
+  position: absolute;
+  left: 0;
+}
+.delete-button {
+  position: absolute;
+  right: 0;
+}
+</style>
