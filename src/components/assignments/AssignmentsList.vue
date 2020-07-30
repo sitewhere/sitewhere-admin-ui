@@ -46,7 +46,7 @@ import { Component, Ref } from "vue-property-decorator";
 import {
   IPageSizes,
   NavigationIcon,
-  searchDeviceAssignments
+  searchDeviceAssignmentSummaries,
 } from "sitewhere-ide-common";
 import { ListComponent, ListPage, ListLayout } from "sitewhere-ide-components";
 
@@ -65,7 +65,7 @@ import {
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
+  IDeviceAssignmentSummarySearchResults,
 } from "sitewhere-rest-api";
 
 @Component({
@@ -79,14 +79,14 @@ import {
     InvocationByAssignmentCriteriaCreateDialog,
     DeviceCommandButton,
     FilterButton,
-    NoResultsPanel
-  }
+    NoResultsPanel,
+  },
 })
 export default class AssignmentsList extends ListComponent<
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
+  IDeviceAssignmentSummarySearchResults
 > {
   @Ref() readonly filterDialog!: AssignmentListFilterDialog;
   @Ref() readonly batch!: InvocationByAssignmentCriteriaCreateDialog;
@@ -95,16 +95,16 @@ export default class AssignmentsList extends ListComponent<
   pageSizes: IPageSizes = [
     {
       text: "20",
-      value: 20
+      value: 20,
     },
     {
       text: "50",
-      value: 50
+      value: 50,
     },
     {
       text: "100",
-      value: 100
-    }
+      value: 100,
+    },
   ];
 
   /** Get page icon */
@@ -138,8 +138,8 @@ export default class AssignmentsList extends ListComponent<
   performSearch(
     criteria: IDeviceAssignmentSearchCriteria,
     format: IDeviceAssignmentResponseFormat
-  ): AxiosPromise<IDeviceAssignmentSearchResults> {
-    return searchDeviceAssignments(this.$store, criteria, format);
+  ): AxiosPromise<IDeviceAssignmentSummarySearchResults> {
+    return searchDeviceAssignmentSummaries(this.$store, criteria, format);
   }
 
   /** Called to show filter criteria dialog */

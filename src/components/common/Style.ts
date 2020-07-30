@@ -63,9 +63,7 @@ export function styleForAssignmentStatus(
   assignment: IDeviceAssignment
 ): IStyle {
   return {
-    "background-color": assignmentBackgroundColor(assignment),
     border: "1px solid " + assignmentBorderColor(assignment),
-    "border-top": "5px solid " + assignmentHeaderColor(assignment)
+    "border-left": "5px solid " + assignmentHeaderColor(assignment)
   };
 }
-

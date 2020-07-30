@@ -35,7 +35,6 @@ import { Component, Prop, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
-  DialogSection,
   BaseDialog,
   MetadataPanel,
 } from "sitewhere-ide-components";

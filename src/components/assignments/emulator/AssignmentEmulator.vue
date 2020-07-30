@@ -7,7 +7,9 @@
     :record="assignment"
   >
     <template slot="header">
-      <assignment-list-entry v-if="assignment" :assignment="assignment" headerMode="false" />
+      <v-card flat class="pa-2">
+        <assignment-list-entry v-if="summary" :assignment="summary" headerMode="true" />
+      </v-card>
     </template>
     <template slot="tabs">
       <v-tab key="emulator">Emulator</v-tab>
@@ -69,7 +71,7 @@ import { NavigationIcon, getDeviceAssignment } from "sitewhere-ide-common";
 import {
   DetailComponent,
   DetailPage,
-  NavigationActionButton
+  NavigationActionButton,
 } from "sitewhere-ide-components";
 
 import AssignmentListEntry from "../AssignmentListEntry.vue";
@@ -83,9 +85,11 @@ import { AxiosPromise } from "axios";
 import { Map as LeafletMap, LatLng } from "leaflet";
 import {
   IDeviceAssignment,
-  IDeviceAssignmentResponseFormat
+  IDeviceAssignmentResponseFormat,
+  IDeviceAssignmentSummary,
 } from "sitewhere-rest-api";
 import { AssignmentEmulatorSection } from "../../../libraries/constants";
+import { convertAssignmentToSummary } from "../AssignmentUtils";
 
 @Component({
   components: {
@@ -95,8 +99,8 @@ import { AssignmentEmulatorSection } from "../../../libraries/constants";
     AssignmentEmulatorMap,
     LocationCreateDialog,
     AlertCreateDialog,
-    MeasurementCreateDialog
-  }
+    MeasurementCreateDialog,
+  },
 })
 export default class AssignmentEmulator extends DetailComponent<
   IDeviceAssignment
@@ -107,6 +111,7 @@ export default class AssignmentEmulator extends DetailComponent<
   @Ref() readonly alert!: AlertCreateDialog;
 
   addLocationMode = false;
+  summary: IDeviceAssignmentSummary | null = null;
 
   /** Access the Leaflet map directly */
   getMap(): LeafletMap | null {
@@ -134,13 +139,19 @@ export default class AssignmentEmulator extends DetailComponent<
   /** Load record */
   loadRecord(token: string): AxiosPromise<IDeviceAssignment> {
     const format: IDeviceAssignmentResponseFormat = {
-      includeDevice: true
+      includeDevice: true,
+      includeCustomer: true,
+      includeArea: true,
+      includeAsset: true,
     };
     return getDeviceAssignment(this.$store, token, format);
   }
 
   /** Called after data is loaded */
   afterRecordLoaded() {
+    if (this.assignment) {
+      this.summary = convertAssignmentToSummary(this.assignment);
+    }
     this.$store.commit("currentSection", AssignmentEmulatorSection);
   }
 
@@ -150,7 +161,7 @@ export default class AssignmentEmulator extends DetailComponent<
     const component = this;
     const map = this.getMap();
     if (map) {
-      map.on("click", function(e) {
+      map.on("click", function (e) {
         component.onMapClicked(e);
       });
     }
@@ -171,7 +182,7 @@ export default class AssignmentEmulator extends DetailComponent<
     const location: {} = {
       latitude: chosen.lat,
       longitude: chosen.lng,
-      elevation: 0
+      elevation: 0,
     };
     this.location.loadAndOpen(location as any);
   }
@@ -179,7 +190,7 @@ export default class AssignmentEmulator extends DetailComponent<
   /** Called after a location has been added */
   onLocationAdded() {
     const component = this;
-    setTimeout(function() {
+    setTimeout(function () {
       component.map.refreshLocations(false);
     }, 500);
   }
@@ -222,7 +233,7 @@ export default class AssignmentEmulator extends DetailComponent<
       opacity: 0.65,
       padding: "10px 20px",
       "z-index": 500,
-      "text-align": "center"
+      "text-align": "center",
     };
   }
 }

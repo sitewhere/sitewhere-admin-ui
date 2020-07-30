@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { listDeviceAssignmentHistory } from "sitewhere-ide-common";
+import { searchDeviceAssignmentSummaries } from "sitewhere-ide-common";
 import { ListComponent, ListTab } from "sitewhere-ide-components";
 
 import AssignmentListEntry from "../assignments/AssignmentListEntry.vue";
@@ -34,20 +34,20 @@ import {
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
+  IDeviceAssignmentSummarySearchResults,
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
     ListTab,
-    AssignmentListEntry
-  }
+    AssignmentListEntry,
+  },
 })
 export default class DeviceAssignmentHistory extends ListComponent<
   IDeviceAssignment,
   IDeviceAssignmentSearchCriteria,
   IDeviceAssignmentResponseFormat,
-  IDeviceAssignmentSearchResults
+  IDeviceAssignmentSummarySearchResults
 > {
   @Prop() readonly tabkey!: string;
   @Prop() readonly id!: string;
@@ -74,13 +74,8 @@ export default class DeviceAssignmentHistory extends ListComponent<
   performSearch(
     criteria: IDeviceAssignmentSearchCriteria,
     format: IDeviceAssignmentResponseFormat
-  ): AxiosPromise<IDeviceAssignmentSearchResults> {
-    return listDeviceAssignmentHistory(
-      this.$store,
-      this.deviceToken,
-      criteria,
-      format
-    );
+  ): AxiosPromise<IDeviceAssignmentSummarySearchResults> {
+    return searchDeviceAssignmentSummaries(this.$store, criteria, format);
   }
 
   /** Open device assignment detail page */

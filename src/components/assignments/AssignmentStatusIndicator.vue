@@ -1,7 +1,7 @@
 <template>
   <span>
-    <v-icon small :color="colorForStatus">{{iconForStatus}}</v-icon>
-    {{nameForStatus}}
+    <v-icon small :color="colorForStatus">{{ iconForStatus }}</v-icon>
+    <span class="caption pl-1">{{ nameForStatus }}</span>
   </span>
 </template>
 
