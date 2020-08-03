@@ -1,11 +1,7 @@
 <template>
   <dialog-form>
     <v-flex xs12>
-      <customer-type-multiselect
-        :idMode="true"
-        :value="containedCustomerTypeIds"
-        @input="onSelectionUpdated"
-      />
+      <customer-type-multiselect :value="containedCustomerTypeTokens" @input="onSelectionUpdated" />
     </v-flex>
   </dialog-form>
 </template>
@@ -13,22 +9,24 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import { DialogSection, DialogForm } from "sitewhere-ide-components";
+import { ICustomerType } from "sitewhere-rest-api";
 
 import CustomerTypeMultiselect from "./CustomerTypeMultiselect.vue";
 
 @Component({
   components: {
     DialogForm,
-    CustomerTypeMultiselect
-  }
+    CustomerTypeMultiselect,
+  },
 })
 export default class CustomerTypeContentFields extends DialogSection {
-  containedCustomerTypeIds: string[] = [];
+  initialContainedCustomerTypes: ICustomerType[] = [];
   containedCustomerTypeTokens: string[] = [];
 
   /** Reset section content */
   reset(): void {
-    this.containedCustomerTypeIds = [];
+    this.initialContainedCustomerTypes = [];
+    this.containedCustomerTypeTokens = [];
   }
 
   /** Perform validation */
@@ -42,14 +40,17 @@ export default class CustomerTypeContentFields extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: {}): void {
-    this.containedCustomerTypeIds = (input as any).containedCustomerTypeIds;
+  load(input: ICustomerType): void {
+    this.initialContainedCustomerTypes = input.containedCustomerTypes || [];
+    this.containedCustomerTypeTokens = this.initialContainedCustomerTypes.map(
+      (item) => item.token
+    );
   }
 
   /** Save form data to an object */
   save(): {} {
     return {
-      containedCustomerTypeTokens: this.containedCustomerTypeTokens
+      containedCustomerTypeTokens: this.containedCustomerTypeTokens,
     };
   }
 }

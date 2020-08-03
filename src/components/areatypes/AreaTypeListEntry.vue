@@ -2,10 +2,10 @@
   <list-entry>
     <v-container @click="onAreaTypeClicked">
       <v-layout row>
-        <v-flex xs2>
+        <v-flex xs3>
           <branding-image :style="logoStyle" :entity="areaType" iconSize="3x" />
         </v-flex>
-        <v-flex xs10>
+        <v-flex xs9>
           <div>
             <div class="title ellipsis mb-1">{{ areaType.name }}</div>
             <div class="atdesc">{{ areaType.description }}</div>
@@ -29,8 +29,8 @@ import { IAreaType } from "sitewhere-rest-api";
 @Component({
   components: {
     ListEntry,
-    BrandingImage
-  }
+    BrandingImage,
+  },
 })
 export default class AreaTypeListEntry extends Vue {
   @Prop() readonly areaType!: IAreaType;
@@ -39,7 +39,7 @@ export default class AreaTypeListEntry extends Vue {
   get logoStyle(): IStyle {
     return {
       height: "80px",
-      width: "80px"
+      width: "80px",
     };
   }
 

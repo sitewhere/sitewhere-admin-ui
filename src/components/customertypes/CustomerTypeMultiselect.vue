@@ -5,22 +5,21 @@
 <script lang="ts">
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { listCustomerTypes } from "sitewhere-ide-common";
-import Vue from "vue";
-
 import { Multichooser } from "sitewhere-ide-components";
+import Vue from "vue";
 
 import { AxiosResponse } from "axios";
 import {
   ICustomerType,
   ICustomerTypeSearchResults,
   ICustomerTypeResponseFormat,
-  ICustomerTypeSearchCriteria
+  ICustomerTypeSearchCriteria,
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    Multichooser
-  }
+    Multichooser,
+  },
 })
 export default class CustomerTypeMultiselect extends Vue {
   @Prop() readonly value!: string[];

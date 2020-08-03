@@ -14,13 +14,13 @@ import {
   IAreaType,
   IAreaTypeSearchResults,
   IAreaTypeResponseFormat,
-  IAreaTypeSearchCriteria
+  IAreaTypeSearchCriteria,
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    Multichooser
-  }
+    Multichooser,
+  },
 })
 export default class AreaTypeMultiselect extends Vue {
   @Prop() readonly value!: string[];

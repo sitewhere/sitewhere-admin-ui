@@ -2,10 +2,10 @@
   <list-entry>
     <v-container @click="onCustomerTypeClicked">
       <v-layout row>
-        <v-flex xs2>
+        <v-flex xs3>
           <branding-image :style="logoStyle" :entity="customerType" />
         </v-flex>
-        <v-flex xs10>
+        <v-flex xs9>
           <div>
             <div class="title ellipsis mt-1 mb-2">{{ customerType.name }}</div>
             <div class="ctdesc caption">{{ customerType.description }}</div>
@@ -29,8 +29,8 @@ import { ICustomerType } from "sitewhere-rest-api";
 @Component({
   components: {
     ListEntry,
-    BrandingImage
-  }
+    BrandingImage,
+  },
 })
 export default class CustomerTypeListEntry extends Vue {
   @Prop() readonly customerType!: ICustomerType;
@@ -39,7 +39,7 @@ export default class CustomerTypeListEntry extends Vue {
   get logoStyle(): IStyle {
     return {
       height: "80px",
-      width: "80px"
+      width: "80px",
     };
   }
 
