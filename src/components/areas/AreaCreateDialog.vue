@@ -4,6 +4,7 @@
     title="Create Area"
     createLabel="Create"
     cancelLabel="Cancel"
+    :parentArea="parentArea"
     @payload="onCommit"
   />
 </template>
@@ -12,7 +13,7 @@
 import { Component, Prop, Ref } from "vue-property-decorator";
 import {
   CreateDialogComponent,
-  DialogComponent
+  DialogComponent,
 } from "sitewhere-ide-components";
 
 import AreaDialog from "./AreaDialog.vue";
@@ -23,8 +24,8 @@ import { createArea } from "sitewhere-ide-common";
 
 @Component({
   components: {
-    AreaDialog
-  }
+    AreaDialog,
+  },
 })
 export default class AreaCreateDialog extends CreateDialogComponent<
   IArea,

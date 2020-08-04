@@ -19,7 +19,7 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details" eager>
-        <area-detail-fields ref="details" />
+        <area-detail-fields ref="details" :parentArea="parentArea" />
       </v-tab-item>
       <v-tab-item key="bounds" eager>
         <area-bounds-panel ref="bounds" />
@@ -35,14 +35,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref } from "vue-property-decorator";
+import { Component, Ref, Prop } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   BaseDialog,
   DialogComponent,
   DialogSection,
   BrandingPanel,
-  MetadataPanel
+  MetadataPanel,
 } from "sitewhere-ide-components";
 
 import AreaDetailFields from "./AreaDetailFields.vue";
@@ -55,10 +55,11 @@ import { IArea } from "sitewhere-rest-api";
     AreaDetailFields,
     AreaBoundsPanel,
     BrandingPanel,
-    MetadataPanel
-  }
+    MetadataPanel,
+  },
 })
 export default class AreaDialog extends DialogComponent<IArea> {
+  @Prop() readonly parentArea!: IArea;
   @Ref() readonly dialog!: ITabbedComponent;
   @Ref() readonly details!: AreaDetailFields;
   @Ref() readonly bounds!: AreaBoundsPanel;

@@ -4,6 +4,7 @@
     title="Create Customer"
     createLabel="Create"
     cancelLabel="Cancel"
+    :parentCustomer="parentCustomer"
     @payload="onCommit"
   />
 </template>
@@ -20,8 +21,8 @@ import { ICustomer, ICustomerCreateRequest } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    CustomerDialog
-  }
+    CustomerDialog,
+  },
 })
 export default class CustomerCreateDialog extends CreateDialogComponent<
   ICustomer,

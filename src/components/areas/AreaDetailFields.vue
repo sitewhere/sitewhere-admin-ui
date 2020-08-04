@@ -15,9 +15,13 @@
       </form-text>
     </v-flex>
     <v-flex xs12>
-      <area-type-selector v-model="areaTypeToken" title="Type of area being created.">
+      <contained-area-type-selector
+        v-model="areaTypeToken"
+        :parentArea="parentArea"
+        title="Type of area being created."
+      >
         <span v-if="$v.areaTypeToken.$invalid && $v.$dirty">Area type is required.</span>
-      </area-type-selector>
+      </contained-area-type-selector>
     </v-flex>
     <v-flex xs12>
       <form-text-area
@@ -32,18 +36,19 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import {
   DialogSection,
   DialogForm,
   FormToken,
   FormText,
-  FormTextArea
+  FormTextArea,
 } from "sitewhere-ide-components";
 
-import AreaTypeSelector from "../areatypes/AreaTypeSelector.vue";
+import ContainedAreaTypeSelector from "../areatypes/ContainedAreaTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
+import { IArea } from "sitewhere-rest-api";
 
 // Validation for token.
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
@@ -54,22 +59,24 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     FormToken,
     FormText,
     FormTextArea,
-    AreaTypeSelector
+    ContainedAreaTypeSelector,
   },
   validations: {
     token: {
       required,
-      validToken
+      validToken,
     },
     name: {
-      required
+      required,
     },
     areaTypeToken: {
-      required
-    }
-  }
+      required,
+    },
+  },
 })
 export default class AreaDetailFields extends DialogSection {
+  @Prop() readonly parentArea!: IArea;
+
   token: string | null = null;
   name: string | null = null;
   areaTypeToken: string | null = null;
@@ -91,11 +98,11 @@ export default class AreaDetailFields extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: {}): void {
-    this.token = (input as any).token;
-    this.name = (input as any).name;
+  load(input: IArea): void {
+    this.token = input.token;
+    this.name = input.name;
     this.areaTypeToken = (input as any).areaType.token;
-    this.description = (input as any).description;
+    this.description = input.description;
   }
 
   /** Save form data to an object */
@@ -104,7 +111,7 @@ export default class AreaDetailFields extends DialogSection {
       token: this.token,
       name: this.name,
       areaTypeToken: this.areaTypeToken,
-      description: this.description
+      description: this.description,
     };
   }
 }

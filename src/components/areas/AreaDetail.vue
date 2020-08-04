@@ -27,12 +27,7 @@
     </template>
     <template slot="dialogs">
       <area-create-dialog ref="create" :parentArea="area" @created="onSubareaAdded" />
-      <area-update-dialog
-        ref="edit"
-        :token="token"
-        :parentArea="area"
-        @areaUpdated="onAreaUpdated"
-      />
+      <area-update-dialog ref="edit" :token="token" @areaUpdated="onAreaUpdated" />
       <area-delete-dialog ref="delete" :token="token" @deleted="afterAreaDeleted" />
       <zone-create-dialog ref="zoneCreate" :area="area" @zoneAdded="onZoneAdded" />
     </template>
@@ -91,8 +86,8 @@ import { AreasSection } from "../../libraries/constants";
     AreaButton,
     ZoneButton,
     EditButton,
-    DeleteButton
-  }
+    DeleteButton,
+  },
 })
 export default class AreaDetail extends DetailComponent<IArea> {
   @Ref() readonly create!: AreaCreateDialog;
@@ -128,7 +123,7 @@ export default class AreaDetail extends DetailComponent<IArea> {
   /** Load record */
   loadRecord(token: string): AxiosPromise<IArea> {
     const format: IAreaResponseFormat = {
-      includeAreaType: true
+      includeAreaType: true,
     };
     return getArea(this.$store, token, format);
   }

@@ -21,9 +21,13 @@
       </form-text>
     </v-flex>
     <v-flex xs12>
-      <customer-type-selector v-model="customerTypeToken" title="Type of customer being created.">
+      <contained-customer-type-selector
+        v-model="customerTypeToken"
+        :parentCustomer="parentCustomer"
+        title="Type of customer being created."
+      >
         <span v-if="$v.customerTypeToken.$invalid && $v.$dirty">Customer type is required.</span>
-      </customer-type-selector>
+      </contained-customer-type-selector>
     </v-flex>
     <v-flex xs12>
       <form-text-area
@@ -38,18 +42,19 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import {
   DialogSection,
   DialogForm,
   FormToken,
   FormText,
-  FormTextArea
+  FormTextArea,
 } from "sitewhere-ide-components";
 
-import CustomerTypeSelector from "../customertypes/CustomerTypeSelector.vue";
+import ContainedCustomerTypeSelector from "../customertypes/ContainedCustomerTypeSelector.vue";
 
 import { required, helpers } from "vuelidate/lib/validators";
+import { ICustomer } from "sitewhere-rest-api";
 
 // Validation for token.
 const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
@@ -60,22 +65,24 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     FormToken,
     FormText,
     FormTextArea,
-    CustomerTypeSelector
+    ContainedCustomerTypeSelector,
   },
   validations: {
     token: {
       required,
-      validToken
+      validToken,
     },
     name: {
-      required
+      required,
     },
     customerTypeToken: {
-      required
-    }
-  }
+      required,
+    },
+  },
 })
 export default class CustomerDetailFields extends DialogSection {
+  @Prop() readonly parentCustomer!: ICustomer;
+
   token: string | null = null;
   name: string | null = null;
   customerTypeToken: string | null = null;
@@ -110,7 +117,7 @@ export default class CustomerDetailFields extends DialogSection {
       token: this.token,
       name: this.name,
       customerTypeToken: this.customerTypeToken,
-      description: this.description
+      description: this.description,
     };
   }
 }

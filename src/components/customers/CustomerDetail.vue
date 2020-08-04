@@ -29,12 +29,7 @@
         :parentCustomer="customer"
         @created="onSubcustomerAdded"
       />
-      <customer-update-dialog
-        ref="edit"
-        :token="token"
-        :parentCustomer="parentCustomer"
-        @updated="onCustomerUpdated"
-      />
+      <customer-update-dialog ref="edit" :token="token" @updated="onCustomerUpdated" />
       <customer-delete-dialog ref="delete" :token="token" @deleted="onCustomerDeleted" />
     </template>
     <template slot="actions">
@@ -84,8 +79,8 @@ import { CustomersSection } from "../../libraries/constants";
     CustomerButton,
     UpButton,
     EditButton,
-    DeleteButton
-  }
+    DeleteButton,
+  },
 })
 export default class CustomerDetail extends DetailComponent<ICustomer> {
   @Ref() readonly create!: CustomerCreateDialog;
@@ -120,7 +115,7 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   loadRecord(token: string): AxiosPromise<ICustomer> {
     const format: ICustomerResponseFormat = {
       includeCustomerType: true,
-      includeParentCustomer: true
+      includeParentCustomer: true,
     };
     return getCustomer(this.$store, token, format);
   }

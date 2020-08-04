@@ -5,12 +5,13 @@
     :loaded="loaded"
     createLabel="Update"
     cancelLabel="Cancel"
+    :parentArea="parentArea"
     @payload="onSave"
   />
 </template>
 
 <script lang="ts">
-import { Component, Ref } from "vue-property-decorator";
+import { Component, Ref, Prop } from "vue-property-decorator";
 import { getArea, updateArea } from "sitewhere-ide-common";
 import { EditDialogComponent, DialogComponent } from "sitewhere-ide-components";
 
@@ -20,18 +21,19 @@ import { AxiosPromise } from "axios";
 import {
   IArea,
   IAreaCreateRequest,
-  IAreaResponseFormat
+  IAreaResponseFormat,
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    AreaDialog
-  }
+    AreaDialog,
+  },
 })
 export default class AreaUpdateDialog extends EditDialogComponent<
   IArea,
   IAreaCreateRequest
 > {
+  @Prop() readonly parentArea!: IArea;
   @Ref() readonly dialog!: DialogComponent<IArea>;
 
   /** Get wrapped dialog */

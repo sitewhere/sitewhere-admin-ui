@@ -18,7 +18,7 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details" eager>
-        <customer-detail-fields ref="details" />
+        <customer-detail-fields ref="details" :parentCustomer="parentCustomer" />
       </v-tab-item>
       <v-tab-item key="branding" eager>
         <branding-panel ref="branding" />
@@ -31,14 +31,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref } from "vue-property-decorator";
+import { Component, Ref, Prop } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   BaseDialog,
   DialogComponent,
   DialogSection,
   BrandingPanel,
-  MetadataPanel
+  MetadataPanel,
 } from "sitewhere-ide-components";
 
 import CustomerDetailFields from "./CustomerDetailFields.vue";
@@ -49,10 +49,11 @@ import { ICustomer } from "sitewhere-rest-api";
     BaseDialog,
     CustomerDetailFields,
     BrandingPanel,
-    MetadataPanel
-  }
+    MetadataPanel,
+  },
 })
 export default class CustomerDialog extends DialogComponent<ICustomer> {
+  @Prop() readonly parentCustomer!: ICustomer;
   @Ref() readonly dialog!: ITabbedComponent;
   @Ref() readonly details!: CustomerDetailFields;
   @Ref() readonly branding!: BrandingPanel;
