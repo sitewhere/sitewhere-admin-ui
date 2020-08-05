@@ -44,14 +44,14 @@ import { AxiosPromise } from "axios";
 import {
   formatDate,
   fourDecimalPlaces,
-  listLocationsForArea
+  listLocationsForArea,
 } from "sitewhere-ide-common";
 import { EventPageSizes, LocationHeaders } from "../../libraries/constants";
 import {
   IDeviceLocation,
   IDeviceLocationResponseFormat,
   IDeviceLocationSearchResults,
-  IDateRangeSearchCriteria
+  IDateRangeSearchCriteria,
 } from "sitewhere-rest-api";
 
 @Component({ components: { DataTableTab } })

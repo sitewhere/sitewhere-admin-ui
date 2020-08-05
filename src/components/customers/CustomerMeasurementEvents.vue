@@ -8,20 +8,22 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading customer measurements ..."
   >
-    <template slot="items" slot-scope="props">
-      <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
-      <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
-      <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+    <template slot="item" slot-scope="props">
+      <tr>
+        <td width="30%" :title="props.item.assetName">{{ props.item.assetName }}</td>
+        <td width="25%" :title="props.item.name">{{ props.item.name }}</td>
+        <td width="25%" :title="props.item.value">{{ props.item.value }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.eventDate)"
+        >{{ formatDate(props.item.eventDate) }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.receivedDate)"
+        >{{ formatDate(props.item.receivedDate) }}</td>
+      </tr>
     </template>
   </data-table-tab>
 </template>
@@ -31,7 +33,7 @@ import { Component, Prop } from "vue-property-decorator";
 import {
   IPageSizes,
   ITableHeaders,
-  listMeasurementsForCustomer
+  listMeasurementsForCustomer,
 } from "sitewhere-ide-common";
 import { ListComponent, DataTableTab } from "sitewhere-ide-components";
 
@@ -42,7 +44,7 @@ import {
   IDeviceMeasurement,
   IDeviceMeasurementResponseFormat,
   IDeviceMeasurementSearchResults,
-  IDateRangeSearchCriteria
+  IDateRangeSearchCriteria,
 } from "sitewhere-rest-api";
 
 @Component({ components: { DataTableTab } })

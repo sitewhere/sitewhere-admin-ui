@@ -60,11 +60,16 @@ import UpButton from "../common/navbuttons/UpButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { Route } from "vue-router";
 import { AxiosPromise } from "axios";
 import { ICustomer, ICustomerResponseFormat } from "sitewhere-rest-api";
 import { CustomersSection } from "../../libraries/constants";
 
 @Component({
+  beforeRouteUpdate(to: Route, from: Route, next: any) {
+    (this as CustomerDetail).display(to.params.token);
+    next();
+  },
   components: {
     DetailPage,
     CustomerDetailHeader,
@@ -88,11 +93,13 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   @Ref() readonly delete!: CustomerDeleteDialog;
   @Ref() readonly subcustomers!: CustomerSubcustomers;
 
-  parentCustomer: ICustomer | null = null;
-
   /** Get record as customer */
   get customer(): ICustomer | null {
     return this.record;
+  }
+
+  get parentCustomer(): ICustomer | null {
+    return this.customer ? (this.customer as any).parentCustomer : null;
   }
 
   /** Icon for page */
@@ -103,12 +110,6 @@ export default class CustomerDetail extends DetailComponent<ICustomer> {
   /** Get page title */
   get title(): string {
     return this.customer ? this.customer.name : "";
-  }
-
-  /** Called when component is reused */
-  beforeRouteUpdate(to: any, from: any, next: any) {
-    this.display(to.params.token);
-    next();
   }
 
   /** Load record */

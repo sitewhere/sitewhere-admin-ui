@@ -8,27 +8,29 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading customer locations ..."
   >
-    <template slot="items" slot-scope="props">
-      <td width="40%" :title="props.item.assetName">{{ props.item.assetName }}</td>
-      <td width="40%" title="Lat/Lon/Elevation">
-        {{
-        fourDecimalPlaces(props.item.latitude) +
-        ", " +
-        fourDecimalPlaces(props.item.longitude) +
-        ", " +
-        fourDecimalPlaces(props.item.elevation)
-        }}
-      </td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.eventDate)"
-      >{{ formatDate(props.item.eventDate) }}</td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.receivedDate)"
-      >{{ formatDate(props.item.receivedDate) }}</td>
+    <template slot="item" slot-scope="props">
+      <tr>
+        <td width="40%" :title="props.item.assetName">{{ props.item.assetName }}</td>
+        <td width="40%" title="Lat/Lon/Elevation">
+          {{
+          fourDecimalPlaces(props.item.latitude) +
+          ", " +
+          fourDecimalPlaces(props.item.longitude) +
+          ", " +
+          fourDecimalPlaces(props.item.elevation)
+          }}
+        </td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.eventDate)"
+        >{{ formatDate(props.item.eventDate) }}</td>
+        <td
+          width="10%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.receivedDate)"
+        >{{ formatDate(props.item.receivedDate) }}</td>
+      </tr>
     </template>
   </data-table-tab>
 </template>
@@ -38,7 +40,7 @@ import { Component, Prop } from "vue-property-decorator";
 import {
   IPageSizes,
   ITableHeaders,
-  listLocationsForCustomer
+  listLocationsForCustomer,
 } from "sitewhere-ide-common";
 import { ListComponent, DataTableTab } from "sitewhere-ide-components";
 
@@ -49,7 +51,7 @@ import {
   IDeviceLocation,
   IDeviceLocationResponseFormat,
   IDeviceLocationSearchResults,
-  IDateRangeSearchCriteria
+  IDateRangeSearchCriteria,
 } from "sitewhere-rest-api";
 
 @Component({ components: { DataTableTab } })

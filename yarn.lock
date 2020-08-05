@@ -8662,14 +8662,14 @@ single-line-log@^1.1.2:
   dependencies:
     string-width "^1.0.1"
 
-sitewhere-admin-ui-plugins@3.0.0-beta.24:
-  version "3.0.0-beta.24"
-  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.24.tgz#1494fa55d8671c7adbc125cbbc6bcc26460812af"
-  integrity sha512-hSdno1yz/+2LL9h1uVdcPHRxS4wE9C1QMZMMygbc5Fm8yzLvzb5pIoKnUJ+qIRgQEsCObl51ilRuMg++MyK9uQ==
+sitewhere-admin-ui-plugins@3.0.0-beta.26:
+  version "3.0.0-beta.26"
+  resolved "https://registry.yarnpkg.com/sitewhere-admin-ui-plugins/-/sitewhere-admin-ui-plugins-3.0.0-beta.26.tgz#aee0670a8df06b50e7546a28f59812ddc4407f6b"
+  integrity sha512-LeJwte5kcLDwzEbq158aA1Saly0XaRJ1bJ05K8kF3H+8wy7UdLPCIIajnLqsg5ypkplYmgExDeJlXvLEeCAPCg==
   dependencies:
     axios "^0.19.2"
     sitewhere-configuration-model "3.0.0-beta.3"
-    sitewhere-ide-components "3.0.0-beta.14"
+    sitewhere-ide-components "3.0.0-beta.16"
     vue "^2.6.11"
     vue-class-component "^7.2.3"
     vue-color "^2.7.1"
@@ -8693,10 +8693,10 @@ sitewhere-ide-common@3.0.0-beta.8:
     moment "^2.25.1"
     sitewhere-rest-api "3.0.0-beta.11"
 
-sitewhere-ide-components@3.0.0-beta.14:
-  version "3.0.0-beta.14"
-  resolved "https://registry.yarnpkg.com/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-beta.14.tgz#1c28c3440464575e75359cbe1c86b37ba6097b15"
-  integrity sha512-7iRA4KJGVzxSW6yfcSkEi9BFJT5W69579ofnGcjwv3NneYRK+NdeZcBgk3QzzoNdawqpxVRysfLk3jntYIGHkQ==
+sitewhere-ide-components@3.0.0-beta.16:
+  version "3.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/sitewhere-ide-components/-/sitewhere-ide-components-3.0.0-beta.16.tgz#b8318659aa5bddb64a9b8ba6ab58626be5c0c429"
+  integrity sha512-bPcJUoKNjvwjFRe0vWQFmX3iYrp61cIN26AIASW6nAbXiFvJ2MXoTNmRcprVSMOkQSMOL4omAE9loBaOBDWS0Q==
   dependencies:
     axios "^0.19.2"
     sitewhere-ide-common "3.0.0-beta.8"

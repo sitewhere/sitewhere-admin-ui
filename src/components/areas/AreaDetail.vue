@@ -63,12 +63,17 @@ import ZoneButton from "../common/navbuttons/ZoneButton.vue";
 import EditButton from "../common/navbuttons/EditButton.vue";
 import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
+import { Route } from "vue-router";
 import { routeTo } from "sitewhere-ide-common";
 import { AxiosPromise } from "axios";
 import { IArea, IAreaResponseFormat } from "sitewhere-rest-api";
 import { AreasSection } from "../../libraries/constants";
 
 @Component({
+  beforeRouteUpdate(to: Route, from: Route, next: any) {
+    (this as AreaDetail).display(to.params.token);
+    next();
+  },
   components: {
     DetailPage,
     AreaDetailHeader,
@@ -97,11 +102,14 @@ export default class AreaDetail extends DetailComponent<IArea> {
   @Ref() readonly zoneCreate!: ZoneCreateDialog;
   @Ref() readonly zones!: AreaZones;
 
-  parentArea: IArea | null = null;
-
   /** Record as area */
   get area(): IArea | null {
     return this.record;
+  }
+
+  /** Parent area */
+  get parentArea(): IArea | null {
+    return this.area ? (this.area as any).parentArea : null;
   }
 
   /** Icon for page */
