@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar flat dark dense card color="primary" class="tb" height="38">
+  <v-app-bar flat dark dense color="primary" class="tb" height="38">
     <slot name="icon" />
     <v-toolbar-title class="white--text body-2 ml-2">
       {{
@@ -7,9 +7,9 @@
       }}
     </v-toolbar-title>
     <slot name="left" />
-    <v-spacer></v-spacer>
+    <v-spacer />
     <slot />
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script lang="ts">

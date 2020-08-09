@@ -160,7 +160,7 @@ import { handleError, IRemotes, IRemoteConnection } from "sitewhere-ide-common";
 import {
   RemotesDialog,
   RemotesDropdown,
-  ErrorBanner
+  ErrorBanner,
 } from "sitewhere-ide-components";
 import { AxiosResponse } from "axios";
 import { validationMixin } from "vuelidate";
@@ -194,17 +194,17 @@ const twitterTitle = "Follow SiteWhere on Twitter";
     SocialButton,
     RemotesDialog,
     RemotesDropdown,
-    ErrorBanner
+    ErrorBanner,
   },
   mixins: [validationMixin],
   validations: {
     username: {
-      required
+      required,
     },
     password: {
-      required
-    }
-  }
+      required,
+    },
+  },
 })
 export default class Login extends Vue {
   @Ref() readonly remotesDialog!: RemotesDialog;
@@ -235,9 +235,7 @@ export default class Login extends Vue {
   }
 
   @Watch("remotes", { immediate: true })
-  onRemotesStoreUpdated(updated: IRemotes) {
-    console.log("Remotes store updated.", updated);
-  }
+  onRemotesStoreUpdated(updated: IRemotes) {}
 
   // Called to attempt server login.
   async onLogin() {
@@ -312,7 +310,6 @@ export default class Login extends Vue {
 
   /** Called when connection selection is updated */
   onConnectionUpdated(connection: IRemoteConnection) {
-    console.log("connection updated", connection);
     this.connection = connection;
     this.$store.commit("protocol", connection.protocol);
     this.$store.commit("server", connection.host);

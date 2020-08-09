@@ -53,8 +53,6 @@ export default class AreaCreateDialog extends CreateDialogComponent<
   }
 
   /** Implemented in subclasses for after-save */
-  afterSave(payload: IArea): void {
-    console.log(payload);
-  }
+  afterSave(payload: IArea): void {}
 }
 </script>

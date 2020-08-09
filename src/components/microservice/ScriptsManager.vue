@@ -5,11 +5,15 @@
         <v-flex xs3>
           <condensed-toolbar title="Scripts">
             <v-tooltip bottom>
-              <v-icon @click="onScriptCreate" small class="mr-2" slot="activator">add</v-icon>
+              <template v-slot:activator="{ on }">
+                <v-icon @click="onScriptCreate" small class="mr-2" v-on="on">add</v-icon>
+              </template>
               <span>Create Script</span>
             </v-tooltip>
             <v-tooltip bottom>
-              <v-icon @click="refresh" small slot="activator">refresh</v-icon>
+              <template v-slot:activator="{ on }">
+                <v-icon @click="refresh" small v-on="on">refresh</v-icon>
+              </template>
               <span>Refresh Scripts</span>
             </v-tooltip>
           </condensed-toolbar>
@@ -60,37 +64,36 @@
     </template>
     <v-layout style="border-bottom: 1px solid #ddd;" row wrap fill-height>
       <v-flex xs3>
-        <v-expansion-panel
-          style="box-shadow: none; border-bottom: 1px solid #eee;"
-          v-if="scriptsByCategory && scriptsByCategory.length"
-          :expand="true"
-          :value="0"
-        >
-          <v-expansion-panel-content v-for="category in scriptsByCategory" :key="category.id">
-            <template v-slot:header>
-              <div>{{ category.name }}</div>
-            </template>
-            <v-divider />
-            <v-list v-if="category.scripts && category.scripts.length" dense>
-              <v-list-tile
-                v-for="script in category.scripts"
-                :key="script.id"
-                @click="onScriptClicked(script)"
-              >
-                <v-list-tile-content>
-                  <v-list-tile-title>
-                    <v-icon style="font-size: 12px;" color="grey" class="mr-2">fa-code</v-icon>
-                    {{ script.name }}
-                  </v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-            <v-card v-else>
-              <v-card-text style="text-align: center;">No Scripts Configured</v-card-text>
-            </v-card>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-card flat v-else class="subheading">
+        <v-expansion-panels v-if="scriptsByCategory && scriptsByCategory.length">
+          <v-expansion-panel
+            style="box-shadow: none; border-bottom: 1px solid #eee;"
+            :expand="true"
+            :value="0"
+          >
+            <v-expansion-panel-header>{{ category.name }}</v-expansion-panel-header>
+            <v-expansion-panel-content v-for="category in scriptsByCategory" :key="category.id">
+              <v-divider />
+              <v-list v-if="category.scripts && category.scripts.length" dense>
+                <v-list-tile
+                  v-for="script in category.scripts"
+                  :key="script.id"
+                  @click="onScriptClicked(script)"
+                >
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      <v-icon style="font-size: 12px;" color="grey" class="mr-2">fa-code</v-icon>
+                      {{ script.name }}
+                    </v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+              <v-card v-else>
+                <v-card-text style="text-align: center;">No Scripts Configured</v-card-text>
+              </v-card>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <v-card flat tile v-else class="subheading">
           <v-card-text>No scripts have been configured.</v-card-text>
         </v-card>
       </v-flex>
@@ -134,7 +137,7 @@ import {
   getTenantScriptMetadata,
   updateTenantScript,
   cloneTenantScript,
-  activateTenantScript
+  activateTenantScript,
 } from "sitewhere-ide-common";
 
 import { ContentTab } from "sitewhere-ide-components";
@@ -149,7 +152,7 @@ import { formatDate, showMessage, showError } from "sitewhere-ide-common";
 import {
   IScriptCategory,
   IScriptMetadata,
-  IScriptVersion
+  IScriptVersion,
 } from "sitewhere-rest-api";
 
 @Component({
@@ -159,8 +162,8 @@ import {
     ScriptVersionList,
     ScriptsContentEditor,
     ScriptCreateDialog,
-    ScriptCreateCloneDialog
-  }
+    ScriptCreateCloneDialog,
+  },
 })
 export default class ScriptsManager extends Vue {
   @Prop() readonly tabkey!: string;
@@ -189,7 +192,9 @@ export default class ScriptsManager extends Vue {
   /** Refresh list of scripts */
   async refresh() {
     try {
-      const response: AxiosResponse<IScriptCategory[]> = await listTenantScriptsByCategory(
+      const response: AxiosResponse<
+        IScriptCategory[]
+      > = await listTenantScriptsByCategory(
         this.$store,
         this.identifier,
         this.tenantToken
@@ -204,9 +209,9 @@ export default class ScriptsManager extends Vue {
   onScriptsRefreshed(scriptsByCategory: IScriptCategory[]) {
     this.scriptsByCategory = scriptsByCategory;
     if (this.scriptAfterRefresh) {
-      this.scriptsByCategory.forEach(category => {
+      this.scriptsByCategory.forEach((category) => {
         if (category.scripts) {
-          category.scripts.forEach(script => {
+          category.scripts.forEach((script) => {
             if (this.scriptAfterRefresh === script.id) {
               this.onScriptClicked(script);
             }
@@ -281,7 +286,7 @@ export default class ScriptsManager extends Vue {
         category: "",
         description: "",
         interpreterType: this.selectedScript.interpreterType,
-        content: btoa(this.content)
+        content: btoa(this.content),
       };
       try {
         await updateTenantScript(
@@ -312,7 +317,7 @@ export default class ScriptsManager extends Vue {
   /** Create clone of edited version */
   async onSaveClone(version: IScriptVersion) {
     const request = {
-      comment: version.comment
+      comment: version.comment,
     };
     if (this.selectedScript && this.selectedVersion) {
       try {

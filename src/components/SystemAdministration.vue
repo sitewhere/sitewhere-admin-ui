@@ -48,7 +48,7 @@ import { IAction, INavigationSection } from "sitewhere-ide-common";
 import {
   InAppSystemBar,
   InAppFooter,
-  Navigation
+  Navigation,
 } from "sitewhere-ide-components";
 
 import Copyright from "./Copyright.vue";
@@ -62,8 +62,8 @@ import Electron from "electron";
     Notifications,
     InAppSystemBar,
     Navigation,
-    InAppFooter
-  }
+    InAppFooter,
+  },
 })
 export default class SystemAdministration extends Vue {
   showMessage = true;
@@ -75,7 +75,7 @@ export default class SystemAdministration extends Vue {
       icon: NavigationIcon.Tenant,
       route: "system/tenants",
       longTitle: "Manage System Tenants",
-      requireAll: ["ADMINISTER_TENANTS"]
+      requireAll: ["ADMINISTER_TENANTS"],
     },
     {
       id: "users",
@@ -83,7 +83,7 @@ export default class SystemAdministration extends Vue {
       icon: NavigationIcon.User,
       route: "system/users",
       longTitle: "Manage System Users",
-      requireAll: ["ADMINISTER_USERS"]
+      requireAll: ["ADMINISTER_USERS"],
     },
     {
       id: "settings",
@@ -91,8 +91,8 @@ export default class SystemAdministration extends Vue {
       icon: NavigationIcon.Global,
       route: "system/settings",
       longTitle: "Manage Global Settings",
-      requireAll: ["ADMINISTER_TENANTS"]
-    }
+      requireAll: ["ADMINISTER_TENANTS"],
+    },
   ];
 
   created() {
@@ -102,7 +102,6 @@ export default class SystemAdministration extends Vue {
     // Verify that user is logged in.
     const user = this.$store.getters.user;
     if (!user) {
-      console.log("No user found in store. Logging out!");
       this.onLogOut();
       return;
     }
@@ -190,12 +189,11 @@ export default class SystemAdministration extends Vue {
       const response: AxiosResponse<any> = await getJwt(this.$store);
       const jwt = response.headers["x-sitewhere-jwt"];
       this.$store.commit("jwt", jwt);
-      setTimeout(function() {
+      setTimeout(function () {
         component.refreshJwt();
       }, 1000 * 60 * 5);
     } catch (err) {
       handleError(err);
-      console.log("Could not update JWT.");
       component.onLogOut();
     }
   }
