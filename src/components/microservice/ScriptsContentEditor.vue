@@ -1,20 +1,22 @@
 <template>
-  <v-layout row wrap fill-height v-if="selectedVersion">
-    <v-flex xs12>
-      <v-card flat height="100%">
-        <editor
-          ref="editor"
-          v-model="content"
-          @init="editorInit"
-          lang="groovy"
-          theme="chrome"
-          :options="aceOptions"
-          width="100%"
-          height="100%"
-        ></editor>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <v-container style="align-items: stretch;" class="pa-0" fill-height>
+    <v-row no-gutters v-if="selectedVersion">
+      <v-col cols="12">
+        <v-card flat tile height="100%">
+          <editor
+            ref="editor"
+            v-model="content"
+            @init="editorInit"
+            lang="groovy"
+            theme="chrome"
+            :options="aceOptions"
+            width="100%"
+            height="100%"
+          ></editor>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -28,8 +30,8 @@ import { IScriptMetadata, IScriptVersion } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    editor: require("vue2-ace-editor")
-  }
+    editor: require("vue2-ace-editor"),
+  },
 })
 export default class ScriptsContentEditor extends Vue {
   @Prop() readonly identifier!: string;
@@ -42,7 +44,7 @@ export default class ScriptsContentEditor extends Vue {
   selectedVersion: any = null;
   content = "";
   aceOptions: {} = {
-    showPrintMargin: false
+    showPrintMargin: false,
   };
 
   @Watch("script", { immediate: true })
@@ -67,7 +69,7 @@ export default class ScriptsContentEditor extends Vue {
 
   /** Get handle to embedded Ace editor */
   get editor(): any {
-    return this.editorReference.editor;
+    return this.editorReference ? this.editorReference.editor : null;
   }
 
   /** Initialize code editor by requiring dependencies */
@@ -79,11 +81,13 @@ export default class ScriptsContentEditor extends Vue {
     require("brace/theme/chrome");
     require("brace/snippets/javascript"); //snippet
 
-    this.editor.commands.addCommand({
-      name: "save",
-      bindKey: { win: "Ctrl-S", mac: "Cmd-S" },
-      exec: this.onSaveContent
-    });
+    if (this.editor) {
+      this.editor.commands.addCommand({
+        name: "save",
+        bindKey: { win: "Ctrl-S", mac: "Cmd-S" },
+        exec: this.onSaveContent,
+      });
+    }
   }
 
   /** Update script content */

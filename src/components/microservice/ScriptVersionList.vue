@@ -1,20 +1,20 @@
 <template>
   <v-list dense two-line>
     <template v-for="version in versions">
-      <v-list-tile v-bind:key="version.versionId" @click="onVersionClicked(version)">
-        <v-list-tile-content>
-          <v-list-tile-title class="subheading">
-            <v-icon :color="versionColor(version)">
+      <v-list-item v-bind:key="version.versionId" @click="onVersionClicked(version)">
+        <v-list-item-content>
+          <v-list-item-title class="subheading">
+            <v-icon small :color="versionColor(version)">
               {{
               versionIcon(version)
               }}
             </v-icon>
             {{ formatDate(version.createdDate) }}
-          </v-list-tile-title>
-          <v-list-tile-sub-title v-html="version.comment"></v-list-tile-sub-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-divider v-bind:key="'div_' + version.versionId"></v-divider>
+          </v-list-item-title>
+          <v-list-item-subtitle class="mt-2 caption" v-html="version.comment" />
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider v-bind:key="'div_' + version.versionId" />
     </template>
   </v-list>
 </template>
