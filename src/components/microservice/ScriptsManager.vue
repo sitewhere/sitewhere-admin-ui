@@ -1,131 +1,153 @@
 <template>
   <content-tab :tabkey="tabkey" :loaded="loaded" loadingMessage="Loading...">
     <template slot="header">
-      <v-layout row>
-        <v-flex xs3>
-          <condensed-toolbar title="Scripts">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-icon @click="onScriptCreate" small class="mr-2" v-on="on">add</v-icon>
-              </template>
-              <span>Create Script</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-icon @click="refresh" small v-on="on">refresh</v-icon>
-              </template>
-              <span>Refresh Scripts</span>
-            </v-tooltip>
-          </condensed-toolbar>
-        </v-flex>
-        <v-flex xs9>
-          <condensed-toolbar :title="scriptTitle" v-if="this.selectedScript != null">
-            <template slot="icon">
-              <v-icon style="font-size: 10px;">fa-code</v-icon>
-            </template>
-            <v-menu v-if="selectedScript" offset-y class="mr-3" max-width="400">
-              <v-btn color="primary" dark slot="activator">
-                <v-icon small class="mr-1" :color="versionColor">
-                  {{
-                  versionIcon
-                  }}
-                </v-icon>
-                <span v-if="selectedVersion" class="white--text">
-                  {{
-                  formatDate(selectedVersion.createdDate)
-                  }}
-                </span>
-                <v-icon small>expand_more</v-icon>
-              </v-btn>
-              <script-version-list
-                :versions="versions"
-                :selectedScript="selectedScript"
-                @selected="onVersionSelected"
-              />
-            </v-menu>
-            <v-tooltip bottom>
-              <v-icon @click="onActivate" small class="mr-2" slot="activator">play_circle_outline</v-icon>
-              <span>Make Version Active</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <v-icon @click="onClone" small class="mr-2" slot="activator">note_add</v-icon>
-              <span>Clone as New Version</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <v-icon @click="onSave" small slot="activator">cloud_upload</v-icon>
-              <span>Upload Changes</span>
-            </v-tooltip>
-          </condensed-toolbar>
-          <v-card flat v-else height="100%">
-            <v-divider />
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </template>
-    <v-layout style="border-bottom: 1px solid #ddd;" row wrap fill-height>
-      <v-flex xs3>
-        <v-expansion-panels v-if="scriptsByCategory && scriptsByCategory.length">
-          <v-expansion-panel
-            style="box-shadow: none; border-bottom: 1px solid #eee;"
-            :expand="true"
-            :value="0"
-          >
-            <v-expansion-panel-header>{{ category.name }}</v-expansion-panel-header>
-            <v-expansion-panel-content v-for="category in scriptsByCategory" :key="category.id">
+      <v-container class="pa-0">
+        <v-row no-gutters>
+          <v-col cols="3">
+            <condensed-toolbar title="Scripts">
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-icon @click="onScriptCreate" small class="mr-2" v-on="on">add</v-icon>
+                </template>
+                <span>Create Script</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-icon @click="refresh" small v-on="on">refresh</v-icon>
+                </template>
+                <span>Refresh Scripts</span>
+              </v-tooltip>
+            </condensed-toolbar>
+          </v-col>
+          <v-col cols="9">
+            <div v-if="this.selectedScript != null" style="border-left: 1px solid #999;">
+              <condensed-toolbar :title="scriptTitle">
+                <template slot="icon">
+                  <v-icon style="font-size: 10px;">fa-code</v-icon>
+                </template>
+                <v-menu v-if="selectedScript" offset-y left class="mr-3" max-width="400">
+                  <template v-slot:activator="{ on }">
+                    <v-btn color="primary" dark v-on="on">
+                      <v-icon small class="mr-1" :color="versionColor">
+                        {{
+                        versionIcon
+                        }}
+                      </v-icon>
+                      <span v-if="selectedVersion" class="caption white--text">
+                        {{
+                        formatDate(selectedVersion.createdDate)
+                        }}
+                      </span>
+                      <v-icon small>expand_more</v-icon>
+                    </v-btn>
+                  </template>
+                  <script-version-list
+                    :versions="versions"
+                    :selectedScript="selectedScript"
+                    @selected="onVersionSelected"
+                  />
+                </v-menu>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-icon @click="onActivate" small class="mr-2" v-on="on">play_circle_outline</v-icon>
+                  </template>
+                  <span>Make Version Active</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-icon @click="onClone" small class="mr-2" v-on="on">note_add</v-icon>
+                  </template>
+                  <span>Clone as New Version</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-icon @click="onSave" small class="mr-2" v-on="on">cloud_upload</v-icon>
+                  </template>
+                  <span>Upload Changes</span>
+                </v-tooltip>
+              </condensed-toolbar>
+            </div>
+            <v-card flat v-else height="100%">
               <v-divider />
-              <v-list v-if="category.scripts && category.scripts.length" dense>
-                <v-list-tile
-                  v-for="script in category.scripts"
-                  :key="script.id"
-                  @click="onScriptClicked(script)"
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </template>
+    <v-container fill-height style="align-items: stretch;" class="pa-0">
+      <v-row align="stretch" justify="start" no-gutters style="border-bottom: 1px solid #eee;">
+        <v-col cols="3">
+          <v-expansion-panels tile v-if="scriptsByCategory && scriptsByCategory.length">
+            <v-expansion-panel
+              v-for="category in scriptsByCategory"
+              :key="category.id"
+              :expand="true"
+              :value="0"
+            >
+              <v-expansion-panel-header>{{ category.name }}</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-list
+                  class="pa-0"
+                  dark
+                  color="primary"
+                  v-if="category.scripts && category.scripts.length"
+                  dense
                 >
-                  <v-list-tile-content>
-                    <v-list-tile-title>
-                      <v-icon style="font-size: 12px;" color="grey" class="mr-2">fa-code</v-icon>
-                      {{ script.name }}
-                    </v-list-tile-title>
-                  </v-list-tile-content>
-                </v-list-tile>
-              </v-list>
-              <v-card v-else>
-                <v-card-text style="text-align: center;">No Scripts Configured</v-card-text>
-              </v-card>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-        <v-card flat tile v-else class="subheading">
-          <v-card-text>No scripts have been configured.</v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex xs9>
-        <scripts-content-editor
-          v-if="this.selectedScript != null"
-          ref="content"
-          :script="selectedScript"
-          :version="selectedVersion"
-          :identifier="identifier"
-          :tenantToken="tenantToken"
-          @content="onContentUpdated"
-          @save="onSave"
-        />
-        <v-card flat v-else height="100%">
-          <v-divider vertical />
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <script-create-dialog
-      ref="create"
-      :identifier="identifier"
-      :tenantToken="tenantToken"
-      :scriptCategories="scriptCategories"
-      @scriptAdded="onScriptAdded"
-    />
-    <script-create-clone-dialog
-      ref="clone"
-      :identifier="identifier"
-      :tenantToken="tenantToken"
-      @save="onSaveClone"
-    />
+                  <v-list-item
+                    v-for="script in category.scripts"
+                    :key="script.id"
+                    @click="onScriptClicked(script)"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        <v-icon style="font-size: 12px;" color="grey" class="mr-2">fa-code</v-icon>
+                        {{ script.name }}
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+                <v-card flat v-else>
+                  <v-card-text style="text-align: center;">No Scripts Configured</v-card-text>
+                </v-card>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          <v-card flat tile v-else class="subheading">
+            <v-card-text>No scripts have been configured.</v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="9">
+          <scripts-content-editor
+            v-if="this.selectedScript != null"
+            ref="content"
+            :script="selectedScript"
+            :version="selectedVersion"
+            :identifier="identifier"
+            :tenantToken="tenantToken"
+            @content="onContentUpdated"
+            @save="onSave"
+          />
+          <v-card tile flat v-else height="100%">
+            <v-divider vertical />
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+    <template slot="dialogs">
+      <script-create-dialog
+        ref="create"
+        :identifier="identifier"
+        :tenantToken="tenantToken"
+        :scriptCategories="scriptCategories"
+        @scriptAdded="onScriptAdded"
+      />
+      <script-create-clone-dialog
+        ref="clone"
+        :identifier="identifier"
+        :tenantToken="tenantToken"
+        @save="onSaveClone"
+      />
+    </template>
   </content-tab>
 </template>
 
