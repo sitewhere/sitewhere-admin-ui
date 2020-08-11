@@ -1,8 +1,4 @@
 dist: xenial
-addons:
-  homebrew:
-    packages:
-      - snapcraft
 matrix:
   include:
     - os: osx

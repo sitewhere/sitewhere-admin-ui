@@ -22,10 +22,12 @@ module.exports = {
           "icon": null
         },
         "mac": {
-          "category": "public.app-category.business"
+          "category": "public.app-category.business",
+          "target": "dmg"
         },
         "linux": {
-          "category": "Monitor"
+          "category": "Monitor",
+          "target": "AppImage"
         }
       }
     }
