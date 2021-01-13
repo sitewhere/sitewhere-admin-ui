@@ -3,6 +3,7 @@
     ref="dialog"
     title="Create User"
     width="600"
+    mode="create"
     createLabel="Create"
     cancelLabel="Cancel"
     @payload="onCommit"
@@ -21,8 +22,8 @@ import { IUser, IUserCreateRequest } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    UserDialog
-  }
+    UserDialog,
+  },
 })
 export default class UserCreateDialog extends CreateDialogComponent<
   IUser,
