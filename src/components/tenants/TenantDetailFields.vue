@@ -8,9 +8,14 @@
         label="Tenant token"
         icon="info"
         class="mr-3"
+        :readonly="mode == 'update'"
       >
-        <span v-if="!$v.token.required && $v.$dirty">Tenant token is required.</span>
-        <span v-if="!$v.token.validToken && $v.$dirty">Tenant token is not valid.</span>
+        <span v-if="!$v.token.required && $v.$dirty"
+          >Tenant token is required.</span
+        >
+        <span v-if="!$v.token.validToken && $v.$dirty"
+          >Tenant token is not valid.</span
+        >
       </form-text>
     </v-flex>
     <v-flex xs7>
@@ -21,7 +26,9 @@
         label="Authentication Token"
         icon="https"
       >
-        <span v-if="$v.authToken.$invalid && $v.$dirty">Authentication Token is required.</span>
+        <span v-if="$v.authToken.$invalid && $v.$dirty"
+          >Authentication Token is required.</span
+        >
       </form-text>
     </v-flex>
     <v-flex xs12>
@@ -60,7 +67,9 @@
         icon="layers"
         class="mr-3"
       >
-        <span v-if="$v.configurationTemplateId.$invalid && $v.$dirty">Tenant template is required.</span>
+        <span v-if="$v.configurationTemplateId.$invalid && $v.$dirty"
+          >Tenant template is required.</span
+        >
       </form-select>
     </v-flex>
     <v-flex xs6>
@@ -74,24 +83,26 @@
         item-value="id"
         icon="backup"
       >
-        <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty">Dataset template is required.</span>
+        <span v-if="$v.datasetTemplateId.$invalid && $v.$dirty"
+          >Dataset template is required.</span
+        >
       </form-select>
     </v-flex>
   </dialog-form>
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import {
   listTenantConfigurationTemplates,
   listTenantDatasetTemplates,
-  listUsers
+  listUsers,
 } from "sitewhere-ide-common";
 import {
   DialogSection,
   DialogForm,
   FormText,
-  FormSelect
+  FormSelect,
 } from "sitewhere-ide-components";
 
 import { required, helpers } from "vuelidate/lib/validators";
@@ -105,7 +116,7 @@ import {
   IUserSearchResults,
   ITenantConfigurationTemplate,
   ITenantDatasetTemplate,
-  ITenantCreateRequest
+  ITenantCreateRequest,
 } from "sitewhere-rest-api";
 
 // Validation for token.
@@ -116,26 +127,28 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
   validations: {
     token: {
       required,
-      validToken
+      validToken,
     },
     name: {
-      required
+      required,
     },
     authToken: {
-      required
+      required,
     },
     authUsers: {
-      required
+      required,
     },
     configurationTemplateId: {
-      required
+      required,
     },
     datasetTemplateId: {
-      required
-    }
-  }
+      required,
+    },
+  },
 })
 export default class TenantDetailFields extends DialogSection {
+  @Prop() readonly mode!: string;
+
   token: string | null = null;
   name: string | null = null;
   authToken: string | null = null;
@@ -184,19 +197,19 @@ export default class TenantDetailFields extends DialogSection {
       authenticationToken: this.authToken,
       authorizedUserIds: this.authUsers,
       configurationTemplateId: this.configurationTemplateId,
-      datasetTemplateId: this.datasetTemplateId
+      datasetTemplateId: this.datasetTemplateId,
     };
   }
 
   /** Refresh content for dropdowns */
   refreshDropdownContent(): void {
     const component = this;
-    const tenantTemplates: AxiosPromise<ITenantConfigurationTemplate[]> = listTenantConfigurationTemplates(
-      this.$store
-    );
-    const datasetTemplates: AxiosPromise<ITenantDatasetTemplate[]> = listTenantDatasetTemplates(
-      this.$store
-    );
+    const tenantTemplates: AxiosPromise<
+      ITenantConfigurationTemplate[]
+    > = listTenantConfigurationTemplates(this.$store);
+    const datasetTemplates: AxiosPromise<
+      ITenantDatasetTemplate[]
+    > = listTenantDatasetTemplates(this.$store);
 
     const criteria: IUserSearchCriteria = { pageNumber: 1, pageSize: 0 };
     const format: IUserResponseFormat = {};
@@ -206,12 +219,12 @@ export default class TenantDetailFields extends DialogSection {
       format
     );
     Promise.all([tenantTemplates, datasetTemplates, users])
-      .then(values => {
+      .then((values) => {
         component.templatesList = values[0].data;
         component.datasetsList = values[1].data;
         component.allUsers = values[2].data.results;
       })
-      .catch(error => {
+      .catch((error) => {
         handleError(error);
       });
   }

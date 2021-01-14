@@ -18,7 +18,8 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details" eager>
-        <user-detail-fields ref="details" />
+        <user-create-detail-fields v-if="mode == 'create'" ref="details" />
+        <user-update-detail-fields v-if="mode == 'update'" ref="details" />
       </v-tab-item>
       <v-tab-item key="permissions" eager>
         <user-permissions ref="permissions" />
@@ -31,30 +32,33 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref } from "vue-property-decorator";
+import { Component, Ref, Prop } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
   DialogSection,
   BaseDialog,
-  MetadataPanel
+  MetadataPanel,
 } from "sitewhere-ide-components";
 
-import UserDetailFields from "./UserDetailFields.vue";
+import UserCreateDetailFields from "./UserCreateDetailFields.vue";
+import UserUpdateDetailFields from "./UserUpdateDetailFields.vue";
 import UserPermissions from "./UserPermissions.vue";
 import { IUser } from "sitewhere-rest-api";
 
 @Component({
   components: {
     BaseDialog,
-    UserDetailFields,
+    UserCreateDetailFields,
+    UserUpdateDetailFields,
     UserPermissions,
-    MetadataPanel
-  }
+    MetadataPanel,
+  },
 })
 export default class UserDialog extends DialogComponent<IUser> {
+  @Prop() readonly mode!: string;
   @Ref() readonly dialog!: ITabbedComponent;
-  @Ref() readonly details!: UserDetailFields;
+  @Ref() readonly details!: UserCreateDetailFields;
   @Ref() readonly permissions!: UserPermissions;
   @Ref() readonly metadata!: DialogSection;
 
@@ -90,7 +94,7 @@ export default class UserDialog extends DialogComponent<IUser> {
   }
 
   // Load dialog from a given payload.
-  load(payload: IUser) {
+  load(payload: IUser & { roles: string[] }) {
     this.reset();
     if (this.details) {
       this.details.load(payload);

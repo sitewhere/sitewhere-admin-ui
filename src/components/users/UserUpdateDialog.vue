@@ -3,6 +3,7 @@
     ref="dialog"
     title="Update User"
     :loaded="loaded"
+    mode="update"
     createLabel="Update"
     cancelLabel="Cancel"
     @payload="onSave"
@@ -20,13 +21,13 @@ import { AxiosPromise } from "axios";
 import {
   IUser,
   IUserCreateRequest,
-  IUserResponseFormat
+  IUserResponseFormat,
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    UserDialog
-  }
+    UserDialog,
+  },
 })
 export default class UserUpdateDialog extends EditDialogComponent<
   IUser,

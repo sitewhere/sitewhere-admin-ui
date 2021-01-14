@@ -4,6 +4,7 @@
     title="Edit Tenant"
     width="650"
     :loaded="loaded"
+    mode="update"
     createLabel="Update"
     cancelLabel="Cancel"
     @payload="onSave"
@@ -21,13 +22,13 @@ import { AxiosPromise } from "axios";
 import {
   ITenant,
   ITenantCreateRequest,
-  ITenantResponseFormat
+  ITenantResponseFormat,
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    TenantDialog
-  }
+    TenantDialog,
+  },
 })
 export default class TenantUpdateDialog extends EditDialogComponent<
   ITenant,

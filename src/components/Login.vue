@@ -6,7 +6,7 @@
         <div class="overlay"></div>
       </div>
       <div class="social">
-        <div style="padding-top: 240px;">
+        <div style="padding-top: 240px">
           <social-button
             :settings="settings"
             type="Discord"
@@ -51,8 +51,16 @@
           <error-banner :error="error" />
           <v-card flat tile color="transparent" class="mb-7">
             <div
-              style="width: 100%; text-align: center; color: #333; font-size: 35px; font-family: RobotoRegular"
-            >Instance Administration</div>
+              style="
+                width: 100%;
+                text-align: center;
+                color: #333;
+                font-size: 35px;
+                font-family: RobotoRegular;
+              "
+            >
+              Instance Administration
+            </div>
           </v-card>
           <v-card flat tile color="transparent">
             <v-layout row wrap>
@@ -65,7 +73,9 @@
                   autofocus
                 />
                 <div class="validation-error">
-                  <span v-if="$v.username.$invalid && $v.$dirty">Username is required.</span>
+                  <span v-if="$v.username.$invalid && $v.$dirty"
+                    >Username is required.</span
+                  >
                 </div>
               </v-flex>
               <v-flex xs12 class="mb-7">
@@ -77,14 +87,23 @@
                   type="password"
                 ></v-text-field>
                 <div class="validation-error">
-                  <span v-if="$v.password.$invalid && $v.$dirty">Password is required.</span>
+                  <span v-if="$v.password.$invalid && $v.$dirty"
+                    >Password is required.</span
+                  >
                 </div>
               </v-flex>
               <v-flex xs11>
-                <remotes-dropdown :remotes="remotes" @selected="onConnectionUpdated" />
+                <remotes-dropdown
+                  :remotes="remoteInstances"
+                  @selected="onInstanceSelected"
+                />
               </v-flex>
               <v-flex xs1>
-                <v-icon class="pt-2 pl-3 blue--grey text--darken-2" @click="onEditRemotes">edit</v-icon>
+                <v-icon
+                  class="pt-2 pl-3 blue--grey text--darken-2"
+                  @click="onEditRemotes"
+                  >edit</v-icon
+                >
               </v-flex>
             </v-layout>
           </v-card>
@@ -100,13 +119,16 @@
                   dark
                   @click="onLogin"
                   :loading="loggingIn"
-                >Login</v-btn>
+                  >Login</v-btn
+                >
               </v-flex>
             </v-layout>
           </v-card>
           <v-dialog v-model="noserver" max-width="300">
             <v-card>
-              <v-card-title class="headline">Instance Not Available</v-card-title>
+              <v-card-title class="headline"
+                >Instance Not Available</v-card-title
+              >
               <v-card-text>
                 The server location specified could not be contacted. Verify
                 that you have started a SiteWhere instance and the microservices
@@ -114,7 +136,9 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn tile color="primary" outlined @click="noserver = false">OK</v-btn>
+                <v-btn tile color="primary" outlined @click="noserver = false"
+                  >OK</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -134,13 +158,33 @@
           <v-icon>menu</v-icon>
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="minWindow">
+        <v-btn
+          icon
+          small
+          class="ma-0 mt-2 title-bar-button"
+          color="grey"
+          @click="minWindow"
+        >
           <v-icon>remove</v-icon>
         </v-btn>
-        <v-btn text icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="maxWindow">
+        <v-btn
+          text
+          icon
+          small
+          class="ma-0 mt-2 title-bar-button"
+          color="grey"
+          @click="maxWindow"
+        >
           <v-icon>check_box_outline_blank</v-icon>
         </v-btn>
-        <v-btn text icon small class="ma-0 mt-2 title-bar-button" color="grey" @click="closeWindow">
+        <v-btn
+          text
+          icon
+          small
+          class="ma-0 mt-2 title-bar-button"
+          color="grey"
+          @click="closeWindow"
+        >
           <v-icon>close</v-icon>
         </v-btn>
       </v-system-bar>
@@ -150,18 +194,20 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Ref, Watch } from "vue-property-decorator";
+import { Component, Ref } from "vue-property-decorator";
 import { getJwt, getUser } from "sitewhere-ide-common";
 
 import SocialButton from "./SocialButton.vue";
+import RemotesDialog from "../components/login/RemotesDialog.vue";
+import RemotesDropdown from "../components/login/RemotesDropdown.vue";
 
 import Electron from "electron";
-import { handleError, IRemotes, IRemoteConnection } from "sitewhere-ide-common";
 import {
-  RemotesDialog,
-  RemotesDropdown,
-  ErrorBanner,
-} from "sitewhere-ide-components";
+  handleError,
+  IRemoteInstances,
+  IRemoteInstance,
+} from "sitewhere-ide-common";
+import { ErrorBanner } from "sitewhere-ide-components";
 import { AxiosResponse } from "axios";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
@@ -223,19 +269,16 @@ export default class Login extends Vue {
   githubTitle: string = githubTitle;
   twitterSvgContent: string = twitterSvgContent;
   twitterTitle: string = twitterTitle;
-  connection: IRemoteConnection | null = null;
+  remoteInstance: IRemoteInstance | null = null;
 
   created() {
     this.getOrCreateSiteWhereSettings();
   }
 
   /** Compute remotes based on store */
-  get remotes(): IRemotes {
-    return this.$store.getters.remotes;
+  get remoteInstances(): IRemoteInstances {
+    return this.$store.getters.remoteInstances;
   }
-
-  @Watch("remotes", { immediate: true })
-  onRemotesStoreUpdated(updated: IRemotes) {}
 
   // Called to attempt server login.
   async onLogin() {
@@ -298,22 +341,21 @@ export default class Login extends Vue {
 
   /** Open dialog to edit remotes */
   onEditRemotes() {
-    this.remotesDialog.load(this.remotes);
+    this.remotesDialog.load(this.remoteInstances);
     this.remotesDialog.openDialog();
   }
 
   /** Called after remotes are updated */
-  onRemotesUpdated(updated: IRemotes) {
-    this.$store.commit("remotes", updated);
+  onRemotesUpdated(updated: IRemoteInstances) {
+    console.log("Remotes updated", updated);
+    this.$store.commit("remoteInstances", updated);
     this.remotesDialog.closeDialog();
   }
 
-  /** Called when connection selection is updated */
-  onConnectionUpdated(connection: IRemoteConnection) {
-    this.connection = connection;
-    this.$store.commit("protocol", connection.protocol);
-    this.$store.commit("server", connection.host);
-    this.$store.commit("port", connection.port);
+  /** Called when instance selection is updated */
+  onInstanceSelected(instance: IRemoteInstance) {
+    this.remoteInstance = instance;
+    this.$store.commit("instanceUrl", instance.baseUrl);
   }
 
   openWebTools() {

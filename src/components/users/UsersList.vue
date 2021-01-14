@@ -9,6 +9,7 @@
   >
     <v-flex xs12>
       <v-data-table
+        class="users-table"
         :headers="headers"
         :items="matches"
         :hide-default-footer="true"
@@ -16,23 +17,38 @@
       >
         <template slot="item" slot-scope="props">
           <tr>
-            <td width="15%" :title="props.item.username">{{ props.item.username }}</td>
-            <td width="15%" :title="props.item.firstName">{{ props.item.firstName }}</td>
-            <td width="15%" :title="props.item.lastName">{{ props.item.lastName }}</td>
-            <td width="15%" :title="props.item.status">{{ props.item.status }}</td>
+            <td width="13%" :title="props.item.username">
+              {{ props.item.username }}
+            </td>
+            <td width="13%" :title="props.item.firstName">
+              {{ props.item.firstName }}
+            </td>
+            <td width="14%" :title="props.item.lastName">
+              {{ props.item.lastName }}
+            </td>
+            <td width="25%" :title="props.item.email">
+              {{ props.item.email }}
+            </td>
+            <td width="25%" :title="props.item.createdDate">
+              {{ props.item.createdDate }}
+            </td>
             <td
-              width="15%"
-              :title="format(props.item.createdDate)"
-            >{{ format(props.item.createdDate) }}</td>
-            <td
-              width="15%"
-              :title="format(props.item.updatedDate)"
-            >{{ format(props.item.updatedDate) }}</td>
-            <td width="12%" class="action-buttons">
-              <actions-block
-                @edit="onEditUser(props.item.username)"
-                @delete="onDeleteUser(props.item.username)"
-              />
+              width="80px"
+              title="Actions"
+              v-show="props.item.username != 'system'"
+            >
+              <v-icon
+                small
+                class="action-icon"
+                @click="onEditUser(props.item.username)"
+                >fa-edit</v-icon
+              >
+              <v-icon
+                small
+                class="action-icon ml-2"
+                @click="onDeleteUser(props.item.username)"
+                >fa-trash</v-icon
+              >
             </td>
           </tr>
         </template>
@@ -56,7 +72,7 @@ import {
   ITableHeaders,
   NavigationIcon,
   listUsers,
-  formatDate
+  formatDate,
 } from "sitewhere-ide-common";
 import { ListComponent, ListPage } from "sitewhere-ide-components";
 
@@ -72,7 +88,7 @@ import {
   IUser,
   IUserSearchCriteria,
   IUserResponseFormat,
-  IUserSearchResults
+  IUserSearchResults,
 } from "sitewhere-rest-api";
 
 @Component({
@@ -82,8 +98,8 @@ import {
     ActionsBlock,
     UserCreateDialog,
     UserUpdateDialog,
-    UserDeleteDialog
-  }
+    UserDeleteDialog,
+  },
 })
 export default class UsersList extends ListComponent<
   IUser,
@@ -99,59 +115,53 @@ export default class UsersList extends ListComponent<
     {
       align: "left",
       sortable: false,
-      text: "User Name",
-      value: "username"
+      text: "Username",
+      value: "username",
     },
     {
       align: "left",
       sortable: false,
       text: "First Name",
-      value: "firstname"
+      value: "firstname",
     },
     {
       align: "left",
       sortable: false,
       text: "Last Name",
-      value: "lastname"
+      value: "lastname",
     },
     {
       align: "left",
       sortable: false,
-      text: "Status",
-      value: "status"
+      text: "Email",
+      value: "email",
     },
     {
       align: "left",
       sortable: false,
-      text: "Created",
-      value: "created"
+      text: "Created Date",
+      value: "created",
     },
     {
       align: "left",
       sortable: false,
-      text: "Updated",
-      value: "updated"
+      text: "",
+      value: "created",
     },
-    {
-      align: "left",
-      sortable: false,
-      text: "Actions",
-      value: "actions"
-    }
   ];
   pageSizes: IPageSizes = [
     {
       text: "25",
-      value: 25
+      value: 25,
     },
     {
       text: "50",
-      value: 50
+      value: 50,
     },
     {
       text: "100",
-      value: 100
-    }
+      value: 100,
+    },
   ];
 
   /** Get page icon */
@@ -200,3 +210,16 @@ export default class UsersList extends ListComponent<
   }
 }
 </script>
+
+<style scoped>
+.users-table >>> td {
+  font-size: 0.875rem;
+  height: 38px;
+}
+.action-icon {
+  color: #ddd;
+}
+.action-icon:hover {
+  color: #999;
+}
+</style>

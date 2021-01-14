@@ -1,49 +1,66 @@
 <template>
   <dialog-form>
-    <div class="tree-wrapper">
-      <v-treeview
-        ref="tree"
-        selectable
-        :items="allPermissions"
-        item-children="items"
-        item-key="id"
-        item-text="text"
-        v-model="authorities"
+    <v-card flat tile>
+      <form-select
+        :items="allRoles"
+        :multiple="true"
+        title="Choose user roles"
+        label="User Roles"
+        item-text="role"
+        item-value="role"
+        v-model="roles"
+        icon="assignment_ind"
       />
-    </div>
+      <v-switch dense v-model="enabled" label="Enable user login"></v-switch>
+    </v-card>
   </dialog-form>
 </template>
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import { getAuthoritiesHierarchy } from "sitewhere-ide-common";
+import { listRoles } from "sitewhere-ide-common";
 
-import { DialogSection, DialogForm } from "sitewhere-ide-components";
+import {
+  DialogSection,
+  DialogForm,
+  FormSelect,
+} from "sitewhere-ide-components";
 
 import { handleError } from "sitewhere-ide-common";
 
 import { AxiosResponse } from "axios";
-import { IGrantedAuthorityHierarchyNode } from "sitewhere-rest-api";
+import {
+  IRole,
+  IRoleSearchCriteria,
+  IRoleResponseFormat,
+  IRoleSearchResults,
+} from "sitewhere-rest-api";
 
 @Component({
-  components: { DialogForm },
-  validations: {}
+  components: { DialogForm, FormSelect },
+  validations: {},
 })
 export default class UserPermissions extends DialogSection {
-  authorities: string[] = [];
-  allPermissions: IGrantedAuthorityHierarchyNode[] = [];
+  enabled = true;
+  roles: string[] = [];
+  allRoles: IRole[] = [];
 
   /** Reset section content */
   async reset() {
-    this.authorities = [];
+    this.enabled = true;
+    this.roles = [];
     this.$v.$reset();
 
-    // Reload permissions hierarchy.
+    // Reload roles list.
     try {
-      const response: AxiosResponse<IGrantedAuthorityHierarchyNode[]> = await getAuthoritiesHierarchy(
-        this.$store
+      const criteria: IRoleSearchCriteria = { pageNumber: 1, pageSize: 0 };
+      const format: IRoleResponseFormat = {};
+      const response: AxiosResponse<IRoleSearchResults> = await listRoles(
+        this.$store,
+        criteria,
+        format
       );
-      this.allPermissions = response.data;
+      this.allRoles = response.data.results;
     } catch (err) {
       handleError(err);
     }
@@ -56,23 +73,16 @@ export default class UserPermissions extends DialogSection {
   }
 
   /** Load form data from an object */
-  load(input: { authorities: string[] }): void {
-    this.authorities = input.authorities;
+  load(input: { roles: IRole[] }): void {
+    this.roles = input.roles.map((role) => role.role);
   }
 
   /** Save form data to an object */
   save(): {} {
     return {
-      authorities: this.authorities
+      roles: this.roles,
+      enabled: this.enabled,
     };
   }
 }
 </script>
-
-<style scoped>
-.tree-wrapper {
-  max-height: 400px;
-  overflow-y: auto;
-  width: 100%;
-}
-</style>
