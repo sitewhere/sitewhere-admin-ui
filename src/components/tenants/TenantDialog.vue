@@ -18,7 +18,7 @@
     </template>
     <template slot="tab-items">
       <v-tab-item key="details" eager>
-        <tenant-detail-fields ref="details" />
+        <tenant-detail-fields ref="details" :mode="mode" />
       </v-tab-item>
       <v-tab-item key="branding" eager>
         <branding-panel ref="branding" />
@@ -31,13 +31,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref } from "vue-property-decorator";
+import { Component, Ref, Prop } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   DialogComponent,
   BaseDialog,
   BrandingPanel,
-  MetadataPanel
+  MetadataPanel,
 } from "sitewhere-ide-components";
 
 import TenantDetailFields from "./TenantDetailFields.vue";
@@ -48,10 +48,11 @@ import { ITenant, IBrandedEntity } from "sitewhere-rest-api";
     TenantDetailFields,
     BrandingPanel,
     MetadataPanel,
-    BaseDialog
-  }
+    BaseDialog,
+  },
 })
 export default class TenantDialog extends DialogComponent<ITenant> {
+  @Prop() readonly mode!: string;
   @Ref() readonly dialog!: ITabbedComponent;
   @Ref() readonly details!: TenantDetailFields;
   @Ref() readonly branding!: BrandingPanel;
@@ -107,7 +108,7 @@ export default class TenantDialog extends DialogComponent<ITenant> {
         imageUrl: payload.imageUrl,
         updatedDate: undefined,
         updatedBy: "",
-        metadata: payload.metadata
+        metadata: payload.metadata,
       };
       this.branding.load(bpayload);
     }

@@ -10,18 +10,17 @@ Vue.use(Vuex);
 const store: StoreOptions<ISiteWhereUIState> = {
   plugins: [createPersistedState()],
   state: {
-    remotes: {
+    remoteInstances: {
       default: "local",
-      connections: [
+      instances: [
         {
           id: "local",
           name: "Local Instance",
-          protocol: "http",
-          host: "localhost",
-          port: 8080
+          baseUrl: "http://localhost/sitewhere",
         }
       ]
     },
+    instanceUrl: undefined,
     jwt: undefined,
     user: undefined,
     authToken: undefined,
@@ -35,23 +34,13 @@ const store: StoreOptions<ISiteWhereUIState> = {
   },
   mutations: {
     // Set list of remote connections.
-    remotes(state, remotes) {
-      state.remotes = remotes;
+    remoteInstances(state, remoteInstances) {
+      state.remoteInstances = remoteInstances;
     },
 
-    // Set protocol.
-    protocol(state, protocol) {
-      state.protocol = protocol;
-    },
-
-    // Set server.
-    server(state, server) {
-      state.server = server;
-    },
-
-    // Set port.
-    port(state, port) {
-      state.port = port;
+    // Set instance url.
+    instanceUrl(state, instanceUrl) {
+      state.instanceUrl = instanceUrl;
     },
 
     // Set current JWT.
@@ -122,20 +111,12 @@ const store: StoreOptions<ISiteWhereUIState> = {
   },
 
   getters: {
-    remotes: state => {
-      return state.remotes;
+    remoteInstances: state => {
+      return state.remoteInstances;
     },
 
-    protocol: state => {
-      return state.protocol;
-    },
-
-    server: state => {
-      return state.server;
-    },
-
-    port: state => {
-      return state.port;
+    instanceUrl: state => {
+      return state.instanceUrl;
     },
 
     jwt: state => {

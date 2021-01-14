@@ -2,18 +2,31 @@
   <v-app v-if="tenant">
     <in-app-system-bar
       style="-webkit-app-region: drag"
+      title="SiteWhere Community Edition - Tenant Administration"
       @openWebTools="onOpenWebTools"
       @minimize="onMinWindow"
       @maximize="onMaxWindow"
       @close="onCloseWindow"
     />
-    <v-navigation-drawer :width="300" style="margin-top: 25px;" v-model="drawer" app>
-      <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
+    <v-navigation-drawer
+      :width="300"
+      style="margin-top: 25px"
+      v-model="drawer"
+      app
+    >
+      <v-toolbar color="#fff" class="elevation-1" style="height: 47px" dense>
         <div class="tenant-logo" :style="tenantLogoStyle" />
         <v-spacer />
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn small v-on="on" class="ma-0" icon @click="onTenantSettings" slot="activator">
+            <v-btn
+              small
+              v-on="on"
+              class="ma-0"
+              icon
+              @click="onTenantSettings"
+              slot="activator"
+            >
               <v-icon class="grey--text text--darken-1">settings</v-icon>
             </v-btn>
           </template>
@@ -21,7 +34,14 @@
         </v-tooltip>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn small v-on="on" class="ma-0 ml-1" icon @click="onLogOut" slot="activator">
+            <v-btn
+              small
+              v-on="on"
+              class="ma-0 ml-1"
+              icon
+              @click="onLogOut"
+              slot="activator"
+            >
               <v-icon class="grey--text text--darken-1">exit_to_app</v-icon>
             </v-btn>
           </template>
@@ -56,12 +76,12 @@ import {
   INavigationSection,
   getTenant,
   handleError,
-  getJwt
+  getJwt,
 } from "sitewhere-ide-common";
 import {
   InAppSystemBar,
   InAppFooter,
-  Navigation
+  Navigation,
 } from "sitewhere-ide-components";
 import Copyright from "../Copyright.vue";
 import Notifications from "../common/Notifications.vue";
@@ -74,7 +94,7 @@ import {
   AreasGroup,
   AssetsGroup,
   BatchOperationsGroup,
-  SchedulesGroup
+  SchedulesGroup,
 } from "../../libraries/constants";
 
 import Electron from "electron";
@@ -85,8 +105,8 @@ import Electron from "electron";
     Navigation,
     InAppFooter,
     Copyright,
-    Notifications
-  }
+    Notifications,
+  },
 })
 export default class TenantAdministration extends Vue {
   tenant!: ITenant;
@@ -100,7 +120,7 @@ export default class TenantAdministration extends Vue {
     AreasGroup,
     AssetsGroup,
     BatchOperationsGroup,
-    SchedulesGroup
+    SchedulesGroup,
   ];
 
   /** Available user actions */
@@ -108,13 +128,13 @@ export default class TenantAdministration extends Vue {
     {
       id: "sysadmin",
       title: "System Administration",
-      icon: "cog"
+      icon: "cog",
     },
     {
       id: "logout",
       title: "Log Out",
-      icon: "power-off"
-    }
+      icon: "power-off",
+    },
   ];
 
   created() {
@@ -149,7 +169,7 @@ export default class TenantAdministration extends Vue {
   /** Set tenant logo in style */
   get tenantLogoStyle(): {} {
     return {
-      backgroundImage: this.tenant ? "url(" + this.tenant.imageUrl + ")" : ""
+      backgroundImage: this.tenant ? "url(" + this.tenant.imageUrl + ")" : "",
     };
   }
 
@@ -241,7 +261,7 @@ export default class TenantAdministration extends Vue {
       const response: AxiosResponse<any> = await getJwt(this.$store);
       const jwt = response.headers["x-sitewhere-jwt"];
       this.$store.commit("jwt", jwt);
-      setTimeout(function() {
+      setTimeout(function () {
         component.refreshJwt();
       }, 1000 * 60 * 5);
     } catch (err) {

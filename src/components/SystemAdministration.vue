@@ -2,13 +2,19 @@
   <v-app v-if="user">
     <in-app-system-bar
       style="-webkit-app-region: drag"
+      title="SiteWhere Community Edition - System Administration"
       @openWebTools="onOpenWebTools"
       @minimize="onMinWindow"
       @maximize="onMaxWindow"
       @close="onCloseWindow"
     />
-    <v-navigation-drawer :width="300" style="margin-top: 25px;" v-model="drawer" app>
-      <v-toolbar color="#fff" class="elevation-1" style="height: 47px;" dense>
+    <v-navigation-drawer
+      :width="300"
+      style="margin-top: 25px"
+      v-model="drawer"
+      app
+    >
+      <v-toolbar color="#fff" class="elevation-1" style="height: 47px" dense>
         <div class="sitewhere-logo" />
         <v-spacer />
         <v-tooltip bottom>
