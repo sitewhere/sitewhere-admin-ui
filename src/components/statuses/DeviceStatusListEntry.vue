@@ -5,7 +5,12 @@
       <v-toolbar-title :style="textStyle">{{ name }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-tooltip top>
-        <v-icon :style="deleteStyle" @click="onDeleteStatus" slot="activator">{{ deleteIcon }}</v-icon>
+        <v-icon
+          :style="deleteStyle"
+          @click.stop="onDeleteStatus"
+          slot="activator"
+          >{{ deleteIcon }}</v-icon
+        >
         <span>Delete Device Status</span>
       </v-tooltip>
     </v-toolbar>
@@ -44,14 +49,14 @@ export default class DeviceTypeListEntry extends Vue {
   get cardStyle() {
     return {
       "background-color": this.deviceStatus.backgroundColor,
-      border: "1px solid " + this.deviceStatus.borderColor
+      border: "1px solid " + this.deviceStatus.borderColor,
     };
   }
 
   /** Text style for status */
   get textStyle() {
     return {
-      color: this.deviceStatus.foregroundColor
+      color: this.deviceStatus.foregroundColor,
     };
   }
 
@@ -59,7 +64,7 @@ export default class DeviceTypeListEntry extends Vue {
   get deleteStyle() {
     return {
       color: this.deviceStatus.foregroundColor,
-      opacity: 0.5
+      opacity: 0.5,
     };
   }
 

@@ -20,13 +20,13 @@ import { AxiosPromise } from "axios";
 import {
   IDeviceType,
   IDeviceTypeCreateRequest,
-  IDeviceTypeResponseFormat
+  IDeviceTypeResponseFormat,
 } from "sitewhere-rest-api";
 
 @Component({
   components: {
-    DeviceTypeDialog
-  }
+    DeviceTypeDialog,
+  },
 })
 export default class DeviceTypeUpdateDialog extends EditDialogComponent<
   IDeviceType,
@@ -42,7 +42,7 @@ export default class DeviceTypeUpdateDialog extends EditDialogComponent<
   /** Load payload */
   prepareLoad(identifier: string): AxiosPromise<IDeviceType> {
     const format: IDeviceTypeResponseFormat = {
-      includeAsset: false
+      includeAsset: false,
     };
     return getDeviceType(this.$store, identifier, format);
   }
@@ -67,5 +67,3 @@ export default class DeviceTypeUpdateDialog extends EditDialogComponent<
 }
 </script>
 
-<style scoped>
-</style>

@@ -7,11 +7,7 @@
     :record="deviceType"
   >
     <template slot="header">
-      <device-type-detail-header
-        :record="deviceType"
-        @deviceTypeDeleted="onDeleted"
-        @deviceTypeUpdated="onUpdated"
-      />
+      <device-type-detail-header :record="deviceType" />
     </template>
     <template slot="tabs">
       <v-tab key="commands">Commands</v-tab>
@@ -19,26 +15,51 @@
       <!--
       <v-tab key="code">Code Generation</v-tab>
       -->
-      <v-tab v-if="containerPolicy === 'Composite'" key="composition">Composition</v-tab>
+      <v-tab v-if="containerPolicy === 'Composite'" key="composition"
+        >Composition</v-tab
+      >
     </template>
     <template slot="tab-items">
-      <device-type-commands tabkey="commands" ref="commands" :deviceTypeToken="token" />
-      <device-type-statuses tabkey="statuses" ref="statuses" :deviceTypeToken="token" />
+      <device-type-commands
+        tabkey="commands"
+        ref="commands"
+        :deviceTypeToken="token"
+      />
+      <device-type-statuses
+        tabkey="statuses"
+        ref="statuses"
+        :deviceTypeToken="token"
+      />
       <!--
       <device-type-codegen tabkey="code" id="code" :deviceType="deviceType"/>
       -->
       <device-type-composition tabkey="composition" :deviceType="deviceType" />
     </template>
     <template slot="actions">
-      <device-command-button tooltip="Create Command" @action="onCommandCreate" />
+      <device-command-button
+        tooltip="Create Command"
+        @action="onCommandCreate"
+      />
       <device-status-button tooltip="Create Status" @action="onStatusCreate" />
       <edit-button tooltip="Edit Device Type" @action="onEdit" />
       <delete-button tooltip="Delete Device Type" @action="onDelete" />
     </template>
     <template slot="dialogs">
-      <device-type-update-dialog ref="edit" :token="token" @deviceTypeUpdated="onUpdated" />
-      <device-type-delete-dialog ref="delete" :token="token" @deviceTypeDeleted="onDeleted" />
-      <command-create-dialog ref="command" :deviceTypeToken="token" @commandAdded="onCommandAdded" />
+      <device-type-update-dialog
+        ref="edit"
+        :token="token"
+        @deviceTypeUpdated="onUpdated"
+      />
+      <device-type-delete-dialog
+        ref="delete"
+        :token="token"
+        @deleted="onDeleted"
+      />
+      <command-create-dialog
+        ref="command"
+        :deviceTypeToken="token"
+        @commandAdded="onCommandAdded"
+      />
       <device-status-create-dialog
         ref="status"
         :deviceTypeToken="token"
@@ -71,7 +92,7 @@ import { AxiosPromise } from "axios";
 import {
   IDeviceType,
   IDeviceTypeResponseFormat,
-  DeviceContainerPolicy
+  DeviceContainerPolicy,
 } from "sitewhere-rest-api";
 import { DeviceTypesSection } from "../../libraries/constants";
 
@@ -89,8 +110,8 @@ import { DeviceTypesSection } from "../../libraries/constants";
     DeviceCommandButton,
     DeviceStatusButton,
     EditButton,
-    DeleteButton
-  }
+    DeleteButton,
+  },
 })
 export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
   @Ref() readonly commands!: DeviceTypeCommands;
@@ -126,7 +147,7 @@ export default class DeviceTypeDetail extends DetailComponent<IDeviceType> {
   /** Load record */
   loadRecord(token: string): AxiosPromise<IDeviceType> {
     const format: IDeviceTypeResponseFormat = {
-      includeAsset: true
+      includeAsset: true,
     };
     return getDeviceType(this.$store, token, format);
   }

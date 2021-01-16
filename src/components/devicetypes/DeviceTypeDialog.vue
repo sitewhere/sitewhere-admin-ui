@@ -35,10 +35,10 @@ import { Component, Ref } from "vue-property-decorator";
 import { ITabbedComponent, NavigationIcon } from "sitewhere-ide-common";
 import {
   BaseDialog,
+  BrandingPanel,
   DialogComponent,
   DialogSection,
-  BrandingPanel,
-  MetadataPanel
+  MetadataPanel,
 } from "sitewhere-ide-components";
 
 import DeviceTypeDetailFields from "./DeviceTypeDetailFields.vue";
@@ -49,8 +49,8 @@ import { IDeviceType } from "sitewhere-rest-api";
     BaseDialog,
     DeviceTypeDetailFields,
     BrandingPanel,
-    MetadataPanel
-  }
+    MetadataPanel,
+  },
 })
 export default class DeviceTypeDialog extends DialogComponent<IDeviceType> {
   @Ref() readonly dialog!: ITabbedComponent;

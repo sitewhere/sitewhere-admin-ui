@@ -9,11 +9,19 @@
         icon="info"
       >
         <span v-if="!$v.token.required && $v.$dirty">Token is required.</span>
-        <span v-if="!$v.token.validToken && $v.$dirty">Token is not valid.</span>
+        <span v-if="!$v.token.validToken && $v.$dirty"
+          >Token is not valid.</span
+        >
       </form-text>
     </v-flex>
     <v-flex xs12>
-      <form-text required label="Name" title="Status name." v-model="name" icon="info">
+      <form-text
+        required
+        label="Name"
+        title="Status name."
+        v-model="name"
+        icon="info"
+      >
         <span v-if="!$v.name.required && $v.$dirty">Name is required.</span>
       </form-text>
     </v-flex>
@@ -32,13 +40,13 @@
       <icon-selector v-model="icon" />
     </v-flex>
     <v-flex xs6>
-      <color-input-field text="Border" v-model="borderColor" />
+      <color-input-field label="Border" v-model="borderColor" />
     </v-flex>
     <v-flex xs6>
-      <color-input-field text="Background" v-model="backgroundColor" />
+      <color-input-field label="Background" v-model="backgroundColor" />
     </v-flex>
     <v-flex xs6>
-      <color-input-field text="Foreground" v-model="foregroundColor" />
+      <color-input-field label="Foreground" v-model="foregroundColor" />
     </v-flex>
   </dialog-form>
 </template>
@@ -51,7 +59,7 @@ import {
   DialogForm,
   FormText,
   IconSelector,
-  ColorInputField
+  ColorInputField,
 } from "sitewhere-ide-components";
 
 import { required, helpers } from "vuelidate/lib/validators";
@@ -64,27 +72,27 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
   validations: {
     token: {
       required,
-      validToken
+      validToken,
     },
     name: {
-      required
+      required,
     },
     code: {
-      required
+      required,
     },
     icon: {
-      required
+      required,
     },
     backgroundColor: {
-      required
+      required,
     },
     foregroundColor: {
-      required
+      required,
     },
     borderColor: {
-      required
-    }
-  }
+      required,
+    },
+  },
 })
 export default class DeviceStatusDetailFields extends DialogSection {
   token: string | null = null;
@@ -133,7 +141,7 @@ export default class DeviceStatusDetailFields extends DialogSection {
       icon: this.icon,
       backgroundColor: this.backgroundColor,
       foregroundColor: this.foregroundColor,
-      borderColor: this.borderColor
+      borderColor: this.borderColor,
     };
   }
 }
