@@ -106,8 +106,6 @@ export default class MapWithZoneOverlayPanel extends Vue {
         if (this.zonesGroup) {
           this.zonesGroup.addLayer(polygon);
         }
-      } else {
-        console.log("ignored zone", zone.token);
       }
     });
 

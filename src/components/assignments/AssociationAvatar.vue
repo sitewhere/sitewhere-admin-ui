@@ -1,5 +1,5 @@
 <template>
-  <v-card flat v-show="identifier">
+  <v-card color="transparent" flat v-show="identifier">
     <div class="caption text-center text-truncate font-weight-bold">{{ label }}</div>
     <div class="text-center">
       <v-avatar size="40">

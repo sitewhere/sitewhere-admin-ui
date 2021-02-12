@@ -1,18 +1,20 @@
 <template>
-  <div>
-    <map-with-zone-overlay-panel
-      style="height: 450px; border: 1px solid #ddd;"
-      ref="map"
-      :areaToken="areaToken"
-      :visible="true"
-      @ready="onInitializeMap"
-    />
-  </div>
+  <dialog-form>
+    <v-flex xs12>
+      <map-with-zone-overlay-panel
+        style="height: 450px; border: 1px solid #ddd;"
+        ref="map"
+        :areaToken="areaToken"
+        :visible="mapVisible"
+        @ready="onInitializeMap"
+      />
+    </v-flex>
+  </dialog-form>
 </template>
 
 <script lang="ts">
-import { Component, Watch, Ref } from "vue-property-decorator";
-import { DialogSection } from "sitewhere-ide-components";
+import { Component, Watch, Ref, Prop } from "vue-property-decorator";
+import { DialogSection, DialogForm } from "sitewhere-ide-components";
 
 import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
 import {
@@ -37,11 +39,13 @@ import { ILocation, IArea, IZoneCreateRequest } from "sitewhere-rest-api";
 
 @Component({
   components: {
+    DialogForm,
     MapWithZoneOverlayPanel
   }
 })
 export default class AreaBoundsPanel extends DialogSection {
   @Ref() readonly map!: MapWithZoneOverlayPanel;
+  @Prop() readonly mapVisible!: boolean;
 
   areaToken: string | undefined = undefined;
   bounds: ILocation[] = [];
@@ -51,7 +55,7 @@ export default class AreaBoundsPanel extends DialogSection {
   borderOpacity = 0.8;
   fillColor = "#779977";
   fillOpacity = 0.3;
-
+  
   // Prevent unused warning.
   xxx: any = XXX;
 
@@ -81,8 +85,9 @@ export default class AreaBoundsPanel extends DialogSection {
 
   /** Reset section content */
   reset(): void {
-    // Refresh zones.
+    console.log("reset called");
     if (this.map) {
+      console.log("map reset called");
       this.map.refresh();
     }
 

@@ -9,7 +9,7 @@
   >
     <list-layout>
       <v-flex xs6 v-for="(asset) in matches" :key="asset.token">
-        <asset-list-entry :asset="asset"></asset-list-entry>
+        <asset-list-entry :asset="asset" @assetOpened="onOpenAsset"/>
       </v-flex>
     </list-layout>
     <template slot="noresults">
@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { Component, Prop } from "vue-property-decorator";
-import { listAssets } from "sitewhere-ide-common";
+import { listAssets, routeTo } from "sitewhere-ide-common";
 import { ListComponent, ListTab, ListLayout } from "sitewhere-ide-components";
 
 import AssetListEntry from "../assets/AssetListEntry.vue";
@@ -73,6 +73,11 @@ export default class AssetTypeAssets extends ListComponent<
     format: IAssetResponseFormat
   ): AxiosPromise<IAssetSearchResults> {
     return listAssets(this.$store, criteria, format);
+  }
+
+  /** Called to open an asset */
+  onOpenAsset(asset: IAsset) {
+    routeTo(this, "/assets/" + asset.token);
   }
 }
 </script>

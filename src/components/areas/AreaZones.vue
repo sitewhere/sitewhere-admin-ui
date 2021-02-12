@@ -9,41 +9,41 @@
     @pagingUpdated="onPagingUpdated"
     loadingMessage="Loading area measurements ..."
   >
-    <template slot="items" slot-scope="props">
-      <td width="30%" :title="props.item.name">
-        <span class="zone-name">
-          <div class="zone-outer" :style="{ 'border-color': props.item.borderColor }">
-            <div
-              class="zone-inner"
-              :style="{
-                'background-color': props.item.fillColor,
-                opacity: props.item.opacity
-              }"
-            ></div>
-          </div>
-          {{ props.item.name }}
-        </span>
-      </td>
-      <td width="40%" :title="props.item.token" class="zone-token">{{ props.item.token }}</td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.createdDate)"
-      >{{ formatDate(props.item.createdDate) }}</td>
-      <td
-        width="10%"
-        style="white-space: nowrap"
-        :title="formatDate(props.item.updatedDate)"
-      >{{ formatDate(props.item.updatedDate) }}</td>
-      <td width="1%" style="white-space: nowrap" title="Edit/Delete">
-        <actions-block
-          @edit="onEditZone(props.item.token)"
-          @delete="onDeleteZone(props.item.token)"
-        />
-      </td>
+    <template slot="item" slot-scope="props">
+      <tr>
+        <td width="25%" :title="props.item.name">
+          <span class="zone-name">
+            <div class="zone-outer" :style="{ 'border-color': props.item.borderColor }">
+              <div
+                class="zone-inner"
+                :style="{
+                  'background-color': props.item.fillColor,
+                  opacity: props.item.opacity
+                }"
+              ></div>
+            </div>
+            {{ props.item.name }}
+          </span>
+        </td>
+        <td width="25%" :title="props.item.token" class="zone-token">{{ props.item.token }}</td>
+        <td
+          width="25%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.createdDate)"
+        >{{ formatDate(props.item.createdDate) }}</td>
+        <td
+          width="25%"
+          style="white-space: nowrap"
+          :title="formatDate(props.item.updatedDate)"
+        >{{ formatDate(props.item.updatedDate) }}</td>
+        <td width="1%" style="white-space: nowrap" title="Edit/Delete">
+          <edit-button tooltip="Edit" @action="onEditZone(props.item.token)" />
+          <delete-button tooltip="Delete" @action="onDeleteZone(props.item.token)" />
+        </td>
+      </tr>
     </template>
     <template slot="dialogs">
-      <zone-update-dialog ref="update" :area="area" />
+      <zone-update-dialog ref="update" :area="area" @updated="refresh" />
       <zone-delete-dialog ref="delete" @deleted="refresh" />
     </template>
   </data-table-tab>
@@ -59,9 +59,10 @@ import {
 } from "sitewhere-ide-common";
 import { ListComponent, DataTableTab } from "sitewhere-ide-components";
 
-import ActionsBlock from "../common/ActionsBlock.vue";
 import ZoneUpdateDialog from "./ZoneUpdateDialog.vue";
 import ZoneDeleteDialog from "./ZoneDeleteDialog.vue";
+import EditButton from "../common/navbuttons/EditButton.vue";
+import DeleteButton from "../common/navbuttons/DeleteButton.vue";
 
 import { AxiosPromise } from "axios";
 import {
@@ -75,7 +76,8 @@ import {
 @Component({
   components: {
     DataTableTab,
-    ActionsBlock,
+    EditButton,
+    DeleteButton,
     ZoneUpdateDialog,
     ZoneDeleteDialog
   }

@@ -8,6 +8,7 @@
     :visible="dialogVisible"
     :createLabel="createLabel"
     :cancelLabel="cancelLabel"
+    @tabSelected="onTabSelected"
     @createClicked="onCreateClicked"
     @cancelClicked="onCancelClicked"
   >
@@ -22,7 +23,7 @@
         <area-detail-fields ref="details" :parentArea="parentArea" />
       </v-tab-item>
       <v-tab-item key="bounds" eager>
-        <area-bounds-panel ref="bounds" />
+        <area-bounds-panel ref="bounds" :mapVisible="mapVisible" />
       </v-tab-item>
       <v-tab-item key="branding" eager>
         <branding-panel ref="branding" />
@@ -65,6 +66,8 @@ export default class AreaDialog extends DialogComponent<IArea> {
   @Ref() readonly bounds!: AreaBoundsPanel;
   @Ref() readonly branding!: BrandingPanel;
   @Ref() readonly metadata!: DialogSection;
+
+  mapVisible = false;
 
   /** Get icon for dialog */
   get icon(): NavigationIcon {
@@ -115,6 +118,13 @@ export default class AreaDialog extends DialogComponent<IArea> {
     }
     if (this.metadata) {
       this.metadata.load(payload);
+    }
+  }
+
+  /** Called when tab is selected */
+  onTabSelected(id: number) {
+    if (id == 1) {
+      this.mapVisible = true;
     }
   }
 

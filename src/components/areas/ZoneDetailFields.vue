@@ -12,8 +12,9 @@
       />
       <v-container fluid>
         <v-layout row wrap>
-          <v-flex xs12 class="mb-2">
+          <v-flex xs6 class="mb-2">
             <v-text-field
+              class="mr-4"
               required
               label="Token"
               v-model="token"
@@ -26,7 +27,7 @@
               <span v-if="!$v.token.validToken && $v.$dirty">Token is not valid.</span>
             </div>
           </v-flex>
-          <v-flex xs8>
+          <v-flex xs6>
             <v-text-field
               required
               hide-details
@@ -39,21 +40,11 @@
               <span v-if="$v.name.$invalid && $v.$dirty">Zone name is required.</span>
             </div>
           </v-flex>
-          <v-flex xs2>
-            <color-picker
-              text="Border"
-              v-model="borderColor"
-              :opacity="borderOpacity"
-              @opacityChanged="onBorderOpacityUpdated"
-            />
+          <v-flex xs6>
+            <color-input-field label="Border" v-model="borderColor" />
           </v-flex>
-          <v-flex xs2>
-            <color-picker
-              text="Fill"
-              v-model="fillColor"
-              :opacity="fillOpacity"
-              @opacityChanged="onFillOpacityUpdated"
-            />
+          <v-flex xs6>
+            <color-input-field label="Fill" v-model="fillColor" />
           </v-flex>
         </v-layout>
       </v-container>
@@ -67,7 +58,7 @@ import { Component, Prop, Watch, Ref } from "vue-property-decorator";
 import {
   DialogSection,
   DialogForm,
-  ColorPicker
+  ColorInputField
 } from "sitewhere-ide-components";
 
 import MapWithZoneOverlayPanel from "../common/map/MapWithZoneOverlayPanel.vue";
@@ -96,9 +87,8 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
 
 @Component({
   components: {
-    DialogSection,
     DialogForm,
-    ColorPicker,
+    ColorInputField,
     MapWithZoneOverlayPanel
   },
   validations: {
@@ -112,13 +102,7 @@ const validToken = helpers.regex("validToken", /^[a-zA-Z0-9-_]+$/);
     borderColor: {
       required
     },
-    borderOpacity: {
-      required
-    },
     fillColor: {
-      required
-    },
-    fillOpacity: {
       required
     }
   }
@@ -131,10 +115,8 @@ export default class ZoneDetailFields extends DialogSection {
   token: string | null = null;
   name: string | null = null;
   bounds: ILocation[] = [];
-  borderColor = "#333";
-  borderOpacity = 0.7;
-  fillColor = "#ccc";
-  fillOpacity = 0.4;
+  borderColor = "#333333FF";
+  fillColor = "#CCCCCCFF";
   editControl: Control.Draw | null = null;
   zoneLayer: Polygon | null = null;
 
@@ -172,11 +154,13 @@ export default class ZoneDetailFields extends DialogSection {
     }
 
     // Zoom and center on area bounds.
-    const latLongs: LatLng[] = swToLeafletBounds(this.area.bounds);
-    if (map) {
-      map.fitBounds(GetLatLongBounds(latLongs), {
-        padding: [10, 10]
-      });
+    if (this.area.bounds) {
+      const latLongs: LatLng[] = swToLeafletBounds(this.area.bounds);
+      if (map) {
+        map.fitBounds(GetLatLongBounds(latLongs), {
+          padding: [10, 10]
+        });
+      }
     }
 
     // Update map with existing bounds.
@@ -190,7 +174,6 @@ export default class ZoneDetailFields extends DialogSection {
 
   /** Reset section content */
   reset(): void {
-    // Refresh zones.
     if (this.map) {
       this.map.refresh();
     }
@@ -199,10 +182,8 @@ export default class ZoneDetailFields extends DialogSection {
     this.token = null;
     this.name = null;
     this.bounds = [];
-    this.borderColor = "#333";
-    this.borderOpacity = 0.7;
-    this.fillColor = "#ccc";
-    this.fillOpacity = 0.4;
+    this.borderColor = "#333333FF";
+    this.fillColor = "#CCCCCCFF";
     this.$v.$reset();
   }
 
@@ -218,13 +199,11 @@ export default class ZoneDetailFields extends DialogSection {
 
   /** Load form data from an object */
   load(input: IZoneCreateRequest): void {
-    this.token = (input as any).token;
-    this.name = (input as any).name;
-    this.bounds = (input as any).bounds;
-    this.borderColor = (input as any).borderColor;
-    this.borderOpacity = (input as any).borderOpacity;
-    this.fillColor = (input as any).fillColor;
-    this.fillOpacity = (input as any).fillOpacity;
+    this.token = input.token || "";
+    this.name = input.name;
+    this.bounds = input.bounds;
+    this.borderColor = input.borderColor || "#333333FF";
+    this.fillColor = input.fillColor || "#CCCCCCFF";
   }
 
   /** Save form data to an object */
@@ -234,24 +213,10 @@ export default class ZoneDetailFields extends DialogSection {
       name: this.name,
       bounds: this.bounds,
       borderColor: this.borderColor,
-      borderOpacity: this.borderOpacity,
+      borderOpacity: 1.0,
       fillColor: this.fillColor,
-      fillOpacity: this.fillOpacity
+      fillOpacity: 1.0
     };
-  }
-  /** Called when zone bounds are updated */
-  onBoundsUpdated(bounds: ILocation[]) {
-    this.bounds = bounds;
-  }
-
-  /** Called when border opacity value is updated */
-  onBorderOpacityUpdated(opacity: number) {
-    this.borderOpacity = opacity;
-  }
-
-  /** Called when fill opacity value is updated */
-  onFillOpacityUpdated(opacity: number) {
-    this.fillOpacity = opacity;
   }
 
   @Watch("bounds")
@@ -299,19 +264,17 @@ export default class ZoneDetailFields extends DialogSection {
         areaToken: "",
         name: "",
         bounds: [],
-        borderColor: this.borderColor ? this.borderColor : "#666",
-        borderOpacity: this.borderOpacity ? this.borderOpacity : 0.7,
-        fillColor: this.fillColor ? this.fillColor : "#ccc",
-        fillOpacity: this.fillOpacity ? this.fillOpacity : 0.4
+        borderColor: this.borderColor ? this.borderColor.substring(0, 7) : "#333333",
+        borderOpacity: this.borderColor ? parseInt('0x' + this.borderColor.substring(7, 9)) / 255.0 : 1.0,
+        fillColor: this.fillColor ? this.fillColor.substring(0, 7) : "#CCCCCC",
+        fillOpacity: this.fillColor ? parseInt('0x' + this.fillColor.substring(7, 9)) / 255.0 : 1.0
       };
       this.editControl = enableMapDrawing(map, zone);
     }
   }
 
   @Watch("borderColor")
-  @Watch("borderOpacity")
   @Watch("fillColor")
-  @Watch("fillOpacity")
   onStyleSet() {
     this.updateZoneStyle();
   }
@@ -320,16 +283,16 @@ export default class ZoneDetailFields extends DialogSection {
   updateZoneStyle() {
     if (this.zoneLayer) {
       this.zoneLayer.setStyle({
-        color: this.borderColor ? this.borderColor : "#666"
+        color: this.borderColor ? this.borderColor.substring(0, 7) : "#333333"
       });
       this.zoneLayer.setStyle({
-        opacity: this.borderOpacity ? this.borderOpacity : 0.7
+        opacity: this.borderColor ? parseInt('0x' + this.borderColor.substring(7, 9)) / 255.0 : 1.0
       });
       this.zoneLayer.setStyle({
-        fillColor: this.fillColor ? this.fillColor : "#ccc"
+        fillColor: this.fillColor ? this.fillColor.substring(0, 7) : "#CCCCCC"
       });
       this.zoneLayer.setStyle({
-        fillOpacity: this.fillOpacity ? this.fillOpacity : 0.4
+        fillOpacity: this.fillColor ? parseInt('0x' + this.fillColor.substring(7, 9)) / 255.0 : 1.0
       });
     }
   }
@@ -344,12 +307,13 @@ export default class ZoneDetailFields extends DialogSection {
   editZoneLayer() {
     if (this.zoneLayer) {
       this.bounds = leafletToSwBounds(this.zoneLayer.getLatLngs()[0]);
+      console.log("edit zone set bounds to", this.bounds);
     }
   }
 
   /** Remove existing zone layer */
   removeZoneLayer() {
-    const map: LeafletMap | null = this.getMap();
+   const map: LeafletMap | null = this.getMap();
     if (this.zoneLayer && map) {
       map.removeLayer(this.zoneLayer);
       this.zoneLayer = null;

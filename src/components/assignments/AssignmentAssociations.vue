@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="pa-2">
+  <v-card color="transparent" flat class="pa-2">
     <v-layout row>
       <v-flex xs3>
         <association-avatar

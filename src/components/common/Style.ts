@@ -64,6 +64,7 @@ export function styleForAssignmentStatus(
 ): IStyle {
   return {
     border: "1px solid " + assignmentBorderColor(assignment),
-    "border-left": "5px solid " + assignmentHeaderColor(assignment)
+    "border-left": "5px solid " + assignmentHeaderColor(assignment),
+    "background-color": assignmentBackgroundColor(assignment)
   };
 }
