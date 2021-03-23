@@ -90,6 +90,7 @@ import { ITenant, ITenantResponseFormat } from "sitewhere-rest-api";
 import {
   DevicesGroup,
   DevicesSection,
+  EventsGroup,
   CustomersGroup,
   AreasGroup,
   AssetsGroup,
@@ -116,6 +117,7 @@ export default class TenantAdministration extends Vue {
   /** Navigation sections */
   sections: INavigationSection[] = [
     DevicesGroup,
+    EventsGroup,
     CustomersGroup,
     AreasGroup,
     AssetsGroup,

@@ -45,6 +45,11 @@
       v-else-if="functionalArea == 'inbound-processing'"
       @dirty="markDirty"
     />
+    <instance-management-plugin
+      :configuration="configuration"
+      v-else-if="functionalArea == 'instance-management'"
+      @dirty="markDirty"
+    />
     <label-generation-plugin
       :configuration="configuration"
       v-else-if="functionalArea == 'label-generation'"
@@ -82,10 +87,11 @@ import {
   EventManagementPlugin,
   EventSourcesPlugin,
   InboundProcessingPlugin,
+  InstanceManagementPlugin,
   LabelGenerationPlugin,
   OutboundConnectorsPlugin,
   ScheduleManagementPlugin,
-  TenantEnginePlugin
+  TenantEnginePlugin,
 } from "sitewhere-admin-ui-plugins";
 import { ITenantEngineConfiguration } from "sitewhere-rest-api";
 
@@ -101,11 +107,12 @@ import { ITenantEngineConfiguration } from "sitewhere-rest-api";
     EventManagementPlugin,
     EventSourcesPlugin,
     InboundProcessingPlugin,
+    InstanceManagementPlugin,
     LabelGenerationPlugin,
     OutboundConnectorsPlugin,
     ScheduleManagementPlugin,
-    TenantEnginePlugin
-  }
+    TenantEnginePlugin,
+  },
 })
 export default class TenantMicroserviceConfiguration extends Vue {
   @Prop() readonly tabkey!: string;

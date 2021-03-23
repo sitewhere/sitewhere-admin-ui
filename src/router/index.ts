@@ -24,6 +24,7 @@ import DeviceTypesList from "@/components/devicetypes/DeviceTypesList.vue";
 import DeviceTypeDetail from "@/components/devicetypes/DeviceTypeDetail.vue";
 import DevicesList from "@/components/devices/DevicesList.vue";
 import DeviceDetail from "@/components/devices/DeviceDetail.vue";
+import EventPipelineLogging from "@/components/events/EventPipelineLogging.vue";
 import DeviceGroupsList from "@/components/devicegroups/DeviceGroupsList.vue";
 import DeviceGroupDetail from "@/components/devicegroups/DeviceGroupDetail.vue";
 import DeviceStatesList from "@/components/devicestates/DeviceStatesList.vue";
@@ -132,6 +133,10 @@ const routes = <Array<RouteConfig>>[
       {
         path: "devices/:token",
         component: DeviceDetail
+      },
+      {
+        path: "events",
+        component: EventPipelineLogging
       },
       {
         path: "groups",

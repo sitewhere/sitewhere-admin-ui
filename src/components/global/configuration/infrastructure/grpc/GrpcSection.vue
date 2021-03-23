@@ -10,8 +10,15 @@
         name="initial backoff seconds"
         :value="grpc.initialBackoffSeconds"
       />
-      <content-field name="max backoff seconds" :value="grpc.maxBackoffSeconds" />
-      <content-field :alt="true" name="backoff multiplier" :value="grpc.backoffMultiplier" />
+      <content-field
+        name="max backoff seconds"
+        :value="grpc.maxBackoffSeconds"
+      />
+      <content-field
+        :alt="true"
+        name="backoff multiplier"
+        :value="grpc.backoffMultiplier"
+      />
       <content-field name="resolve fqdn" :value="grpc.resolveFQDN" />
       <content-link
         class="mt-3"
@@ -20,7 +27,11 @@
         @linkClicked="onEdit"
       />
     </v-card>
-    <grpc-configuration-dialog ref="dialog" :grpc="grpc" @payload="onGrpcUpdated" />
+    <grpc-configuration-dialog
+      ref="dialog"
+      :grpc="grpc"
+      @payload="onGrpcUpdated"
+    />
   </content-section>
 </template>
 
@@ -33,13 +44,13 @@ import GrpcConfigurationDialog from "./GrpcConfigurationDialog.vue";
 import {
   IInstanceConfiguration,
   IInfrastructureConfiguration,
-  IGrpcConfiguration
+  IGrpcConfiguration,
 } from "sitewhere-rest-api";
 
 import {
   ContentSection,
   ContentField,
-  ContentLink
+  ContentLink,
 } from "sitewhere-ide-components";
 
 @Component({
@@ -47,10 +58,10 @@ import {
     ContentSection,
     ContentField,
     ContentLink,
-    GrpcConfigurationDialog
-  }
+    GrpcConfigurationDialog,
+  },
 })
-export default class KafkaSection extends Vue {
+export default class GrpcSection extends Vue {
   @Prop() readonly configuration!: IInstanceConfiguration;
   @Ref() readonly dialog!: GrpcConfigurationDialog;
 
