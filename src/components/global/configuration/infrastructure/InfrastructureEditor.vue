@@ -11,7 +11,10 @@
     <content-divider />
     <redis-section :configuration="configuration" @updated="onRedisUpdated" />
     <content-divider />
-    <metrics-section :configuration="configuration" @updated="onMetricsUpdated" />
+    <metrics-section
+      :configuration="configuration"
+      @updated="onMetricsUpdated"
+    />
   </instance-configuration-editor>
 </template>
 
@@ -24,7 +27,7 @@ import {
   IGrpcConfiguration,
   IKafkaConfiguration,
   IRedisConfiguration,
-  IMetricsConfiguration
+  IMetricsConfiguration,
 } from "sitewhere-rest-api";
 
 import { ContentDivider } from "sitewhere-ide-components";
@@ -42,8 +45,8 @@ import MetricsSection from "./metrics/MetricsSection.vue";
     RedisSection,
     KafkaSection,
     GrpcSection,
-    MetricsSection
-  }
+    MetricsSection,
+  },
 })
 export default class InfrastructureEditor extends Vue {
   @Prop() readonly tabkey!: string;
@@ -64,6 +67,7 @@ export default class InfrastructureEditor extends Vue {
     }
     this.$emit("updated");
   }
+
   /** Called when Redis values are updated. */
   onRedisUpdated(updated: IRedisConfiguration) {
     if (this.configuration) {
@@ -71,6 +75,7 @@ export default class InfrastructureEditor extends Vue {
     }
     this.$emit("updated");
   }
+
   /** Called when metrics values are updated. */
   onMetricsUpdated(updated: IMetricsConfiguration) {
     if (this.configuration) {

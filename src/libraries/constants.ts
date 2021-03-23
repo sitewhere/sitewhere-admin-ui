@@ -56,6 +56,25 @@ export const DevicesGroup: INavigationSection = {
   subsections: [DeviceTypesSection, DevicesSection, DeviceAssignmentsSection, DeviceGroupsSection]
 }
 
+/** Device assignments section */
+export const PipelineEventLogSection: INavigationSection = {
+  id: "pipelineEventLog",
+  title: "Pipeline Event Log",
+  icon: NavigationIcon.Device,
+  route: "events",
+  longTitle: "Manage Pipeline Event Log"
+}
+
+/** Events group */
+export const EventsGroup: INavigationSection = {
+  id: "eventsGroup",
+  title: "Event Management",
+  icon: NavigationIcon.Device,
+  route: "events",
+  longTitle: "Manage Events",
+  subsections: [PipelineEventLogSection]
+}
+
 /** Customer types section */
 export const CustomerTypesSection: INavigationSection = {
   id: "customertypes",

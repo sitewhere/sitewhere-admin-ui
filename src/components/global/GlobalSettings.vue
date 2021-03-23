@@ -17,6 +17,7 @@
     <template slot="tabs">
       <v-tab key="persistence">Persistence</v-tab>
       <v-tab key="infra">Infrastructure</v-tab>
+      <v-tab key="debug">Debugging</v-tab>
       <v-tab key="json">JSON</v-tab>
     </template>
     <template slot="tab-items">
@@ -30,7 +31,15 @@
         :configuration="workingCopy"
         @updated="onInfrastructureUpdated"
       />
-      <instance-configuration-source tabkey="json" :configuration="workingCopy" />
+      <debugging-editor
+        tabkey="debug"
+        :configuration="workingCopy"
+        @updated="onDebuggingUpdated"
+      />
+      <instance-configuration-source
+        tabkey="json"
+        :configuration="workingCopy"
+      />
     </template>
     <template slot="actions" />
   </detail-page>
@@ -44,12 +53,13 @@ import { Component, Watch } from "vue-property-decorator";
 import {
   NavigationIcon,
   getInstanceConfiguration,
-  updateInstanceConfiguration
+  updateInstanceConfiguration,
 } from "sitewhere-ide-common";
 import { DetailPage } from "sitewhere-ide-components";
 
 import InfrastructureEditor from "./configuration/infrastructure/InfrastructureEditor.vue";
 import PersistenceConfigurationsEditor from "./configuration/persistence/PersistenceConfigurationsEditor.vue";
+import DebuggingEditor from "./configuration/debugging/DebuggingEditor.vue";
 import InstanceConfigurationSource from "./InstanceConfigurationSource.vue";
 import UnsavedUpdatesPanel from "./configuration/UnsavedUpdatesPanel.vue";
 
@@ -60,9 +70,10 @@ import { IInstanceConfiguration } from "sitewhere-rest-api";
     DetailPage,
     InfrastructureEditor,
     PersistenceConfigurationsEditor,
+    DebuggingEditor,
     InstanceConfigurationSource,
-    UnsavedUpdatesPanel
-  }
+    UnsavedUpdatesPanel,
+  },
 })
 export default class GlobalSettings extends Vue {
   configuration: IInstanceConfiguration | null = null;
@@ -102,6 +113,11 @@ export default class GlobalSettings extends Vue {
 
   /** Called when infrastructure settings are updated */
   onInfrastructureUpdated(): void {
+    this.checkDirty();
+  }
+
+  /** Called when debugging settings are updated */
+  onDebuggingUpdated(): void {
     this.checkDirty();
   }
 
